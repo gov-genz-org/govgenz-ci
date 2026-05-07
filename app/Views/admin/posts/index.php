@@ -6,6 +6,7 @@ declare(strict_types=1);
 /** @var string $filterStatus */
 /** @var string $searchQuery */
 /** @var \CodeIgniter\Pager\Pager $pager */
+/** @var array<string, array<string, true>> $translationLocalesByGroup */
 ?>
 <h1 class="h3 mb-1">Articles</h1>
 <p class="text-muted small mb-3">Communiqués et articles affichés sous <strong>/press</strong>.</p>
@@ -41,7 +42,15 @@ declare(strict_types=1);
 <table class="table table-striped align-middle mb-0">
     <thead class="table-light"><tr><th>Langue</th><th>Slug</th><th>Titre</th><th>Statut</th><th>Publié le</th><th class="text-end">Actions</th></tr></thead>
     <tbody>
-    <?php foreach ($posts as $post) : ?>
+    <?php foreach ($posts as $post) :
+        $tgrp = trim((string) ($post['translation_group'] ?? ''));
+        $loc = strtolower((string) ($post['locale'] ?? 'fr'));
+        if (! in_array($loc, ['fr', 'en'], true)) {
+            $loc = 'fr';
+        }
+        $otherLoc              = $loc === 'fr' ? 'en' : 'fr';
+        $duplicateTradDisabled = $tgrp !== '' && ! empty($translationLocalesByGroup[$tgrp][$otherLoc]);
+        ?>
         <tr>
             <td><code class="small"><?= esc(strtoupper((string) ($post['locale'] ?? 'fr'))) ?></code></td>
             <td><code class="small"><?= esc($post['slug']) ?></code></td>
@@ -59,6 +68,10 @@ declare(strict_types=1);
                     <a href="<?= site_url('press/' . $post['slug']) ?>" class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener">Voir</a>
                 <?php endif; ?>
                 <a href="<?= site_url('admin/posts/edit/' . $post['id']) ?>" class="btn btn-outline-secondary btn-sm">Éditer</a>
+                <form action="<?= site_url('admin/posts/duplicate/' . $post['id']) ?>" method="post" class="d-inline">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="btn btn-outline-primary btn-sm" <?= $duplicateTradDisabled ? 'disabled title="Une traduction existe déjà pour l’autre langue."' : '' ?>>Dupliquer trad</button>
+                </form>
                 <form action="<?= site_url('admin/posts/delete/' . $post['id']) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="Supprimer définitivement cet article ?">
                     <?= csrf_field() ?>
                     <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>

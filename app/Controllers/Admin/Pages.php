@@ -35,13 +35,16 @@ class Pages extends BaseController
 
         $pages = $model->orderBy('locale', 'ASC')->orderBy('slug', 'ASC')->paginate(static::ADMIN_LIST_PER_PAGE);
 
+        $translationLocalesByGroup = $this->translationLocalesByGroupForRows($pages, CmsPageModel::class);
+
         return view('admin/layout', [
             'title' => 'Pages',
             'main'  => view('admin/pages/index', [
-                'pages'        => $pages,
-                'filterStatus' => $filter ?? 'all',
-                'searchQuery'  => $searchQuery,
-                'pager'        => $model->pager,
+                'pages'                       => $pages,
+                'filterStatus'                => $filter ?? 'all',
+                'searchQuery'                 => $searchQuery,
+                'pager'                       => $model->pager,
+                'translationLocalesByGroup'   => $translationLocalesByGroup,
             ]),
         ]);
     }
@@ -206,12 +209,12 @@ class Pages extends BaseController
         if ($srcSlug === 'home') {
             $baseTargetSlug = 'home';
         } else {
-            $baseTargetSlug = $targetLocale === 'en'
-                ? $srcSlug . '-en'
+            $baseTargetSlug = $srcSlug === ''
+                ? 'page'
                 : (string) preg_replace('/-en$/', '', $srcSlug);
-        }
-        if ($baseTargetSlug === '') {
-            $baseTargetSlug = $srcSlug . '-' . $targetLocale;
+            if ($baseTargetSlug === '') {
+                $baseTargetSlug = 'page';
+            }
         }
         $targetSlug = $this->buildUniqueSlugForLocale($baseTargetSlug, $targetLocale);
 
@@ -219,6 +222,12 @@ class Pages extends BaseController
         $group       = $sourceGroup !== '' ? $sourceGroup : (string) $id;
         if ($sourceGroup === '') {
             $model->update($id, ['translation_group' => $group]);
+        }
+
+        $partner = $model->where('translation_group', $group)->where('locale', $targetLocale)->first();
+        if ($partner !== null) {
+            return redirect()->to(site_url('admin/pages'))
+                ->with('error', 'Une variante existe déjà pour cette langue dans ce groupe de traduction.');
         }
 
         $newTitle = trim((string) ($src['title'] ?? '')) . ($targetLocale === 'en' ? ' (EN)' : ' (FR)');

@@ -32,13 +32,16 @@ class Posts extends BaseController
 
         $posts = $model->orderBy('locale', 'ASC')->orderBy('id', 'DESC')->paginate(static::ADMIN_LIST_PER_PAGE);
 
+        $translationLocalesByGroup = $this->translationLocalesByGroupForRows($posts, CmsPostModel::class);
+
         return view('admin/layout', [
             'title' => 'Articles / presse',
             'main'  => view('admin/posts/index', [
-                'posts'        => $posts,
-                'filterStatus' => $filter ?? 'all',
-                'searchQuery'  => $searchQuery,
-                'pager'        => $model->pager,
+                'posts'                       => $posts,
+                'filterStatus'                => $filter ?? 'all',
+                'searchQuery'                 => $searchQuery,
+                'pager'                       => $model->pager,
+                'translationLocalesByGroup'   => $translationLocalesByGroup,
             ]),
         ]);
     }
@@ -157,6 +160,59 @@ class Posts extends BaseController
         return redirect()->to(site_url('admin/posts'))->with('message', 'Article mis à jour.');
     }
 
+    public function duplicate(int $id): ResponseInterface
+    {
+        $model = model(CmsPostModel::class);
+        $src   = $model->find($id);
+        if ($src === null) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $srcLocale    = $this->normalizedLocale($src['locale'] ?? 'fr');
+        $targetLocale = $srcLocale === 'fr' ? 'en' : 'fr';
+        $srcSlug = $this->normalizedSlug((string) ($src['slug'] ?? ''));
+        $baseTargetSlug = $srcSlug === ''
+            ? 'article'
+            : (string) preg_replace('/-en$/', '', $srcSlug);
+        if ($baseTargetSlug === '') {
+            $baseTargetSlug = 'article';
+        }
+        $targetSlug = $this->buildUniquePostSlugForLocale($baseTargetSlug, $targetLocale);
+
+        $sourceGroup = trim((string) ($src['translation_group'] ?? ''));
+        $group       = $sourceGroup !== '' ? $sourceGroup : (string) $id;
+        if ($sourceGroup === '') {
+            $model->update($id, ['translation_group' => $group]);
+        }
+
+        $partner = $model->where('translation_group', $group)->where('locale', $targetLocale)->first();
+        if ($partner !== null) {
+            return redirect()->to(site_url('admin/posts'))
+                ->with('error', 'Une variante existe déjà pour cette langue dans ce groupe de traduction.');
+        }
+
+        $newTitle = trim((string) ($src['title'] ?? '')) . ($targetLocale === 'en' ? ' (EN)' : ' (FR)');
+
+        $model->insert([
+            'slug'               => $targetSlug,
+            'locale'             => $targetLocale,
+            'translation_group'  => $group,
+            'title'              => $newTitle,
+            'excerpt'            => $src['excerpt'] ?? null,
+            'body_html'          => (string) ($src['body_html'] ?? ''),
+            'status'             => 'draft',
+            'published_at'       => null,
+            'meta_title'         => $src['meta_title'] ?? null,
+            'meta_description'   => $src['meta_description'] ?? null,
+        ]);
+
+        $newId = (int) $model->getInsertID();
+
+        return redirect()
+            ->to(site_url('admin/posts/edit/' . $newId))
+            ->with('message', 'Copie créée en ' . strtoupper($targetLocale) . ' (brouillon).');
+    }
+
     public function delete(int $id): ResponseInterface
     {
         model(CmsPostModel::class)->delete($id);
@@ -221,5 +277,25 @@ class Posts extends BaseController
         $ts = strtotime($raw);
 
         return $ts ? date('Y-m-d H:i:s', $ts) : date('Y-m-d H:i:s');
+    }
+
+    private function buildUniquePostSlugForLocale(string $baseSlug, string $locale): string
+    {
+        $slug = $this->normalizedSlug($baseSlug);
+        if ($slug === '') {
+            $slug = 'article-' . $locale;
+        }
+
+        $candidate = $slug;
+        $i         = 2;
+        while (model(CmsPostModel::class)->where('slug', $candidate)->where('locale', $locale)->first() !== null) {
+            $candidate = $slug . '-' . $i;
+            $i++;
+            if ($i > 500) {
+                break;
+            }
+        }
+
+        return $candidate;
     }
 }

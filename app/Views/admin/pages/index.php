@@ -8,6 +8,7 @@ helper('admin');
 /** @var string $filterStatus */
 /** @var string $searchQuery */
 /** @var \CodeIgniter\Pager\Pager $pager */
+/** @var array<string, array<string, true>> $translationLocalesByGroup */
 ?>
 <h1 class="h3 mb-1">Pages</h1>
 <p class="text-muted small mb-3">Pages fixes du site (accueil, à propos, contact…). Seules les URL connues du routage ont un lien « Site ».</p>
@@ -45,6 +46,13 @@ helper('admin');
     <tbody>
     <?php foreach ($pages as $p) :
         $pubUrl = (($p['status'] ?? '') === 'published') ? admin_public_page_url((string) ($p['slug'] ?? ''), (string) ($p['locale'] ?? 'fr')) : null;
+        $tgrp = trim((string) ($p['translation_group'] ?? ''));
+        $loc = strtolower((string) ($p['locale'] ?? 'fr'));
+        if (! in_array($loc, ['fr', 'en'], true)) {
+            $loc = 'fr';
+        }
+        $otherLoc              = $loc === 'fr' ? 'en' : 'fr';
+        $duplicateTradDisabled = $tgrp !== '' && ! empty($translationLocalesByGroup[$tgrp][$otherLoc]);
         ?>
         <tr>
             <td><code class="small"><?= esc(strtoupper((string) ($p['locale'] ?? 'fr'))) ?></code></td>
@@ -68,7 +76,7 @@ helper('admin');
                 <a href="<?= site_url('admin/pages/edit/' . $p['id']) ?>" class="btn btn-outline-secondary btn-sm">Éditer</a>
                 <form action="<?= site_url('admin/pages/duplicate/' . $p['id']) ?>" method="post" class="d-inline">
                     <?= csrf_field() ?>
-                    <button type="submit" class="btn btn-outline-primary btn-sm">Dupliquer trad</button>
+                    <button type="submit" class="btn btn-outline-primary btn-sm" <?= $duplicateTradDisabled ? 'disabled title="Une traduction existe déjà pour l’autre langue."' : '' ?>>Dupliquer trad</button>
                 </form>
                 <form action="<?= site_url('admin/pages/delete/' . $p['id']) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="Supprimer définitivement cette page ?">
                     <?= csrf_field() ?>

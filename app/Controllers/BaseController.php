@@ -62,4 +62,43 @@ abstract class BaseController extends Controller
     {
         return $this->tinymceExtraScripts() . view('admin/partials/form_dirty_guard');
     }
+
+    /**
+     * Locales présentes par groupe de traduction (ex. bouton « Dupliquer trad » dans les listes admin).
+     *
+     * @param list<array<string, mixed>> $rows
+     * @return array<string, array<string, true>>
+     */
+    protected function translationLocalesByGroupForRows(array $rows, string $modelClass): array
+    {
+        $groupsOnPage = [];
+        foreach ($rows as $row) {
+            $g = trim((string) ($row['translation_group'] ?? ''));
+            if ($g !== '') {
+                $groupsOnPage[$g] = true;
+            }
+        }
+        if ($groupsOnPage === []) {
+            return [];
+        }
+
+        $out = [];
+        $pairs = model($modelClass)
+            ->select('translation_group, locale')
+            ->whereIn('translation_group', array_keys($groupsOnPage))
+            ->findAll();
+        foreach ($pairs as $pair) {
+            $g = trim((string) ($pair['translation_group'] ?? ''));
+            if ($g === '') {
+                continue;
+            }
+            $loc = strtolower(trim((string) ($pair['locale'] ?? '')));
+            if (! in_array($loc, ['fr', 'en'], true)) {
+                $loc = 'fr';
+            }
+            $out[$g][$loc] = true;
+        }
+
+        return $out;
+    }
 }
