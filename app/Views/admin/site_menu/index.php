@@ -1,0 +1,64 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var list<array<string, mixed>> $items */
+?>
+<h1 class="h3 mb-1">Menu du site</h1>
+<p class="text-muted small mb-3">Liens affichés dans l’en-tête du site public. Ordre = champ « Ordre » (tri croissant).</p>
+
+<div class="mb-3">
+    <a href="<?= site_url('admin/site-menu/create') ?>" class="btn btn-primary btn-sm">Nouvelle entrée</a>
+</div>
+
+<?php if ($items === []) : ?>
+    <div class="admin-empty">
+        <p class="mb-2 text-muted">Aucune entrée. Exécutez les migrations ou ajoutez un lien.</p>
+        <a href="<?= site_url('admin/site-menu/create') ?>" class="btn btn-primary btn-sm">Créer une entrée</a>
+    </div>
+<?php else : ?>
+<div class="table-responsive admin-table-wrap shadow-sm rounded border bg-white">
+<table class="table table-striped align-middle mb-0">
+    <thead class="table-light">
+    <tr>
+        <th scope="col">Langue</th>
+        <th scope="col">Ordre</th>
+        <th scope="col">Libellé</th>
+        <th scope="col">Type</th>
+        <th scope="col">Cible</th>
+        <th scope="col">Surlignage</th>
+        <th scope="col">Actif</th>
+        <th scope="col" class="text-end">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($items as $row) :
+        $id = (int) ($row['id'] ?? 0);
+        ?>
+        <tr>
+            <td><span class="badge text-bg-light border"><?= esc(strtoupper((string) ($row['locale'] ?? 'fr'))) ?></span></td>
+            <td class="small"><?= esc((string) ($row['sort_order'] ?? '')) ?></td>
+            <td><?= esc((string) ($row['label'] ?? '')) ?></td>
+            <td><code class="small"><?= esc((string) ($row['href_kind'] ?? '')) ?></code></td>
+            <td class="small text-break"><?= esc((string) ($row['href_target'] ?? '')) ?></td>
+            <td><code class="small"><?= esc((string) ($row['match_key'] ?? '')) ?></code></td>
+            <td>
+                <?php if ((int) ($row['is_active'] ?? 0) === 1) : ?>
+                    <span class="badge text-bg-success">Oui</span>
+                <?php else : ?>
+                    <span class="badge text-bg-secondary">Non</span>
+                <?php endif; ?>
+            </td>
+            <td class="text-end text-nowrap">
+                <a href="<?= site_url('admin/site-menu/edit/' . $id) ?>" class="btn btn-sm btn-outline-primary">Éditer</a>
+                <form action="<?= site_url('admin/site-menu/delete/' . $id) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="Supprimer cette entrée du menu ?">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+</div>
+<?php endif; ?>

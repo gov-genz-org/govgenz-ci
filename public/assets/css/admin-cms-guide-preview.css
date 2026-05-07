@@ -1,0 +1,243 @@
+/**
+ * Aperçu des composants GovGenZ — réservé à admin/cms-guide.
+ * Scope : .cms-guide-preview-host.ggz-main-shell (ne pas charger govgenz-front-pages.css dans l’admin : il cible #main-content).
+ */
+
+/* — Jetons alignés sur govgenz-bridge (#main-content.ggz-main-shell) — */
+.cms-guide-preview-host.ggz-main-shell {
+    position: relative;
+    --ggz-font-display: var(--font-display);
+    --ggz-font-sans: var(--font-body);
+    --ggz-line-heading: 1.12;
+    --ggz-line-body: 1.65;
+    --ggz-peach: var(--red-soft);
+    --ggz-red-action: var(--red-primary);
+    --ggz-bordeaux: var(--red-deep);
+    --ggz-night-deep: var(--bg-deep);
+    --ggz-night-blue: var(--bg-elevated);
+    --ggz-blue-gray: var(--text-muted);
+    --ggz-text-on-dark: var(--text-primary);
+    --ggz-text-meta: var(--text-tertiary);
+    --ggz-max-content: min(96vw, var(--max-width));
+    --ggz-max-wide: min(calc(100vw - 2 * var(--gutter)), 96rem);
+    --ggz-gradient-hero:
+        radial-gradient(ellipse 92% 56% at 90% -6%, rgba(220, 38, 38, 0.2), transparent 56%),
+        radial-gradient(ellipse 68% 44% at 8% 102%, rgba(124, 45, 18, 0.28), transparent 52%),
+        linear-gradient(168deg, var(--bg-light) 0%, var(--bg-deep) 45%, var(--bg-mid) 100%);
+    --ggz-gradient-page:
+        radial-gradient(ellipse 120% 82% at 50% -28%, rgba(220, 38, 38, 0.12), transparent 52%),
+        radial-gradient(ellipse 72% 48% at 100% 12%, rgba(30, 30, 44, 0.55), transparent 48%),
+        linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 100%);
+    --ggz-shadow-card: 0 16px 56px rgba(0, 0, 0, 0.35);
+    --ggz-shadow-card-hover: 0 12px 28px rgba(220, 38, 38, 0.18), 0 28px 56px rgba(0, 0, 0, 0.28);
+}
+
+/* — Cadre « Aperçu » — */
+.cms-guide-sample {
+    border-radius: 12px;
+    border: 1px solid var(--border-strong);
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.cms-guide-sample__label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.5rem 0.85rem;
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+}
+
+.cms-guide-sample__canvas {
+    background: var(--bg-deep);
+    overflow-x: auto;
+}
+
+.cms-guide-sample__canvas--flush .section {
+    border-radius: 0;
+}
+
+/* — Rubrique + CMS shell (copie ciblée du pont public) — */
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg).ggz-cms-fullwidth {
+    margin-top: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg).ggz-cms-fullwidth a.tile,
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg).ggz-cms-fullwidth a.fn-card,
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg).ggz-cms-fullwidth a.contact-block {
+    color: inherit;
+    text-decoration: none;
+}
+
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg).ggz-cms-fullwidth a.tile:hover,
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg).ggz-cms-fullwidth a.fn-card:hover,
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg).ggz-cms-fullwidth a.contact-block:hover {
+    color: inherit;
+}
+
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .section__header,
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .ggz-section-intro {
+    text-align: center;
+    margin-bottom: 3rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .section__overline,
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .ggz-section-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    text-transform: none;
+    color: var(--red-soft);
+    margin: 0 0 1rem;
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    border-radius: 100px;
+    background: rgba(220, 38, 38, 0.05);
+}
+
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) :is(h1, h2).section__title,
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) :is(h1, h2).ggz-section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    font-weight: 400;
+    color: var(--text-bright);
+    margin: 0 0 1rem;
+    text-transform: none;
+}
+
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .section__lead,
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .ggz-section-lead {
+    font-family: var(--font-body);
+    font-size: clamp(0.95rem, 1.4vw, 1.08rem);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .section__header .section__meta {
+    margin: 0.75rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) a.btn {
+    text-decoration: none;
+}
+
+.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) h2:not(.ggz-press-card__title) {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    color: var(--text-bright);
+    font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+    line-height: 1.05;
+}
+
+/* Hero landing (bloc home-program) */
+.cms-guide-preview-host.ggz-main-shell .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 3rem 1rem 2.5rem;
+    text-align: center;
+}
+
+.cms-guide-preview-host.ggz-main-shell .hero__inner {
+    position: relative;
+    z-index: 2;
+    max-width: 68rem;
+    margin: 0 auto;
+}
+
+.cms-guide-preview-host.ggz-main-shell .hero__bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 56px 56px;
+}
+
+.cms-guide-preview-host.ggz-main-shell .hero__bg-glow {
+    position: absolute;
+    left: 50%;
+    top: 52%;
+    width: 640px;
+    height: 640px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(220, 38, 38, 0.18) 0%, transparent 62%);
+    filter: blur(48px);
+}
+
+.cms-guide-preview-host.ggz-main-shell .hero__overline {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.4em;
+    color: var(--red-soft);
+    margin: 0 0 1.4rem;
+}
+
+.cms-guide-preview-host.ggz-main-shell .hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(2.3rem, 8.5vw, 6.2rem);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    margin: 0 0 1rem;
+}
+
+.cms-guide-preview-host.ggz-main-shell .hero__title-1,
+.cms-guide-preview-host.ggz-main-shell .hero__title-2 {
+    display: block;
+}
+
+.cms-guide-preview-host.ggz-main-shell .hero__title-1 {
+    color: var(--text-bright) !important;
+    -webkit-text-fill-color: var(--text-bright) !important;
+    text-shadow: 0 0 0 transparent;
+}
+
+.cms-guide-preview-host.ggz-main-shell .hero__title-2 {
+    background: linear-gradient(135deg, var(--red-soft) 0%, var(--red-primary) 50%, var(--red-deep) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.cms-guide-preview-host.ggz-main-shell .section__inner > .ggz-breadcrumb {
+    margin-bottom: 1rem;
+}
+
+.cms-guide-preview-host.ggz-main-shell .section__inner > .ggz-breadcrumb a {
+    color: var(--red-soft);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.cms-guide-preview-host.ggz-main-shell .section__inner > .ggz-breadcrumb a:hover {
+    text-decoration: underline;
+}
