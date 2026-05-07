@@ -186,6 +186,25 @@ HTML,
 HTML,
             ],
             [
+                'id'    => 'press-page',
+                'title' => 'Presse — fil d’Ariane + en-tête',
+                'intro' => 'Aligné sur les pages /press : navigation .ggz-breadcrumb en premier dans .section__inner, puis .section__header (overline, titre, chapô). À réutiliser dans le corps HTML d’un article si besoin.',
+                'html'  => <<<'HTML'
+<nav class="ggz-breadcrumb" aria-label="Fil d’Ariane">
+    <a href="/">Accueil</a>
+    <span class="ggz-breadcrumb__sep" aria-hidden="true">/</span>
+    <a href="/press">Presse</a>
+    <span class="ggz-breadcrumb__sep" aria-hidden="true">/</span>
+    <span class="muted">Communiqué</span>
+</nav>
+<div class="section__header">
+    <div class="section__overline">MÉDIAS</div>
+    <h1 class="section__title">Titre du communiqué</h1>
+    <p class="section__lead">Chapô ou extrait affiché sous le titre.</p>
+</div>
+HTML,
+            ],
+            [
                 'id'    => 'wire-full-section',
                 'title' => 'Exemple de section complète',
                 'intro' => 'Enveloppe type pour une page pleine largeur CMS.',
