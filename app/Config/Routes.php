@@ -60,6 +60,7 @@ $routes->group('admin', ['filter' => 'authadmin'], static function ($routes) {
     $routes->post('posts/store', 'Admin\\Posts::store');
     $routes->get('posts/edit/(:num)', 'Admin\\Posts::edit/$1');
     $routes->post('posts/update/(:num)', 'Admin\\Posts::update/$1');
+    $routes->post('posts/duplicate/(:num)', 'Admin\\Posts::duplicate/$1');
     $routes->post('posts/delete/(:num)', 'Admin\\Posts::delete/$1');
 
     $routes->get('media', 'Admin\\Media::index');
