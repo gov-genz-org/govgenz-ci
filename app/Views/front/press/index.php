@@ -1,21 +1,27 @@
 <div class="wysiwyg ggz-shell-wysiwyg ggz-cms-fullwidth">
     <section class="section section--press" aria-labelledby="press-heading">
         <div class="section__inner">
+            <nav class="ggz-breadcrumb" aria-label="<?= esc(lang('Site.breadcrumb_aria'), 'attr') ?>">
+                <a href="<?= esc(localized_site_url(''), 'attr') ?>"><?= esc(lang('Site.breadcrumb_home')) ?></a>
+                <span class="ggz-breadcrumb__sep" aria-hidden="true">/</span>
+                <span class="muted"><?= esc(lang('Site.breadcrumb_press')) ?></span>
+            </nav>
             <div class="section__header">
-                <div class="section__overline">MÉDIAS</div>
-                <h1 class="section__title" id="press-heading">Presse</h1>
-                <p class="section__lead">Communiqués et actualités publiés par GovGenZ Madagascar.    
-                    <?php if ($posts === []) : ?>
-                        <div class="ggz-empty-state">
-                            <p>Aucun communiqué publié pour le moment.</p>
-                            <br>
-                            <p class="muted">Revenez plus tard ou utilisez le formulaire de <a class="cercle__sub" href="<?= site_url('contact') ?>">Contact</a> pour les demandes médias.</p>
-                        </div>
-                    <?php endif; ?>
+                <div class="section__overline"><?= esc(lang('Site.press_overline')) ?></div>
+                <h1 class="section__title" id="press-heading"><?= esc(lang('Site.breadcrumb_press')) ?></h1>
+                <p class="section__lead">
+                    <?= esc(lang('Site.press_index_intro')) ?>
                 </p>
             </div>
-            <div class="ggz-page-press-index">
-                <?php if ($posts !== []) : ?>
+            <?php if ($posts === []) : ?>
+                <div class="ggz-empty-state">
+                    <p><?= esc(lang('Site.press_empty_none')) ?></p>
+                    <p class="muted">
+                        <a href="<?= esc(localized_site_url('contact'), 'attr') ?>"><?= esc(lang('Site.press_media_contact')) ?></a>
+                    </p>
+                </div>
+            <?php else : ?>
+                <div class="ggz-page-press-index">
                     <ul class="ggz-press-grid">
                         <?php foreach ($posts as $post) : ?>
                             <?php
@@ -27,18 +33,18 @@
                                         <time class="ggz-press-card__date" datetime="<?= esc((string) ($post['published_at'] ?? ''), 'attr') ?>"><?= esc($pub) ?></time>
                                     <?php endif; ?>
                                     <h2 class="cercle__title">
-                                        <a href="<?= site_url('press/' . $post['slug']) ?>"><?= esc($post['title']) ?></a>
+                                        <a href="<?= esc(localized_site_url('press/' . $post['slug']), 'attr') ?>"><?= esc($post['title']) ?></a>
                                     </h2>
                                     <?php if (! empty($post['excerpt'])) : ?>
                                         <p class="ggz-press-card__excerpt"><?= esc($post['excerpt']) ?></p>
                                     <?php endif; ?>
-                                    <a class="ggz-press-card__cta" href="<?= site_url('press/' . $post['slug']) ?>">Lire le communiqué</a>
+                                    <a class="btn btn--primary" href="<?= esc(localized_site_url('press/' . $post['slug']), 'attr') ?>"><?= esc(lang('Site.press_read_release')) ?></a>
                                 </article>
                             </li>
                         <?php endforeach; ?>
                     </ul>
-                <?php endif; ?>
-            </div>
+                </div>
+            <?php endif; ?>
         </div>
     </section>
 </div>
