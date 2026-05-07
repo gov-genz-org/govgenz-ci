@@ -626,30 +626,6 @@ a.lang-toggle {
   pointer-events: none;
 }
 
-.section--structure {
-  background: linear-gradient(180deg, var(--bg-mid) 0%, var(--bg-deepest) 100%);
-}
-
-.section--secteurs {
-  background: var(--bg-deepest);
-}
-
-.section--etude {
-  background: linear-gradient(180deg, var(--bg-deepest) 0%, var(--bg-deep) 100%);
-}
-
-.section--contact {
-  background: var(--bg-deepest);
-}
-
-.section--press {
-  background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 100%);
-}
-
-.section--join {
-  background: linear-gradient(180deg, var(--bg-mid) 0%, var(--bg-deepest) 100%);
-}
-
 /* ===== CERCLES (qui sommes-nous) ===== */
 .cercles {
   display: grid;

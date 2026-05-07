@@ -56,7 +56,7 @@ body.ggz-public-theme {
 }
 
 /* Titres éditoriaux : même registre que .section__title du template */
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) h2:not(.ggz-press-card__title) {
+#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) h2:not(.cercle__title) {
     font-family: var(--font-display);
     font-weight: 400;
     letter-spacing: -0.01em;

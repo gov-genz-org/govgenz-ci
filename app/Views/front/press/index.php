@@ -26,7 +26,7 @@
                                     <?php if ($pub !== '') : ?>
                                         <time class="ggz-press-card__date" datetime="<?= esc((string) ($post['published_at'] ?? ''), 'attr') ?>"><?= esc($pub) ?></time>
                                     <?php endif; ?>
-                                    <h2 class="ggz-press-card__title">
+                                    <h2 class="cercle__title">
                                         <a href="<?= site_url('press/' . $post['slug']) ?>"><?= esc($post['title']) ?></a>
                                     </h2>
                                     <?php if (! empty($post['excerpt'])) : ?>
