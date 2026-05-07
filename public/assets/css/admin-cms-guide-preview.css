@@ -143,7 +143,7 @@
     text-transform: uppercase;
     color: var(--text-muted);
 }
-cercle__title
+
 .cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) a.btn {
     text-decoration: none;
 }
@@ -240,4 +240,20 @@ cercle__title
 
 .cms-guide-preview-host.ggz-main-shell .section__inner > .ggz-breadcrumb a:hover {
     text-decoration: underline;
+}
+
+/*
+ * Le layout admin impose #121417 sur #main-content h1–h3 et #212529 sur .card-body ;
+ * sans cette passe, les titres de l’aperçu « Rendu » restent noirs.
+ */
+#main-content .card .card-body .cms-guide-preview-host.ggz-main-shell {
+    color: var(--text-primary);
+}
+
+#main-content .card .card-body .cms-guide-preview-host.ggz-main-shell :is(h1, h2, h3, h4, h5, h6) {
+    color: var(--text-bright);
+}
+
+#main-content .card .card-body .cms-guide-preview-host.ggz-main-shell .muted {
+    color: var(--text-tertiary) !important;
 }

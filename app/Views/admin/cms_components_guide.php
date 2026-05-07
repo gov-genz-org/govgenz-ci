@@ -31,6 +31,7 @@ declare(strict_types=1);
             'secteurs' => 'section section--secteurs',
             'etude' => 'section section--etude',
             'contact' => 'section section--contact',
+            'press-page' => 'section section--press',
             default => 'section section--qui',
         };
         ?>
