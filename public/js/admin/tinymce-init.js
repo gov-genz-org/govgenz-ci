@@ -27,7 +27,7 @@
             '<section class="cms-section" aria-labelledby="etude-heading">' +
             '<header>' +
             '<p class="cms-kicker">Étude jeunesse 2026</p>' +
-            '<h2 id="etude-heading">Les chiffres qui nous portent</h2>' +
+            '<h2 id="etude-heading" class="section__title">Les chiffres qui nous portent</h2>' +
             '<p class="cms-lead muted">Une base chiffrée pour comprendre le poids démographique de la jeunesse malgache et les leviers d’action à activer.</p>' +
             '</header>' +
             '<dl class="cms-metrics">' +
@@ -54,11 +54,21 @@
             '<section class="cms-section">' +
             '<header>' +
             '<p class="cms-kicker">Sur-titre de section</p>' +
-            '<h2>Titre principal</h2>' +
+            '<h2 class="section__title">Titre principal</h2>' +
             '<p class="cms-lead muted">Chapô : une ou deux phrases pour introduire le bloc.</p>' +
             '</header>' +
             '<p>Corps du bloc : paragraphes, listes, images…</p>' +
             '</section>'
+        );
+    }
+
+    function tplSectionHeaderGovgenz() {
+        return (
+            '<div class="section__header">' +
+            '<div class="section__overline">SUR-TITRE</div>' +
+            '<h2 class="section__title">Titre principal</h2>' +
+            '<p class="section__lead">Chapô : une ou deux phrases pour introduire la rubrique.</p>' +
+            '</div>'
         );
     }
 
@@ -327,6 +337,7 @@
         plugins: 'lists link image code table autoresize wordcount',
         image_advtab: true,
         image_title: true,
+        block_formats: 'Paragraphe=p; Titre 2=h2; Titre 3=h3; Titre 4=h4; Division=div',
         toolbar:
             'undo redo | blocks styles | bold italic underline forecolor backcolor | alignleft aligncenter alignright | bullist numlist | link image medialibrary table | ggzblocks | code | removeformat',
         relative_urls: false,
@@ -337,13 +348,26 @@
         formats: {
             cms_kicker: { block: 'p', classes: 'cms-kicker' },
             cms_lead: { block: 'p', classes: 'cms-lead' },
+            ggz_section_overline: { block: 'div', classes: 'section__overline' },
+            ggz_section_title_h1: { block: 'h1', classes: 'section__title' },
+            ggz_section_title_h2: { block: 'h2', classes: 'section__title' },
+            ggz_section_lead: { block: 'p', classes: 'section__lead' },
         },
         style_formats: [
             {
-                title: 'Typo GovGenZ',
+                title: 'Bloc CMS (sections simples)',
                 items: [
-                    { title: 'Sur-titre de section (ligne pêche)', format: 'cms_kicker' },
-                    { title: 'Chapô de section', format: 'cms_lead' },
+                    { title: 'Sur-titre · cms-kicker', format: 'cms_kicker' },
+                    { title: 'Chapô · cms-lead', format: 'cms_lead' },
+                ],
+            },
+            {
+                title: 'Rubrique site_govgenz (.section__*)',
+                items: [
+                    { title: 'Sur-titre pill · section__overline', format: 'ggz_section_overline' },
+                    { title: 'Titre · H2 + section__title', format: 'ggz_section_title_h2' },
+                    { title: 'Titre page · H1 + section__title', format: 'ggz_section_title_h1' },
+                    { title: 'Chapô · section__lead', format: 'ggz_section_lead' },
                 ],
             },
         ],
@@ -352,7 +376,11 @@
             'body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 17px; line-height: 1.55; color: #212529; }' +
             ' p { margin-top: 0; margin-bottom: 0.75em; }' +
             ' .cms-kicker { margin: 0 0 0.35rem; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #c2410c; }' +
-            ' .cms-lead { margin: 0; font-size: 1.02rem; line-height: 1.55; }',
+            ' .cms-lead { margin: 0; font-size: 1.02rem; line-height: 1.55; }' +
+            ' .section__header { text-align: center; max-width: 800px; margin: 0 auto 1.5rem; }' +
+            ' .section__overline { display: inline-block; margin: 0 0 0.75rem; padding: 0.35rem 0.9rem; border-radius: 100px; border: 1px solid rgba(220,38,38,0.35); font-family: ui-monospace, monospace; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.28em; color: #b91c1c; background: rgba(220,38,38,0.06); }' +
+            ' .section__title { font-family: "Bebas Neue", "Arial Narrow", sans-serif; font-size: clamp(1.75rem, 4vw, 2.6rem); line-height: 1.05; letter-spacing: -0.02em; font-weight: 400; margin: 0 0 0.65rem; color: #111827; }' +
+            ' .section__lead { font-style: italic; font-size: 1rem; line-height: 1.65; color: #374151; max-width: 700px; margin: 0 auto; }',
         setup(editor) {
             editor.ui.registry.addMenuButton('ggzblocks', {
                 text: 'Blocs',
@@ -367,6 +395,11 @@
                             type: 'menuitem',
                             text: 'Section simple (sur-titre + titre + chapô)',
                             onAction: () => editor.insertContent(tplSectionSimple()),
+                        },
+                        {
+                            type: 'menuitem',
+                            text: 'En-tête rubrique site_govgenz (.section__header)',
+                            onAction: () => editor.insertContent(tplSectionHeaderGovgenz()),
                         },
                     ]);
                 },

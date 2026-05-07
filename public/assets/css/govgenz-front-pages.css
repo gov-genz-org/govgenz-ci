@@ -1005,19 +1005,13 @@ button.ggz-btn-urgent:hover,
     color: var(--ggz-text-meta);
 }
 
-.ggz-press-card__title {
-    margin: 0;
-    font-size: 1.05rem;
-    line-height: var(--ggz-line-heading);
-    font-weight: 800;
-}
 
-.ggz-press-card__title a {
+.cercle__title a {
     color: var(--ggz-text-on-dark);
     text-decoration: none;
 }
 
-.ggz-press-card__title a:hover {
+.cercle__title a:hover {
     color: var(--ggz-peach);
 }
 
