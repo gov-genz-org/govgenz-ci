@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="<?= base_url('assets/favicon.png') ?>">
+    <link rel="apple-touch-icon" href="<?= base_url('assets/logo-256.png') ?>">
     <title><?= esc($title ?? 'Admin') ?> — GovGenZ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <?= $extraHead ?? '' ?>
