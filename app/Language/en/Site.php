@@ -44,6 +44,8 @@ return [
     'press_overline'     => 'MEDIA',
     'press_show_overline' => 'RELEASE',
     'press_published_label' => 'Published',
+    'home_missing_title' => 'Home',
+    'home_missing_message' => 'No published page with slug "home" was found. Create it in Administration > Pages, then run migrations if you expect the initial page set.',
 
     'sector_legal'          => 'Justice · Governance · Anti-corruption',
     'sector_economy'        => 'Public finance · Trade · Employment',

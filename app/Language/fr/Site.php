@@ -44,6 +44,8 @@ return [
     'press_overline'     => 'MÉDIAS',
     'press_show_overline' => 'COMMUNIQUÉ',
     'press_published_label' => 'Publié le',
+    'home_missing_title' => 'Accueil',
+    'home_missing_message' => 'Aucune page publiée avec le slug "home". Créez-la dans Administration > Pages, puis exécutez les migrations si vous attendez le jeu de pages initial.',
 
     'sector_legal'          => 'Justice · Gouvernance · Anti-corruption',
     'sector_economy'        => 'Finances publiques · Commerce · Emploi',
