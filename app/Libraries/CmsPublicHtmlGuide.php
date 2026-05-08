@@ -23,6 +23,43 @@ final class CmsPublicHtmlGuide
                 'html'  => '',
             ],
             [
+                'id'    => 'site-footer',
+                'title' => 'Pied de page global (slug réservé site-footer)',
+                'intro' => 'Créez deux pages publiées (FR et EN), même slug site-footer, même groupe de traduction. Le corps remplace uniquement les trois colonnes sous le logo ; le logo, la devise et la ligne © restent dans le gabarit. Collez le HTML en mode source (recommandé) avec des blocs .footer__col (sans wrapper .footer__columns, déjà présent dans le layout). Les URLs : adaptez aux slugs de votre locale (/secteurs vs /sectors, etc.).',
+                'html'  => <<<'HTML'
+<div class="footer__col">
+    <h4>Le mouvement</h4>
+    <ul>
+        <li><a href="/qui-sommes-nous">Qui sommes-nous</a></li>
+        <li><a href="/notre-adn">Notre ADN</a></li>
+        <li><a href="/structure">Structure</a></li>
+        <li><a href="/secteurs">Secteurs</a></li>
+        <li><a href="/etude">Étude</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/press">Presse</a></li>
+        <li><a href="/join">Rejoindre</a></li>
+    </ul>
+</div>
+<div class="footer__col">
+    <h4>À venir</h4>
+    <ul>
+        <li><span class="footer__soon">declaration.govgenz.org</span></li>
+        <li><span class="footer__soon">counterpoint.govgenz.org</span></li>
+        <li><span class="footer__soon">projects.govgenz.org</span></li>
+    </ul>
+</div>
+<div class="footer__col">
+    <h4>Contacts</h4>
+    <ul>
+        <li><a href="mailto:contact@govgenz.org">contact@govgenz.org</a></li>
+        <li><a href="mailto:recruitment@govgenz.org">recruitment@govgenz.org</a></li>
+        <li><a href="mailto:partnerships@govgenz.org">partnerships@govgenz.org</a></li>
+        <li><a href="mailto:ethics@govgenz.org">ethics@govgenz.org</a></li>
+    </ul>
+</div>
+HTML,
+            ],
+            [
                 'id'    => 'section-header',
                 'title' => 'En-tête de rubrique',
                 'intro' => 'Overline pill + titre + chapô. Utiliser h1 sur une page dédiée (sans hero gabarit), h2 dans une maquette multi-sections.',
@@ -201,6 +238,27 @@ HTML,
     <div class="section__overline">MÉDIAS</div>
     <h1 class="section__title">Titre du communiqué</h1>
     <p class="section__lead">Chapô ou extrait affiché sous le titre.</p>
+</div>
+HTML,
+            ],
+            [
+                'id'    => 'site-footer-minimal',
+                'title' => 'Pied de page — variante courte (2 colonnes)',
+                'intro' => 'Si vous ne voulez que deux blocs, laissez simplement 2 .footer__col ; le layout les place dans sa grille. Pour une seule colonne pleine largeur, utilisez un seul .footer__col.',
+                'html'  => <<<'HTML'
+<div class="footer__col">
+    <h4>Liens utiles</h4>
+    <ul>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/press">Presse</a></li>
+        <li><a href="/join">Rejoindre</a></li>
+    </ul>
+</div>
+<div class="footer__col">
+    <h4>Écrivez-nous</h4>
+    <ul>
+        <li><a href="mailto:contact@govgenz.org">contact@govgenz.org</a></li>
+    </ul>
 </div>
 HTML,
             ],

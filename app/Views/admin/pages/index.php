@@ -12,6 +12,9 @@ helper('admin');
 ?>
 <h1 class="h3 mb-1">Pages</h1>
 <p class="text-muted small mb-3">Pages fixes du site (accueil, à propos, contact…). Seules les URL connues du routage ont un lien « Site ».</p>
+<div class="alert alert-secondary py-2 px-3 small mb-3" role="note">
+    <strong>Pied de page (colonnes)</strong> : pour les modifier depuis l’admin, créez une page <strong>publiée</strong> avec le slug exact <code>site-footer</code> (une variante FR et une EN). Son corps remplace les trois colonnes du footer&nbsp;; la route publique <code>/site-footer</code> est désactivée. La marque (logo, devise, ligne légale) reste dans le gabarit tant que vous ne demandez pas de les sortir aussi en CMS.
+</div>
 <div class="d-flex flex-wrap align-items-end gap-2 gap-md-3 mb-3">
     <a href="<?= site_url('admin/pages/create') ?>" class="btn btn-primary btn-sm">Nouvelle page</a>
     <form method="get" action="<?= site_url('admin/pages') ?>" class="d-flex flex-wrap align-items-end gap-2 ms-md-auto">
