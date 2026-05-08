@@ -54,7 +54,7 @@ $labels = Join::sectorLabels();
         $status = (string) ($row['status'] ?? '');
         $msg    = (string) ($row['message'] ?? '');
         ?>
-        <tr>
+        <tr id="vol-row-<?= $id ?>">
             <td class="small text-nowrap"><?= esc((string) ($row['created_at'] ?? '')) ?></td>
             <td><?= esc((string) ($row['full_name'] ?? '')) ?></td>
             <td><a href="mailto:<?= esc((string) ($row['email'] ?? '')) ?>" class="text-break"><?= esc((string) ($row['email'] ?? '')) ?></a></td>

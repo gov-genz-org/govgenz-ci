@@ -10,6 +10,44 @@ class Email extends BaseConfig
     public string $fromName   = '';
     public string $recipients = '';
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->fromEmail = (string) env('email.fromEmail', $this->fromEmail);
+        $this->fromName  = (string) env('email.fromName', $this->fromName ?: 'Gov Gen Z');
+
+        $protocol = env('email.protocol');
+        if (is_string($protocol) && $protocol !== '') {
+            $this->protocol = $protocol;
+        }
+
+        $host = env('email.SMTPHost');
+        if (is_string($host)) {
+            $this->SMTPHost = $host;
+        }
+
+        $user = env('email.SMTPUser');
+        if (is_string($user)) {
+            $this->SMTPUser = $user;
+        }
+
+        $pass = env('email.SMTPPass');
+        if (is_string($pass)) {
+            $this->SMTPPass = $pass;
+        }
+
+        $port = env('email.SMTPPort');
+        if ($port !== null && $port !== '') {
+            $this->SMTPPort = (int) $port;
+        }
+
+        $crypto = env('email.SMTPCrypto');
+        if (is_string($crypto) && $crypto !== '') {
+            $this->SMTPCrypto = $crypto;
+        }
+    }
+
     /**
      * The "user agent"
      */
