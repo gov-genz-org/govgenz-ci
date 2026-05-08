@@ -5,17 +5,27 @@ declare(strict_types=1);
 namespace App\Controllers\Front;
 
 use App\Controllers\BaseController;
+use App\Libraries\VolunteerJoinNotifier;
 use App\Models\VolunteerApplicationModel;
 
 class Join extends BaseController
 {
     /** @var list<string> */
     public const SECTOR_KEYS = [
-        'communication',
-        'mobilisation',
-        'juridique',
-        'tech',
-        'autre',
+        'legal',
+        'economy',
+        'food',
+        'energy',
+        'water',
+        'education',
+        'health',
+        'infrastructure',
+        'digital',
+        'territories',
+        'environment',
+        'mines',
+        'security',
+        'citizen',
     ];
 
     public function index()
@@ -44,17 +54,39 @@ class Join extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        $sectorKey = (string) $this->request->getPost('sector');
+        $fullName  = (string) $this->request->getPost('full_name');
+        $emailAddr = (string) $this->request->getPost('email');
+        $phoneRaw  = $this->request->getPost('phone');
+        $msgRaw    = $this->request->getPost('message');
+
         $model = model(VolunteerApplicationModel::class);
         $model->insert([
-            'sector'     => $this->request->getPost('sector'),
-            'full_name'  => $this->request->getPost('full_name'),
-            'email'      => $this->request->getPost('email'),
-            'phone'      => $this->request->getPost('phone') ?: null,
-            'message'    => $this->request->getPost('message') ?: null,
+            'sector'     => $sectorKey,
+            'full_name'  => $fullName,
+            'email'      => $emailAddr,
+            'phone'      => $phoneRaw ?: null,
+            'message'    => $msgRaw ?: null,
             'ip_address' => $this->request->getIPAddress(),
             'status'     => 'new',
             'created_at' => date('Y-m-d H:i:s'),
         ]);
+
+        $newId = (int) $model->getInsertID();
+        if ($newId > 0) {
+            $labels = self::sectorLabels();
+            $adminValidationUrl = site_url('admin/volunteers') . '?status=new#vol-row-' . $newId;
+            VolunteerJoinNotifier::send([
+                'id'                   => $newId,
+                'sector_label'         => $labels[$sectorKey] ?? $sectorKey,
+                'full_name'            => $fullName,
+                'email'                => $emailAddr,
+                'phone'                => $phoneRaw ? (string) $phoneRaw : null,
+                'message'              => $msgRaw ? (string) $msgRaw : null,
+                'ip_address'           => $this->request->getIPAddress(),
+                'admin_validation_url' => $adminValidationUrl,
+            ]);
+        }
 
         helper(['locale']);
 
@@ -67,11 +99,20 @@ class Join extends BaseController
     public static function sectorLabels(): array
     {
         return [
-            'communication' => lang('Site.sector_communication'),
-            'mobilisation'  => lang('Site.sector_mobilisation'),
-            'juridique'     => lang('Site.sector_juridique'),
-            'tech'          => lang('Site.sector_tech'),
-            'autre'         => lang('Site.sector_autre'),
+            'legal'          => lang('Site.sector_legal'),
+            'economy'        => lang('Site.sector_economy'),
+            'food'           => lang('Site.sector_food'),
+            'energy'         => lang('Site.sector_energy'),
+            'water'          => lang('Site.sector_water'),
+            'education'      => lang('Site.sector_education'),
+            'health'         => lang('Site.sector_health'),
+            'infrastructure' => lang('Site.sector_infrastructure'),
+            'digital'        => lang('Site.sector_digital'),
+            'territories'    => lang('Site.sector_territories'),
+            'environment'    => lang('Site.sector_environment'),
+            'mines'          => lang('Site.sector_mines'),
+            'security'       => lang('Site.sector_security'),
+            'citizen'        => lang('Site.sector_citizen'),
         ];
     }
 }
