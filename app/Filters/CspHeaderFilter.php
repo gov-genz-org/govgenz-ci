@@ -9,13 +9,14 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
 /**
- * CSP « progressive » : compatible TinyMCE et CDN (jsDelivr) ; à durcir au fil du temps.
+ * CSP « progressive » : TinyMCE / Bootstrap / jsDelivr ; Google Fonts (layout public + guide CMS).
  */
 class CspHeaderFilter implements FilterInterface
 {
     private const POLICY = "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; "
-        . "img-src 'self' data: blob: https:; font-src 'self' data: https://cdn.jsdelivr.net; "
-        . "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+        . "img-src 'self' data: blob: https:; "
+        . "font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; "
+        . "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; "
         . "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
         . "connect-src 'self'";
 

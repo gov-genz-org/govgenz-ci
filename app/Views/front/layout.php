@@ -39,15 +39,6 @@ if ($footerCmsHtml !== '' && preg_match('/^<div\s+class="footer__columns(?:\s[^"
 </head>
 <body class="ggz-public-theme">
 <a class="ggz-skip-link" href="#main-content"><?= esc(lang('Site.skip_to_content')) ?></a>
-<?php if (ENVIRONMENT !== 'development') : ?>
-    <div class="provisoire-bar">
-        <div class="provisoire-bar__inner">
-            <span class="provisoire-bar__dot" aria-hidden="true"></span>
-            <span><?= esc(lang('Site.provisoire_bar')) ?></span>
-            <span class="provisoire-bar__dot" aria-hidden="true"></span>
-        </div>
-    </div>
-<?php endif; ?>
 <header class="header" id="header">
     <div class="header__inner">
         <a href="<?= esc(localized_site_url(''), 'attr') ?>" class="header__logo">
