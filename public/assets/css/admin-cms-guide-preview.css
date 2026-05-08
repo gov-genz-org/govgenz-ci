@@ -242,6 +242,15 @@
     text-decoration: underline;
 }
 
+/* Aperçu pied de page réservé site-footer (même enveloppe que le layout public) */
+.cms-guide-sample__canvas--footer {
+    padding: 0;
+}
+
+.cms-guide-preview-host--footer {
+    padding: 1.25rem 1rem 1.5rem;
+}
+
 /*
  * Le layout admin impose #121417 sur #main-content h1–h3 et #212529 sur .card-body ;
  * sans cette passe, les titres de l’aperçu « Rendu » restent noirs.

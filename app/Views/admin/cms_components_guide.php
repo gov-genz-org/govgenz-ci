@@ -9,7 +9,7 @@ declare(strict_types=1);
 <div class="mb-4">
     <h1 class="h3 mb-2">Composants HTML du site public</h1>
     <p class="text-muted mb-0">
-        Les blocs ci-dessous reprennent les classes du template (<span class="font-monospace small">section__*</span>, <span class="font-monospace small">cercle__*</span>, etc.). Sous chaque extrait : un aperçu isolé dans la charte sombre (sans publier de page dédiée).
+        Les blocs ci-dessous reprennent les classes du template (<span class="font-monospace small">section__*</span>, <span class="font-monospace small">cercle__*</span>, <span class="font-monospace small">footer__*</span>, etc.). Sous chaque extrait : un aperçu isolé dans la charte sombre (sans publier de page dédiée). Pour le pied de page éditable, voir les sections «&nbsp;site-footer&nbsp;» (slug réservé).
     </p>
 </div>
 
@@ -24,7 +24,9 @@ declare(strict_types=1);
         $canvas = match ($sec['id']) {
             'wire-full-section' => null,
             'home-program' => null,
-            'section-header',
+            'site-footer' => '__footer__',
+            'site-footer-minimal' => '__footer__',
+            'section-header' => 'section section--qui',
             'cercles' => 'section section--qui',
             'adn' => 'section section--adn',
             'structure' => 'section section--structure',
@@ -50,6 +52,18 @@ declare(strict_types=1);
                         <div class="cms-guide-sample__canvas cms-guide-sample__canvas--flush">
                             <div class="ggz-public-theme cms-guide-preview-host ggz-main-shell">
                                 <?= $sec['html'] ?>
+                            </div>
+                        </div>
+                    <?php elseif ($canvas === '__footer__') : ?>
+                        <div class="cms-guide-sample__canvas cms-guide-sample__canvas--footer">
+                            <div class="ggz-public-theme cms-guide-preview-host ggz-main-shell cms-guide-preview-host--footer">
+                                <footer class="footer">
+                                    <div class="footer__inner">
+                                        <div class="footer__columns">
+                                            <?= $sec['html'] ?>
+                                        </div>
+                                    </div>
+                                </footer>
                             </div>
                         </div>
                     <?php else : ?>

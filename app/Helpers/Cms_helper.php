@@ -167,6 +167,17 @@ if (! function_exists('cms_page_content_mode')) {
     }
 }
 
+if (! function_exists('cms_footer_embed_slug')) {
+    /**
+     * Slug réservé : page CMS publiée dont le corps remplace les colonnes du pied de page (FR et EN).
+     * L’URL /site-footer n’est pas exposée publiquement.
+     */
+    function cms_footer_embed_slug(): string
+    {
+        return 'site-footer';
+    }
+}
+
 if (! function_exists('cms_render_page_body')) {
     /**
      * Corps principal affiché sur le site (HTML depuis éditeur ou blocs structurés).

@@ -52,6 +52,11 @@ class Page extends BaseController
      */
     public function show(string $slug)
     {
+        helper('cms');
+        if (strtolower(trim($slug)) === cms_footer_embed_slug()) {
+            throw PageNotFoundException::forPageNotFound('Page introuvable.');
+        }
+
         return $this->renderSlug($slug, '');
     }
 }
