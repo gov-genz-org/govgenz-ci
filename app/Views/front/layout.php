@@ -16,6 +16,8 @@ use App\Libraries\SiteContext;
     <meta name="theme-color" content="#0a0a14">
     <meta name="author" content="GoV Gen Z Madagascar">
     <title><?= esc($title ?? 'GovGenZ') ?></title>
+    <link rel="icon" type="image/png" href="<?= base_url('assets/favicon.png') ?>">
+    <link rel="apple-touch-icon" href="<?= base_url('assets/logo-256.png') ?>">
     <?php if (! empty($metaDescription)) : ?>
         <meta name="description" content="<?= esc((string) $metaDescription, 'attr') ?>">
     <?php endif; ?>
