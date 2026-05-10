@@ -8,14 +8,6 @@ $pub    = cms_format_publish_date($pubRaw !== '' ? $pubRaw : null);
 <div class="wysiwyg ggz-shell-wysiwyg ggz-cms-fullwidth">
     <section class="section section--press">
         <div class="section__inner">
-            <nav class="ggz-breadcrumb" aria-label="<?= esc(lang('Site.breadcrumb_aria'), 'attr') ?>">
-                <a href="<?= esc(localized_site_url(''), 'attr') ?>"><?= esc(lang('Site.breadcrumb_home')) ?></a>
-                <span class="ggz-breadcrumb__sep" aria-hidden="true">/</span>
-                <a href="<?= esc(localized_site_url('press'), 'attr') ?>"><?= esc(lang('Site.breadcrumb_press')) ?></a>
-                <span class="ggz-breadcrumb__sep" aria-hidden="true">/</span>
-                <span class="muted"><?= esc(lang('Site.breadcrumb_press_article')) ?></span>
-            </nav>
-
             <div class="section__header">
                 <div class="section__overline"><?= esc(lang('Site.press_show_overline')) ?></div>
                 <h1 class="section__title"><?= esc($post['title']) ?></h1>

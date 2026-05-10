@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Point d’entrée HTTP lorsque la racine du domaine = racine du projet (FTP classique).
+ * En environnement conseillé (Docker, VPS), la racine Apache doit être `public/` :
+ * dans ce cas ce fichier n’est pas utilisé ; serving via `public/index.php`.
+ */
+
 use CodeIgniter\Boot;
 use Config\Paths;
 
@@ -9,7 +15,7 @@ use Config\Paths;
  *---------------------------------------------------------------
  */
 
-$minPhpVersion = '8.2'; // Aligner avec `spark` et `index.php` (racine FTP).
+$minPhpVersion = '8.2'; // Aligner avec `spark` et `public/index.php`.
 if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
     $message = sprintf(
         'Your PHP version must be %s or higher to run CodeIgniter. Current version: %s',
@@ -29,41 +35,21 @@ if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
  *---------------------------------------------------------------
  */
 
-// Path to the front controller (this file)
 define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
 
-// Ensure the current directory is pointing to the front controller's directory
 if (getcwd() . DIRECTORY_SEPARATOR !== FCPATH) {
     chdir(FCPATH);
 }
 
-/*
- *---------------------------------------------------------------
- * UTF-8 — évite le « mojibake » (ex. PrÃ©sentation) quel que soit php.ini
- *---------------------------------------------------------------
- */
 ini_set('default_charset', 'UTF-8');
 if (function_exists('mb_internal_encoding')) {
     mb_internal_encoding('UTF-8');
 }
 
-/*
- *---------------------------------------------------------------
- * BOOTSTRAP THE APPLICATION
- *---------------------------------------------------------------
- * This process sets up the path constants, loads and registers
- * our autoloader, along with Composer's, loads our constants
- * and fires up an environment-specific bootstrapping.
- */
-
-// LOAD OUR PATHS CONFIG FILE
-// This is the line that might need to be changed, depending on your folder structure.
-require FCPATH . '../app/Config/Paths.php';
-// ^^^ Change this line if you move your application folder
+require FCPATH . 'app/Config/Paths.php';
 
 $paths = new Paths();
 
-// LOAD THE FRAMEWORK BOOTSTRAP FILE
 require $paths->systemDirectory . '/Boot.php';
 
 exit(Boot::bootWeb($paths));
