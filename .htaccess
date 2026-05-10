@@ -1,0 +1,39 @@
+# Apache lorsque DocumentRoot = racine du projet (FTP mutualisé).
+# Si la racine web est `public/`, seul `public/.htaccess` suffit ; celui-ci est ignoré.
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+	Options +FollowSymlinks
+	RewriteEngine On
+
+	# Bloquer l’accès direct aux dossiers applicatifs
+	RewriteRule ^(app|writable|vendor|tests)(/|$) - [F,L]
+
+	# Statiques toujours sous public/
+	RewriteRule ^assets/(.*)$ public/assets/$1 [L]
+	RewriteRule ^js/(.*)$ public/js/$1 [L]
+	RewriteRule ^uploads/(.*)$ public/uploads/$1 [L]
+	RewriteRule ^robots\.txt$ public/robots.txt [L]
+
+	RewriteCond %{REQUEST_FILENAME} -f [OR]
+	RewriteCond %{REQUEST_FILENAME} -d
+	RewriteRule ^ - [L]
+
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} (.+)/$
+	RewriteRule ^ %1 [L,R=301]
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^([\s\S]*)$ index.php/$1 [L,NC,QSA]
+
+	RewriteCond %{HTTP:Authorization} .
+	RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+	ErrorDocument 404 index.php
+</IfModule>
+
+ServerSignature Off

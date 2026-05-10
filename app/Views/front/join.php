@@ -6,11 +6,6 @@ $sectors = $sectors ?? [];
 <div class="wysiwyg ggz-shell-wysiwyg ggz-cms-fullwidth">
     <section class="section section--join" aria-labelledby="join-heading">
         <div class="section__inner">
-            <nav class="ggz-breadcrumb" aria-label="<?= esc(lang('Site.breadcrumb_aria'), 'attr') ?>">
-                <a href="<?= esc(localized_site_url(''), 'attr') ?>"><?= esc(lang('Site.breadcrumb_home')) ?></a>
-                <span class="ggz-breadcrumb__sep" aria-hidden="true">/</span>
-                <span class="muted"><?= esc(lang('Site.breadcrumb_join')) ?></span>
-            </nav>
             <div class="section__header">
                 <div class="section__overline"><?= esc(lang('Site.join_overline')) ?></div>
                 <h1 class="section__title" id="join-heading"><?= esc(lang('Site.breadcrumb_join')) ?></h1>
