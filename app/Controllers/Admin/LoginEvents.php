@@ -99,6 +99,13 @@ class LoginEvents extends BaseController
         return $response->setBody($body);
     }
 
+    public function clearTable(): ResponseInterface
+    {
+        model(StaffLoginEventModel::class)->db->table('staff_login_events')->truncate();
+
+        return redirect()->to(site_url('admin/login-events'))->with('message', 'Le journal de connexion a été vidé.');
+    }
+
     /**
      * @param list<string> $fields
      */

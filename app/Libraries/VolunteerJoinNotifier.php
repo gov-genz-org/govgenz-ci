@@ -12,7 +12,7 @@ class VolunteerJoinNotifier
     /**
      * @param array{
      *   id: int,
-     *   sector_label: string,
+     *   sector_label: string, // un libellé par ligne (retours à la ligne)
      *   full_name: string,
      *   email: string,
      *   phone: ?string,
@@ -65,7 +65,7 @@ class VolunteerJoinNotifier
     /**
      * @param array{
      *   id: int,
-     *   sector_label: string,
+     *   sector_label: string, // un libellé par ligne (retours à la ligne)
      *   full_name: string,
      *   email: string,
      *   phone: ?string,
@@ -79,12 +79,23 @@ class VolunteerJoinNotifier
         $phone   = $payload['phone'] ?? '';
         $message = $payload['message'] ?? '';
 
+        $sectorRaw = (string) ($payload['sector_label'] ?? '');
+        $sectorLines = array_values(array_filter(array_map('trim', explode("\n", $sectorRaw)), static fn (string $s): bool => $s !== ''));
+        if ($sectorLines === []) {
+            $sectorLines = ['—'];
+        }
+
         if ($locale === 'en') {
             $lines = [
                 'New submission from the Join form.',
                 '',
                 'Record ID: ' . $payload['id'],
-                'Sector: ' . $payload['sector_label'],
+                'Sector(s):',
+            ];
+            foreach ($sectorLines as $sl) {
+                $lines[] = '  - ' . $sl;
+            }
+            $lines = array_merge($lines, [
                 'Name: ' . $payload['full_name'],
                 'Email: ' . $payload['email'],
                 'Phone: ' . ($phone !== '' ? $phone : '—'),
@@ -95,13 +106,18 @@ class VolunteerJoinNotifier
                 'IP: ' . $payload['ip_address'],
                 '',
                 'Validation URL (admin): ' . $payload['admin_validation_url'],
-            ];
+            ]);
         } else {
             $lines = [
                 'Nouvel envoi depuis le formulaire Rejoindre.',
                 '',
                 'ID en base : ' . $payload['id'],
-                'Secteur : ' . $payload['sector_label'],
+                'Secteur(s) :',
+            ];
+            foreach ($sectorLines as $sl) {
+                $lines[] = '  - ' . $sl;
+            }
+            $lines = array_merge($lines, [
                 'Nom : ' . $payload['full_name'],
                 'E-mail : ' . $payload['email'],
                 'Téléphone : ' . ($phone !== '' ? $phone : '—'),
@@ -112,7 +128,7 @@ class VolunteerJoinNotifier
                 'IP : ' . $payload['ip_address'],
                 '',
                 'URL de validation (admin) : ' . $payload['admin_validation_url'],
-            ];
+            ]);
         }
 
         return implode("\n", $lines);

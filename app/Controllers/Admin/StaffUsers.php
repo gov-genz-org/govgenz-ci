@@ -7,6 +7,7 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Libraries\StaffAuthPolicy;
 use App\Models\StaffUserModel;
+use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class StaffUsers extends BaseController
@@ -135,6 +136,45 @@ class StaffUsers extends BaseController
         $model->update($id, $data);
 
         return redirect()->to(site_url('admin/staff-users'))->with('message', 'Compte mis à jour.');
+    }
+
+    public function delete(int $id): ResponseInterface
+    {
+        $currentId = (int) session()->get('staff_user_id');
+        if ($id === $currentId) {
+            return redirect()->back()->with('error', 'Vous ne pouvez pas supprimer votre propre compte.');
+        }
+
+        $model = model(StaffUserModel::class);
+        $user  = $model->find($id);
+        if ($user === null) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $role     = (string) ($user['role'] ?? '');
+        $isActive = (int) ($user['is_active'] ?? 1) === 1;
+        if ($role === 'admin' && $isActive && $this->countOtherActiveAdmins($model, $id) < 1) {
+            return redirect()->back()->with('error', 'Impossible de supprimer le dernier administrateur actif.');
+        }
+
+        $model->delete($id, true);
+
+        return redirect()->back()->with('message', 'Compte supprimé.');
+    }
+
+    public function clearTable(): ResponseInterface
+    {
+        $currentId = (int) session()->get('staff_user_id');
+        if ($currentId < 1) {
+            return redirect()->to(site_url('admin/staff-users'))->with('error', 'Session invalide.');
+        }
+
+        model(StaffUserModel::class)->where('id !=', $currentId)->delete();
+
+        return redirect()->to(site_url('admin/staff-users'))->with(
+            'message',
+            'Les autres comptes ont été supprimés. Le vôtre est conservé.',
+        );
     }
 
     /**

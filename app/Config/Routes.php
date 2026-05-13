@@ -72,14 +72,19 @@ $routes->group('admin', ['filter' => 'authadmin'], static function ($routes) {
     $routes->post('volunteers/status/(:num)', 'Admin\\Volunteers::setStatus/$1');
 
     $routes->group('', ['filter' => 'adminonly'], static function ($routes) {
+        $routes->post('volunteers/clear-table', 'Admin\\Volunteers::clearTable');
+
         $routes->get('login-events', 'Admin\\LoginEvents::index');
         $routes->get('login-events/export', 'Admin\\LoginEvents::exportCsv');
+        $routes->post('login-events/clear-table', 'Admin\\LoginEvents::clearTable');
 
         $routes->get('staff-users', 'Admin\\StaffUsers::index');
         $routes->get('staff-users/create', 'Admin\\StaffUsers::create');
         $routes->post('staff-users/store', 'Admin\\StaffUsers::store');
         $routes->get('staff-users/edit/(:num)', 'Admin\\StaffUsers::edit/$1');
         $routes->post('staff-users/update/(:num)', 'Admin\\StaffUsers::update/$1');
+        $routes->post('staff-users/delete/(:num)', 'Admin\\StaffUsers::delete/$1');
+        $routes->post('staff-users/clear-table', 'Admin\\StaffUsers::clearTable');
     });
 });
 
