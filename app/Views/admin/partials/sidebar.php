@@ -16,6 +16,7 @@ $siteMenuActive    = $section === 'site-menu';
 $postsActive       = $section === 'posts';
 $mediaActive      = $section === 'media';
 $volunteersActive = $section === 'volunteers';
+$sectorsActive    = $section === 'sectors';
 $loginEventsActive = $section === 'login-events';
 $staffUsersActive  = $section === 'staff-users';
 $isStaffAdmin      = session()->get('staff_role') === 'admin';
@@ -42,6 +43,7 @@ $isStaffAdmin      = session()->get('staff_role') === 'admin';
         <p class="admin-sidebar-section-label" role="presentation">Données</p>
         <div class="admin-sidebar-items d-flex flex-column gap-1">
             <a class="nav-link rounded px-3 py-2 <?= $volunteersActive ? 'active bg-dark text-white' : 'text-dark' ?>" href="<?= site_url('admin/volunteers') ?>">Volontaires</a>
+            <a class="nav-link rounded px-3 py-2 <?= $sectorsActive ? 'active bg-dark text-white' : 'text-dark' ?>" href="<?= site_url('admin/sectors') ?>">Secteurs</a>
         </div>
     </div>
 

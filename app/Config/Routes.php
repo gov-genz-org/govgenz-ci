@@ -20,6 +20,9 @@ $registerFrontWithoutCatchAll = static function (RouteCollection $routes): void 
     $routes->get('press', 'Front\\Press::index');
     $routes->get('press/(:segment)', 'Front\\Press::show/$1');
 
+    $routes->get('secteurs', 'Front\\Sectors::index');
+    $routes->get('sectors', 'Front\\Sectors::index');
+
     $routes->get('join', 'Front\\Join::index');
     $routes->post('join', 'Front\\Join::submit');
 
@@ -80,6 +83,13 @@ $routes->group('admin', ['filter' => 'authadmin'], static function ($routes) {
 
     $routes->get('volunteers', 'Admin\\Volunteers::index');
     $routes->post('volunteers/status/(:num)', 'Admin\\Volunteers::setStatus/$1');
+
+    $routes->get('sectors', 'Admin\\Sectors::index');
+    $routes->get('sectors/create', 'Admin\\Sectors::create');
+    $routes->post('sectors/store', 'Admin\\Sectors::store');
+    $routes->get('sectors/edit/(:num)', 'Admin\\Sectors::edit/$1');
+    $routes->post('sectors/update/(:num)', 'Admin\\Sectors::update/$1');
+    $routes->post('sectors/delete/(:num)', 'Admin\\Sectors::delete/$1');
 
     $routes->group('', ['filter' => 'adminonly'], static function ($routes) {
         $routes->post('volunteers/clear-table', 'Admin\\Volunteers::clearTable');

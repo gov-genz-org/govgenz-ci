@@ -14,7 +14,11 @@
     const csrfName = cfg.csrfName;
     const pageUrlContact = cfg.pageUrlContact || '';
     const pageUrlPress = cfg.pageUrlPress || '';
-    if (!uploadUrl || !mediaJsonUrl || !csrfName || typeof tinymce === 'undefined') {
+    const editorSelector = typeof cfg.editorSelector === 'string' && cfg.editorSelector !== '' ? cfg.editorSelector : '#body_html';
+    if (!uploadUrl || !mediaJsonUrl || !csrfName) {
+        return;
+    }
+    if (!document.querySelector(editorSelector)) {
         return;
     }
 
@@ -330,8 +334,17 @@
         window.requestAnimationFrame(tryOnce);
     }
 
-    tinymce.init({
-        selector: '#body_html',
+    var adminTinyMceInitDone = false;
+
+    function runTinyMceInit() {
+        if (adminTinyMceInitDone) {
+            return true;
+        }
+        if (typeof tinymce === 'undefined' || typeof tinymce.init !== 'function') {
+            return false;
+        }
+        tinymce.init({
+            selector: editorSelector,
         height: 520,
         menubar: false,
         plugins: 'lists link image code table autoresize wordcount',
@@ -345,6 +358,8 @@
         branding: false,
         promotion: false,
         custom_colors: true,
+        // Sinon TinyMCE supprime data-gg-cms à l’enregistrement (grille secteurs dynamique).
+        extended_valid_elements: '+div[data-gg-cms]',
         formats: {
             cms_kicker: { block: 'p', classes: 'cms-kicker' },
             cms_lead: { block: 'p', classes: 'cms-lead' },
@@ -400,6 +415,22 @@
                             type: 'menuitem',
                             text: 'En-tête rubrique site_govgenz (.section__header)',
                             onAction: () => editor.insertContent(tplSectionHeaderGovgenz()),
+                        },
+                        {
+                            type: 'menuitem',
+                            text: 'Grille secteurs (BDD) — marqueur FR',
+                            onAction: () =>
+                                editor.insertContent(
+                                    '<div data-gg-cms="secteurs-tile-grid"></div>',
+                                ),
+                        },
+                        {
+                            type: 'menuitem',
+                            text: 'Grille secteurs (BDD) — marqueur EN',
+                            onAction: () =>
+                                editor.insertContent(
+                                    '<div data-gg-cms="sectors-tile-grid"></div>',
+                                ),
                         },
                     ]);
                 },
@@ -480,4 +511,17 @@
             });
         },
     });
+        adminTinyMceInitDone = true;
+        return true;
+    }
+
+    if (!runTinyMceInit()) {
+        var attempts = 0;
+        var tinyWait = window.setInterval(function () {
+            attempts += 1;
+            if (runTinyMceInit() || attempts > 200) {
+                window.clearInterval(tinyWait);
+            }
+        }, 50);
+    }
 })();

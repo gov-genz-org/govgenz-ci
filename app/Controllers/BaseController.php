@@ -47,13 +47,17 @@ abstract class BaseController extends Controller
         // $this->session = service('session');
     }
 
-    protected function tinymceExtraScripts(): string
+    /**
+     * @param string|null $editorSelector Sélecteur CSS du textarea TinyMCE (ex. '#body_html', '#pp-body').
+     */
+    protected function tinymceExtraScripts(?string $editorSelector = null): string
     {
         return view('admin/partials/tinymce_init', [
             'uploadUrl'        => site_url('admin/media/upload'),
             'mediaJsonUrl'     => site_url('admin/media/json'),
             'pageUrlContact'   => site_url('contact'),
             'pageUrlPress'     => site_url('press'),
+            'editorSelector'   => $editorSelector ?? '#body_html',
         ]);
     }
 
@@ -61,6 +65,14 @@ abstract class BaseController extends Controller
     protected function editorFormExtraScripts(): string
     {
         return $this->tinymceExtraScripts() . view('admin/partials/form_dirty_guard');
+    }
+
+    /**
+     * Même bundle TinyMCE que les pages, ciblant un autre champ (ex. corps projet).
+     */
+    protected function editorFormExtraScriptsForSelector(string $editorSelector): string
+    {
+        return $this->tinymceExtraScripts($editorSelector) . view('admin/partials/form_dirty_guard');
     }
 
     /**

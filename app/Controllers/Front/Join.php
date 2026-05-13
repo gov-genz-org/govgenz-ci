@@ -6,28 +6,11 @@ namespace App\Controllers\Front;
 
 use App\Controllers\BaseController;
 use App\Libraries\VolunteerJoinNotifier;
+use App\Models\SectorModel;
 use App\Models\VolunteerApplicationModel;
 
 class Join extends BaseController
 {
-    /** @var list<string> */
-    public const SECTOR_KEYS = [
-        'legal',
-        'economy',
-        'food',
-        'energy',
-        'water',
-        'education',
-        'health',
-        'infrastructure',
-        'digital',
-        'territories',
-        'environment',
-        'mines',
-        'security',
-        'citizen',
-    ];
-
     public function index()
     {
         helper('url');
@@ -47,7 +30,7 @@ HTML;
         return view('front/layout', [
             'title'           => lang('Site.join_title'),
             'main'            => view('front/join', [
-                'sectors' => self::sectorLabels(),
+                'sectors' => model(SectorModel::class)->optionsForSelect(),
             ]),
             'navActive'       => 'join',
             'mainExtraClass'  => 'ggz-layout-full',
@@ -126,39 +109,17 @@ HTML;
     }
 
     /**
-     * @return array<string, string>
-     */
-    public static function sectorLabels(): array
-    {
-        return [
-            'legal'          => lang('Site.sector_legal'),
-            'economy'        => lang('Site.sector_economy'),
-            'food'           => lang('Site.sector_food'),
-            'energy'         => lang('Site.sector_energy'),
-            'water'          => lang('Site.sector_water'),
-            'education'      => lang('Site.sector_education'),
-            'health'         => lang('Site.sector_health'),
-            'infrastructure' => lang('Site.sector_infrastructure'),
-            'digital'        => lang('Site.sector_digital'),
-            'territories'    => lang('Site.sector_territories'),
-            'environment'    => lang('Site.sector_environment'),
-            'mines'          => lang('Site.sector_mines'),
-            'security'       => lang('Site.sector_security'),
-            'citizen'        => lang('Site.sector_citizen'),
-        ];
-    }
-
-    /**
      * @param mixed $raw
      * @return list<string>
      */
     public static function normalizeSectorKeys($raw): array
     {
         $values = is_array($raw) ? $raw : (($raw === null || $raw === '') ? [] : [$raw]);
+        $allowed = array_fill_keys(model(SectorModel::class)->allowedCodes(), true);
         $out = [];
         foreach ($values as $value) {
-            $key = trim((string) $value);
-            if ($key === '' || ! in_array($key, self::SECTOR_KEYS, true)) {
+            $key = strtolower(trim((string) $value));
+            if ($key === '' || ! isset($allowed[$key])) {
                 continue;
             }
             if (! in_array($key, $out, true)) {
@@ -177,10 +138,15 @@ HTML;
      */
     public static function sectorLabelLines(array $sectorKeys): array
     {
-        $labels = self::sectorLabels();
-        $out = [];
+        $fromDb = model(SectorModel::class)->optionsForSelect();
+        $out    = [];
         foreach ($sectorKeys as $key) {
-            $out[] = $labels[$key] ?? $key;
+            if (isset($fromDb[$key])) {
+                $out[] = $fromDb[$key];
+                continue;
+            }
+            $line = lang('Site.sector_' . $key);
+            $out[] = is_string($line) && $line !== '' && ! str_starts_with($line, 'Site.') ? $line : $key;
         }
 
         return $out;

@@ -178,6 +178,81 @@ if (! function_exists('cms_footer_embed_slug')) {
     }
 }
 
+if (! function_exists('cms_sectors_render_tile_grid_html')) {
+    /**
+     * Grille des secteurs depuis la table `sectors` (même source que Join et les projets).
+     */
+    function cms_sectors_render_tile_grid_html(): string
+    {
+        $sectors = model(\App\Models\SectorModel::class)->listOrdered();
+
+        return view('front/sectors/tile_grid', ['sectors' => $sectors]);
+    }
+}
+
+if (! function_exists('cms_sector_tile_placeholder_div_patterns')) {
+    /**
+     * Motifs pour un marqueur div (TinyMCE peut ajouter &nbsp;, &quot;, &lt;br&gt;, etc.).
+     *
+     * @return list<string>
+     */
+    function cms_sector_tile_placeholder_div_patterns(string $key): array
+    {
+        $q     = preg_quote($key, '~');
+        $quote = '(?:"|\'|&quot;|&#34;|&apos;|&#39;)';
+        $val   = $quote . $q . $quote;
+        $in    = '(?=[^>]*\bdata-gg-cms\s*=\s*' . $val . ')';
+        $inner = '(?:\s|&nbsp;|&#160;|&#x0*A0;|<br\s*/?>)*';
+
+        return [
+            '~<div\b' . $in . '[^>]*>' . $inner . '</div>~iu',
+            '~<div\b' . $in . '[^>]*/>~iu',
+        ];
+    }
+}
+
+if (! function_exists('cms_apply_html_embeds')) {
+    /**
+     * Remplace les marqueurs d’embed dans le HTML éditeur (mode source recommandé).
+     *
+     * Grille secteurs (table `sectors`) — valeur équivalente EN / FR :
+     * - data-gg-cms="sectors-tile-grid"
+     * - data-gg-cms="secteurs-tile-grid"
+     * - <!-- GG_CMS_SECTORS_TILE_GRID -->
+     * - <!-- GG_CMS_SECTEURS_TILE_GRID -->
+     *
+     * Note : sans `extended_valid_elements` côté TinyMCE, l’attribut data-gg-cms peut être supprimé à l’enregistrement.
+     */
+    function cms_apply_html_embeds(string $html): string
+    {
+        if ($html === '') {
+            return '';
+        }
+
+        $gridHtml = cms_sectors_render_tile_grid_html();
+        $patterns = [];
+
+        foreach (['sectors-tile-grid', 'secteurs-tile-grid'] as $key) {
+            $patterns = array_merge($patterns, cms_sector_tile_placeholder_div_patterns($key));
+        }
+
+        $patterns[] = '#<!--\s*GG_CMS_SECTORS_TILE_GRID\s*-->#i';
+        $patterns[] = '#<!--\s*GG_CMS_SECTEURS_TILE_GRID\s*-->#i';
+
+        foreach ($patterns as $pattern) {
+            $html = preg_replace_callback(
+                $pattern,
+                static function () use ($gridHtml): string {
+                    return $gridHtml;
+                },
+                $html,
+            ) ?? $html;
+        }
+
+        return $html;
+    }
+}
+
 if (! function_exists('cms_render_page_body')) {
     /**
      * Corps principal affiché sur le site (HTML depuis éditeur ou blocs structurés).
@@ -195,10 +270,12 @@ if (! function_exists('cms_render_page_body')) {
                 return '';
             }
 
-            return \App\Libraries\CmsBodyBlocksRenderer::render($decoded);
+            $out = \App\Libraries\CmsBodyBlocksRenderer::render($decoded);
+
+            return cms_apply_html_embeds($out);
         }
 
-        return (string) ($page['body_html'] ?? '');
+        return cms_apply_html_embeds((string) ($page['body_html'] ?? ''));
     }
 }
 
