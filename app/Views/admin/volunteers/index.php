@@ -42,6 +42,7 @@ $labels = Join::sectorLabels();
         <th scope="col">Date</th>
         <th scope="col">Nom</th>
         <th scope="col">E-mail</th>
+        <th scope="col">Téléphone</th>
         <th scope="col">Secteur</th>
         <th scope="col">Statut</th>
         <th scope="col">Message</th>
@@ -58,7 +59,17 @@ $labels = Join::sectorLabels();
             <td class="small text-nowrap"><?= esc((string) ($row['created_at'] ?? '')) ?></td>
             <td><?= esc((string) ($row['full_name'] ?? '')) ?></td>
             <td><a href="mailto:<?= esc((string) ($row['email'] ?? '')) ?>" class="text-break"><?= esc((string) ($row['email'] ?? '')) ?></a></td>
-            <td><?= esc($labels[$row['sector'] ?? ''] ?? (string) ($row['sector'] ?? '')) ?></td>
+            <td class="text-nowrap">
+                <?php $phone = trim((string) ($row['phone'] ?? '')); ?>
+                <?= $phone !== '' ? esc($phone) : '<span class="text-muted small">—</span>' ?>
+            </td>
+            <td>
+                <?php
+                $sectorRaw = (string) ($row['sector'] ?? '');
+                $sectorKeys = Join::normalizeSectorKeys(explode(',', $sectorRaw));
+                ?>
+                <?= esc($sectorKeys !== [] ? Join::sectorLabelsText($sectorKeys) : $sectorRaw) ?>
+            </td>
             <td>
                 <?php if ($status === 'new') : ?>
                     <span class="badge text-bg-primary">Nouvelle</span>

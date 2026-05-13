@@ -720,7 +720,7 @@ input,
 textarea,
 select {
     width: 100%;
-    max-width: 32rem;
+    max-width: 35rem;
     padding: 0.55rem 0.7rem;
     margin-top: 0.35rem;
     border-radius: 10px;
@@ -731,13 +731,17 @@ select {
     font-size: 1rem;
 }
 
+select[multiple] {
+    min-height: 12rem;
+}
+
 textarea {
     min-height: 8rem;
     resize: vertical;
 }
 
 /* Hors vocabulaire template (.btn--primary / .btn--ghost) — évite d’écraser FR/EN et les CTA site_govgenz */
-button:not(.lang-toggle):not(.menu-toggle),
+button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear),
 .btn:not(.btn--primary):not(.btn--ghost) {
     display: inline-flex;
     align-items: center;
@@ -764,7 +768,7 @@ button:not(.lang-toggle):not(.menu-toggle),
         border-color 0.2s ease;
 }
 
-button:not(.lang-toggle):not(.menu-toggle):hover,
+button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):hover,
 .btn:not(.btn--primary):not(.btn--ghost):hover {
     filter: brightness(1.05);
 }
@@ -1013,7 +1017,7 @@ button.ggz-btn-urgent:hover,
     font-family: var(--ggz-font-sans);
 }
 
-#main-content.ggz-main-shell .ggz-page-join .ggz-form input,
+#main-content.ggz-main-shell .ggz-page-join .ggz-form input:not(.multi-select-search):not(.iti__search-input),
 #main-content.ggz-main-shell .ggz-page-join .ggz-form textarea,
 #main-content.ggz-main-shell .ggz-page-join .ggz-form select {
     font-family: var(--ggz-font-sans);
@@ -1030,16 +1034,37 @@ button.ggz-btn-urgent:hover,
         box-shadow 0.18s ease;
 }
 
-#main-content.ggz-main-shell .ggz-page-join .ggz-form :is(input, textarea, select):hover {
+#main-content.ggz-main-shell .ggz-page-join .ggz-phone-row {
+    display: grid;
+    grid-template-columns: minmax(9rem, 11rem) minmax(0, 1fr);
+    gap: 0.65rem;
+}
+
+#main-content.ggz-main-shell .ggz-page-join .ggz-form input:not(.multi-select-search):not(.iti__search-input):hover,
+#main-content.ggz-main-shell .ggz-page-join .ggz-form textarea:hover,
+#main-content.ggz-main-shell .ggz-page-join .ggz-form select:hover {
     border-color: rgba(90, 102, 122, 0.95);
 }
 
-#main-content.ggz-main-shell .ggz-page-join .ggz-form :is(input, textarea, select):focus {
+#main-content.ggz-main-shell .ggz-page-join .ggz-form input:not(.multi-select-search):not(.iti__search-input):focus,
+#main-content.ggz-main-shell .ggz-page-join .ggz-form textarea:focus,
+#main-content.ggz-main-shell .ggz-page-join .ggz-form select:focus {
     outline: none;
-    border-color: rgba(220, 38, 38, 0.55);
+    /* Pêche / corail : pas le rouge « erreur » (220,38,38) */
+    border-color: rgba(255, 164, 138, 0.72);
     box-shadow:
-        0 0 0 3px rgba(220, 38, 38, 0.18),
+        0 0 0 3px rgba(255, 146, 112, 0.22),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Liste native seulement (pas le <select> masqué dans multi-select-dropdown-js) */
+#main-content.ggz-main-shell .ggz-page-join .ggz-field > select[multiple] {
+    min-height: 15rem;
+    line-height: 1.5;
+}
+
+#main-content.ggz-main-shell .ggz-page-join #phone_country {
+    min-width: 11rem;
 }
 
 #main-content.ggz-main-shell .ggz-page-join .ggz-fieldset {
@@ -1106,7 +1131,9 @@ button.ggz-btn-urgent:hover,
 }
 
 @media (prefers-reduced-motion: reduce) {
-    #main-content.ggz-main-shell .ggz-page-join .ggz-form :is(input, textarea, select):focus {
+    #main-content.ggz-main-shell .ggz-page-join .ggz-form input:not(.multi-select-search):not(.iti__search-input):focus,
+    #main-content.ggz-main-shell .ggz-page-join .ggz-form textarea:focus,
+    #main-content.ggz-main-shell .ggz-page-join .ggz-form select:focus {
         transition: none;
     }
 }
@@ -1171,6 +1198,7 @@ button.ggz-btn-urgent:hover,
     line-height: 1.5;
     color: var(--ggz-text-meta);
     display: -webkit-box;
+    line-clamp: 4;
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
@@ -1191,7 +1219,7 @@ button.ggz-btn-urgent:hover,
         transform: none;
     }
 
-    button:not(.lang-toggle):not(.menu-toggle),
+    button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear),
     .btn:not(.btn--primary):not(.btn--ghost),
     .card,
     .ggz-press-card {
