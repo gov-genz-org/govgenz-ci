@@ -30,12 +30,17 @@ class Join extends BaseController
 
     public function index()
     {
-        $extraHead = <<<'HTML'
+        helper('url');
+        $multiSelectBase = base_url('assets/vendor/multi-select-dropdown-js/1.0.3/');
+
+        $extraHead = <<<HTML
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/css/intlTelInput.css">
+<link rel="stylesheet" href="{$multiSelectBase}MultiSelect.min.css">
 <link rel="stylesheet" href="/assets/css/join-enhancements.css">
 HTML;
-        $extraScripts = <<<'HTML'
+        $extraScripts = <<<HTML
 <script defer src="https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/js/intlTelInput.min.js"></script>
+<script defer src="{$multiSelectBase}MultiSelect.min.js"></script>
 <script defer src="/js/front/join-enhancements.js"></script>
 HTML;
 

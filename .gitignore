@@ -133,3 +133,4 @@ _modules/*
 #-------------------------
 /public/uploads/cms/*
 !/public/uploads/cms/.htaccess
+env.production.example
