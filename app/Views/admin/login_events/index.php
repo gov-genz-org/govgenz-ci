@@ -23,6 +23,11 @@ if ($queryParams !== []) {
 
 <div class="d-flex flex-wrap align-items-end gap-2 gap-md-3 mb-3">
     <a href="<?= esc($exportUrl) ?>" class="btn btn-outline-secondary btn-sm">Exporter CSV</a>
+    <form method="post" action="<?= site_url('admin/login-events/clear-table') ?>"
+          onsubmit="return confirm('Vider tout le journal de connexion ? Cette action est irréversible.');">
+        <?= csrf_field() ?>
+        <button type="submit" class="btn btn-outline-danger btn-sm">Vider la table</button>
+    </form>
     <form method="get" action="<?= site_url('admin/login-events') ?>" class="d-flex flex-wrap align-items-end gap-2 ms-md-auto">
         <div>
             <label class="small text-muted mb-0 d-block" for="le-search-q">E-mail (fragment)</label>

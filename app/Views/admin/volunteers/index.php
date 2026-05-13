@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 use App\Controllers\Front\Join;
 
-$labels = Join::sectorLabels();
-
 /** @var list<array<string, mixed>> $rows */
 /** @var string $volunteerFilter */
 /** @var \CodeIgniter\Pager\Pager $pager */
+
+$isStaffAdmin = session()->get('staff_role') === 'admin';
 ?>
 <h1 class="h3 mb-1">Candidatures volontaires</h1>
 <p class="text-muted small mb-3">Demandes envoyées depuis le formulaire <strong>Rejoindre</strong> du site public.</p>
@@ -22,6 +22,13 @@ $labels = Join::sectorLabels();
             <option value="reviewed" <?= $volunteerFilter === 'reviewed' ? 'selected' : '' ?>>Traitées</option>
         </select>
     </form>
+    <?php if ($isStaffAdmin && $rows !== []) : ?>
+        <form method="post" action="<?= site_url('admin/volunteers/clear-table') ?>" class="ms-md-auto"
+              onsubmit="return confirm('Supprimer toutes les candidatures volontaires ? Cette action est irréversible.');">
+            <?= csrf_field() ?>
+            <button type="submit" class="btn btn-outline-danger btn-sm">Vider la table</button>
+        </form>
+    <?php endif; ?>
 </div>
 
 <?php if ($rows === []) : ?>
@@ -43,9 +50,7 @@ $labels = Join::sectorLabels();
         <th scope="col">Nom</th>
         <th scope="col">E-mail</th>
         <th scope="col">Téléphone</th>
-        <th scope="col">Secteur</th>
         <th scope="col">Statut</th>
-        <th scope="col">Message</th>
         <th scope="col" class="text-end">Actions</th>
     </tr>
     </thead>
@@ -64,13 +69,6 @@ $labels = Join::sectorLabels();
                 <?= $phone !== '' ? esc($phone) : '<span class="text-muted small">—</span>' ?>
             </td>
             <td>
-                <?php
-                $sectorRaw = (string) ($row['sector'] ?? '');
-                $sectorKeys = Join::normalizeSectorKeys(explode(',', $sectorRaw));
-                ?>
-                <?= esc($sectorKeys !== [] ? Join::sectorLabelsText($sectorKeys) : $sectorRaw) ?>
-            </td>
-            <td>
                 <?php if ($status === 'new') : ?>
                     <span class="badge text-bg-primary">Nouvelle</span>
                 <?php elseif ($status === 'reviewed') : ?>
@@ -79,20 +77,10 @@ $labels = Join::sectorLabels();
                     <span class="badge text-bg-secondary"><?= esc($status) ?></span>
                 <?php endif; ?>
             </td>
-            <td style="max-width: 14rem;">
-                <?php if ($msg === '') : ?>
-                    <span class="text-muted small">—</span>
-                <?php else : ?>
-                    <span class="small d-block text-truncate" title="<?= esc($msg) ?>"><?= esc(mb_strimwidth($msg, 0, 90, '…')) ?></span>
-                    <button type="button" class="btn btn-link btn-sm p-0 align-baseline" data-bs-toggle="collapse" data-bs-target="#vol-msg-<?= $id ?>" aria-expanded="false">Lire tout</button>
-                    <div class="collapse mt-1" id="vol-msg-<?= $id ?>">
-                        <div class="small border rounded p-2 bg-light"><?= nl2br(esc($msg)) ?></div>
-                    </div>
-                <?php endif; ?>
-            </td>
             <td class="text-end text-nowrap">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#volDetailModal" data-vol-id="<?= $id ?>">Détail</button>
                 <?php if ($status !== 'reviewed') : ?>
-                    <form action="<?= site_url('admin/volunteers/status/' . $id) ?>" method="post" class="d-inline">
+                    <form action="<?= site_url('admin/volunteers/status/' . $id) ?>" method="post" class="d-inline ms-1">
                         <?= csrf_field() ?>
                         <input type="hidden" name="status" value="reviewed">
                         <button type="submit" class="btn btn-outline-success btn-sm">Marquer traitée</button>
@@ -111,6 +99,70 @@ $labels = Join::sectorLabels();
     </tbody>
 </table>
 </div>
+
+<?php foreach ($rows as $row) :
+    $id = (int) ($row['id'] ?? 0);
+    $msg = (string) ($row['message'] ?? '');
+    $sectorRaw = (string) ($row['sector'] ?? '');
+    $sectorKeys = Join::normalizeSectorKeys(explode(',', $sectorRaw));
+    ?>
+<div id="vol-detail-<?= $id ?>" class="d-none">
+    <dl class="row mb-0">
+        <dt class="col-sm-3">Secteur(s)</dt>
+        <dd class="col-sm-9 mb-3">
+            <?php if ($sectorKeys !== []) : ?>
+                <ul class="mb-0 ps-3">
+                    <?php foreach (Join::sectorLabelLines($sectorKeys) as $sectorLine) : ?>
+                    <li><?= esc($sectorLine) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php elseif ($sectorRaw !== '') : ?>
+                <?= esc($sectorRaw) ?>
+            <?php else : ?>
+                <span class="text-muted">—</span>
+            <?php endif; ?>
+        </dd>
+        <dt class="col-sm-3">Message</dt>
+        <dd class="col-sm-9 mb-0">
+            <?php if ($msg !== '') : ?>
+                <div class="small border rounded p-2 bg-light"><?= nl2br(esc($msg)) ?></div>
+            <?php else : ?>
+                <span class="text-muted">—</span>
+            <?php endif; ?>
+        </dd>
+    </dl>
+</div>
+<?php endforeach; ?>
+
+<div class="modal fade" id="volDetailModal" tabindex="-1" aria-labelledby="volDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title h5" id="volDetailModalLabel">Détail candidature</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body" id="volDetailModalBody"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function () {
+    var modal = document.getElementById('volDetailModal');
+    if (!modal) {
+        return;
+    }
+    modal.addEventListener('show.bs.modal', function (e) {
+        var btn = e.relatedTarget;
+        var id = btn && btn.getAttribute('data-vol-id');
+        var src = id ? document.getElementById('vol-detail-' + id) : null;
+        var body = document.getElementById('volDetailModalBody');
+        if (body) {
+            body.innerHTML = src ? src.innerHTML : '<p class="text-muted mb-0">Contenu introuvable.</p>';
+        }
+    });
+})();
+</script>
+
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3 small text-muted">
     <div><?= (int) $pager->getTotal('default') ?> résultat(s)</div>
     <?php if ($pager->getPageCount('default') > 1) : ?>

@@ -170,9 +170,12 @@ HTML;
     }
 
     /**
+     * Libellés humains pour les clés secteur, dans l’ordre de sélection.
+     *
      * @param list<string> $sectorKeys
+     * @return list<string>
      */
-    public static function sectorLabelsText(array $sectorKeys): string
+    public static function sectorLabelLines(array $sectorKeys): array
     {
         $labels = self::sectorLabels();
         $out = [];
@@ -180,7 +183,15 @@ HTML;
             $out[] = $labels[$key] ?? $key;
         }
 
-        return implode(' | ', $out);
+        return $out;
+    }
+
+    /**
+     * @param list<string> $sectorKeys
+     */
+    public static function sectorLabelsText(array $sectorKeys): string
+    {
+        return implode("\n", self::sectorLabelLines($sectorKeys));
     }
 
 }

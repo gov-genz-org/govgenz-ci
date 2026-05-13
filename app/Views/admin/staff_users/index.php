@@ -11,8 +11,15 @@ helper('admin');
 <h1 class="h3 mb-1">Équipe</h1>
 <p class="text-muted small mb-3">Comptes d’accès au back-office. Seuls les administrateurs voient cet écran.</p>
 
-<div class="mb-3">
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
     <a href="<?= site_url('admin/staff-users/create') ?>" class="btn btn-primary btn-sm">Inviter un compte</a>
+    <?php if ($users !== []) : ?>
+        <form method="post" action="<?= site_url('admin/staff-users/clear-table') ?>" class="ms-md-auto"
+              onsubmit="return confirm('Supprimer tous les comptes équipe sauf le vôtre ? Cette action est irréversible.');">
+            <?= csrf_field() ?>
+            <button type="submit" class="btn btn-outline-danger btn-sm">Vider la table</button>
+        </form>
+    <?php endif; ?>
 </div>
 
 <?php if ($users === []) : ?>
@@ -35,6 +42,8 @@ helper('admin');
         $rid = (string) ($u['role'] ?? '');
         $roleLabel = $roles[$rid] ?? $rid;
         $active = (int) ($u['is_active'] ?? 1) === 1;
+        $uid = (int) ($u['id'] ?? 0);
+        $isSelf = $uid === (int) session()->get('staff_user_id');
         ?>
         <tr>
             <td><?= esc((string) ($u['email'] ?? '')) ?></td>
@@ -46,8 +55,15 @@ helper('admin');
                     <span class="badge text-bg-secondary">Désactivé</span>
                 <?php endif; ?>
             </td>
-            <td class="text-end">
-                <a href="<?= site_url('admin/staff-users/edit/' . (int) ($u['id'] ?? 0)) ?>" class="btn btn-outline-primary btn-sm">Modifier</a>
+            <td class="text-end text-nowrap">
+                <a href="<?= site_url('admin/staff-users/edit/' . $uid) ?>" class="btn btn-outline-primary btn-sm">Modifier</a>
+                <?php if (! $isSelf) : ?>
+                    <form method="post" action="<?= site_url('admin/staff-users/delete/' . $uid) ?>" class="d-inline ms-1"
+                          onsubmit="return confirm('Supprimer définitivement ce compte ? Cette action est irréversible.');">
+                        <?= csrf_field() ?>
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                    </form>
+                <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>
