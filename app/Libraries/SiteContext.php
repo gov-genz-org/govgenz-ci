@@ -4,12 +4,20 @@ declare(strict_types=1);
 
 namespace App\Libraries;
 
+use CodeIgniter\HTTP\RequestInterface;
+
 /**
  * Contexte site public : locale active et segments d’URL après préfixe éventuel /en.
+ *
+ * `projects` = même appli servie sur le vhost configuré par app.projectsHost (dossier B FTP).
  */
 final class SiteContext
 {
-    private static string $siteId = 'main';
+    public const SITE_MAIN = 'main';
+
+    public const SITE_PROJECTS = 'projects';
+
+    private static string $siteId = self::SITE_MAIN;
 
     private static string $locale = 'fr';
 
@@ -25,7 +33,92 @@ final class SiteContext
 
     public static function setMain(): void
     {
-        self::$siteId = 'main';
+        self::$siteId = self::SITE_MAIN;
+    }
+
+    public static function setProjects(): void
+    {
+        self::$siteId = self::SITE_PROJECTS;
+    }
+
+    public static function isProjectsSite(): bool
+    {
+        return self::$siteId === self::SITE_PROJECTS;
+    }
+
+    /**
+     * HTTP_HOST correspond à app.projectsHost (insensible à la casse).
+     *
+     * Tolère l’écart fréquent en local : .env = projects.localhost:8082 alors que le navigateur
+     * envoie seulement projects.localhost — on accepte si SERVER_PORT = 8082.
+     */
+    public static function httpHostMatchesProjectsHost(?RequestInterface $request = null): bool
+    {
+        if (is_cli()) {
+            return false;
+        }
+
+        $raw = trim($request !== null
+            ? (string) $request->getServer('HTTP_HOST')
+            : (string) ($_SERVER['HTTP_HOST'] ?? ''));
+
+        $configured = trim((string) env('app.projectsHost', ''));
+        if ($raw === '' || $configured === '') {
+            return false;
+        }
+
+        if (strcasecmp($raw, $configured) === 0) {
+            return true;
+        }
+
+        $rawParts = self::splitHostAndPort($raw);
+        $cfgParts = self::splitHostAndPort($configured);
+
+        if (strcasecmp($rawParts['host'], $cfgParts['host']) !== 0) {
+            return false;
+        }
+
+        if ($cfgParts['port'] === null) {
+            return true;
+        }
+
+        if ($rawParts['port'] !== null) {
+            return (string) $rawParts['port'] === (string) $cfgParts['port'];
+        }
+
+        $serverPort = isset($_SERVER['SERVER_PORT']) ? (string) $_SERVER['SERVER_PORT'] : '';
+
+        return $serverPort !== '' && (string) $cfgParts['port'] === $serverPort;
+    }
+
+    /**
+     * @return array{host: string, port: ?string}
+     */
+    private static function splitHostAndPort(string $value): array
+    {
+        $value = trim($value);
+        if ($value === '') {
+            return ['host' => '', 'port' => null];
+        }
+
+        if (preg_match('#^\[([^\]]+)]:(\d+)$#', $value, $m)) {
+            return ['host' => '[' . $m[1] . ']', 'port' => $m[2]];
+        }
+
+        $parts = explode(':', $value, 2);
+
+        return [
+            'host' => $parts[0],
+            'port' => isset($parts[1]) && $parts[1] !== '' ? $parts[1] : null,
+        ];
+    }
+
+    /**
+     * Développement sur un seul domaine : URLs /projects/… (prépare la future bascule sous-domaine).
+     */
+    public static function projectsPathPrefixEnabled(): bool
+    {
+        return filter_var(env('app.projectsUsePathPrefix', false), FILTER_VALIDATE_BOOLEAN);
     }
 
     public static function id(): string

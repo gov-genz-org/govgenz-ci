@@ -1,13 +1,18 @@
 <?php
 
+use App\Libraries\SiteContext;
 use CodeIgniter\Router\RouteCollection;
 
 /**
  * @var RouteCollection $routes
  */
 $registerFrontWithoutCatchAll = static function (RouteCollection $routes): void {
-    $routes->get('/', 'Front\\Home::index');
-    $routes->get('home', 'Front\\Home::index');
+    $pathPrefix      = SiteContext::projectsPathPrefixEnabled();
+    $onProjectsVhost = ! $pathPrefix && trim((string) env('app.projectsHost', '')) !== '' && SiteContext::httpHostMatchesProjectsHost();
+    $frontHomeIndex  = $onProjectsVhost ? 'Front\\Projects\\Home::index' : 'Front\\Home::index';
+
+    $routes->get('/', $frontHomeIndex);
+    $routes->get('home', $frontHomeIndex);
 
     $routes->get('about', 'Front\\Page::redirectLegacyAbout');
     $routes->get('contact', 'Front\\Page::contact');
@@ -17,6 +22,11 @@ $registerFrontWithoutCatchAll = static function (RouteCollection $routes): void 
 
     $routes->get('join', 'Front\\Join::index');
     $routes->post('join', 'Front\\Join::submit');
+
+    if (SiteContext::projectsPathPrefixEnabled()) {
+        $routes->get('projects', 'Front\\Projects\\Home::index');
+        $routes->get('projects/(.+)', 'Front\\Projects\\Home::tail/$1');
+    }
 };
 
 $registerFrontCatchAll = static function (RouteCollection $routes): void {
