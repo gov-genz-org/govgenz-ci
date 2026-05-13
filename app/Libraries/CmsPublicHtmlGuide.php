@@ -171,7 +171,7 @@ HTML,
             [
                 'id'    => 'secteurs',
                 'title' => 'Grille tuiles (contact)',
-                'intro' => 'Conteneur .tile-grid, cartes cliquables a.tile.',
+                'intro' => 'Conteneur .tile-grid, cartes cliquables a.tile. Pour afficher les 14 secteurs depuis la base (table sectors, comme Rejoindre), supprimez les tuiles statiques et insérez en mode source le marqueur décrit dans « Grille secteurs (dynamique BDD) ».',
                 'html'  => <<<'HTML'
 <div class="tile-grid">
     <a href="mailto:education@govgenz.org" class="tile reveal" data-delay="0">
@@ -180,6 +180,17 @@ HTML,
         <div class="tile__mail">education@govgenz.org</div>
     </a>
 </div>
+HTML,
+            ],
+            [
+                'id'    => 'secteurs-dynamic',
+                'title' => 'Grille secteurs (dynamique BDD)',
+                'intro' => 'Les libellés FR/EN et les e-mails viennent de la table sectors (administration > Secteurs). En mode source : même effet pour data-gg-cms="sectors-tile-grid" (nom anglais) ou data-gg-cms="secteurs-tile-grid" (nom français). Commentaires : GG_CMS_SECTORS_TILE_GRID ou GG_CMS_SECTEURS_TILE_GRID.',
+                'html'  => <<<'HTML'
+<div class="section__inner">
+    <div data-gg-cms="sectors-tile-grid"></div>
+</div>
+<p class="small text-muted">Variante française équivalente : <code>&lt;div data-gg-cms="secteurs-tile-grid"&gt;&lt;/div&gt;</code></p>
 HTML,
             ],
             [

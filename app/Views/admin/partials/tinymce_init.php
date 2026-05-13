@@ -6,8 +6,10 @@ declare(strict_types=1);
 /** @var string $mediaJsonUrl */
 /** @var string|null $pageUrlContact */
 /** @var string|null $pageUrlPress */
+/** @var string $editorSelector */
 $pageUrlContact = $pageUrlContact ?? site_url('contact');
 $pageUrlPress   = $pageUrlPress ?? site_url('press');
+$editorSelector  = $editorSelector ?? '#body_html';
 ?>
 <div class="modal fade" id="tinymce-media-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -29,7 +31,7 @@ $pageUrlPress   = $pageUrlPress ?? site_url('press');
         </div>
     </div>
 </div>
-<script defer src="https://cdn.jsdelivr.net/npm/tinymce@7/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.jsdelivr.net/npm/tinymce@7/tinymce.min.js" referrerpolicy="origin"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/js-beautify@1.15.4/js/lib/beautify.min.js" referrerpolicy="origin"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/js-beautify@1.15.4/js/lib/beautify-css.min.js" referrerpolicy="origin"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/js-beautify@1.15.4/js/lib/beautify-html.min.js" referrerpolicy="origin"></script>
@@ -40,6 +42,7 @@ $tinymceCfg = [
     'csrfName'         => csrf_token(),
     'pageUrlContact'   => $pageUrlContact,
     'pageUrlPress'     => $pageUrlPress,
+    'editorSelector'   => $editorSelector,
 ];
 ?>
 <script type="application/json" id="admin-tinymce-config"><?= json_encode($tinymceCfg, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES) ?></script>

@@ -47,6 +47,14 @@ if ($rest === 'pages') {
     $items[] = ['label' => 'Médias', 'url' => null];
 } elseif ($rest === 'volunteers') {
     $items[] = ['label' => 'Volontaires', 'url' => null];
+} elseif ($rest === 'sectors') {
+    $items[] = ['label' => 'Secteurs', 'url' => null];
+} elseif ($rest === 'sectors/create') {
+    $items[] = ['label' => 'Secteurs', 'url' => site_url('admin/sectors')];
+    $items[] = ['label' => 'Nouveau secteur', 'url' => null];
+} elseif (preg_match('#^sectors/edit/\d+$#', $rest)) {
+    $items[] = ['label' => 'Secteurs', 'url' => site_url('admin/sectors')];
+    $items[] = ['label' => 'Modifier', 'url' => null];
 } else {
     return;
 }
