@@ -98,24 +98,150 @@
   }
 
   onReady(function () {
-    const form = document.querySelector('.ggz-page-join .ggz-form');
-    const phoneInput = document.getElementById('phone');
-    const phoneCountry = document.getElementById('phone_country');
-    const phoneErrorEl = document.getElementById('phone-error');
-    const intlTelInit =
-      typeof window !== 'undefined' ? window.intlTelInput : null;
-
-    if (
-      !form ||
-      !phoneInput ||
-      !phoneCountry ||
-      typeof intlTelInit !== 'function'
-    ) {
+    var form = document.querySelector('.ggz-page-join .ggz-form');
+    if (!form) {
       return;
     }
 
-    let phoneMsgs = {};
+    var fieldMsgs = {
+      sectorRequired: form.getAttribute('data-join-msg-sector') || '',
+      fullNameRequired: form.getAttribute('data-join-msg-full-name') || '',
+      emailRequired: form.getAttribute('data-join-msg-email-req') || '',
+      emailInvalid: form.getAttribute('data-join-msg-email-invalid') || '',
+    };
 
+    var isEn =
+      (document.documentElement.getAttribute('lang') || '')
+        .toLowerCase()
+        .indexOf('en') === 0;
+    if (!fieldMsgs.sectorRequired) {
+      fieldMsgs.sectorRequired = isEn
+        ? 'Select at least one sector.'
+        : 'Sélectionnez au moins un secteur.';
+    }
+    if (!fieldMsgs.fullNameRequired) {
+      fieldMsgs.fullNameRequired = isEn
+        ? 'Full name is required.'
+        : 'Le nom complet est obligatoire.';
+    }
+    if (!fieldMsgs.emailRequired) {
+      fieldMsgs.emailRequired = isEn
+        ? 'Email address is required.'
+        : 'L’adresse e-mail est obligatoire.';
+    }
+    if (!fieldMsgs.emailInvalid) {
+      fieldMsgs.emailInvalid = isEn
+        ? 'Please enter a valid email address.'
+        : 'L’adresse e-mail n’est pas valide.';
+    }
+
+    function showFieldError(id, msg) {
+      var el = document.getElementById(id);
+      if (!el) {
+        return;
+      }
+      if (msg) {
+        el.textContent = msg;
+        el.hidden = false;
+      } else {
+        el.textContent = '';
+        el.hidden = true;
+      }
+    }
+
+    function validateRequiredFields() {
+      var sector = document.getElementById('sector');
+      var fullName = document.getElementById('full_name');
+      var email = document.getElementById('email');
+      var firstFocus = null;
+
+      showFieldError('sector-error', '');
+      showFieldError('full_name-error', '');
+      showFieldError('email-error', '');
+
+      if (sector && sector.selectedOptions.length === 0) {
+        showFieldError('sector-error', fieldMsgs.sectorRequired || '');
+        firstFocus = sector;
+      }
+      if (fullName && !fullName.value.trim()) {
+        showFieldError('full_name-error', fieldMsgs.fullNameRequired || '');
+        if (!firstFocus) {
+          firstFocus = fullName;
+        }
+      }
+      if (email) {
+        if (!email.value.trim()) {
+          showFieldError('email-error', fieldMsgs.emailRequired || '');
+          if (!firstFocus) {
+            firstFocus = email;
+          }
+        } else if (!email.checkValidity()) {
+          showFieldError(
+            'email-error',
+            fieldMsgs.emailInvalid || email.validationMessage
+          );
+          if (!firstFocus) {
+            firstFocus = email;
+          }
+        }
+      }
+
+      if (firstFocus) {
+        try {
+          firstFocus.focus();
+        } catch (eF) {
+          /* ignore */
+        }
+        return false;
+      }
+      return true;
+    }
+
+    var sectorEl = document.getElementById('sector');
+    if (sectorEl) {
+      sectorEl.addEventListener('change', function () {
+        if (sectorEl.selectedOptions.length > 0) {
+          showFieldError('sector-error', '');
+        }
+      });
+    }
+
+    var fullNameEl = document.getElementById('full_name');
+    if (fullNameEl) {
+      fullNameEl.addEventListener('input', function () {
+        if (fullNameEl.value.trim()) {
+          showFieldError('full_name-error', '');
+        }
+      });
+    }
+
+    var emailEl = document.getElementById('email');
+    if (emailEl) {
+      emailEl.addEventListener('input', function () {
+        if (emailEl.value.trim() && emailEl.checkValidity()) {
+          showFieldError('email-error', '');
+        }
+      });
+    }
+
+    var phoneInput = document.getElementById('phone');
+    var phoneCountry = document.getElementById('phone_country');
+    var phoneErrorEl = document.getElementById('phone-error');
+    var intlTelInit =
+      typeof window !== 'undefined' ? window.intlTelInput : null;
+
+    if (!phoneInput || !phoneCountry || typeof intlTelInit !== 'function') {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!validateRequiredFields()) {
+          return;
+        }
+        form.submit();
+      });
+      return;
+    }
+
+    var phoneMsgs = {};
     try {
       phoneMsgs = JSON.parse(form.getAttribute('data-phone-msgs') || '{}');
     } catch (e1) {
@@ -149,19 +275,34 @@
       }
     }
 
-    /* v25 : utilsScript / loadUtilsOnInit sont ignorés — il faut loadUtils → import dynamique du module utils */
-    const iti = intlTelInit(phoneInput, {
-      initialCountry: 'mg',
-      separateDialCode: true,
-      autoPlaceholder: 'aggressive',
-      placeholderNumberType: 'MOBILE',
-      validationNumberTypes: null,
+    var iti = null;
+    try {
+      iti = intlTelInit(phoneInput, {
+        initialCountry: 'mg',
+        separateDialCode: true,
+        autoPlaceholder: 'aggressive',
+        placeholderNumberType: 'MOBILE',
+        validationNumberTypes: null,
 
-      /* attachUtils attend une promesse qui résout vers le module ES ({ default: utils }), pas l’objet utils seul */
-      loadUtils: function () {
-        return import(ITI_UTILS_URL);
-      },
-    });
+        /* attachUtils attend une promesse qui résout vers le module ES ({ default: utils }), pas l’objet utils seul */
+        loadUtils: function () {
+          return import(ITI_UTILS_URL);
+        },
+      });
+    } catch (eInit) {
+      iti = null;
+    }
+
+    if (!iti) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!validateRequiredFields()) {
+          return;
+        }
+        form.submit();
+      });
+      return;
+    }
 
     function syncCountryCode() {
       const country = iti.getSelectedCountryData();
@@ -223,6 +364,7 @@
 
     phoneInput.addEventListener('countrychange', function () {
       syncCountryCode();
+      showFieldError('phone_country-error', '');
       runPhoneValidation();
     });
 
@@ -246,16 +388,33 @@
         return;
       }
 
+      e.preventDefault();
+
+      if (!validateRequiredFields()) {
+        return;
+      }
+
       syncCountryCode();
 
       const raw = phoneInput.value.replace(/\s/g, '').trim();
 
       if (raw === '') {
         showPhoneError('');
+        allowItiValidatedSubmit = true;
+        window.setTimeout(function () {
+          try {
+            if (typeof form.requestSubmit === 'function') {
+              form.requestSubmit();
+            } else {
+              form.submit();
+            }
+          } finally {
+            allowItiValidatedSubmit = false;
+          }
+        }, 0);
         return;
       }
 
-      e.preventDefault();
       showPhoneValidation = true;
 
       function afterUtils() {

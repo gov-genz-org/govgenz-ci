@@ -10,15 +10,19 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 /**
  * CSP « progressive » : TinyMCE / Bootstrap / jsDelivr ; Google Fonts (layout public + guide CMS).
+ * script-src-elem / style-src-elem : requis par certains agents pour <script src> / <link rel=stylesheet> tiers
+ * (ex. intl-tel-input, multi-select-dropdown-js) même si script-src / style-src sont déjà définis.
  */
 class CspHeaderFilter implements FilterInterface
 {
     private const POLICY = "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; "
         . "img-src 'self' data: blob: https:; "
-        . "font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; "
-        . "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; "
-        . "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
-        . "connect-src 'self' https://cdn.jsdelivr.net;";
+        . "font-src 'self' data: https://cdn.jsdelivr.net https://*.jsdelivr.net https://fonts.gstatic.com; "
+        . "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.jsdelivr.net https://fonts.googleapis.com; "
+        . "style-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.jsdelivr.net https://fonts.googleapis.com; "
+        . "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.jsdelivr.net; "
+        . "script-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.jsdelivr.net; "
+        . "connect-src 'self' https://cdn.jsdelivr.net https://*.jsdelivr.net;";
 
     public function before(RequestInterface $request, $arguments = null)
     {
