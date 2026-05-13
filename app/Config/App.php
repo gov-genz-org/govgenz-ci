@@ -2,10 +2,35 @@
 
 namespace Config;
 
+use App\Libraries\SiteContext;
 use CodeIgniter\Config\BaseConfig;
 
 class App extends BaseConfig
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->applyProjectsSubdomainBaseUrl();
+    }
+
+    /**
+     * Si la requête arrive sur le vhost « projects » (voir .env app.projectsHost),
+     * on force baseURL pour que site_url(), CSRF, etc. utilisent ce domaine.
+     */
+    private function applyProjectsSubdomainBaseUrl(): void
+    {
+        if (is_cli() || ! SiteContext::httpHostMatchesProjectsHost()) {
+            return;
+        }
+
+        $url = trim((string) env('app.projectsBaseURL', ''));
+        if ($url === '' || filter_var($url, FILTER_VALIDATE_URL) === false) {
+            return;
+        }
+
+        $this->baseURL = rtrim($url, '/ ') . '/';
+    }
+
     /**
      * --------------------------------------------------------------------------
      * Base Site URL
