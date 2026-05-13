@@ -2,6 +2,24 @@
 
 /** @var array<string, string> $sectors */
 $sectors = $sectors ?? [];
+
+$oldSectorRaw = old('sector');
+$oldSectors = [];
+if (is_array($oldSectorRaw)) {
+    $oldSectors = array_values(array_map(static fn ($v) => (string) $v, $oldSectorRaw));
+} elseif (is_string($oldSectorRaw) && trim($oldSectorRaw) !== '') {
+    $oldSectors = [trim($oldSectorRaw)];
+}
+
+$joinPhoneMsgs = [
+    'generic' => lang('Site.join_phone_invalid'),
+    '1'       => lang('Site.join_phone_err_country'),
+    '2'       => lang('Site.join_phone_err_short'),
+    '3'       => lang('Site.join_phone_err_long'),
+    '4'       => lang('Site.join_phone_err_local'),
+    '5'       => lang('Site.join_phone_err_length'),
+];
+$joinPhoneMsgsJson = json_encode($joinPhoneMsgs, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
 ?>
 <div class="wysiwyg ggz-shell-wysiwyg ggz-cms-fullwidth">
     <section class="section section--join" aria-labelledby="join-heading">
@@ -15,15 +33,20 @@ $sectors = $sectors ?? [];
             </div>
 
             <div class="ggz-page-join">
-                <form action="<?= esc(localized_site_url('join'), 'attr') ?>" method="post" accept-charset="UTF-8" class="ggz-form">
+                <form
+                    action="<?= esc(localized_site_url('join'), 'attr') ?>"
+                    method="post"
+                    accept-charset="UTF-8"
+                    class="ggz-form"
+                    data-phone-msgs="<?= esc($joinPhoneMsgsJson, 'attr') ?>"
+                >
                     <?= csrf_field() ?>
                     <div class="ggz-field">
                         <label for="sector"><?= esc(lang('Site.join_sector_label')) ?></label>
                         <p class="ggz-field-hint" id="sector-hint"><?= esc(lang('Site.join_sector_hint')) ?></p>
-                        <select name="sector" id="sector" required aria-describedby="sector-hint">
-                            <option value=""><?= esc(lang('Site.join_sector_placeholder')) ?></option>
+                        <select name="sector[]" id="sector" required multiple size="7" aria-describedby="sector-hint">
                             <?php foreach ($sectors as $key => $label) : ?>
-                                <option value="<?= esc($key, 'attr') ?>" <?= old('sector') === $key ? 'selected' : '' ?>><?= esc($label) ?></option>
+                                <option value="<?= esc($key, 'attr') ?>" <?= in_array($key, $oldSectors, true) ? 'selected' : '' ?>><?= esc($label) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -40,9 +63,12 @@ $sectors = $sectors ?? [];
                     </fieldset>
                     <fieldset class="ggz-fieldset ggz-fieldset--optional">
                         <legend class="ggz-fieldset-legend"><?= esc(lang('Site.join_fs_optional_legend')) ?> <span class="ggz-optional-tag"><?= esc(lang('Site.join_optional_tag')) ?></span></legend>
-                        <div class="ggz-field">
+                        <div class="ggz-field ggz-field-phone">
                             <label for="phone"><?= esc(lang('Site.join_label_phone')) ?></label>
-                            <input type="text" name="phone" id="phone" value="<?= esc(old('phone')) ?>" autocomplete="tel" inputmode="tel">
+                            <p class="ggz-field-hint" id="phone-hint"><?= esc(lang('Site.join_phone_placeholder_hint')) ?></p>
+                            <input type="hidden" name="phone_country" id="phone_country" value="<?= esc((string) old('phone_country', '+261'), 'attr') ?>">
+                            <input type="tel" name="phone_number" id="phone" value="<?= esc(old('phone_number')) ?>" autocomplete="tel-national" inputmode="tel" aria-describedby="phone-hint phone-error">
+                            <p class="ggz-field-error" id="phone-error" role="alert" hidden></p>
                         </div>
                         <div class="ggz-field">
                             <label for="message"><?= esc(lang('Site.join_label_message')) ?></label>

@@ -18,7 +18,7 @@ class CspHeaderFilter implements FilterInterface
         . "font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; "
         . "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; "
         . "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
-        . "connect-src 'self'";
+        . "connect-src 'self' https://cdn.jsdelivr.net;";
 
     public function before(RequestInterface $request, $arguments = null)
     {

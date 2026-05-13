@@ -30,6 +30,15 @@ class Join extends BaseController
 
     public function index()
     {
+        $extraHead = <<<'HTML'
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/css/intlTelInput.css">
+<link rel="stylesheet" href="/assets/css/join-enhancements.css">
+HTML;
+        $extraScripts = <<<'HTML'
+<script defer src="https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/js/intlTelInput.min.js"></script>
+<script defer src="/js/front/join-enhancements.js"></script>
+HTML;
+
         return view('front/layout', [
             'title'           => lang('Site.join_title'),
             'main'            => view('front/join', [
@@ -37,35 +46,54 @@ class Join extends BaseController
             ]),
             'navActive'       => 'join',
             'mainExtraClass'  => 'ggz-layout-full',
+            'extraHead'       => $extraHead,
+            'extraScripts'    => $extraScripts,
         ]);
     }
 
     public function submit()
     {
+        $sectorKeys = self::normalizeSectorKeys($this->request->getPost('sector'));
+
         $rules = [
-            'sector'    => 'required|in_list[' . implode(',', self::SECTOR_KEYS) . ']',
             'full_name' => 'required|max_length[255]',
             'email'     => 'required|valid_email|max_length[190]',
-            'phone'     => 'permit_empty|max_length[64]',
+            'phone_country' => 'permit_empty|regex_match[/^\+[0-9]{1,4}$/]',
+            'phone_number'  => 'permit_empty|max_length[32]|regex_match[/^[0-9][0-9 .()-]{3,31}$/]',
             'message'   => 'permit_empty|max_length[8000]',
         ];
 
-        if (! $this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        $errors = [];
+        if ($sectorKeys === []) {
+            $errors['sector'] = lang('Site.join_sector_required');
         }
 
-        $sectorKey = (string) $this->request->getPost('sector');
+        if (! $this->validate($rules)) {
+            $errors = array_merge($errors, $this->validator->getErrors());
+        }
+
+        $phoneNumber = trim((string) ($this->request->getPost('phone_number') ?? ''));
+        $phoneCountry = trim((string) ($this->request->getPost('phone_country') ?? ''));
+        if ($phoneNumber !== '' && $phoneCountry === '') {
+            $errors['phone_country'] = lang('Site.join_phone_country_required');
+        }
+
+        if ($errors !== []) {
+            return redirect()->back()->withInput()->with('errors', $errors);
+        }
+
         $fullName  = (string) $this->request->getPost('full_name');
         $emailAddr = (string) $this->request->getPost('email');
-        $phoneRaw  = $this->request->getPost('phone');
         $msgRaw    = $this->request->getPost('message');
+        $phoneFull = ($phoneNumber !== '') ? trim($phoneCountry . ' ' . $phoneNumber) : null;
+        $sectorCsv = implode(',', $sectorKeys);
 
         $model = model(VolunteerApplicationModel::class);
         $model->insert([
-            'sector'     => $sectorKey,
+            'sector'     => $sectorCsv,
             'full_name'  => $fullName,
             'email'      => $emailAddr,
-            'phone'      => $phoneRaw ?: null,
+            'phone'      => $phoneFull,
             'message'    => $msgRaw ?: null,
             'ip_address' => $this->request->getIPAddress(),
             'status'     => 'new',
@@ -74,14 +102,13 @@ class Join extends BaseController
 
         $newId = (int) $model->getInsertID();
         if ($newId > 0) {
-            $labels = self::sectorLabels();
             $adminValidationUrl = site_url('admin/volunteers') . '?status=new#vol-row-' . $newId;
             VolunteerJoinNotifier::send([
                 'id'                   => $newId,
-                'sector_label'         => $labels[$sectorKey] ?? $sectorKey,
+                'sector_label'         => self::sectorLabelsText($sectorKeys),
                 'full_name'            => $fullName,
                 'email'                => $emailAddr,
-                'phone'                => $phoneRaw ? (string) $phoneRaw : null,
+                'phone'                => $phoneFull,
                 'message'              => $msgRaw ? (string) $msgRaw : null,
                 'ip_address'           => $this->request->getIPAddress(),
                 'admin_validation_url' => $adminValidationUrl,
@@ -115,4 +142,40 @@ class Join extends BaseController
             'citizen'        => lang('Site.sector_citizen'),
         ];
     }
+
+    /**
+     * @param mixed $raw
+     * @return list<string>
+     */
+    public static function normalizeSectorKeys($raw): array
+    {
+        $values = is_array($raw) ? $raw : (($raw === null || $raw === '') ? [] : [$raw]);
+        $out = [];
+        foreach ($values as $value) {
+            $key = trim((string) $value);
+            if ($key === '' || ! in_array($key, self::SECTOR_KEYS, true)) {
+                continue;
+            }
+            if (! in_array($key, $out, true)) {
+                $out[] = $key;
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * @param list<string> $sectorKeys
+     */
+    public static function sectorLabelsText(array $sectorKeys): string
+    {
+        $labels = self::sectorLabels();
+        $out = [];
+        foreach ($sectorKeys as $key) {
+            $out[] = $labels[$key] ?? $key;
+        }
+
+        return implode(' | ', $out);
+    }
+
 }
