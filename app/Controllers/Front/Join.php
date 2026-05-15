@@ -27,10 +27,13 @@ HTML;
 <script defer src="/js/front/join-enhancements.js"></script>
 HTML;
 
+        $preselectedSectors = self::normalizeSectorKeys($this->request->getGet('sector'));
+
         return view('front/layout', [
             'title'           => lang('Site.join_title'),
             'main'            => view('front/join', [
-                'sectors' => model(SectorModel::class)->optionsForSelect(),
+                'sectors'              => model(SectorModel::class)->optionsForSelect(),
+                'preselectedSectors'   => $preselectedSectors,
             ]),
             'navActive'       => 'join',
             'mainExtraClass'  => 'ggz-layout-full',

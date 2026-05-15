@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Controllers\Front\Join;
 use App\Libraries\SiteContext;
 
 if (! function_exists('localized_site_url')) {
@@ -151,5 +152,42 @@ if (! function_exists('locale_switch_url')) {
         $path = implode('/', $mapped);
 
         return $path === '' ? site_url('/') : site_url($path);
+    }
+}
+
+if (! function_exists('public_join_url')) {
+    /**
+     * URL du formulaire Rejoindre sur le site principal, avec secteurs pré-sélectionnés.
+     *
+     * @param list<string>         $sectorKeys  codes secteur (ex. depuis sectors_csv d’un projet)
+     * @param array<string, mixed> $extraQuery paramètres GET additionnels
+     */
+    function public_join_url(array $sectorKeys = [], array $extraQuery = []): string
+    {
+        helper('url');
+        $locale = SiteContext::locale();
+
+        if (SiteContext::isProjectsSite() && ! SiteContext::projectsPathPrefixEnabled()) {
+            $mainBase = rtrim(trim((string) env('app.baseURL', '')), '/ ');
+            if ($mainBase === '' || filter_var($mainBase, FILTER_VALIDATE_URL) === false) {
+                $mainBase = rtrim((string) config('App')->baseURL, '/ ');
+            }
+            $path = $locale === 'en' ? '/en/join' : '/join';
+            $base = $mainBase . $path;
+        } else {
+            $base = localized_site_url('join');
+        }
+
+        $sectorKeys = Join::normalizeSectorKeys($sectorKeys);
+        if ($sectorKeys === [] && $extraQuery === []) {
+            return $base;
+        }
+
+        $query = $extraQuery;
+        foreach ($sectorKeys as $code) {
+            $query['sector'][] = $code;
+        }
+
+        return $base . '?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986);
     }
 }
