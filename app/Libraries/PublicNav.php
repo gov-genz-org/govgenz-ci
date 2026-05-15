@@ -54,7 +54,30 @@ final class PublicNav
             'join' => $navActive === 'join',
             'contact' => $navActive === 'contact',
             'admin_login' => $seg1 === 'admin' && $seg2 === 'login',
-            default => $navActive === '' && $seg1 === $mk,
+            // Liste programme (URL /projects ou vhost racine) : Front\Projects\Home impose navActive = "projects"
+            'projects', 'projets-programme', 'projects-program' => self::isProjectsListMenuActive($navActive, $seg1),
+            default => ($navActive === '' && $seg1 === $mk)
+                || self::isProjectsDetailMenuActive($navActive, $seg1, $mk),
         };
+    }
+
+    /**
+     * Entrée menu « liste des projets » (slug path ou slug CMS bandeau liste).
+     */
+    private static function isProjectsListMenuActive(string $navActive, string $seg1): bool
+    {
+        return $navActive === 'projects' && $seg1 === '';
+    }
+
+    /**
+     * Fiche projet : même navActive ; le 1er segment public est le slug projet.
+     */
+    private static function isProjectsDetailMenuActive(string $navActive, string $seg1, string $mk): bool
+    {
+        if ($navActive !== 'projects' || $seg1 === '') {
+            return false;
+        }
+
+        return $seg1 === $mk;
     }
 }

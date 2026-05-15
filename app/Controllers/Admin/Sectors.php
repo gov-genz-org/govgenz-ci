@@ -14,14 +14,31 @@ class Sectors extends BaseController
 {
     public function index()
     {
-        $rows = model(SectorModel::class)
-            ->orderBy('sort_order', 'ASC')
-            ->orderBy('code', 'ASC')
-            ->findAll();
+        $list = $this->adminPaginatedList(
+            model(SectorModel::class),
+            [
+                'code'          => 'code',
+                'label_fr'      => 'label_fr',
+                'contact_email' => 'contact_email',
+                'sort_order'    => 'sort_order',
+                'is_active'     => 'is_active',
+            ],
+            'sort_order',
+            'asc',
+            [],
+            null,
+            'code',
+            'ASC',
+        );
 
         return view('admin/layout', [
             'title' => 'Secteurs',
-            'main'  => view('admin/sectors/index', ['rows' => $rows]),
+            'main'  => view('admin/sectors/index', [
+                'rows'  => $list['rows'],
+                'pager' => $list['pager'],
+                'sort'  => $list['sort'],
+                'dir'   => $list['dir'],
+            ]),
         ]);
     }
 
@@ -154,6 +171,24 @@ class Sectors extends BaseController
             $errors['label_en'] = 'English label too long (255 max).';
         }
 
+        $codeFr = trim((string) $this->request->getPost('code_fr'));
+        if ($codeFr !== '') {
+            if (mb_strlen($codeFr) > 48) {
+                $errors['code_fr'] = 'Code filtre FR trop long (48 max).';
+            } elseif (! preg_match('/^[A-Za-z0-9][A-Za-z0-9_-]{0,47}$/', $codeFr)) {
+                $errors['code_fr'] = 'Code filtre : lettre ou chiffre en tête, puis lettres, chiffres, tirets ou underscores (ex. Education, Food).';
+            }
+        }
+
+        $codeEn = trim((string) $this->request->getPost('code_en'));
+        if ($codeEn !== '') {
+            if (mb_strlen($codeEn) > 48) {
+                $errors['code_en'] = 'Code filtre EN trop long (48 max).';
+            } elseif (! preg_match('/^[A-Za-z0-9][A-Za-z0-9_-]{0,47}$/', $codeEn)) {
+                $errors['code_en'] = 'Filter code (EN): leading letter or digit, then letters, digits, hyphens or underscores.';
+            }
+        }
+
         $email = trim((string) $this->request->getPost('contact_email'));
         if ($email === '') {
             $errors['contact_email'] = 'L’e-mail de contact est obligatoire.';
@@ -180,8 +215,13 @@ class Sectors extends BaseController
         $activeRaw = $this->request->getPost('is_active');
         $active    = (string) $activeRaw === '1' || $activeRaw === 1 || $activeRaw === true ? 1 : 0;
 
+        $codeFr = trim((string) $this->request->getPost('code_fr'));
+        $codeEn = trim((string) $this->request->getPost('code_en'));
+
         return [
             'code'            => $code,
+            'code_fr'         => $codeFr === '' ? null : $codeFr,
+            'code_en'         => $codeEn === '' ? null : $codeEn,
             'label_fr'        => trim((string) $this->request->getPost('label_fr')),
             'label_en'        => trim((string) $this->request->getPost('label_en')),
             'contact_email'   => trim((string) $this->request->getPost('contact_email')),

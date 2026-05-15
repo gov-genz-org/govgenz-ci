@@ -12,11 +12,31 @@ class SiteMenu extends BaseController
 {
     public function index()
     {
-        $rows = model(SiteNavItemModel::class)->orderBy('locale', 'ASC')->orderBy('sort_order', 'ASC')->orderBy('id', 'ASC')->findAll();
+        $list = $this->adminPaginatedList(
+            model(SiteNavItemModel::class),
+            [
+                'locale'     => 'locale',
+                'sort_order' => 'sort_order',
+                'label'      => 'label',
+                'href_kind'  => 'href_kind',
+                'is_active'  => 'is_active',
+            ],
+            'locale',
+            'asc',
+            [],
+            null,
+            'sort_order',
+            'ASC',
+        );
 
         return view('admin/layout', [
             'title' => 'Menu du site',
-            'main'  => view('admin/site_menu/index', ['items' => $rows]),
+            'main'  => view('admin/site_menu/index', [
+                'items' => $list['rows'],
+                'pager' => $list['pager'],
+                'sort'  => $list['sort'],
+                'dir'   => $list['dir'],
+            ]),
         ]);
     }
 

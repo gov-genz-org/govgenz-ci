@@ -8,6 +8,8 @@ helper('admin');
 /** @var string $filterOutcome */
 /** @var string $searchQuery */
 /** @var \CodeIgniter\Pager\Pager $pager */
+/** @var string $sort */
+/** @var string $dir */
 
 $queryParams = array_filter([
     'outcome' => $filterOutcome !== 'all' ? $filterOutcome : null,
@@ -29,6 +31,7 @@ if ($queryParams !== []) {
         <button type="submit" class="btn btn-outline-danger btn-sm">Vider la table</button>
     </form>
     <form method="get" action="<?= site_url('admin/login-events') ?>" class="d-flex flex-wrap align-items-end gap-2 ms-md-auto">
+        <?= admin_list_sort_hidden_fields($sort, $dir) ?>
         <div>
             <label class="small text-muted mb-0 d-block" for="le-search-q">E-mail (fragment)</label>
             <input type="search" name="q" id="le-search-q" value="<?= esc($searchQuery) ?>" class="form-control form-control-sm" placeholder="Rechercher…" maxlength="120" autocomplete="off">
@@ -54,11 +57,11 @@ if ($queryParams !== []) {
 <table class="table table-striped align-middle mb-0 small">
     <thead class="table-light">
         <tr>
-            <th>Date</th>
-            <th>Résultat</th>
+            <th><?= admin_list_sort_th('created_at', 'Date', $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('outcome', 'Résultat', $sort, $dir) ?></th>
             <th>Détail</th>
-            <th>E-mail</th>
-            <th>ID staff</th>
+            <th><?= admin_list_sort_th('email_attempt', 'E-mail', $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('staff_user_id', 'ID staff', $sort, $dir) ?></th>
             <th>IP</th>
             <th>Navigateur</th>
         </tr>
@@ -69,7 +72,7 @@ if ($queryParams !== []) {
         $uaShort = mb_strlen($ua) > 72 ? mb_substr($ua, 0, 69) . '…' : $ua;
         ?>
         <tr>
-            <td class="text-nowrap"><?= esc((string) ($ev['created_at'] ?? '')) ?></td>
+            <td class="text-nowrap"><?= admin_format_datetime($ev['created_at'] ?? null) ?></td>
             <td><span class="badge <?= (($ev['outcome'] ?? '') === 'success') ? 'text-bg-success' : 'text-bg-warning' ?>"><?= esc((string) ($ev['outcome'] ?? '')) ?></span></td>
             <td><?= esc((string) ($ev['detail'] ?? '')) ?></td>
             <td><?= esc((string) ($ev['email_attempt'] ?? '')) ?></td>
@@ -81,10 +84,5 @@ if ($queryParams !== []) {
     </tbody>
 </table>
 </div>
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3 small text-muted">
-    <div><?= (int) $pager->getTotal('default') ?> événement(s)</div>
-    <?php if ($pager->getPageCount('default') > 1) : ?>
-        <?= $pager->links('default', 'bootstrap_full') ?>
-    <?php endif; ?>
-</div>
+<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => 'événement(s)']) ?>
 <?php endif; ?>

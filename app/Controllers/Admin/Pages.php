@@ -15,8 +15,6 @@ class Pages extends BaseController
 {
     public function index()
     {
-        service('pager')->only(['status', 'q']);
-
         $status = $this->request->getGet('status');
         $filter = is_string($status) && in_array($status, ['draft', 'published'], true) ? $status : null;
 
@@ -33,17 +31,33 @@ class Pages extends BaseController
             $model = $model->groupStart()->like('title', $searchQuery)->orLike('slug', $searchQuery)->groupEnd();
         }
 
-        $pages = $model->orderBy('locale', 'ASC')->orderBy('slug', 'ASC')->paginate(static::ADMIN_LIST_PER_PAGE);
+        $list = $this->adminPaginatedList(
+            $model,
+            [
+                'locale' => 'locale',
+                'slug'   => 'slug',
+                'title'  => 'title',
+                'status' => 'status',
+            ],
+            'locale',
+            'asc',
+            ['status', 'q'],
+            null,
+            'slug',
+            'ASC',
+        );
 
-        $translationLocalesByGroup = $this->translationLocalesByGroupForRows($pages, CmsPageModel::class);
+        $translationLocalesByGroup = $this->translationLocalesByGroupForRows($list['rows'], CmsPageModel::class);
 
         return view('admin/layout', [
             'title' => 'Pages',
             'main'  => view('admin/pages/index', [
-                'pages'                       => $pages,
+                'pages'                       => $list['rows'],
                 'filterStatus'                => $filter ?? 'all',
                 'searchQuery'                 => $searchQuery,
-                'pager'                       => $model->pager,
+                'pager'                       => $list['pager'],
+                'sort'                        => $list['sort'],
+                'dir'                         => $list['dir'],
                 'translationLocalesByGroup'   => $translationLocalesByGroup,
             ]),
         ]);

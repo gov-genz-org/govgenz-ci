@@ -7,6 +7,8 @@ helper('admin');
 /** @var list<array<string, mixed>> $users */
 /** @var array<string, string> $roles */
 /** @var \CodeIgniter\Pager\Pager $pager */
+/** @var string $sort */
+/** @var string $dir */
 ?>
 <h1 class="h3 mb-1">Équipe</h1>
 <p class="text-muted small mb-3">Comptes d’accès au back-office. Seuls les administrateurs voient cet écran.</p>
@@ -31,9 +33,9 @@ helper('admin');
 <table class="table table-striped align-middle mb-0">
     <thead class="table-light">
         <tr>
-            <th>E-mail</th>
-            <th>Rôle</th>
-            <th>État</th>
+            <th><?= admin_list_sort_th('email', 'E-mail', $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('role', 'Rôle', $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('is_active', 'État', $sort, $dir) ?></th>
             <th class="text-end">Actions</th>
         </tr>
     </thead>
@@ -70,10 +72,5 @@ helper('admin');
     </tbody>
 </table>
 </div>
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3 small text-muted">
-    <div><?= (int) $pager->getTotal('default') ?> compte(s)</div>
-    <?php if ($pager->getPageCount('default') > 1) : ?>
-        <?= $pager->links('default', 'bootstrap_full') ?>
-    <?php endif; ?>
-</div>
+<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => 'compte(s)']) ?>
 <?php endif; ?>

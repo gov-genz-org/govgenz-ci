@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+helper('admin');
+
 /** @var list<array<string, mixed>> $recentPages */
 /** @var list<array<string, mixed>> $recentPosts */
 
@@ -67,7 +69,7 @@ declare(strict_types=1);
                         <li class="list-group-item d-flex justify-content-between align-items-start gap-2 py-2">
                             <div class="min-w-0 flex-grow-1">
                                 <a href="<?= site_url('admin/pages/edit/' . $rid) ?>" class="fw-medium text-decoration-none text-truncate d-block"><?= esc((string) ($rp['title'] ?? '')) ?></a>
-                                <span class="small text-muted"><code class="small"><?= esc((string) ($rp['slug'] ?? '')) ?></code> · <?= esc((string) ($rp['updated_at'] ?? '')) ?></span>
+                                <span class="small text-muted"><code class="small"><?= esc((string) ($rp['slug'] ?? '')) ?></code> · <?= admin_format_datetime($rp['updated_at'] ?? null) ?></span>
                             </div>
                             <?php if (($rp['status'] ?? '') === 'published') : ?>
                                 <span class="badge text-bg-success align-self-center flex-shrink-0">Publié</span>
@@ -96,7 +98,7 @@ declare(strict_types=1);
                         <li class="list-group-item d-flex justify-content-between align-items-start gap-2 py-2">
                             <div class="min-w-0 flex-grow-1">
                                 <a href="<?= site_url('admin/posts/edit/' . $pid) ?>" class="fw-medium text-decoration-none text-truncate d-block"><?= esc((string) ($post['title'] ?? '')) ?></a>
-                                <span class="small text-muted"><code class="small"><?= esc((string) ($post['slug'] ?? '')) ?></code> · <?= esc((string) ($post['updated_at'] ?? '')) ?></span>
+                                <span class="small text-muted"><code class="small"><?= esc((string) ($post['slug'] ?? '')) ?></code> · <?= admin_format_datetime($post['updated_at'] ?? null) ?></span>
                             </div>
                             <?php if (($post['status'] ?? '') === 'published') : ?>
                                 <span class="badge text-bg-success align-self-center flex-shrink-0">Publié</span>

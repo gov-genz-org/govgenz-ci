@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Libraries\AdminListQuery;
 use CodeIgniter\Controller;
+use CodeIgniter\Model;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -112,5 +114,43 @@ abstract class BaseController extends Controller
         }
 
         return $out;
+    }
+
+    /**
+     * Liste admin paginée avec tri (?sort= & ?dir=).
+     *
+     * @param array<string, string> $allowedSorts clé URL => colonne SQL
+     * @param list<string>          $pagerOnly    paramètres GET conservés dans la pagination
+     * @return array{rows: list<array<string, mixed>>, pager: \CodeIgniter\Pager\Pager, sort: string, dir: string}
+     */
+    protected function adminPaginatedList(
+        Model $model,
+        array $allowedSorts,
+        string $defaultSort,
+        string $defaultDir = 'desc',
+        array $pagerOnly = [],
+        ?int $perPage = null,
+        ?string $secondarySortColumn = null,
+        string $secondarySortDir = 'ASC',
+    ): array {
+        $query = new AdminListQuery(
+            $model,
+            $allowedSorts,
+            $defaultSort,
+            $defaultDir,
+            $perPage ?? static::ADMIN_LIST_PER_PAGE,
+            $pagerOnly,
+        );
+
+        if ($secondarySortColumn !== null && $secondarySortColumn !== '') {
+            $query->setSecondarySort($secondarySortColumn, $secondarySortDir);
+        }
+
+        return [
+            'rows'  => $query->paginate(),
+            'pager' => $query->pager(),
+            'sort'  => $query->sortKey(),
+            'dir'   => $query->sortDir(),
+        ];
     }
 }

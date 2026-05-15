@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
+helper('admin');
+
 /** @var list<array<string, mixed>> $items */
 /** @var int $totalMedia */
 /** @var \CodeIgniter\Pager\Pager $pager */
+/** @var string $sort */
+/** @var string $dir */
 ?>
 <h1 class="h3 mb-1">Médiathèque</h1>
 <p class="text-muted small mb-3">Glissez-déposez des fichiers ci-dessous (images, SVG, PDF), ou insérez une image depuis le bouton « Médias » dans l’éditeur des pages et articles.</p>
@@ -26,6 +30,12 @@ declare(strict_types=1);
     <div class="col-md-6 col-lg-4">
         <label class="form-label small text-muted mb-1" for="media-search">Filtrer par nom</label>
         <input type="search" class="form-control form-control-sm" id="media-search" placeholder="Tapez pour réduire la grille…" autocomplete="off">
+    </div>
+    <div class="col-auto ms-md-auto small text-muted d-flex flex-wrap gap-2 align-items-center">
+        <span class="text-muted">Tri :</span>
+        <?= admin_list_sort_th('id', 'Date d’ajout', $sort, $dir) ?>
+        <?= admin_list_sort_th('original_name', 'Nom', $sort, $dir) ?>
+        <?= admin_list_sort_th('size_bytes', 'Taille', $sort, $dir) ?>
     </div>
 </div>
     <div id="media-library-grid" class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
@@ -63,11 +73,6 @@ declare(strict_types=1);
             </div>
         <?php endforeach; ?>
     </div>
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3 small text-muted">
-    <div><?= (int) $pager->getTotal('default') ?> fichier(s)</div>
-    <?php if ($pager->getPageCount('default') > 1) : ?>
-        <?= $pager->links('default', 'bootstrap_full') ?>
-    <?php endif; ?>
-</div>
+<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => 'fichier(s)']) ?>
 <script defer src="<?= base_url('js/admin/media-library-grid.js') ?>"></script>
 <?php endif; ?>

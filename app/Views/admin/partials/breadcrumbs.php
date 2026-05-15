@@ -55,6 +55,16 @@ if ($rest === 'pages') {
 } elseif (preg_match('#^sectors/edit/\d+$#', $rest)) {
     $items[] = ['label' => 'Secteurs', 'url' => site_url('admin/sectors')];
     $items[] = ['label' => 'Modifier', 'url' => null];
+} elseif ($rest === 'project-projects') {
+    $items[] = ['label' => 'Projets programme', 'url' => null];
+} elseif ($rest === 'project-projects/create') {
+    $items[] = ['label' => 'Projets programme', 'url' => site_url('admin/project-projects')];
+    $items[] = ['label' => 'Nouveau projet', 'url' => null];
+} elseif (preg_match('#^project-projects/edit/\d+$#', $rest)) {
+    $items[] = ['label' => 'Projets programme', 'url' => site_url('admin/project-projects')];
+    $items[] = ['label' => 'Modifier', 'url' => null];
+} elseif ($rest === 'project-exchange-rates') {
+    $items[] = ['label' => 'Taux de change', 'url' => null];
 } else {
     return;
 }

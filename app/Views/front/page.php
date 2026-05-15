@@ -10,6 +10,12 @@ helper(['cms']);
 $structuredHero    = cms_page_structured_hero_active($page);
 $suppressOuterHero = $structuredHero || cms_page_suppress_outer_hero((string) ($page['slug'] ?? ''));
 $articleClass      = $suppressOuterHero ? 'wysiwyg ggz-cms-fullwidth' : 'wysiwyg ggz-page-prose';
+
+$tgroup = strtolower(trim((string) ($page['translation_group'] ?? '')));
+$slug   = strtolower(trim((string) ($page['slug'] ?? '')));
+if ($tgroup === 'projects-program-list' || in_array($slug, ['projets-programme', 'projects-program'], true)) {
+    $articleClass .= ' ggz-cms-page--projects-program-note';
+}
 ?>
 <?php if ($structuredHero) : ?>
     <?= cms_render_structured_page_hero($page) ?>

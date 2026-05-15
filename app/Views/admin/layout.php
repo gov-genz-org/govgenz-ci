@@ -89,6 +89,20 @@
             padding: 0.12em 0.4em;
             border-radius: 0.25rem;
         }
+        #main-content .admin-sort-link {
+            color: inherit;
+        }
+        #main-content .admin-sort-link:hover {
+            color: #0d6efd;
+        }
+        #main-content .admin-sort-link--active {
+            color: #0d6efd;
+        }
+        #main-content .admin-sort-arrow {
+            font-size: 0.65em;
+            opacity: 0.85;
+            vertical-align: baseline;
+        }
         #main-content .form-label {
             font-weight: 600;
             color: #212529;
@@ -196,6 +210,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <?php if (session()->get('staff_user_id')) : ?>
 <?= view('admin/partials/confirm_modal') ?>
+<script defer src="<?= base_url('js/admin/datetime-client.js') ?>"></script>
 <?php endif; ?>
 <?= $extraScripts ?? '' ?>
 <?php if (! empty($adminToastSuccess)) : ?>

@@ -468,6 +468,14 @@ article.wysiwyg p {
     margin: 0 0 1rem;
 }
 
+/* Pages CMS « liste programme projets » : note sur le corps (non affichée sur /projects). */
+#main-content article.wysiwyg.ggz-cms-page--projects-program-note > p {
+    text-align: center;
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 article.wysiwyg a:not(.btn) {
     color: var(--ggz-peach);
     font-weight: 600;
@@ -741,7 +749,7 @@ textarea {
 }
 
 /* Hors vocabulaire template (.btn--primary / .btn--ghost) — évite d’écraser FR/EN et les CTA site_govgenz */
-button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear),
+button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill),
 .btn:not(.btn--primary):not(.btn--ghost) {
     display: inline-flex;
     align-items: center;
@@ -768,7 +776,7 @@ button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti_
         border-color 0.2s ease;
 }
 
-button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):hover,
+button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.projects-program-page__pill):hover,
 .btn:not(.btn--primary):not(.btn--ghost):hover {
     filter: brightness(1.05);
 }
@@ -1215,7 +1223,7 @@ button.ggz-btn-urgent:hover,
         transform: none;
     }
 
-    button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear),
+    button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill),
     .btn:not(.btn--primary):not(.btn--ghost),
     .card,
     .ggz-press-card {

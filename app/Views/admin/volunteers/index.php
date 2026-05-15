@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
+helper('admin');
+
 use App\Controllers\Front\Join;
 
 /** @var list<array<string, mixed>> $rows */
 /** @var string $volunteerFilter */
 /** @var \CodeIgniter\Pager\Pager $pager */
+/** @var string $sort */
+/** @var string $dir */
 
 $isStaffAdmin = session()->get('staff_role') === 'admin';
 ?>
@@ -15,6 +19,7 @@ $isStaffAdmin = session()->get('staff_role') === 'admin';
 
 <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
     <form method="get" action="<?= site_url('admin/volunteers') ?>" class="d-flex align-items-center gap-2">
+        <?= admin_list_sort_hidden_fields($sort, $dir) ?>
         <label class="small text-muted mb-0" for="vol-filter">Afficher</label>
         <select name="status" id="vol-filter" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
             <option value="" <?= $volunteerFilter === 'all' ? 'selected' : '' ?>>Toutes</option>
@@ -46,11 +51,11 @@ $isStaffAdmin = session()->get('staff_role') === 'admin';
 <table class="table table-hover align-middle mb-0">
     <thead class="table-light">
     <tr>
-        <th scope="col">Date</th>
-        <th scope="col">Nom</th>
-        <th scope="col">E-mail</th>
+        <th scope="col"><?= admin_list_sort_th('created_at', 'Date', $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('full_name', 'Nom', $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('email', 'E-mail', $sort, $dir) ?></th>
         <th scope="col">Téléphone</th>
-        <th scope="col">Statut</th>
+        <th scope="col"><?= admin_list_sort_th('status', 'Statut', $sort, $dir) ?></th>
         <th scope="col" class="text-end">Actions</th>
     </tr>
     </thead>
@@ -61,7 +66,7 @@ $isStaffAdmin = session()->get('staff_role') === 'admin';
         $msg    = (string) ($row['message'] ?? '');
         ?>
         <tr id="vol-row-<?= $id ?>">
-            <td class="small text-nowrap"><?= esc((string) ($row['created_at'] ?? '')) ?></td>
+            <td class="small text-nowrap"><?= admin_format_datetime($row['created_at'] ?? null) ?></td>
             <td><?= esc((string) ($row['full_name'] ?? '')) ?></td>
             <td><a href="mailto:<?= esc((string) ($row['email'] ?? '')) ?>" class="text-break"><?= esc((string) ($row['email'] ?? '')) ?></a></td>
             <td class="text-nowrap">
@@ -163,10 +168,5 @@ $isStaffAdmin = session()->get('staff_role') === 'admin';
 })();
 </script>
 
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3 small text-muted">
-    <div><?= (int) $pager->getTotal('default') ?> résultat(s)</div>
-    <?php if ($pager->getPageCount('default') > 1) : ?>
-        <?= $pager->links('default', 'bootstrap_full') ?>
-    <?php endif; ?>
-</div>
+<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => 'résultat(s)']) ?>
 <?php endif; ?>

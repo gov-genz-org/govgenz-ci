@@ -11,6 +11,15 @@ class App extends BaseConfig
     {
         parent::__construct();
         $this->applyProjectsSubdomainBaseUrl();
+        $this->applyTimezoneFromEnv();
+    }
+
+    private function applyTimezoneFromEnv(): void
+    {
+        $tz = trim((string) env('app.timezone', ''));
+        if ($tz !== '') {
+            $this->appTimezone = $tz;
+        }
     }
 
     /**

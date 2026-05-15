@@ -24,17 +24,20 @@
     });
 
     function bindTinyMce(editor) {
-        if (!editor || editor.id !== 'body_html') {
+        if (!editor) {
+            return;
+        }
+        const el = editor.getElement();
+        if (!el || !form.contains(el)) {
             return;
         }
         editor.on('Change Undo Redo', mark);
     }
 
     if (typeof tinymce !== 'undefined') {
-        const existing = tinymce.get('body_html');
-        if (existing) {
-            bindTinyMce(existing);
-        }
+        Object.keys(tinymce.editors).forEach((id) => {
+            bindTinyMce(tinymce.editors[id]);
+        });
         tinymce.on('AddEditor', (ev) => {
             bindTinyMce(ev.editor);
         });

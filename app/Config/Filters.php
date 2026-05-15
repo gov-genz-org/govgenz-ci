@@ -83,7 +83,16 @@ class Filters extends BaseFilters
             'sitecontext',
             // CSRF global : verify() ne fait rien sur GET ; évite $methods POST sans « except ».
             // Exception : aperçu brouillon (POST volumineux + nouvel onglet) reste protégé par authadmin.
-            'csrf' => ['except' => ['admin/pages/preview-draft', 'admin/pages/preview-draft/*']],
+            'csrf' => [
+                'except' => [
+                    'admin/pages/preview-draft',
+                    'admin/pages/preview-draft/*',
+                    // Filtre AJAX liste projets (lecture seule) — évite 403 si jeton HTML périmé.
+                    'projects/filter',
+                    'filter',
+                    'en/projects/filter',
+                ],
+            ],
         ],
         'after' => [
             'secureheaders',

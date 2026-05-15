@@ -17,6 +17,8 @@ class SectorModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'code',
+        'code_fr',
+        'code_en',
         'label_fr',
         'label_en',
         'contact_email',
@@ -77,6 +79,58 @@ class SectorModel extends Model
                 continue;
             }
             $out[$code] = $this->labelForRow($row);
+        }
+
+        return $out;
+    }
+
+    /**
+     * Libellé court pour pastilles (liste projets, filtres) : code_en / code_fr selon la locale, sinon capitalisation du code.
+     */
+    public function filterPillLabelForRow(array $row, ?string $locale = null): string
+    {
+        $loc = $locale ?? SiteContext::locale();
+
+        if ($loc === 'en') {
+            $ce = trim((string) ($row['code_en'] ?? ''));
+            if ($ce !== '') {
+                return $ce;
+            }
+            $cf = trim((string) ($row['code_fr'] ?? ''));
+            if ($cf !== '') {
+                return $cf;
+            }
+        } else {
+            $cf = trim((string) ($row['code_fr'] ?? ''));
+            if ($cf !== '') {
+                return $cf;
+            }
+            $ce = trim((string) ($row['code_en'] ?? ''));
+            if ($ce !== '') {
+                return $ce;
+            }
+        }
+
+        $code = strtolower(trim((string) ($row['code'] ?? '')));
+        if ($code === '') {
+            return '';
+        }
+
+        return strtoupper($code[0]) . substr($code, 1);
+    }
+
+    /**
+     * @return array<string, string> code (minuscules) => libellé court pour filtres
+     */
+    public function optionsForProjectFilterPills(?string $locale = null): array
+    {
+        $out = [];
+        foreach ($this->listOrdered() as $row) {
+            $code = strtolower(trim((string) ($row['code'] ?? '')));
+            if ($code === '') {
+                continue;
+            }
+            $out[$code] = $this->filterPillLabelForRow($row, $locale);
         }
 
         return $out;

@@ -29,6 +29,10 @@ $registerFrontWithoutCatchAll = static function (RouteCollection $routes): void 
     if (SiteContext::projectsPathPrefixEnabled()) {
         $routes->get('projects', 'Front\\Projects\\Home::index');
         $routes->get('projects/(.+)', 'Front\\Projects\\Home::tail/$1');
+        $routes->post('projects/filter', 'Front\\Projects\\Home::filterPost');
+    }
+    if ($onProjectsVhost) {
+        $routes->post('filter', 'Front\\Projects\\Home::filterPost');
     }
 };
 
@@ -37,7 +41,14 @@ $registerFrontCatchAll = static function (RouteCollection $routes): void {
 };
 
 $registerFrontWithoutCatchAll($routes);
-$routes->get('en', 'Front\\Home::index');
+
+// /en seul : accueil anglais du site courant (principal vs vhost projets — ne pas forcer Front\Home sur projects.*).
+$pathPrefixForEnRoute     = SiteContext::projectsPathPrefixEnabled();
+$onProjectsVhostForEnRoute = ! $pathPrefixForEnRoute
+    && trim((string) env('app.projectsHost', '')) !== ''
+    && SiteContext::httpHostMatchesProjectsHost();
+$englishRootController = $onProjectsVhostForEnRoute ? 'Front\\Projects\\Home::index' : 'Front\\Home::index';
+$routes->get('en', $englishRootController);
 
 $routes->get('admin/login', 'Admin\\Auth::loginForm');
 $routes->post('admin/login', 'Admin\\Auth::loginAttempt');
@@ -90,6 +101,22 @@ $routes->group('admin', ['filter' => 'authadmin'], static function ($routes) {
     $routes->get('sectors/edit/(:num)', 'Admin\\Sectors::edit/$1');
     $routes->post('sectors/update/(:num)', 'Admin\\Sectors::update/$1');
     $routes->post('sectors/delete/(:num)', 'Admin\\Sectors::delete/$1');
+
+    $routes->get('project-projects', 'Admin\\ProjectProjects::index');
+    $routes->get('project-projects/create', 'Admin\\ProjectProjects::create');
+    $routes->post('project-projects/store', 'Admin\\ProjectProjects::store');
+    $routes->get('project-projects/edit/(:num)', 'Admin\\ProjectProjects::edit/$1');
+    $routes->post('project-projects/update/(:num)', 'Admin\\ProjectProjects::update/$1');
+    $routes->post('project-projects/duplicate/(:num)', 'Admin\\ProjectProjects::duplicate/$1');
+    $routes->post('project-projects/delete/(:num)', 'Admin\\ProjectProjects::delete/$1');
+
+    $routes->get('project-exchange-rates', 'Admin\\ProjectExchangeRates::edit');
+    $routes->post('project-exchange-rates/update', 'Admin\\ProjectExchangeRates::update');
+
+    $routes->get('geo/regions', 'Admin\\GeoCatalog::regions');
+    $routes->get('geo/districts', 'Admin\\GeoCatalog::districts');
+    $routes->get('geo/communes', 'Admin\\GeoCatalog::communes');
+    $routes->get('geo/fokontany', 'Admin\\GeoCatalog::fokontany');
 
     $routes->group('', ['filter' => 'adminonly'], static function ($routes) {
         $routes->post('volunteers/clear-table', 'Admin\\Volunteers::clearTable');
