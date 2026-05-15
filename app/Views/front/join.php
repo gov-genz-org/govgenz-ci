@@ -3,6 +3,9 @@
 /** @var array<string, string> $sectors */
 $sectors = $sectors ?? [];
 
+/** @var list<string> $preselectedSectors */
+$preselectedSectors = $preselectedSectors ?? [];
+
 /** @var array<string, string> Erreurs validation (flash) — lues ici pour affichage inline ; le layout ne les redouble pas */
 $joinErrors = session()->getFlashdata('errors');
 if (! is_array($joinErrors)) {
@@ -16,6 +19,8 @@ if (is_array($oldSectorRaw)) {
 } elseif (is_string($oldSectorRaw) && trim($oldSectorRaw) !== '') {
     $oldSectors = [trim($oldSectorRaw)];
 }
+
+$selectedSectors = $oldSectors !== [] ? $oldSectors : $preselectedSectors;
 
 $joinPhoneMsgs = [
     'generic' => lang('Site.join_phone_invalid'),
@@ -77,7 +82,7 @@ $phoneCountryErr = isset($joinErrors['phone_country']) ? (string) $joinErrors['p
                             data-close-list-on-item-select="false"
                         >
                             <?php foreach ($sectors as $key => $label) : ?>
-                                <option value="<?= esc($key, 'attr') ?>" <?= in_array($key, $oldSectors, true) ? 'selected' : '' ?>><?= esc($label) ?></option>
+                                <option value="<?= esc($key, 'attr') ?>" <?= in_array($key, $selectedSectors, true) ? 'selected' : '' ?>><?= esc($label) ?></option>
                             <?php endforeach; ?>
                         </select>
                         <p class="ggz-field-error" id="sector-error" role="alert" <?= $sectorErr === '' ? 'hidden' : '' ?>><?= esc($sectorErr) ?></p>
