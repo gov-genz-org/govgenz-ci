@@ -20,14 +20,24 @@ class StaffUsers extends BaseController
 
     public function index()
     {
-        $model = model(StaffUserModel::class);
-        $users = $model->orderBy('email', 'ASC')->paginate(static::ADMIN_LIST_PER_PAGE, 'default');
+        $list = $this->adminPaginatedList(
+            model(StaffUserModel::class),
+            [
+                'email'     => 'email',
+                'role'      => 'role',
+                'is_active' => 'is_active',
+            ],
+            'email',
+            'asc',
+        );
 
         return view('admin/layout', [
             'title' => 'Équipe',
             'main'  => view('admin/staff_users/index', [
-                'users' => $users,
-                'pager' => $model->pager,
+                'users' => $list['rows'],
+                'pager' => $list['pager'],
+                'sort'  => $list['sort'],
+                'dir'   => $list['dir'],
                 'roles' => self::ROLE_LABELS,
             ]),
         ]);

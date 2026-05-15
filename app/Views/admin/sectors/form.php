@@ -11,6 +11,8 @@ $action = $isEdit
     : site_url('admin/sectors/store');
 
 $code = old('code', $isEdit ? (string) ($sector['code'] ?? '') : '');
+$codeFr = old('code_fr', $isEdit ? (string) ($sector['code_fr'] ?? '') : '');
+$codeEn = old('code_en', $isEdit ? (string) ($sector['code_en'] ?? '') : '');
 $labelFr = old('label_fr', $isEdit ? (string) ($sector['label_fr'] ?? '') : '');
 $labelEn = old('label_en', $isEdit ? (string) ($sector['label_en'] ?? '') : '');
 $email = old('contact_email', $isEdit ? (string) ($sector['contact_email'] ?? '') : '');
@@ -22,6 +24,7 @@ $active = old('is_active', $isEdit ? (string) ((int) ($sector['is_active'] ?? 1)
     <strong>FR</strong> = texte affiché quand la langue du site est le français ;
     <strong>EN</strong> = texte when the site locale is English (including <code>/en/…</code>).
     Le <strong>code</strong> sert aux formulaires et à la base (volontaires, projets) : il est figé après création.
+    Les <strong>codes filtre FR / EN</strong> (courts) s’affichent sur les pastilles « Secteur » de la liste projets selon la langue du site ; les libellés longs restent pour les tuiles et cartes.
 </p>
 
 <form method="post" action="<?= esc($action, 'attr') ?>" class="border rounded bg-white shadow-sm p-3 p-md-4" accept-charset="UTF-8">
@@ -49,6 +52,24 @@ $active = old('is_active', $isEdit ? (string) ((int) ($sector['is_active'] ?? 1)
                 <option value="1" <?= $active === '1' ? 'selected' : '' ?>>Oui (liste publique, Join, projets)</option>
                 <option value="0" <?= $active === '0' ? 'selected' : '' ?>>Non (masqué des listes)</option>
             </select>
+        </div>
+        <div class="col-12 col-md-6">
+            <label for="sec-code-fr" class="form-label">Code filtre FR (court)</label>
+            <input type="text" name="code_fr" id="sec-code-fr" class="form-control font-monospace" maxlength="48"
+                   pattern="[A-Za-z0-9][A-Za-z0-9_-]{0,47}"
+                   title="Ex. Education, Food — lettre ou chiffre en tête"
+                   placeholder="Education"
+                   value="<?= esc($codeFr) ?>">
+            <div class="form-text">Locale FR sur <code>/projects</code>. Vide = dérivé du code.</div>
+        </div>
+        <div class="col-12 col-md-6">
+            <label for="sec-code-en" class="form-label">Filter code EN (short)</label>
+            <input type="text" name="code_en" id="sec-code-en" class="form-control font-monospace" maxlength="48"
+                   pattern="[A-Za-z0-9][A-Za-z0-9_-]{0,47}"
+                   title="e.g. Education, Food — leading letter or digit"
+                   placeholder="Education"
+                   value="<?= esc($codeEn) ?>">
+            <div class="form-text">English locale (<code>/en/projects</code>). Empty = fallback to FR code or capitalized code.</div>
         </div>
         <div class="col-12">
             <label for="sec-lab-fr" class="form-label">Libellé — français <span class="text-danger">*</span></label>

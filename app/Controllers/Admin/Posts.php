@@ -12,8 +12,6 @@ class Posts extends BaseController
 {
     public function index()
     {
-        service('pager')->only(['status', 'q']);
-
         $status = $this->request->getGet('status');
         $filter = is_string($status) && in_array($status, ['draft', 'published'], true) ? $status : null;
 
@@ -30,17 +28,31 @@ class Posts extends BaseController
             $model = $model->groupStart()->like('title', $searchQuery)->orLike('slug', $searchQuery)->groupEnd();
         }
 
-        $posts = $model->orderBy('locale', 'ASC')->orderBy('id', 'DESC')->paginate(static::ADMIN_LIST_PER_PAGE);
+        $list = $this->adminPaginatedList(
+            $model,
+            [
+                'locale'       => 'locale',
+                'slug'         => 'slug',
+                'title'        => 'title',
+                'status'       => 'status',
+                'published_at' => 'published_at',
+            ],
+            'id',
+            'desc',
+            ['status', 'q'],
+        );
 
-        $translationLocalesByGroup = $this->translationLocalesByGroupForRows($posts, CmsPostModel::class);
+        $translationLocalesByGroup = $this->translationLocalesByGroupForRows($list['rows'], CmsPostModel::class);
 
         return view('admin/layout', [
             'title' => 'Articles / presse',
             'main'  => view('admin/posts/index', [
-                'posts'                       => $posts,
+                'posts'                       => $list['rows'],
                 'filterStatus'                => $filter ?? 'all',
                 'searchQuery'                 => $searchQuery,
-                'pager'                       => $model->pager,
+                'pager'                       => $list['pager'],
+                'sort'                        => $list['sort'],
+                'dir'                         => $list['dir'],
                 'translationLocalesByGroup'   => $translationLocalesByGroup,
             ]),
         ]);
@@ -264,19 +276,23 @@ class Posts extends BaseController
             return null;
         }
 
+        helper('admin');
+
         $raw = trim((string) ($raw ?: $fallback ?: ''));
         if ($raw === '') {
-            return date('Y-m-d H:i:s');
+            $now = (new \DateTimeImmutable('now', new \DateTimeZone(admin_client_timezone())))->format('Y-m-d\TH:i:s');
+
+            return admin_datetime_local_to_storage($now) ?? gmdate('Y-m-d H:i:s');
         }
 
-        $raw = str_replace('T', ' ', $raw);
-        if (preg_match('/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}$/', $raw)) {
-            return $raw . ':00';
+        $stored = admin_datetime_local_to_storage($raw);
+        if ($stored !== null) {
+            return $stored;
         }
 
-        $ts = strtotime($raw);
+        $now = (new \DateTimeImmutable('now', new \DateTimeZone(admin_client_timezone())))->format('Y-m-d\TH:i:s');
 
-        return $ts ? date('Y-m-d H:i:s', $ts) : date('Y-m-d H:i:s');
+        return admin_datetime_local_to_storage($now) ?? gmdate('Y-m-d H:i:s');
     }
 
     private function buildUniquePostSlugForLocale(string $baseSlug, string $locale): string

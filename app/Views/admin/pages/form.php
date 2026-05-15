@@ -45,9 +45,27 @@ if ($page !== null && ($page['status'] ?? '') === 'published') {
             </div>
         </div>
     <?php endif; ?>
+    <?php
+    $slugField = strtolower(trim((string) old('slug', $page !== null ? (string) ($page['slug'] ?? '') : '')));
+    $isProjectsProgramCmsSlug = in_array($slugField, ['projets-programme', 'projects-program'], true);
+    ?>
     <div class="mb-3">
         <label class="form-label" for="slug">Slug (lettres minuscules et tirets)</label>
         <input type="text" name="slug" id="slug" class="form-control" value="<?= esc(old('slug', $page !== null ? $page['slug'] : '')) ?>" required>
+        <?php if ($isProjectsProgramCmsSlug) : ?>
+            <div class="alert alert-info border py-2 small mt-2 mb-0" role="status">
+                <strong>Page « programme projets » :</strong> ce slug est celui attendu par le site pour le bandeau de la
+                <strong>liste</strong> des projets (<code>/projects</code> ou <code>/en/projects</code> selon la config), pas l’URL de cette page CMS.
+                <?php
+                $lpFr = admin_public_projects_program_list_url('fr');
+                $lpEn = admin_public_projects_program_list_url('en');
+                ?>
+                <span class="d-block mt-2">
+                    <a href="<?= esc($lpFr, 'attr') ?>" target="_blank" rel="noopener" class="me-2">Voir la liste publique (FR)</a>
+                    <a href="<?= esc($lpEn, 'attr') ?>" target="_blank" rel="noopener">Voir la liste publique (EN)</a>
+                </span>
+            </div>
+        <?php endif; ?>
     </div>
     <div class="mb-3">
         <?php $pageLocale = old('locale', $page !== null ? (string) ($page['locale'] ?? 'fr') : 'fr'); ?>

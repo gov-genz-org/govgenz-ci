@@ -18,8 +18,6 @@ class Volunteers extends BaseController
             ? $statusGet
             : null;
 
-        service('pager')->only(['status']);
-
         $model = model(VolunteerApplicationModel::class);
         if ($filter === 'new') {
             $model = $model->where('status', 'new');
@@ -27,14 +25,27 @@ class Volunteers extends BaseController
             $model = $model->where('status', 'reviewed');
         }
 
-        $rows = $model->orderBy('created_at', 'DESC')->paginate(static::ADMIN_LIST_PER_PAGE);
+        $list = $this->adminPaginatedList(
+            $model,
+            [
+                'created_at' => 'created_at',
+                'full_name'  => 'full_name',
+                'email'      => 'email',
+                'status'     => 'status',
+            ],
+            'created_at',
+            'desc',
+            ['status'],
+        );
 
         return view('admin/layout', [
             'title' => 'Volontaires',
             'main'  => view('admin/volunteers/index', [
-                'rows'             => $rows,
+                'rows'             => $list['rows'],
                 'volunteerFilter' => $filter ?? 'all',
-                'pager'           => $model->pager,
+                'pager'           => $list['pager'],
+                'sort'            => $list['sort'],
+                'dir'             => $list['dir'],
             ]),
         ]);
     }

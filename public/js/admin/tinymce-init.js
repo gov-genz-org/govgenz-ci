@@ -334,17 +334,32 @@
         window.requestAnimationFrame(tryOnce);
     }
 
-    var adminTinyMceInitDone = false;
+    var adminTinyMceInitedIds = {};
 
-    function runTinyMceInit() {
-        if (adminTinyMceInitDone) {
+    function runTinyMceInit(optionalSelector) {
+        var sel = typeof optionalSelector === 'string' && optionalSelector !== '' ? optionalSelector : editorSelector;
+        var el = document.querySelector(sel);
+        if (!el || !el.id) {
+            return false;
+        }
+        if (adminTinyMceInitedIds[el.id]) {
+            return true;
+        }
+        if (typeof tinymce !== 'undefined' && tinymce.get(el.id)) {
+            adminTinyMceInitedIds[el.id] = true;
             return true;
         }
         if (typeof tinymce === 'undefined' || typeof tinymce.init !== 'function') {
             return false;
         }
+        if (el.id === 'pp-body') {
+            var ppPanel = document.getElementById('pp-html-panel');
+            if (ppPanel && ppPanel.classList.contains('d-none')) {
+                return false;
+            }
+        }
         tinymce.init({
-            selector: editorSelector,
+            selector: sel,
         height: 520,
         menubar: false,
         plugins: 'lists link image code table autoresize wordcount',
@@ -358,8 +373,10 @@
         branding: false,
         promotion: false,
         custom_colors: true,
-        // Sinon TinyMCE supprime data-gg-cms à l’enregistrement (grille secteurs dynamique).
-        extended_valid_elements: '+div[data-gg-cms]',
+        // Grille secteurs : data-gg-cms sur div. Attention TinyMCE : redéfinir « div » sans
+        // répéter class/id/style remplace toute la règle et supprime les classes (régression CMS).
+        extended_valid_elements:
+            'div[id|class|style|title|role|lang|dir|tabindex|contenteditable|data-gg-cms|data-mce-bogus|data-mce-type|data-mce-style|data-mce-href|data-mce-src|data-mce-selected|data-mce-fragment|data-mce-placeholder]',
         formats: {
             cms_kicker: { block: 'p', classes: 'cms-kicker' },
             cms_lead: { block: 'p', classes: 'cms-lead' },
@@ -397,6 +414,14 @@
             ' .section__title { font-family: "Bebas Neue", "Arial Narrow", sans-serif; font-size: clamp(1.75rem, 4vw, 2.6rem); line-height: 1.05; letter-spacing: -0.02em; font-weight: 400; margin: 0 0 0.65rem; color: #111827; }' +
             ' .section__lead { font-style: italic; font-size: 1rem; line-height: 1.65; color: #374151; max-width: 700px; margin: 0 auto; }',
         setup(editor) {
+            if (editor.id === 'pp-body') {
+                editor.on('init', function () {
+                    var ta = document.getElementById('pp-body');
+                    if (ta && ta.value && !editor.getContent({ format: 'text' }).trim()) {
+                        editor.setContent(ta.value);
+                    }
+                });
+            }
             editor.ui.registry.addMenuButton('ggzblocks', {
                 text: 'Blocs',
                 fetch(callback) {
@@ -511,17 +536,24 @@
             });
         },
     });
-        adminTinyMceInitDone = true;
+        adminTinyMceInitedIds[el.id] = true;
         return true;
     }
 
+    window.adminEnsureTinyMce = runTinyMceInit;
+
     if (!runTinyMceInit()) {
-        var attempts = 0;
-        var tinyWait = window.setInterval(function () {
-            attempts += 1;
-            if (runTinyMceInit() || attempts > 200) {
-                window.clearInterval(tinyWait);
-            }
-        }, 50);
+        var el0 = document.querySelector(editorSelector);
+        var ppPanel0 = document.getElementById('pp-html-panel');
+        var deferPp = el0 && el0.id === 'pp-body' && ppPanel0 && ppPanel0.classList.contains('d-none');
+        if (!deferPp) {
+            var attempts = 0;
+            var tinyWait = window.setInterval(function () {
+                attempts += 1;
+                if (runTinyMceInit() || attempts > 200) {
+                    window.clearInterval(tinyWait);
+                }
+            }, 50);
+        }
     }
 })();

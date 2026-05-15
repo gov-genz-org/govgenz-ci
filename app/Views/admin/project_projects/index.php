@@ -1,0 +1,129 @@
+<?php
+
+declare(strict_types=1);
+
+helper(['form', 'admin']);
+
+/** @var list<array<string, mixed>> $rows */
+/** @var \CodeIgniter\Pager\Pager $pager */
+/** @var string $filterStatus */
+/** @var string $filterPub */
+/** @var string $filterLocale */
+/** @var string $searchQuery */
+/** @var array<string, string> $statusLabels */
+/** @var array<string, string> $pubLabels */
+/** @var string $sort */
+/** @var string $dir */
+/** @var array<string, array<string, true>> $translationLocalesByGroup */
+?>
+<h1 class="h3 mb-1">Projets (programme)</h1>
+<div class="alert alert-light border small mb-3" role="note">
+    <p class="mb-2"><strong>Fiches projet</strong> (ci‑dessous) : contenu dynamique aligné sur <code>site_govgenz/projects-govgenz</code>, tables <code>project_*</code>.</p>
+    <p class="mb-2"><strong>Bandeau de la liste publique</strong> <code>/projects</code> (titre, chapô, méta) : ce n’est pas ce tableau — il est alimenté par des <strong>pages CMS</strong> dont les slugs sont fixés dans le code :</p>
+    <ul class="mb-2 ps-3">
+        <li>FR : <code>projets-programme</code></li>
+        <li>EN : <code>projects-program</code></li>
+    </ul>
+    <p class="mb-2 text-muted">Même <strong>groupe de traduction</strong> sur les deux lignes CMS. Le corps HTML de ces pages n’apparaît pas sur la liste ; seuls les champs « hero » sont utilisés.</p>
+    <p class="mb-0 d-flex flex-wrap gap-3 align-items-center">
+        <a href="<?= site_url('admin/pages') ?>" class="btn btn-sm btn-outline-secondary">Pages CMS</a>
+        <a href="<?= esc(admin_public_projects_program_list_url('fr'), 'attr') ?>" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary">Liste publique (FR)</a>
+        <a href="<?= esc(admin_public_projects_program_list_url('en'), 'attr') ?>" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary">Liste publique (EN)</a>
+    </p>
+</div>
+
+<div class="d-flex flex-wrap align-items-end gap-2 mb-3">
+    <a href="<?= site_url('admin/project-projects/create') ?>" class="btn btn-primary btn-sm">Nouveau projet</a>
+    <form method="get" action="<?= site_url('admin/project-projects') ?>" class="d-flex flex-wrap align-items-end gap-2 ms-md-auto">
+        <?= admin_list_sort_hidden_fields($sort, $dir) ?>
+        <div>
+            <label class="small text-muted mb-0 d-block" for="pp-q">Recherche</label>
+            <input type="search" name="q" id="pp-q" value="<?= esc($searchQuery) ?>" class="form-control form-control-sm" placeholder="Titre ou slug…" maxlength="120">
+        </div>
+        <div>
+            <label class="small text-muted mb-0 d-block" for="pp-loc">Langue</label>
+            <select name="loc" id="pp-loc" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
+                <option value="" <?= $filterLocale === 'all' ? 'selected' : '' ?>>Toutes</option>
+                <option value="fr" <?= $filterLocale === 'fr' ? 'selected' : '' ?>>FR</option>
+                <option value="en" <?= $filterLocale === 'en' ? 'selected' : '' ?>>EN</option>
+            </select>
+        </div>
+        <div>
+            <label class="small text-muted mb-0 d-block" for="pp-st">Statut métier</label>
+            <select name="status" id="pp-st" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
+                <option value="" <?= $filterStatus === 'all' ? 'selected' : '' ?>>Tous</option>
+                <?php foreach ($statusLabels as $k => $lab) : ?>
+                    <option value="<?= esc($k) ?>" <?= $filterStatus === $k ? 'selected' : '' ?>><?= esc($lab) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div>
+            <label class="small text-muted mb-0 d-block" for="pp-pub">Publication</label>
+            <select name="pub" id="pp-pub" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
+                <option value="" <?= $filterPub === 'all' ? 'selected' : '' ?>>Toutes</option>
+                <?php foreach ($pubLabels as $k => $lab) : ?>
+                    <option value="<?= esc($k) ?>" <?= $filterPub === $k ? 'selected' : '' ?>><?= esc($lab) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-outline-secondary btn-sm">Filtrer</button>
+    </form>
+</div>
+
+<?php if ($rows === []) : ?>
+    <div class="admin-empty">
+        <p class="mb-2 text-muted">Aucun projet pour ce filtre.</p>
+        <a href="<?= site_url('admin/project-projects/create') ?>" class="btn btn-outline-primary btn-sm">Créer un projet</a>
+    </div>
+<?php else : ?>
+<div class="table-responsive admin-table-wrap shadow-sm rounded border bg-white">
+<table class="table table-hover align-middle mb-0 small">
+    <thead class="table-light">
+        <tr>
+            <th><?= admin_list_sort_th('slug', 'Slug', $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('locale', 'Langue', $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('title', 'Titre', $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('project_status', 'Statut', $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('publication_state', 'Publication', $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('updated_at', 'Maj', $sort, $dir) ?></th>
+            <th class="text-end">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($rows as $row) :
+            $id = (int) ($row['id'] ?? 0);
+            $ps = (string) ($row['project_status'] ?? '');
+            $pub = (string) ($row['publication_state'] ?? '');
+            $loc = strtolower((string) ($row['locale'] ?? 'fr'));
+            if (! in_array($loc, ['fr', 'en'], true)) {
+                $loc = 'fr';
+            }
+            $tgrp = trim((string) ($row['translation_group'] ?? ''));
+            $otherLoc              = $loc === 'fr' ? 'en' : 'fr';
+            $duplicateTradDisabled = $tgrp !== '' && ! empty($translationLocalesByGroup[$tgrp][$otherLoc]);
+            ?>
+        <tr>
+            <td><code><?= esc((string) ($row['slug'] ?? '')) ?></code></td>
+            <td><span class="badge text-bg-light border"><?= esc(strtoupper($loc)) ?></span></td>
+            <td><?= esc((string) ($row['title'] ?? '')) ?></td>
+            <td><span class="badge text-bg-secondary"><?= esc($statusLabels[$ps] ?? $ps) ?></span></td>
+            <td><span class="badge <?= $pub === 'published' ? 'text-bg-success' : 'text-bg-warning' ?>"><?= esc($pubLabels[$pub] ?? $pub) ?></span></td>
+            <td class="text-nowrap"><?= admin_format_datetime($row['updated_at'] ?? null) ?></td>
+                    <td class="text-end text-nowrap">
+                        <a href="<?= site_url('admin/project-projects/edit/' . $id) ?>" class="btn btn-outline-primary btn-sm">Modifier</a>
+                        <form action="<?= site_url('admin/project-projects/duplicate/' . $id) ?>" method="post" class="d-inline">
+                            <?= csrf_field() ?>
+                            <button type="submit" class="btn btn-outline-primary btn-sm" <?= $duplicateTradDisabled ? 'disabled title="Une traduction existe déjà pour l’autre langue."' : '' ?>>Dupliquer trad</button>
+                        </form>
+                        <form action="<?= site_url('admin/project-projects/delete/' . $id) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="Supprimer définitivement ce projet ?">
+                            <?= csrf_field() ?>
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                        </form>
+                    </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+</div>
+<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => 'résultat(s)']) ?>
+<?php endif; ?>

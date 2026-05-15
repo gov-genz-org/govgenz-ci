@@ -68,6 +68,20 @@ if (! function_exists('cms_page_suppress_outer_hero')) {
     }
 }
 
+if (! function_exists('cms_projects_list_page_slug')) {
+    /**
+     * Slug de page CMS pour le bandeau titre / chapô de la liste publique des projets.
+     * Données initiales : migration `SeedCmsProjectsProgramListPages` (FR `projets-programme`, EN `projects-program`).
+     * Sinon, créer une page publiée avec les champs sur-titre, titre affiché, chapô, méta.
+     */
+    function cms_projects_list_page_slug(): string
+    {
+        return \App\Libraries\SiteContext::locale() === 'en'
+            ? 'projects-program'
+            : 'projets-programme';
+    }
+}
+
 if (! function_exists('cms_media_public_url')) {
     /**
      * URL publique d’un fichier en médiathèque (uploads/cms/…).
@@ -178,6 +192,49 @@ if (! function_exists('cms_footer_embed_slug')) {
     }
 }
 
+if (! function_exists('cms_page_partner_slug_for_locale_switch')) {
+    /**
+     * Slug publié de la page CMS dans l’autre langue, si les deux lignes partagent le même
+     * `translation_group` (sinon null — le switch retombe sur le mappage fixe de segments).
+     */
+    function cms_page_partner_slug_for_locale_switch(string $slug, string $currentLocale): ?string
+    {
+        $slug = trim($slug);
+        if ($slug === '' || strcasecmp($slug, cms_footer_embed_slug()) === 0) {
+            return null;
+        }
+
+        $loc = $currentLocale === 'en' ? 'en' : 'fr';
+        $other = $loc === 'en' ? 'fr' : 'en';
+
+        $model = model(\App\Models\CmsPageModel::class);
+        $row   = $model->where('slug', $slug)
+            ->where('locale', $loc)
+            ->where('status', 'published')
+            ->first();
+        if ($row === null || ! is_array($row)) {
+            return null;
+        }
+
+        $tg = trim((string) ($row['translation_group'] ?? ''));
+        if ($tg === '') {
+            return null;
+        }
+
+        $partner = $model->where('translation_group', $tg)
+            ->where('locale', $other)
+            ->where('status', 'published')
+            ->first();
+        if ($partner === null || ! is_array($partner)) {
+            return null;
+        }
+
+        $out = trim((string) ($partner['slug'] ?? ''));
+
+        return $out !== '' ? $out : null;
+    }
+}
+
 if (! function_exists('cms_sectors_render_tile_grid_html')) {
     /**
      * Grille des secteurs depuis la table `sectors` (même source que Join et les projets).
@@ -221,7 +278,9 @@ if (! function_exists('cms_apply_html_embeds')) {
      * - <!-- GG_CMS_SECTORS_TILE_GRID -->
      * - <!-- GG_CMS_SECTEURS_TILE_GRID -->
      *
-     * Note : sans `extended_valid_elements` côté TinyMCE, l’attribut data-gg-cms peut être supprimé à l’enregistrement.
+     * Note : côté TinyMCE, `extended_valid_elements` pour `div` doit inclure `class` (et
+     * `data-gg-cms`) : une règle du type `div[data-gg-cms]` seule remplace la règle `div` et
+     * supprime toutes les classes au save.
      */
     function cms_apply_html_embeds(string $html): string
     {

@@ -68,9 +68,71 @@ if (! function_exists('locale_switch_url')) {
      */
     function locale_switch_url(): string
     {
-        helper('url');
+        helper(['url', 'cms']);
         $loc      = SiteContext::locale();
         $segments = SiteContext::publicUriSegments();
+
+        if (! SiteContext::isProjectsSite() && count($segments) === 1) {
+            $partnerSlug = cms_page_partner_slug_for_locale_switch((string) $segments[0], $loc);
+            if ($partnerSlug !== null) {
+                return $loc === 'fr'
+                    ? site_url('en/' . $partnerSlug)
+                    : site_url($partnerSlug);
+            }
+        }
+
+        // Mini-site « /projects » sur le domaine principal : les segments publics sont déjà sans
+        // le préfixe « projects » (SiteContextFilter). Sans traitement dédié, [] → /en ou / au lieu
+        // de /en/projects ou /projects.
+        if (SiteContext::isProjectsSite() && SiteContext::projectsPathPrefixEnabled()) {
+            if ($loc === 'fr') {
+                $mapped = array_map(
+                    static fn (string $s): string => locale_slug_fr_to_en($s),
+                    $segments,
+                );
+                $tail = implode('/', $mapped);
+
+                return $tail === '' ? site_url('en/projects') : site_url('en/projects/' . $tail);
+            }
+
+            $mapped = array_map(
+                static fn (string $s): string => locale_slug_en_to_fr($s),
+                $segments,
+            );
+            $tail = implode('/', $mapped);
+
+            return $tail === '' ? site_url('projects') : site_url('projects/' . $tail);
+        }
+
+        // Vhost projets (sans /projects dans l’URL) : site_url() peut viser le mauvais domaine si
+        // app.projectsBaseURL n’est pas défini — on garde le même hôte que la requête courante.
+        if (SiteContext::isProjectsSite()
+            && ! SiteContext::projectsPathPrefixEnabled()
+            && SiteContext::httpHostMatchesProjectsHost(service('request'))) {
+            $u      = service('request')->getUri();
+            $origin = $u->getScheme() . '://' . $u->getHost();
+            $port   = $u->getPort();
+            if ($port !== null && ! in_array((int) $port, [80, 443], true)) {
+                $origin .= ':' . $port;
+            }
+            if ($loc === 'fr') {
+                $mapped = array_map(
+                    static fn (string $s): string => locale_slug_fr_to_en($s),
+                    $segments,
+                );
+                $tail = implode('/', $mapped);
+
+                return $tail === '' ? $origin . '/en/' : $origin . '/en/' . $tail;
+            }
+
+            $mapped = array_map(
+                static fn (string $s): string => locale_slug_en_to_fr($s),
+                $segments,
+            );
+            $tail = implode('/', $mapped);
+
+            return $tail === '' ? $origin . '/' : $origin . '/' . $tail;
+        }
 
         if ($loc === 'fr') {
             $mapped = array_map(

@@ -8,6 +8,8 @@ helper('admin');
 /** @var string $filterStatus */
 /** @var string $searchQuery */
 /** @var \CodeIgniter\Pager\Pager $pager */
+/** @var string $sort */
+/** @var string $dir */
 /** @var array<string, array<string, true>> $translationLocalesByGroup */
 ?>
 <h1 class="h3 mb-1">Pages</h1>
@@ -18,6 +20,7 @@ helper('admin');
 <div class="d-flex flex-wrap align-items-end gap-2 gap-md-3 mb-3">
     <a href="<?= site_url('admin/pages/create') ?>" class="btn btn-primary btn-sm">Nouvelle page</a>
     <form method="get" action="<?= site_url('admin/pages') ?>" class="d-flex flex-wrap align-items-end gap-2 ms-md-auto">
+        <?= admin_list_sort_hidden_fields($sort, $dir) ?>
         <div>
             <label class="small text-muted mb-0 d-block" for="pages-search-q">Recherche</label>
             <input type="search" name="q" id="pages-search-q" value="<?= esc($searchQuery) ?>" class="form-control form-control-sm" placeholder="Titre ou slug…" maxlength="120" autocomplete="off">
@@ -45,7 +48,14 @@ helper('admin');
 <?php else : ?>
 <div class="table-responsive admin-table-wrap shadow-sm rounded border bg-white">
 <table class="table table-striped align-middle mb-0">
-    <thead class="table-light"><tr><th>Langue</th><th>Slug</th><th>Titre</th><th>Statut</th><th>Site</th><th class="text-end">Actions</th></tr></thead>
+    <thead class="table-light"><tr>
+        <th><?= admin_list_sort_th('locale', 'Langue', $sort, $dir) ?></th>
+        <th><?= admin_list_sort_th('slug', 'Slug', $sort, $dir) ?></th>
+        <th><?= admin_list_sort_th('title', 'Titre', $sort, $dir) ?></th>
+        <th><?= admin_list_sort_th('status', 'Statut', $sort, $dir) ?></th>
+        <th>Site</th>
+        <th class="text-end">Actions</th>
+    </tr></thead>
     <tbody>
     <?php foreach ($pages as $p) :
         $pubUrl = (($p['status'] ?? '') === 'published') ? admin_public_page_url((string) ($p['slug'] ?? ''), (string) ($p['locale'] ?? 'fr')) : null;
@@ -91,10 +101,6 @@ helper('admin');
     </tbody>
 </table>
 </div>
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3 small text-muted">
-    <div><?= (int) $pager->getTotal('default') ?> résultat(s)</div>
-    <?php if ($pager->getPageCount('default') > 1) : ?>
-        <?= $pager->links('default', 'bootstrap_full') ?>
-    <?php endif; ?>
-</div>
+<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => 'résultat(s)']) ?>
 <?php endif; ?>
+

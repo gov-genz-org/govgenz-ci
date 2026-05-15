@@ -12,10 +12,10 @@ class LoginEvents extends BaseController
 {
     private const EXPORT_ROW_CAP = 5000;
 
+    private const INDEX_PAGE_SIZE = 40;
+
     public function index()
     {
-        service('pager')->only(['outcome', 'q']);
-
         $model = model(StaffLoginEventModel::class);
 
         $outcome = $this->request->getGet('outcome');
@@ -31,21 +31,38 @@ class LoginEvents extends BaseController
             $model = $model->like('email_attempt', $searchQuery);
         }
 
-        $events = $model->orderBy('id', 'DESC')->paginate(40, 'default');
+        $list = $this->adminPaginatedList(
+            $model,
+            [
+                'created_at'    => 'created_at',
+                'outcome'       => 'outcome',
+                'email_attempt' => 'email_attempt',
+                'staff_user_id' => 'staff_user_id',
+                'id'            => 'id',
+            ],
+            'id',
+            'desc',
+            ['outcome', 'q'],
+            self::INDEX_PAGE_SIZE,
+        );
 
         return view('admin/layout', [
             'title' => 'Journal de connexion',
             'main'  => view('admin/login_events/index', [
-                'events'        => $events,
+                'events'        => $list['rows'],
                 'filterOutcome' => is_string($outcome) && in_array($outcome, ['success', 'failure'], true) ? $outcome : 'all',
                 'searchQuery'   => $searchQuery,
-                'pager'         => $model->pager,
+                'pager'         => $list['pager'],
+                'sort'          => $list['sort'],
+                'dir'           => $list['dir'],
             ]),
         ]);
     }
 
     public function exportCsv(): ResponseInterface
     {
+        helper('admin');
+
         $model = model(StaffLoginEventModel::class);
 
         $outcome = $this->request->getGet('outcome');
@@ -84,7 +101,7 @@ class LoginEvents extends BaseController
         foreach ($rows as $row) {
             $lines[] = $this->csvLine([
                 (string) ($row['id'] ?? ''),
-                (string) ($row['created_at'] ?? ''),
+                admin_format_datetime_plain($row['created_at'] ?? null),
                 (string) ($row['outcome'] ?? ''),
                 (string) ($row['detail'] ?? ''),
                 (string) ($row['email_attempt'] ?? ''),

@@ -55,18 +55,29 @@ class Media extends BaseController
 
     public function index()
     {
-        service('pager')->only(['page']);
-
-        $model = model(CmsMediaModel::class);
-        $items = $model->orderBy('id', 'DESC')->paginate(self::INDEX_PAGE_SIZE, 'default');
-        $total = (int) $model->pager->getTotal('default');
+        $list = $this->adminPaginatedList(
+            model(CmsMediaModel::class),
+            [
+                'id'            => 'id',
+                'original_name' => 'original_name',
+                'size_bytes'    => 'size_bytes',
+                'created_at'    => 'created_at',
+            ],
+            'id',
+            'desc',
+            [],
+            self::INDEX_PAGE_SIZE,
+        );
+        $total = (int) $list['pager']->getTotal('default');
 
         return view('admin/layout', [
             'title'      => 'Médias',
             'extraHead'  => '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dropzone@5/dist/min/dropzone.min.css">',
             'main'       => view('admin/media/index', [
-                'items' => $items,
-                'pager' => $model->pager,
+                'items'      => $list['rows'],
+                'pager'      => $list['pager'],
+                'sort'       => $list['sort'],
+                'dir'        => $list['dir'],
                 'totalMedia' => $total,
             ]),
             'extraScripts' => view('admin/partials/media_dropzone', [

@@ -2,10 +2,15 @@
 
 declare(strict_types=1);
 
+helper('admin');
+
 /** @var list<array<string, mixed>> $items */
+/** @var \CodeIgniter\Pager\Pager $pager */
+/** @var string $sort */
+/** @var string $dir */
 ?>
 <h1 class="h3 mb-1">Menu du site</h1>
-<p class="text-muted small mb-3">Liens affichés dans l’en-tête du site public. Ordre = champ « Ordre » (tri croissant).</p>
+<p class="text-muted small mb-3">Liens affichés dans l’en-tête du site public. Cliquez sur un en-tête de colonne pour trier.</p>
 
 <div class="mb-3">
     <a href="<?= site_url('admin/site-menu/create') ?>" class="btn btn-primary btn-sm">Nouvelle entrée</a>
@@ -21,13 +26,13 @@ declare(strict_types=1);
 <table class="table table-striped align-middle mb-0">
     <thead class="table-light">
     <tr>
-        <th scope="col">Langue</th>
-        <th scope="col">Ordre</th>
-        <th scope="col">Libellé</th>
-        <th scope="col">Type</th>
+        <th scope="col"><?= admin_list_sort_th('locale', 'Langue', $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('sort_order', 'Ordre', $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('label', 'Libellé', $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('href_kind', 'Type', $sort, $dir) ?></th>
         <th scope="col">Cible</th>
         <th scope="col">Surlignage</th>
-        <th scope="col">Actif</th>
+        <th scope="col"><?= admin_list_sort_th('is_active', 'Actif', $sort, $dir) ?></th>
         <th scope="col" class="text-end">Actions</th>
     </tr>
     </thead>
@@ -61,4 +66,5 @@ declare(strict_types=1);
     </tbody>
 </table>
 </div>
+<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => 'entrée(s)']) ?>
 <?php endif; ?>

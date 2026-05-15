@@ -7,10 +7,10 @@ helper(['admin']);
 $action = $post
     ? site_url('admin/posts/update/' . $post['id'])
     : site_url('admin/posts/store');
-$pa = old('published_at', $post !== null ? ($post['published_at'] ?? '') : '');
-if (is_string($pa) && $pa !== '' && str_contains($pa, ' ')) {
-    $pa = str_replace(' ', 'T', substr($pa, 0, 16));
-}
+$paRaw = old('published_at', $post !== null ? ($post['published_at'] ?? '') : null);
+$paFromForm = is_string($paRaw) && str_contains($paRaw, 'T');
+$paValue = $paFromForm ? $paRaw : '';
+$paUtcAttr = $paFromForm ? '' : admin_datetime_input_utc_attr($paRaw);
 
 $previewUrl = null;
 if ($post !== null && ($post['status'] ?? '') === 'published' && ($post['slug'] ?? '') !== '') {
@@ -79,7 +79,7 @@ if ($post !== null && ($post['status'] ?? '') === 'published' && ($post['slug'] 
     </div>
     <div class="mb-3">
         <label class="form-label" for="published_at">Date de publication (si publié)</label>
-        <input type="datetime-local" name="published_at" id="published_at" class="form-control" value="<?= esc(is_string($pa) ? $pa : '') ?>">
+        <input type="datetime-local" name="published_at" id="published_at" class="form-control" value="<?= esc($paValue) ?>"<?= $paUtcAttr ?>>
     </div>
     <div class="mb-3">
         <label class="form-label" for="meta_title">Meta title</label>
