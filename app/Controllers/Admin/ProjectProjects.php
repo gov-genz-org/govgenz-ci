@@ -6,6 +6,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Libraries\ProjectBodyBlocksNormalizer;
+use App\Libraries\ProjectBudgetTableSync;
 use App\Libraries\ProjectGeographyPayload;
 use App\Models\ProjectProjectModel;
 use App\Models\SectorModel;
@@ -115,6 +116,10 @@ class ProjectProjects extends BaseController
             return redirect()->back()->withInput()->with('error', 'Mode blocs : ajoutez au moins un bloc valide.');
         }
 
+        $merged        = ProjectBudgetTableSync::applyToPayloads($bodyPayload, $budgetPayload, $locale);
+        $bodyPayload   = $merged['body'];
+        $budgetPayload = $merged['budget'];
+
         $pubState = (string) $this->request->getPost('publication_state');
         $publishedAt = $pubState === ProjectProjectModel::PUBLICATION_PUBLISHED
             ? date('Y-m-d H:i:s')
@@ -155,7 +160,7 @@ class ProjectProjects extends BaseController
             $model->update($newId, ['translation_group' => $tgFinal]);
         }
 
-        return redirect()->to(site_url('admin/project-projects'))->with('message', 'Projet créé.');
+        return $this->adminRedirectToEdit('admin/project-projects', $newId, 'Projet créé.');
     }
 
     public function edit(int $id): string
@@ -210,6 +215,10 @@ class ProjectProjects extends BaseController
             return redirect()->back()->withInput()->with('error', 'Mode blocs : ajoutez au moins un bloc valide.');
         }
 
+        $merged        = ProjectBudgetTableSync::applyToPayloads($bodyPayload, $budgetPayload, $locale);
+        $bodyPayload   = $merged['body'];
+        $budgetPayload = $merged['budget'];
+
         $pubState = (string) $this->request->getPost('publication_state');
         $publishedAt = $project['published_at'] ?? null;
         if ($pubState === ProjectProjectModel::PUBLICATION_PUBLISHED && ($publishedAt === null || $publishedAt === '')) {
@@ -253,7 +262,7 @@ class ProjectProjects extends BaseController
             'published_at'       => $publishedAt,
         ]);
 
-        return redirect()->to(site_url('admin/project-projects'))->with('message', 'Projet mis à jour.');
+        return $this->adminRedirectToEdit('admin/project-projects', $id, 'Projet mis à jour.');
     }
 
     public function delete(int $id): ResponseInterface
@@ -552,6 +561,8 @@ class ProjectProjects extends BaseController
     private function projectFormScripts(array $formData): string
     {
         $scripts = '<script defer src="' . esc(base_url('js/admin/project-budget-preview.js'), 'attr') . '"></script>'
+            . '<script defer src="' . esc(base_url('js/admin/project-block-repeatable.js?v=6'), 'attr') . '"></script>'
+            . '<script defer src="' . esc(base_url('js/admin/project-budget-table-sync.js'), 'attr') . '"></script>'
             . '<script defer src="' . esc(base_url('js/admin/project-geography-form.js'), 'attr') . '"></script>'
             . '<script defer src="' . esc(base_url('js/admin/project-blocks-form.js'), 'attr') . '"></script>';
         if ($formData['canUseAdvancedHtml']) {

@@ -83,6 +83,7 @@ final class ProjectBodyBlocksNormalizer
      */
     private static function normalizeSectionRich(array $blk): ?array
     {
+        helper('admin');
         $heading = trim(strip_tags((string) ($blk['heading'] ?? '')));
         if ($heading === '') {
             return null;
@@ -99,7 +100,7 @@ final class ProjectBodyBlocksNormalizer
                     continue;
                 }
                 $line = trim(strip_tags($line));
-                if ($line !== '') {
+                if ($line !== '' && ! admin_pp_is_junk_repeat_line($line)) {
                     $bullets[] = $line;
                 }
             }
@@ -112,7 +113,7 @@ final class ProjectBodyBlocksNormalizer
                     continue;
                 }
                 $p = trim(strip_tags($p));
-                if ($p !== '') {
+                if ($p !== '' && ! admin_pp_is_junk_repeat_line($p)) {
                     $extras[] = $p;
                 }
             }
@@ -135,6 +136,7 @@ final class ProjectBodyBlocksNormalizer
      */
     private static function normalizeBudgetTable(array $blk): ?array
     {
+        helper('admin');
         $rows = [];
         $raw = $blk['rows'] ?? [];
         if (is_array($raw)) {
@@ -142,20 +144,21 @@ final class ProjectBodyBlocksNormalizer
                 if (! is_array($row)) {
                     continue;
                 }
-                $poste = trim(strip_tags((string) ($row['poste'] ?? '')));
-                $detail = trim(strip_tags((string) ($row['detail'] ?? '')));
-                $montant = trim(strip_tags((string) ($row['montant'] ?? '')));
+                $poste = admin_pp_scrub_junk_text(trim(strip_tags((string) ($row['poste'] ?? ''))));
+                $detail = admin_pp_scrub_junk_text(trim(strip_tags((string) ($row['detail'] ?? ''))));
+                $montant = admin_pp_scrub_junk_text(trim(strip_tags((string) ($row['montant'] ?? ''))));
                 if ($poste === '' && $detail === '' && $montant === '') {
                     continue;
                 }
-                $isTotal = strtolower(trim((string) ($row['is_total'] ?? ''))) === '1'
-                    || strtolower(trim((string) ($row['is_total'] ?? ''))) === 'yes';
-                $rows[] = [
-                    'poste'    => $poste,
-                    'detail'   => $detail,
-                    'montant'  => $montant,
-                    'row_class'=> $isTotal ? 'total' : '',
+                $rowNorm = [
+                    'poste'   => $poste,
+                    'detail'  => $detail,
+                    'montant' => $montant,
                 ];
+                if (ProjectBudgetTableSync::rowIsTotal($rowNorm)) {
+                    continue;
+                }
+                $rows[] = $rowNorm;
             }
         }
         if ($rows === []) {
@@ -217,6 +220,7 @@ final class ProjectBodyBlocksNormalizer
      */
     private static function normalizeKpiGrid(array $blk): ?array
     {
+        helper('admin');
         $items = [];
         $raw = $blk['items'] ?? [];
         if (is_array($raw)) {
@@ -224,8 +228,8 @@ final class ProjectBodyBlocksNormalizer
                 if (! is_array($it)) {
                     continue;
                 }
-                $v = mb_substr(trim(strip_tags((string) ($it['value'] ?? ''))), 0, 64);
-                $l = mb_substr(trim(strip_tags((string) ($it['label'] ?? ''))), 0, 255);
+                $v = admin_pp_scrub_junk_text(mb_substr(trim(strip_tags((string) ($it['value'] ?? ''))), 0, 64));
+                $l = admin_pp_scrub_junk_text(mb_substr(trim(strip_tags((string) ($it['label'] ?? ''))), 0, 255));
                 if ($v === '' && $l === '') {
                     continue;
                 }
@@ -422,6 +426,8 @@ final class ProjectBodyBlocksNormalizer
             return [];
         }
 
-        return array_values(array_filter($decoded, static fn ($row): bool => is_array($row)));
+        $blocks = array_values(array_filter($decoded, static fn ($row): bool => is_array($row)));
+
+        return ProjectBudgetTableSync::stripStoredTotalMontants($blocks);
     }
 }

@@ -2,30 +2,16 @@
 
 declare(strict_types=1);
 
+helper('admin');
+
 /** @var int|string $i */
 /** @var array<string, mixed> $block */
 
 $pfx = 'blocks[' . $i . ']';
 $b = $block;
-$bullets = $b['bullets'] ?? [];
-if (! is_array($bullets)) {
-    $bullets = [];
-}
-$bullets = array_values($bullets);
-while (count($bullets) < 10) {
-    $bullets[] = '';
-}
-$bullets = array_slice($bullets, 0, 10);
-$extras = $b['extra_paragraphs'] ?? [];
-if (! is_array($extras)) {
-    $extras = [];
-}
-$extras = array_values($extras);
-while (count($extras) < 2) {
-    $extras[] = '';
-}
-$extras = array_slice($extras, 0, 2);
-$style = strtolower(trim((string) ($b['heading_style'] ?? 'default')));
+$bullets = admin_pp_repeat_scalar_lines(is_array($b['bullets'] ?? null) ? $b['bullets'] : []);
+$extras  = admin_pp_repeat_scalar_lines(is_array($b['extra_paragraphs'] ?? null) ? $b['extra_paragraphs'] : []);
+$style   = strtolower(trim((string) ($b['heading_style'] ?? 'default')));
 if (! in_array($style, ['default', 'warm', 'teal'], true)) {
     $style = 'default';
 }
@@ -55,24 +41,43 @@ if (! in_array($style, ['default', 'warm', 'teal'], true)) {
             <label class="form-label small">Introduction (texte simple)</label>
             <textarea name="<?= esc($pfx, 'attr') ?>[intro]" class="form-control form-control-sm" rows="3" maxlength="8000"><?= esc((string) ($b['intro'] ?? '')) ?></textarea>
         </div>
-        <p class="small fw-semibold mb-1">Puces (lignes vides ignorées)</p>
-        <div class="table-responsive mb-2">
-            <table class="table table-sm align-middle mb-0">
-                <thead><tr><th>Texte de la puce</th></tr></thead>
-                <tbody>
-                <?php foreach ($bullets as $bi => $line) : ?>
-                    <tr>
-                        <td><input type="text" name="<?= esc($pfx, 'attr') ?>[bullets][<?= (int) $bi ?>]" class="form-control form-control-sm" value="<?= esc(is_string($line) ? $line : '') ?>" maxlength="500"></td>
-                    </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-        <?php foreach ($extras as $ei => $para) : ?>
-            <div class="mb-2">
-                <label class="form-label small">Paragraphe complémentaire <?= $ei + 1 ?> (optionnel)</label>
-                <textarea name="<?= esc($pfx, 'attr') ?>[extra_paragraphs][<?= (int) $ei ?>]" class="form-control form-control-sm" rows="2" maxlength="4000"><?= esc(is_string($para) ? $para : '') ?></textarea>
+        <div class="pp-repeatable mb-4" data-pp-repeat-key="bullets">
+            <p class="small fw-semibold mb-2">Puces (lignes vides ignorées à l’enregistrement)</p>
+            <div class="pp-repeat-body d-flex flex-column gap-2">
+            <?php foreach ($bullets as $bi => $line) : ?>
+                <?= view('admin/project_projects/blocks/section_rich_bullet_row', [
+                    'name'  => $pfx . '[bullets][' . $bi . ']',
+                    'value' => is_string($line) ? $line : '',
+                ]) ?>
+            <?php endforeach; ?>
             </div>
-        <?php endforeach; ?>
+            <button type="button" class="btn btn-sm btn-outline-primary pp-repeat-add mt-2">+ Puce</button>
+            <template class="pp-repeat-template">
+                <?= view('admin/project_projects/blocks/section_rich_bullet_row', [
+                    'name'  => $pfx . '[bullets][__RI__]',
+                    'value' => '',
+                ]) ?>
+            </template>
+        </div>
+        <div class="pp-repeatable" data-pp-repeat-key="extra_paragraphs">
+            <p class="small fw-semibold mb-2">Paragraphes complémentaires (optionnels)</p>
+            <div class="pp-repeat-body d-flex flex-column gap-3">
+            <?php foreach ($extras as $ei => $para) : ?>
+                <?= view('admin/project_projects/blocks/section_rich_extra_row', [
+                    'name'  => $pfx . '[extra_paragraphs][' . $ei . ']',
+                    'value' => is_string($para) ? $para : '',
+                    'n'     => $ei + 1,
+                ]) ?>
+            <?php endforeach; ?>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-primary pp-repeat-add mt-2">+ Paragraphe</button>
+            <template class="pp-repeat-template">
+                <?= view('admin/project_projects/blocks/section_rich_extra_row', [
+                    'name'  => $pfx . '[extra_paragraphs][__RI__]',
+                    'value' => '',
+                    'n'     => 0,
+                ]) ?>
+            </template>
+        </div>
     </div>
 </div>

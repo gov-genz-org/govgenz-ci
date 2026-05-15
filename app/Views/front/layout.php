@@ -28,9 +28,7 @@ if ($footerCmsHtml !== '' && preg_match('/^<div\s+class="footer__columns(?:\s[^"
     <?php if (! empty($metaDescription)) : ?>
         <meta name="description" content="<?= esc((string) $metaDescription, 'attr') ?>">
     <?php endif; ?>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,wght@0,400;0,600;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?= base_url('assets/css/govgenz-fonts.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/govgenz-tokens.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/govgenz-template.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/govgenz-front-pages.css') ?>">

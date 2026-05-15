@@ -24,10 +24,9 @@
   /* Métadonnées lisibles sur fond #161E2F */
   --ggz-text-meta: rgba(250, 250, 250, 0.72);
 
-  /* Typographie — hiérarchie lisible en quelques secondes (charte § typo) */
-  --ggz-font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  /* Titres page — même esprit que govgenz-bull (Elementor / WP), adapté fond sombre */
-  --ggz-font-display: ui-serif, Georgia, 'Times New Roman', serif;
+  /* Typographie — alignée sur govgenz-template.css (polices auto-hébergées) */
+  --ggz-font-sans: 'JetBrains Mono', 'Courier New', monospace;
+  --ggz-font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
   --ggz-line-heading: 1.2;
   --ggz-line-body: 1.65;
   --ggz-letter-nav: 0.06em;

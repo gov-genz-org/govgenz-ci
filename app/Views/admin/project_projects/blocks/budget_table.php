@@ -2,22 +2,41 @@
 
 declare(strict_types=1);
 
+helper('admin');
+
 /** @var int|string $i */
 /** @var array<string, mixed> $block */
 
 $pfx = 'blocks[' . $i . ']';
 $b = $block;
-$rows = $b['rows'] ?? [];
-if (! is_array($rows)) {
-    $rows = [];
+$rawRows = $b['rows'] ?? [];
+if (! is_array($rawRows)) {
+    $rawRows = [];
 }
-$rows = array_values($rows);
-while (count($rows) < 8) {
-    $rows[] = ['poste' => '', 'detail' => '', 'montant' => '', 'is_total' => ''];
+
+$lineRows = [];
+foreach (array_values($rawRows) as $row) {
+    if (! is_array($row)) {
+        continue;
+    }
+    if (\App\Libraries\ProjectBudgetTableSync::rowIsTotal($row)) {
+        continue;
+    }
+    $poste   = admin_pp_scrub_junk_text(trim((string) ($row['poste'] ?? '')));
+    $detail  = admin_pp_scrub_junk_text(trim((string) ($row['detail'] ?? '')));
+    $montant = admin_pp_scrub_junk_text(trim((string) ($row['montant'] ?? '')));
+    if ($poste === '' && $detail === '' && $montant === '') {
+        continue;
+    }
+    $lineRows[] = [
+        'poste'   => $poste,
+        'detail'  => $detail,
+        'montant' => $montant,
+    ];
 }
-$rows = array_slice($rows, 0, 8);
+$lineRows[] = ['poste' => '', 'detail' => '', 'montant' => ''];
 ?>
-<div class="project-block-row card mb-3 border-secondary">
+<div class="project-block-row card mb-3 border-secondary pp-budget-table-block">
     <div class="card-header py-2 d-flex justify-content-between align-items-center flex-wrap gap-2">
         <span class="fw-semibold small mb-0">Bloc · Tableau budget</span>
         <button type="button" class="btn btn-sm btn-outline-danger project-block-remove">Retirer</button>
@@ -32,26 +51,29 @@ $rows = array_slice($rows, 0, 8);
             <label class="form-label small">Note sous le tableau</label>
             <textarea name="<?= esc($pfx, 'attr') ?>[footnote]" class="form-control form-control-sm" rows="2" maxlength="2000"><?= esc((string) ($b['footnote'] ?? '')) ?></textarea>
         </div>
-        <div class="table-responsive">
-            <table class="table table-sm align-middle mb-0">
-                <thead><tr><th>Poste</th><th>Détail</th><th>Montant (Ar)</th><th class="text-center">Total</th></tr></thead>
-                <tbody>
-                <?php foreach ($rows as $ri => $row) : ?>
-                    <?php
-                    $row = is_array($row) ? $row : [];
-                    $rp = $pfx . '[rows][' . $ri . ']';
-                    $it = strtolower(trim((string) ($row['is_total'] ?? ''))) === '1' || strtolower(trim((string) ($row['is_total'] ?? ''))) === 'yes';
-                    ?>
-                    <tr>
-                        <td><input type="text" name="<?= esc($rp, 'attr') ?>[poste]" class="form-control form-control-sm" value="<?= esc((string) ($row['poste'] ?? '')) ?>"></td>
-                        <td><input type="text" name="<?= esc($rp, 'attr') ?>[detail]" class="form-control form-control-sm" value="<?= esc((string) ($row['detail'] ?? '')) ?>"></td>
-                        <td><input type="text" name="<?= esc($rp, 'attr') ?>[montant]" class="form-control form-control-sm" value="<?= esc((string) ($row['montant'] ?? '')) ?>"></td>
-                        <td class="text-center"><input type="checkbox" name="<?= esc($rp, 'attr') ?>[is_total]" value="1" class="form-check-input" <?= $it ? 'checked' : '' ?>></td>
-                    </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
+        <div class="pp-repeatable" data-pp-repeat-key="rows">
+            <div class="row g-2 mb-1 small fw-semibold text-muted d-none d-md-flex align-items-center">
+                <div class="col-md">Poste</div>
+                <div class="col-md">Détail</div>
+                <div class="col-md-3 text-md-end">Montant (Ar)</div>
+                <div class="col-auto ms-auto" style="width:2.75rem"></div>
+            </div>
+            <div class="pp-repeat-body">
+                    <?php foreach ($lineRows as $ri => $row) : ?>
+                        <?= view('admin/project_projects/blocks/budget_table_row', [
+                            'rp'  => $pfx . '[rows][' . $ri . ']',
+                            'row' => $row,
+                        ]) ?>
+                    <?php endforeach; ?>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-primary pp-repeat-add mt-2">+ Ligne</button>
+            <template class="pp-repeat-template">
+                <?= view('admin/project_projects/blocks/budget_table_row', [
+                    'rp'  => $pfx . '[rows][__RI__]',
+                    'row' => ['poste' => '', 'detail' => '', 'montant' => ''],
+                ]) ?>
+            </template>
         </div>
-        <p class="form-text small mb-0">Cochez « Total » sur la ligne du total (classe <code>budget-total</code> côté site).</p>
+        <p class="form-text small mb-0 mt-2">Le <strong>total</strong> est calculé automatiquement sur le site public et pour le budget carte.</p>
     </div>
 </div>

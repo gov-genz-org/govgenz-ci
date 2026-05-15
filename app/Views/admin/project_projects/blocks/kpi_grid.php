@@ -2,20 +2,29 @@
 
 declare(strict_types=1);
 
+helper('admin');
+
 /** @var int|string $i */
 /** @var array<string, mixed> $block */
 
 $pfx = 'blocks[' . $i . ']';
 $b = $block;
-$items = $b['items'] ?? [];
-if (! is_array($items)) {
-    $items = [];
+$rawItems = is_array($b['items'] ?? null) ? $b['items'] : [];
+$scrubbedItems = [];
+foreach (array_values($rawItems) as $it) {
+    if (! is_array($it)) {
+        continue;
+    }
+    $scrubbedItems[] = [
+        'value' => admin_pp_scrub_junk_text(trim((string) ($it['value'] ?? ''))),
+        'label' => admin_pp_scrub_junk_text(trim((string) ($it['label'] ?? ''))),
+    ];
 }
-$items = array_values($items);
-while (count($items) < 8) {
-    $items[] = ['value' => '', 'label' => ''];
-}
-$items = array_slice($items, 0, 8);
+$items = admin_pp_repeat_object_rows(
+    $scrubbedItems,
+    static fn (array $it): bool => trim((string) ($it['value'] ?? '')) === '' && trim((string) ($it['label'] ?? '')) === '',
+    ['value' => '', 'label' => ''],
+);
 $style = strtolower(trim((string) ($b['heading_style'] ?? 'teal')));
 if (! in_array($style, ['default', 'warm', 'teal'], true)) {
     $style = 'teal';
@@ -42,22 +51,27 @@ if (! in_array($style, ['default', 'warm', 'teal'], true)) {
                 </select>
             </div>
         </div>
-        <div class="table-responsive">
-            <table class="table table-sm align-middle mb-0">
-                <thead><tr><th>Chiffre</th><th>Libellé</th></tr></thead>
-                <tbody>
-                <?php foreach ($items as $ii => $it) : ?>
-                    <?php
-                    $it = is_array($it) ? $it : [];
-                    $ip = $pfx . '[items][' . $ii . ']';
-                    ?>
-                    <tr>
-                        <td><input type="text" name="<?= esc($ip, 'attr') ?>[value]" class="form-control form-control-sm" value="<?= esc((string) ($it['value'] ?? '')) ?>"></td>
-                        <td><input type="text" name="<?= esc($ip, 'attr') ?>[label]" class="form-control form-control-sm" value="<?= esc((string) ($it['label'] ?? '')) ?>"></td>
-                    </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
+        <div class="pp-repeatable" data-pp-repeat-key="items">
+            <div class="row g-2 mb-1 small fw-semibold text-muted d-none d-md-flex align-items-center">
+                <div class="col-md-4">Chiffre</div>
+                <div class="col-md">Libellé</div>
+                <div class="col-auto ms-auto" style="width:2.75rem"></div>
+            </div>
+            <div class="pp-repeat-body">
+                    <?php foreach ($items as $ii => $it) : ?>
+                        <?= view('admin/project_projects/blocks/kpi_grid_row', [
+                            'rp' => $pfx . '[items][' . $ii . ']',
+                            'it' => is_array($it) ? $it : [],
+                        ]) ?>
+                    <?php endforeach; ?>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-primary pp-repeat-add mt-2">+ KPI</button>
+            <template class="pp-repeat-template">
+                <?= view('admin/project_projects/blocks/kpi_grid_row', [
+                    'rp' => $pfx . '[items][__RI__]',
+                    'it' => ['value' => '', 'label' => ''],
+                ]) ?>
+            </template>
         </div>
     </div>
 </div>

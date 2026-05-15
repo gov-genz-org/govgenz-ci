@@ -67,6 +67,7 @@ return [
     'show_cta_volunteer'       => 'Volunteer',
     'show_cta_fund'            => 'Fund this project',
     'show_cta_concept'         => 'Request concept note',
+    'budget_table_total_row'   => 'TOTAL (illustrative)',
     'geo_count_regions'        => '{0} regions',
     'geo_count_districts'      => '{0} districts',
     'geo_count_communes'       => '{0} communes',

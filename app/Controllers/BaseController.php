@@ -78,6 +78,21 @@ abstract class BaseController extends Controller
     }
 
     /**
+     * Après création / mise à jour : rester sur le formulaire d’édition (PRG).
+     *
+     * @param string $adminPath ex. admin/pages, admin/project-projects
+     */
+    protected function adminRedirectToEdit(string $adminPath, int $id, string $message): ResponseInterface
+    {
+        $adminPath = trim($adminPath, '/');
+        if ($id < 1) {
+            return redirect()->to(site_url($adminPath))->with('error', 'Enregistrement introuvable après sauvegarde.');
+        }
+
+        return redirect()->to(site_url($adminPath . '/edit/' . $id))->with('message', $message);
+    }
+
+    /**
      * Locales présentes par groupe de traduction (ex. bouton « Dupliquer trad » dans les listes admin).
      *
      * @param list<array<string, mixed>> $rows
