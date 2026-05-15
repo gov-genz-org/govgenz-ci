@@ -67,9 +67,10 @@ class Sectors extends BaseController
         }
 
         $payload = $this->payloadFromPost();
-        model(SectorModel::class)->insert($payload);
+        $model   = model(SectorModel::class);
+        $model->insert($payload);
 
-        return redirect()->to(site_url('admin/sectors'))->with('message', 'Secteur créé.');
+        return $this->adminRedirectToEdit('admin/sectors', (int) $model->getInsertID(), 'Secteur créé.');
     }
 
     public function edit(int $id)
@@ -106,7 +107,7 @@ class Sectors extends BaseController
 
         $model->update($id, $payload);
 
-        return redirect()->to(site_url('admin/sectors'))->with('message', 'Secteur mis à jour.');
+        return $this->adminRedirectToEdit('admin/sectors', $id, 'Secteur mis à jour.');
     }
 
     public function delete(int $id): ResponseInterface

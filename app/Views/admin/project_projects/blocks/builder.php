@@ -5,7 +5,9 @@ declare(strict_types=1);
 /** @var string $contentMode */
 /** @var list<array<string, mixed>> $blocksForForm */
 /** @var bool $canUseAdvancedHtml */
+/** @var string $ppLocale */
 $canUseAdvancedHtml = $canUseAdvancedHtml ?? false;
+$ppLocale = in_array($ppLocale ?? 'fr', ['fr', 'en'], true) ? $ppLocale : 'fr';
 
 /**
  * @param array<string, mixed> $block
@@ -33,7 +35,11 @@ $mapBlockView = static function (array $block): string {
 
     <div id="pp-blocks-container" class="mb-2">
         <?php foreach ($blocksForForm as $idx => $block) : ?>
-            <?= view($mapBlockView(is_array($block) ? $block : []), ['i' => $idx, 'block' => is_array($block) ? $block : []]) ?>
+            <?= view($mapBlockView(is_array($block) ? $block : []), [
+                'i'        => $idx,
+                'block'    => is_array($block) ? $block : [],
+                'ppLocale' => $ppLocale ?? 'fr',
+            ]) ?>
         <?php endforeach; ?>
     </div>
 
@@ -54,7 +60,7 @@ $mapBlockView = static function (array $block): string {
 
 <div id="pp-proto-store" class="d-none" aria-hidden="true">
     <div data-pp-proto="section_rich"><?= view('admin/project_projects/blocks/section_rich', ['i' => '__I__', 'block' => ['type' => 'section_rich']]) ?></div>
-    <div data-pp-proto="budget_table"><?= view('admin/project_projects/blocks/budget_table', ['i' => '__I__', 'block' => ['type' => 'budget_table']]) ?></div>
+    <div data-pp-proto="budget_table"><?= view('admin/project_projects/blocks/budget_table', ['i' => '__I__', 'block' => ['type' => 'budget_table'], 'ppLocale' => $ppLocale]) ?></div>
     <div data-pp-proto="timeline"><?= view('admin/project_projects/blocks/timeline', ['i' => '__I__', 'block' => ['type' => 'timeline']]) ?></div>
     <div data-pp-proto="kpi_grid"><?= view('admin/project_projects/blocks/kpi_grid', ['i' => '__I__', 'block' => ['type' => 'kpi_grid']]) ?></div>
     <div data-pp-proto="impact_tracker"><?= view('admin/project_projects/blocks/impact_tracker', ['i' => '__I__', 'block' => ['type' => 'impact_tracker']]) ?></div>

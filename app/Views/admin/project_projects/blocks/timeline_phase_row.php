@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var string $rp */
+/** @var array<string, string> $ph */
+$ph = $ph ?? ['phase_label' => '', 'duration' => '', 'step_title' => '', 'body' => ''];
+?>
+<div class="pp-repeat-row border rounded p-2 mb-2 bg-light">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <p class="small fw-semibold mb-0">Phase</p>
+        <?= view('admin/project_projects/blocks/partials/repeat_remove_button', ['title' => 'Retirer la phase']) ?>
+    </div>
+    <div class="row g-2">
+        <div class="col-md-4">
+            <label class="form-label small">Libellé phase</label>
+            <input type="text" name="<?= esc($rp, 'attr') ?>[phase_label]" class="form-control form-control-sm" value="<?= esc((string) ($ph['phase_label'] ?? '')) ?>" placeholder="Phase 1">
+        </div>
+        <div class="col-md-8">
+            <label class="form-label small">Durée / période</label>
+            <input type="text" name="<?= esc($rp, 'attr') ?>[duration]" class="form-control form-control-sm" value="<?= esc((string) ($ph['duration'] ?? '')) ?>" placeholder="0 – 8 mois">
+        </div>
+        <div class="col-12">
+            <label class="form-label small">Titre de l’étape</label>
+            <input type="text" name="<?= esc($rp, 'attr') ?>[step_title]" class="form-control form-control-sm" value="<?= esc((string) ($ph['step_title'] ?? '')) ?>">
+        </div>
+        <div class="col-12">
+            <label class="form-label small">Description</label>
+            <textarea name="<?= esc($rp, 'attr') ?>[body]" class="form-control form-control-sm" rows="2" maxlength="4000"><?= esc((string) ($ph['body'] ?? '')) ?></textarea>
+        </div>
+    </div>
+</div>

@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
+helper('admin');
+
 /** @var int|string $i */
 /** @var array<string, mixed> $block */
 
 $pfx = 'blocks[' . $i . ']';
 $b = $block;
-$rows = $b['rows'] ?? [];
-if (! is_array($rows)) {
-    $rows = [];
-}
-$rows = array_values($rows);
-while (count($rows) < 5) {
-    $rows[] = ['label' => '', 'numbers' => '', 'bar_percent' => 0];
-}
-$rows = array_slice($rows, 0, 8);
+$rows = admin_pp_repeat_object_rows(
+    is_array($b['rows'] ?? null) ? $b['rows'] : [],
+    static fn (array $row): bool => trim((string) ($row['label'] ?? '')) === ''
+        && trim((string) ($row['numbers'] ?? '')) === ''
+        && (int) ($row['bar_percent'] ?? 0) === 0,
+    ['label' => '', 'numbers' => '', 'bar_percent' => 0],
+);
 $style = strtolower(trim((string) ($b['heading_style'] ?? 'teal')));
 if (! in_array($style, ['default', 'warm', 'teal'], true)) {
     $style = 'teal';
@@ -47,36 +47,28 @@ $defaultTitle = "🎯 Suivi d'impact — Résultats actuels";
                 <input type="text" name="<?= esc($pfx, 'attr') ?>[note]" class="form-control form-control-sm" maxlength="500" value="<?= esc((string) ($b['note'] ?? '')) ?>" placeholder="Données au …">
             </div>
         </div>
-        <div class="table-responsive">
-            <table class="table table-sm align-middle mb-0">
-                <thead>
-                <tr>
-                    <th>Libellé</th>
-                    <th>Chiffres / texte</th>
-                    <th style="width:7rem">Barre %</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($rows as $ri => $row) : ?>
-                    <?php
-                    $row = is_array($row) ? $row : [];
-                    $rp = $pfx . '[rows][' . $ri . ']';
-                    $pct = (int) ($row['bar_percent'] ?? 0);
-                    if ($pct < 0) {
-                        $pct = 0;
-                    }
-                    if ($pct > 100) {
-                        $pct = 100;
-                    }
-                    ?>
-                    <tr>
-                        <td><input type="text" name="<?= esc($rp, 'attr') ?>[label]" class="form-control form-control-sm" value="<?= esc((string) ($row['label'] ?? '')) ?>"></td>
-                        <td><input type="text" name="<?= esc($rp, 'attr') ?>[numbers]" class="form-control form-control-sm" value="<?= esc((string) ($row['numbers'] ?? '')) ?>" placeholder="38 % de la phase"></td>
-                        <td><input type="number" name="<?= esc($rp, 'attr') ?>[bar_percent]" class="form-control form-control-sm" min="0" max="100" value="<?= esc((string) $pct) ?>"></td>
-                    </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
+        <div class="pp-repeatable" data-pp-repeat-key="rows">
+            <div class="row g-2 mb-1 small fw-semibold text-muted d-none d-md-flex align-items-center">
+                <div class="col-md-4">Libellé</div>
+                <div class="col-md">Chiffres / texte</div>
+                <div class="col-md-2">Barre %</div>
+                <div class="col-auto ms-auto" style="width:2.75rem"></div>
+            </div>
+            <div class="pp-repeat-body">
+                    <?php foreach ($rows as $ri => $row) : ?>
+                        <?= view('admin/project_projects/blocks/impact_tracker_row', [
+                            'rp'  => $pfx . '[rows][' . $ri . ']',
+                            'row' => is_array($row) ? $row : [],
+                        ]) ?>
+                    <?php endforeach; ?>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-primary pp-repeat-add mt-2">+ Ligne</button>
+            <template class="pp-repeat-template">
+                <?= view('admin/project_projects/blocks/impact_tracker_row', [
+                    'rp'  => $pfx . '[rows][__RI__]',
+                    'row' => ['label' => '', 'numbers' => '', 'bar_percent' => 0],
+                ]) ?>
+            </template>
         </div>
     </div>
 </div>

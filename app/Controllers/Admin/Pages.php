@@ -125,7 +125,7 @@ class Pages extends BaseController
             $model->update($newId, ['translation_group' => (string) $newId]);
         }
 
-        return redirect()->to(site_url('admin/pages'))->with('message', 'Page créée.');
+        return $this->adminRedirectToEdit('admin/pages', $newId, 'Page créée.');
     }
 
     public function edit(int $id)
@@ -198,7 +198,7 @@ class Pages extends BaseController
             'hero_image_alt'     => $hero['hero_image_alt'],
         ]);
 
-        return redirect()->to(site_url('admin/pages'))->with('message', 'Page mise à jour.');
+        return $this->adminRedirectToEdit('admin/pages', $id, 'Page mise à jour.');
     }
 
     public function delete(int $id): ResponseInterface

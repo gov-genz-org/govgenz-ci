@@ -12,8 +12,12 @@ final class ProjectBodyBlocksRenderer
     /**
      * @param list<array<string, mixed>> $blocks
      */
-    public static function render(array $blocks): string
+    public static function render(array $blocks, string $locale = 'fr'): string
     {
+        if (! in_array($locale, ['fr', 'en'], true)) {
+            $locale = 'fr';
+        }
+
         $inner = '';
         foreach ($blocks as $b) {
             if (! is_array($b)) {
@@ -21,7 +25,7 @@ final class ProjectBodyBlocksRenderer
             }
             $inner .= match ((string) ($b['type'] ?? '')) {
                 'section_rich' => self::sectionRich($b),
-                'budget_table' => self::budgetTable($b),
+                'budget_table' => self::budgetTable($b, $locale),
                 'timeline' => self::timeline($b),
                 'kpi_grid' => self::kpiGrid($b),
                 'note_panel' => self::notePanel($b),
@@ -61,13 +65,14 @@ final class ProjectBodyBlocksRenderer
         }
         $bullets = $b['bullets'] ?? [];
         if (is_array($bullets) && $bullets !== []) {
+            helper('admin');
             $html .= '<ul>';
             foreach ($bullets as $line) {
                 if (! is_string($line)) {
                     continue;
                 }
                 $line = trim($line);
-                if ($line === '') {
+                if ($line === '' || admin_pp_is_junk_repeat_line($line)) {
                     continue;
                 }
                 $html .= '<li>' . esc($line) . '</li>';
@@ -95,8 +100,10 @@ final class ProjectBodyBlocksRenderer
     /**
      * @param array<string, mixed> $b
      */
-    private static function budgetTable(array $b): string
+    private static function budgetTable(array $b, string $locale): string
     {
+        helper(['project', 'language', 'admin']);
+
         $sectionTitle = trim((string) ($b['section_title'] ?? ''));
         if ($sectionTitle === '') {
             $sectionTitle = '💰 Budget détaillé';
@@ -105,23 +112,44 @@ final class ProjectBodyBlocksRenderer
         if (! is_array($rows) || $rows === []) {
             return '';
         }
-        $bodyRows = '';
+
+        $sumAriary       = project_budget_table_sum_ariary($rows);
+        $totalRowLabel   = '';
+        $bodyRows        = '';
+
         foreach ($rows as $row) {
             if (! is_array($row)) {
                 continue;
             }
-            $poste = trim((string) ($row['poste'] ?? ''));
-            $detail = trim((string) ($row['detail'] ?? ''));
-            $montant = trim((string) ($row['montant'] ?? ''));
+            if (ProjectBudgetTableSync::rowIsTotal($row)) {
+                $poste = trim((string) ($row['poste'] ?? ''));
+                if ($poste !== '') {
+                    $totalRowLabel = $poste;
+                }
+                continue;
+            }
+
+            $poste   = admin_pp_scrub_junk_text(trim((string) ($row['poste'] ?? '')));
+            $detail  = admin_pp_scrub_junk_text(trim((string) ($row['detail'] ?? '')));
+            $montant = admin_pp_scrub_junk_text(trim((string) ($row['montant'] ?? '')));
             if ($poste === '' && $detail === '' && $montant === '') {
                 continue;
             }
-            $isTotal = strtolower(trim((string) ($row['row_class'] ?? ''))) === 'total';
-            $trClass = $isTotal ? ' class="budget-total"' : '';
-            $bodyRows .= '<tr' . $trClass . '>';
+
+            $bodyRows .= '<tr>';
             $bodyRows .= '<td>' . esc($poste) . '</td><td>' . esc($detail) . '</td><td>' . esc($montant) . '</td>';
             $bodyRows .= '</tr>';
         }
+
+        if ($sumAriary !== null && $sumAriary > 0) {
+            $label = $totalRowLabel !== '' ? $totalRowLabel : (string) lang('Projects.budget_table_total_row');
+            $sumDisplay = project_format_ariary_table_cell($sumAriary, $locale);
+            $bodyRows .= '<tr class="budget-total">';
+            $bodyRows .= '<td colspan="2"><strong>' . esc($label) . '</strong></td>';
+            $bodyRows .= '<td><strong>' . esc($sumDisplay) . '</strong></td>';
+            $bodyRows .= '</tr>';
+        }
+
         if ($bodyRows === '') {
             return '';
         }
@@ -189,6 +217,7 @@ final class ProjectBodyBlocksRenderer
      */
     private static function kpiGrid(array $b): string
     {
+        helper('admin');
         $sectionTitle = trim((string) ($b['section_title'] ?? ''));
         if ($sectionTitle === '') {
             $sectionTitle = "📊 Indicateurs d'impact";
@@ -205,8 +234,8 @@ final class ProjectBodyBlocksRenderer
             if (! is_array($it)) {
                 continue;
             }
-            $v = trim((string) ($it['value'] ?? ''));
-            $l = trim((string) ($it['label'] ?? ''));
+            $v = admin_pp_scrub_junk_text(trim((string) ($it['value'] ?? '')));
+            $l = admin_pp_scrub_junk_text(trim((string) ($it['label'] ?? '')));
             if ($v === '' && $l === '') {
                 continue;
             }

@@ -218,7 +218,7 @@ $budgetSuffixesJson = json_encode([
         <div class="col-md-6">
             <label class="form-label">Aperçu affiché (liste + fiche)</label>
             <p id="pp-budget-preview" class="form-control bg-light mb-0" style="min-height:2.4rem"><?= esc($budgetPreview !== '' ? $budgetPreview : '—') ?></p>
-            <p class="form-text mb-0">Choisissez l’unité explicitement (millions, milliards…) — plus d’abréviation « M » ambiguë.</p>
+            <p class="form-text mb-0">Avec un bloc « Tableau budget », le montant et l’aperçu sont calculés automatiquement à partir de la somme des lignes (hors ligne Total).</p>
             <div id="pp-budget-live" class="d-none" aria-hidden="true"
                  data-locale="<?= esc($ppLocale, 'attr') ?>"
                  data-suffixes="<?= esc($budgetSuffixesJson, 'attr') ?>"></div>
@@ -286,6 +286,7 @@ $budgetSuffixesJson = json_encode([
                     'contentMode'        => $ppContentMode,
                     'blocksForForm'      => $blocksForForm,
                     'canUseAdvancedHtml' => $canUseAdvancedHtml,
+                    'ppLocale'           => $ppLocale,
                 ]) ?>
             <?php endif; ?>
         </div>

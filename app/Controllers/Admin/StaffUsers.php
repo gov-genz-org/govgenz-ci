@@ -67,14 +67,15 @@ class StaffUsers extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        model(StaffUserModel::class)->insert([
+        $model = model(StaffUserModel::class);
+        $model->insert([
             'email'         => mb_strtolower(trim((string) $this->request->getPost('email'))),
             'password_hash' => password_hash((string) $this->request->getPost('password'), PASSWORD_DEFAULT),
             'role'          => $this->request->getPost('role'),
             'is_active'     => 1,
         ]);
 
-        return redirect()->to(site_url('admin/staff-users'))->with('message', 'Compte créé.');
+        return $this->adminRedirectToEdit('admin/staff-users', (int) $model->getInsertID(), 'Compte créé.');
     }
 
     public function edit(int $id): ResponseInterface|string
@@ -145,7 +146,7 @@ class StaffUsers extends BaseController
 
         $model->update($id, $data);
 
-        return redirect()->to(site_url('admin/staff-users'))->with('message', 'Compte mis à jour.');
+        return $this->adminRedirectToEdit('admin/staff-users', $id, 'Compte mis à jour.');
     }
 
     public function delete(int $id): ResponseInterface
