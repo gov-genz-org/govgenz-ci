@@ -44,6 +44,14 @@ Options -Indexes
 	ErrorDocument 404 index.php
 </IfModule>
 
+# Cache navigateur — statiques (docroot = public/ uniquement ; sinon voir .htaccess à la racine govgenz-ci)
+<IfModule mod_setenvif.c>
+	SetEnvIf Request_URI "\.(css|js|mjs|woff2?|ttf|eot|png|jpe?g|gif|webp|svg|ico)(\?.*)?$" static_long_cache=1
+</IfModule>
+<IfModule mod_headers.c>
+	Header set Cache-Control "public, max-age=604800, immutable" env=static_long_cache
+</IfModule>
+
 # Disable server signature start
 ServerSignature Off
 # Disable server signature end

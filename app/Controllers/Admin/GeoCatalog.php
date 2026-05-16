@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Libraries\GeoCatalogCache;
 use App\Models\MdgCommuneModel;
 use App\Models\MdgDistrictModel;
 use App\Models\MdgFokontanyModel;
@@ -19,13 +20,17 @@ class GeoCatalog extends BaseController
             return $this->jsonError('Tables géographie absentes. Lancez : php spark migrate && php spark mdg:import-geo');
         }
 
-        $items = [];
-        foreach (model(MdgRegionModel::class)->listForSelect() as $row) {
-            $items[] = [
-                'id'   => (int) $row['id'],
-                'name' => (string) $row['name'],
-            ];
-        }
+        $items = GeoCatalogCache::remember('regions', function (): array {
+            $out = [];
+            foreach (model(MdgRegionModel::class)->listForSelect() as $row) {
+                $out[] = [
+                    'id'   => (int) $row['id'],
+                    'name' => (string) $row['name'],
+                ];
+            }
+
+            return $out;
+        });
 
         return $this->response->setJSON(['ok' => true, 'items' => $items]);
     }
@@ -41,14 +46,21 @@ class GeoCatalog extends BaseController
             return $this->response->setJSON(['ok' => true, 'items' => []]);
         }
 
-        $items = [];
-        foreach (model(MdgDistrictModel::class)->listByRegionIds($regionIds) as $row) {
-            $items[] = [
-                'id'        => (int) $row['id'],
-                'name'      => (string) $row['name'],
-                'region_id' => (int) $row['region_id'],
-            ];
-        }
+        $items = GeoCatalogCache::remember(
+            GeoCatalogCache::idsSuffix('districts', $regionIds),
+            function () use ($regionIds): array {
+                $out = [];
+                foreach (model(MdgDistrictModel::class)->listByRegionIds($regionIds) as $row) {
+                    $out[] = [
+                        'id'        => (int) $row['id'],
+                        'name'      => (string) $row['name'],
+                        'region_id' => (int) $row['region_id'],
+                    ];
+                }
+
+                return $out;
+            },
+        );
 
         return $this->response->setJSON(['ok' => true, 'items' => $items]);
     }
@@ -64,14 +76,21 @@ class GeoCatalog extends BaseController
             return $this->response->setJSON(['ok' => true, 'items' => []]);
         }
 
-        $items = [];
-        foreach (model(MdgCommuneModel::class)->listByDistrictIds($districtIds) as $row) {
-            $items[] = [
-                'id'          => (int) $row['id'],
-                'name'        => (string) $row['name'],
-                'district_id' => (int) $row['district_id'],
-            ];
-        }
+        $items = GeoCatalogCache::remember(
+            GeoCatalogCache::idsSuffix('communes', $districtIds),
+            function () use ($districtIds): array {
+                $out = [];
+                foreach (model(MdgCommuneModel::class)->listByDistrictIds($districtIds) as $row) {
+                    $out[] = [
+                        'id'          => (int) $row['id'],
+                        'name'        => (string) $row['name'],
+                        'district_id' => (int) $row['district_id'],
+                    ];
+                }
+
+                return $out;
+            },
+        );
 
         return $this->response->setJSON(['ok' => true, 'items' => $items]);
     }
@@ -87,14 +106,21 @@ class GeoCatalog extends BaseController
             return $this->response->setJSON(['ok' => true, 'items' => []]);
         }
 
-        $items = [];
-        foreach (model(MdgFokontanyModel::class)->listByCommuneIds($communeIds) as $row) {
-            $items[] = [
-                'id'         => (int) $row['id'],
-                'name'       => (string) $row['name'],
-                'commune_id' => (int) $row['commune_id'],
-            ];
-        }
+        $items = GeoCatalogCache::remember(
+            GeoCatalogCache::idsSuffix('fokontany', $communeIds),
+            function () use ($communeIds): array {
+                $out = [];
+                foreach (model(MdgFokontanyModel::class)->listByCommuneIds($communeIds) as $row) {
+                    $out[] = [
+                        'id'         => (int) $row['id'],
+                        'name'       => (string) $row['name'],
+                        'commune_id' => (int) $row['commune_id'],
+                    ];
+                }
+
+                return $out;
+            },
+        );
 
         return $this->response->setJSON(['ok' => true, 'items' => $items]);
     }

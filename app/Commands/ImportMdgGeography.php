@@ -12,24 +12,26 @@ class ImportMdgGeography extends BaseCommand
 {
     protected $group       = 'mdg';
     protected $name        = 'mdg:import-geo';
-    protected $description = 'Importe régions, districts, communes (SQL) et fokontany (CSV) depuis docs/.';
+    protected $description = 'Importe la géographie MDG : si liste_fokontany_par_district.json est présent, régions/districts/communes/fokontany viennent du JSON (SQL = provinces + aide province_id). Sinon référentiel SQL + CSV fokontany.';
     protected $usage       = 'mdg:import-geo';
 
     public function run(array $params): void
     {
-        [$sql, $csv] = $this->resolveDataFiles();
+        [$sql, $csv, $json] = $this->resolveDataFiles();
 
         CLI::write('SQL : ' . $sql, 'cyan');
-        if ($csv !== null) {
-            CLI::write('CSV fokontany : ' . $csv, 'cyan');
+        if ($json !== null) {
+            CLI::write('Référence JSON (régions, districts, communes, fokontany) : ' . $json, 'cyan');
+        } elseif ($csv !== null) {
+            CLI::write('Fokontany (CSV) : ' . $csv, 'cyan');
         } else {
-            CLI::write('CSV fokontany : absent (import communes uniquement)', 'yellow');
+            CLI::write('Fokontany : aucun fichier JSON/CSV — import sans fokontany.', 'yellow');
         }
 
         $importer = new MdgGeographyImporter(db_connect());
-        $importer->import($sql, $csv);
+        $importer->import($sql, $csv, $json);
 
-        CLI::write('Import géographie Madagascar terminé.', 'green');
+        CLI::write('Import géographie Madagascar terminé (cache géo BO vidé).', 'green');
         CLI::write('Provinces : ' . (string) db_connect()->table('mdg_provinces')->countAllResults());
         CLI::write('Régions : ' . (string) db_connect()->table('mdg_regions')->countAllResults());
         CLI::write('Districts : ' . (string) db_connect()->table('mdg_districts')->countAllResults());
@@ -38,12 +40,13 @@ class ImportMdgGeography extends BaseCommand
     }
 
     /**
-     * @return array{0: string, 1: string|null}
+     * @return array{0: string, 1: string|null, 2: string|null} sql, csv fallback, json (prioritaire à l’import)
      */
     private function resolveDataFiles(): array
     {
-        $sqlName = 'regions-communes-district.sql';
-        $csvName = 'mada_fokontany_payload.csv';
+        $sqlName  = 'regions-communes-district.sql';
+        $csvName  = 'mada_fokontany_payload.csv';
+        $jsonName = 'liste_fokontany_par_district.json';
 
         $dirs = [
             dirname(ROOTPATH) . DIRECTORY_SEPARATOR . 'docs',
@@ -56,9 +59,14 @@ class ImportMdgGeography extends BaseCommand
             if (! is_readable($sql)) {
                 continue;
             }
-            $csv = $dir . DIRECTORY_SEPARATOR . $csvName;
+            $json = $dir . DIRECTORY_SEPARATOR . $jsonName;
+            $csv  = $dir . DIRECTORY_SEPARATOR . $csvName;
 
-            return [$sql, is_readable($csv) ? $csv : null];
+            return [
+                $sql,
+                is_readable($csv) ? $csv : null,
+                is_readable($json) ? $json : null,
+            ];
         }
 
         throw new \RuntimeException(

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Libraries\CmsPublishedPageCache;
 use App\Libraries\SiteContext;
 use CodeIgniter\Model;
 
@@ -42,15 +43,71 @@ class CmsPageModel extends Model
     protected $createdField       = 'created_at';
     protected $updatedField       = 'updated_at';
 
+    /** @var ?array<string, mixed> */
+    private ?array $pageCacheRowBefore = null;
+
+    protected $afterInsert = ['invalidatePublishedPageCache'];
+    protected $beforeUpdate = ['rememberPublishedPageCacheRow'];
+    protected $afterUpdate  = ['invalidatePublishedPageCache'];
+    protected $beforeDelete = ['rememberPublishedPageCacheRow'];
+    protected $afterDelete  = ['invalidatePublishedPageCache'];
+
     public function getPublishedBySlug(string $slug, ?string $locale = null): ?array
     {
         $locale ??= SiteContext::locale();
 
-        $row = $this->where('slug', $slug)
-            ->where('locale', $locale)
-            ->where('status', 'published')
-            ->first();
+        return CmsPublishedPageCache::remember($locale, $slug, function () use ($slug, $locale): ?array {
+            $row = $this->where('slug', $slug)
+                ->where('locale', $locale)
+                ->where('status', 'published')
+                ->first();
 
-        return $row ?: null;
+            return $row ?: null;
+        });
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    protected function rememberPublishedPageCacheRow(array $data): void
+    {
+        $id = (int) ($data['id'] ?? $data[$this->primaryKey] ?? 0);
+        if ($id <= 0) {
+            $this->pageCacheRowBefore = null;
+
+            return;
+        }
+
+        $this->pageCacheRowBefore = $this->find($id);
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    protected function invalidatePublishedPageCache(array $data): void
+    {
+        $before = $this->pageCacheRowBefore;
+        $this->pageCacheRowBefore = null;
+
+        if ($before !== null) {
+            CmsPublishedPageCache::forgetRow($before);
+        }
+
+        $id = (int) ($data['id'] ?? $data[$this->primaryKey] ?? 0);
+        if ($id <= 0) {
+            $id = (int) $this->getInsertID();
+        }
+        if ($id > 0) {
+            $row = $this->find($id);
+            if ($row !== null) {
+                CmsPublishedPageCache::forgetRow($row);
+            }
+        }
+
+        $locale = trim((string) ($data['locale'] ?? ''));
+        $slug   = trim((string) ($data['slug'] ?? ''));
+        if ($locale !== '' && $slug !== '') {
+            CmsPublishedPageCache::forget($locale, $slug);
+        }
     }
 }

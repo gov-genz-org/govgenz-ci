@@ -52,6 +52,16 @@
 
     var restoring = false;
 
+    var geoFetchCache = {
+        districts: {},
+        communes: {},
+        fokontany: {},
+    };
+
+    function idsCacheKey(ids) {
+        return ids.slice().sort().join(',');
+    }
+
     function setStatus(msg, isError) {
         if (!statusEl) {
             return;
@@ -123,6 +133,23 @@
             return encodeURIComponent(param) + '[]=' + encodeURIComponent(id);
         }).join('&');
         return fetchJson(apiBase + '/' + path + '?' + q);
+    }
+
+    function cachedQueryUrl(path, cacheBucket, param, ids) {
+        if (!ids.length) {
+            return Promise.resolve({ ok: true, items: [] });
+        }
+        var key = idsCacheKey(ids);
+        if (geoFetchCache[cacheBucket] && geoFetchCache[cacheBucket][key]) {
+            return Promise.resolve(geoFetchCache[cacheBucket][key]);
+        }
+        return queryUrl(path, param, ids).then(function (data) {
+            if (!geoFetchCache[cacheBucket]) {
+                geoFetchCache[cacheBucket] = {};
+            }
+            geoFetchCache[cacheBucket][key] = data;
+            return data;
+        });
     }
 
     function regionsAlreadyInDom() {
@@ -277,7 +304,7 @@
         }
         var regionIds = selectedValues(selRegions);
         setStatus('Chargement des districts…');
-        queryUrl('districts', 'region_ids', regionIds)
+        cachedQueryUrl('districts', 'districts', 'region_ids', regionIds)
             .then(function (data) {
                 if (!data.ok) {
                     throw new Error(data.error || 'Erreur districts');
@@ -307,7 +334,7 @@
         if (!fromCascade) {
             setStatus('Chargement des communes…');
         }
-        return queryUrl('communes', 'district_ids', districtIds)
+        return cachedQueryUrl('communes', 'communes', 'district_ids', districtIds)
             .then(function (data) {
                 if (!data.ok) {
                     throw new Error(data.error || 'Erreur communes');
@@ -339,7 +366,7 @@
         if (!fromCascade) {
             setStatus('Chargement des fokontany…');
         }
-        return queryUrl('fokontany', 'commune_ids', communeIds)
+        return cachedQueryUrl('fokontany', 'fokontany', 'commune_ids', communeIds)
             .then(function (data) {
                 if (!data.ok) {
                     throw new Error(data.error || 'Erreur fokontany');
@@ -366,20 +393,20 @@
         }
         restoring = true;
         setStatus('Chargement des niveaux…');
-        queryUrl('districts', 'region_ids', initial.region_ids || [])
+        cachedQueryUrl('districts', 'districts', 'region_ids', initial.region_ids || [])
             .then(function (disData) {
                 if (!disData.ok) {
                     throw new Error(disData.error || 'Erreur');
                 }
                 fillSelect(selDistricts, disData.items, initial.district_ids || []);
-                return queryUrl('communes', 'district_ids', initial.district_ids || []);
+                return cachedQueryUrl('communes', 'communes', 'district_ids', initial.district_ids || []);
             })
             .then(function (comData) {
                 if (!comData.ok) {
                     throw new Error(comData.error || 'Erreur');
                 }
                 fillSelect(selCommunes, comData.items, initial.commune_ids || []);
-                return queryUrl('fokontany', 'commune_ids', initial.commune_ids || []);
+                return cachedQueryUrl('fokontany', 'fokontany', 'commune_ids', initial.commune_ids || []);
             })
             .then(function (fokData) {
                 if (fokData && fokData.ok) {
