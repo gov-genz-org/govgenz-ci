@@ -1102,6 +1102,23 @@ html.project-fund-modal-open {
   color: var(--pp-text);
 }
 
+#main-content .projects-program-show .projects-program-show__share {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+#main-content .projects-program-show .projects-program-show__share-url-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+}
+
+#main-content .projects-program-show .projects-program-show__share-url-head .projects-program-show__widget-lead {
+  margin: 0;
+}
+
 #main-content .projects-program-show .projects-program-show__share-url {
   font-size: 0.75rem;
   color: var(--pp-teal);
@@ -1110,6 +1127,164 @@ html.project-fund-modal-open {
   padding: 0.5rem;
   border-radius: 4px;
   display: block;
+  cursor: text;
+  user-select: all;
+}
+
+#main-content .projects-program-show .projects-program-show__share-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--pp-border-dim);
+  border-radius: 4px;
+  background: var(--pp-bg-section);
+  color: var(--pp-teal);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+#main-content .projects-program-show .projects-program-show__share-icon-btn:hover {
+  border-color: var(--pp-teal);
+  color: var(--pp-text);
+  background: rgba(46, 160, 130, 0.08);
+}
+
+#main-content .projects-program-show .projects-program-show__share-icon-btn.is-copied {
+  border-color: var(--pp-teal);
+  color: var(--pp-teal);
+}
+
+#main-content .projects-program-show .projects-program-show__share-qr-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  padding-top: 0.15rem;
+}
+
+#main-content .projects-program-show .projects-program-show__share-qr-label {
+  margin: 0;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pp-text-muted);
+}
+
+#main-content .projects-program-show .projects-program-show__share-qr-frame {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: 6px;
+  background: #fff;
+  padding: 0.35rem;
+  box-sizing: border-box;
+}
+
+#main-content .projects-program-show .projects-program-show__share-qr {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+}
+
+#main-content .projects-program-show .projects-program-show__share-qr-logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 22%;
+  height: 22%;
+  min-width: 26px;
+  min-height: 26px;
+  max-width: 56px;
+  max-height: 56px;
+  transform: translate(-50%, -50%);
+  padding: 3px;
+  border-radius: 4px;
+  background: #fff;
+  box-sizing: border-box;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+#main-content .projects-program-show .projects-program-show__share-qr-frame--large .projects-program-show__share-qr-logo {
+  max-width: 72px;
+  max-height: 72px;
+  padding: 4px;
+}
+
+#main-content .projects-program-show .projects-program-show__share-social {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  padding-top: 0.15rem;
+}
+
+#main-content .projects-program-show .projects-program-show__share-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--pp-border-dim);
+  border-radius: 4px;
+  background: var(--pp-bg-section);
+  color: var(--pp-teal);
+  text-decoration: none;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+#main-content .projects-program-show .projects-program-show__share-social-link:hover {
+  border-color: var(--pp-teal);
+  color: var(--pp-text);
+  background: rgba(46, 160, 130, 0.08);
+}
+
+#main-content .projects-program-show .projects-program-show__share-qr-page {
+  max-width: 22rem;
+  margin: 2rem auto 3rem;
+  text-align: center;
+}
+
+#main-content .projects-program-show .projects-program-show__share-qr-page-lead {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  color: var(--pp-text-sec);
+}
+
+#main-content .projects-program-show .projects-program-show__share-qr-frame--large {
+  width: 280px;
+  height: 280px;
+  margin: 0 auto 1rem;
+}
+
+#main-content .projects-program-show .projects-program-show__share-qr-frame--large .projects-program-show__share-qr {
+  width: 100%;
+  height: 100%;
+}
+
+#main-content .projects-program-show .projects-program-show__share-qr-page-hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.82rem;
+  color: var(--pp-text-muted);
+}
+
+#main-content .projects-program-show .projects-program-show__share-qr-page-link a {
+  color: var(--pp-teal);
+  font-weight: 600;
+  text-decoration: none;
 }
 
 #main-content .projects-program-show .projects-program-show__see-also {

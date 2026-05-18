@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-helper(['locale', 'cms']);
+helper(['locale', 'cms', 'asset']);
 
 use App\Libraries\PublicNav;
 use App\Libraries\SiteContext;
@@ -28,11 +28,11 @@ if ($footerCmsHtml !== '' && preg_match('/^<div\s+class="footer__columns(?:\s[^"
     <?php if (! empty($metaDescription)) : ?>
         <meta name="description" content="<?= esc((string) $metaDescription, 'attr') ?>">
     <?php endif; ?>
-    <link rel="stylesheet" href="<?= base_url('assets/css/govgenz-fonts.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/govgenz-tokens.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/govgenz-template.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/govgenz-front-pages.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/css/govgenz-bridge.css') ?>">
+    <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/govgenz-fonts.css'), 'attr') ?>">
+    <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/govgenz-tokens.css'), 'attr') ?>">
+    <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/govgenz-template.css'), 'attr') ?>">
+    <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/govgenz-front-pages.css'), 'attr') ?>">
+    <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/govgenz-bridge.css'), 'attr') ?>">
     <?= $extraHead ?? '' ?>
 </head>
 <body class="ggz-public-theme">
@@ -71,8 +71,17 @@ if ($footerCmsHtml !== '' && preg_match('/^<div\s+class="footer__columns(?:\s[^"
 
         <div class="header__actions">
             <a href="<?= esc($switchHref, 'attr') ?>" class="lang-toggle lang-toggle--link" title="<?= esc($switchTitle, 'attr') ?>"><?= esc($switchLabel) ?></a>
-            <button type="button" class="menu-toggle" id="menu-toggle" aria-label="<?= esc(lang('Site.menu_aria'), 'attr') ?>">
-                <span></span><span></span><span></span>
+            <button
+                type="button"
+                class="menu-toggle"
+                id="menu-toggle"
+                aria-expanded="false"
+                aria-controls="nav"
+                aria-label="<?= esc(lang('Site.menu_aria'), 'attr') ?>"
+                data-label-open="<?= esc(lang('Site.menu_aria'), 'attr') ?>"
+                data-label-close="<?= esc(lang('Site.menu_close_aria'), 'attr') ?>"
+            >
+                <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
             </button>
         </div>
     </div>
@@ -132,7 +141,7 @@ $mainShell = trim('ggz-main-shell ' . trim((string) ($mainExtraClass ?? '')));
     </div>
 </footer>
 
-<script defer src="<?= base_url('js/front/govgenz-template.js') ?>"></script>
+<script defer src="<?= esc(public_asset_url('js/front/govgenz-template.js'), 'attr') ?>"></script>
 <?= $extraScripts ?? '' ?>
 </body>
 </html>

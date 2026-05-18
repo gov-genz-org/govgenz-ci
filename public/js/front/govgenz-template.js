@@ -37,14 +37,20 @@ const nav = document.getElementById('nav');
 
 if (menuToggle && nav) {
   menuToggle.addEventListener('click', () => {
-    menuToggle.classList.toggle('is-open');
-    nav.classList.toggle('is-open');
+    const open = !nav.classList.contains('is-open');
+    menuToggle.classList.toggle('is-open', open);
+    nav.classList.toggle('is-open', open);
+    menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuToggle.setAttribute('aria-label', open
+      ? (menuToggle.getAttribute('data-label-close') || 'Close menu')
+      : (menuToggle.getAttribute('data-label-open') || 'Open menu'));
   });
 
   nav.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
       menuToggle.classList.remove('is-open');
       nav.classList.remove('is-open');
+      menuToggle.setAttribute('aria-expanded', 'false');
     });
   });
 }

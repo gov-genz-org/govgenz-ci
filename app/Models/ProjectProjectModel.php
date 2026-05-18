@@ -127,6 +127,23 @@ class ProjectProjectModel extends Model
     }
 
     /**
+     * Fiche publiée par slug, toutes locales (FR puis EN).
+     *
+     * @return array<string, mixed>|null
+     */
+    public function findPublishedBySlugAnyLocale(string $slug): ?array
+    {
+        foreach (['fr', 'en'] as $locale) {
+            $row = $this->findPublishedBySlug($slug, $locale);
+            if ($row !== null) {
+                return $row;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Liste des projets publiés (aperçu liste).
      *
      * @return list<array<string, mixed>>
