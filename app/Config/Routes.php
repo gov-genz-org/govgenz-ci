@@ -28,11 +28,17 @@ $registerFrontWithoutCatchAll = static function (RouteCollection $routes): void 
 
     if (SiteContext::projectsPathPrefixEnabled()) {
         $routes->get('projects', 'Front\\Projects\\Home::index');
+        $routes->get('projects/(:segment)/share-qr.png', 'Front\\Projects\\Home::shareQrImage/$1');
+        $routes->get('projects/(:segment)/share-qr', 'Front\\Projects\\Home::shareQrImage/$1');
+        $routes->get('projects/(:segment)/share', 'Front\\Projects\\Home::shareQrPage/$1');
         $routes->get('projects/(.+)', 'Front\\Projects\\Home::tail/$1');
         $routes->post('projects/filter', 'Front\\Projects\\Home::filterPost');
         $routes->post('projects/(:segment)/fund', 'Front\\Projects\\Home::fundSubmit/$1');
     }
     if ($onProjectsVhost) {
+        $routes->get('(:segment)/share-qr.png', 'Front\\Projects\\Home::shareQrImage/$1');
+        $routes->get('(:segment)/share-qr', 'Front\\Projects\\Home::shareQrImage/$1');
+        $routes->get('(:segment)/share', 'Front\\Projects\\Home::shareQrPage/$1');
         $routes->post('filter', 'Front\\Projects\\Home::filterPost');
         $routes->post('(:segment)/fund', 'Front\\Projects\\Home::fundSubmit/$1');
     }

@@ -6,6 +6,7 @@ namespace App\Controllers\Front\Projects;
 
 use App\Controllers\BaseController;
 use App\Libraries\ProjectContributionNotifier;
+use App\Libraries\ProjectShareQrGenerator;
 use App\Libraries\SiteContext;
 use App\Models\CmsPageModel;
 use App\Models\ProjectContributionModel;
@@ -122,10 +123,10 @@ class Home extends BaseController
             ? localized_site_url('projects')
             : localized_site_url('');
 
-        $extraHead = '<link rel="stylesheet" href="' . esc(base_url('assets/css/projects-program-list.css'), 'attr') . '">'
-            . '<link rel="stylesheet" href="' . esc(base_url('assets/css/project-geo-tooltip.css'), 'attr') . '">'
-            . '<script defer src="' . esc(base_url('js/front/projects-program-filters.js'), 'attr') . '"></script>'
-            . '<script defer src="' . esc(base_url('js/front/project-geo-tooltip.js'), 'attr') . '"></script>';
+        $extraHead = '<link rel="stylesheet" href="' . esc(public_asset_url('assets/css/projects-program-list.css'), 'attr') . '">'
+            . '<link rel="stylesheet" href="' . esc(public_asset_url('assets/css/project-geo-tooltip.css'), 'attr') . '">'
+            . '<script defer src="' . esc(public_asset_url('js/front/projects-program-filters.js'), 'attr') . '"></script>'
+            . '<script defer src="' . esc(public_asset_url('js/front/project-geo-tooltip.js'), 'attr') . '"></script>';
 
         $mainExtra = $listPage !== null ? cms_layout_main_class($listPage['layout_key'] ?? null) : 'ggz-layout-full';
         if (trim($mainExtra) === '') {
@@ -345,10 +346,9 @@ class Home extends BaseController
             ? localized_site_url('projects')
             : localized_site_url('');
 
-        $shareUrl = project_public_url($slug);
-        if (str_starts_with($shareUrl, '/')) {
-            $shareUrl = rtrim((string) base_url(), '/') . $shareUrl;
-        }
+        $shareUrl         = project_public_absolute_url($slug);
+        $shareQrImageUrl  = project_share_qr_image_url($slug);
+        $shareQrPageUrl   = project_share_qr_page_url($slug);
 
         $meta = trim((string) ($project['meta_description'] ?? ''));
         if ($meta === '') {
@@ -359,15 +359,15 @@ class Home extends BaseController
         $showFundMaterial = project_has_material_needs($project);
         $showFundCta      = $showFundBudget || $showFundMaterial;
 
-        $extraHead = '<link rel="stylesheet" href="' . esc(base_url('assets/css/projects-program-show.css'), 'attr') . '">'
-            . '<link rel="stylesheet" href="' . esc(base_url('assets/css/project-geo-tooltip.css'), 'attr') . '">'
+        $extraHead = '<link rel="stylesheet" href="' . esc(public_asset_url('assets/css/projects-program-show.css'), 'attr') . '">'
+            . '<link rel="stylesheet" href="' . esc(public_asset_url('assets/css/project-geo-tooltip.css'), 'attr') . '">'
             . '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/css/intlTelInput.css">'
-            . '<script defer src="' . esc(base_url('js/front/project-geo-tooltip.js'), 'attr') . '"></script>';
+            . '<script defer src="' . esc(public_asset_url('js/front/project-geo-tooltip.js'), 'attr') . '"></script>';
 
-        $extraScripts = '';
+        $extraScripts = '<script defer src="' . esc(public_asset_url('js/front/project-share.js'), 'attr') . '"></script>';
         if ($showFundCta) {
-            $extraScripts = '<script defer src="https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/js/intlTelInput.min.js"></script>'
-                . '<script defer src="' . esc(base_url('js/front/project-fund-form.js'), 'attr') . '"></script>';
+            $extraScripts .= '<script defer src="https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/js/intlTelInput.min.js"></script>'
+                . '<script defer src="' . esc(public_asset_url('js/front/project-fund-form.js'), 'attr') . '"></script>';
         }
 
         return view('front/layout', [
@@ -387,8 +387,10 @@ class Home extends BaseController
                 ),
                 'relatedProjects'   => $relatedProjects,
                 'projectsListUrl'   => $projectsListUrl,
-                'shareUrl'          => $shareUrl,
-                'currencyLines'     => project_currency_equivalents_for_project($project, $locale),
+                'shareUrl'         => $shareUrl,
+                'shareQrImageUrl'  => $shareQrImageUrl,
+                'shareQrPageUrl'   => $shareQrPageUrl,
+                'currencyLines'    => project_currency_equivalents_for_project($project, $locale),
             ]),
             'navActive'       => 'projects',
             'mainExtraClass'  => 'ggz-layout-full',
@@ -539,6 +541,78 @@ class Home extends BaseController
         ]), $adminValidationUrl);
 
         return redirect()->to($redirectUrl)->with('fund_success', lang('Projects.fund_form_success'));
+    }
+
+    public function shareQrImage(string $slug): ResponseInterface
+    {
+        helper('project');
+        $slug    = strtolower(trim($slug, '/'));
+        $project = model(ProjectProjectModel::class)->findPublishedBySlugAnyLocale($slug);
+        if ($project === null) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $targetUrl = project_public_absolute_url($slug);
+
+        try {
+            $png = ProjectShareQrGenerator::generate($targetUrl, 512);
+        } catch (\Throwable $e) {
+            log_message('error', 'shareQrImage [{slug}]: {msg}', [
+                'slug' => $slug,
+                'msg'  => $e->getMessage(),
+            ]);
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $cacheMaxAge = ENVIRONMENT === 'development' ? 60 : 86400;
+
+        return $this->response
+            ->setStatusCode(200)
+            ->setHeader('Content-Type', 'image/png')
+            ->setHeader('Cache-Control', 'public, max-age=' . $cacheMaxAge)
+            ->setBody($png);
+    }
+
+    public function shareQrPage(string $slug): string
+    {
+        helper(['language', 'project', 'locale']);
+        $slug    = strtolower(trim($slug, '/'));
+        $project = model(ProjectProjectModel::class)->findPublishedBySlugAnyLocale($slug);
+        if ($project === null) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $title         = (string) ($project['title'] ?? '');
+        $qrImageUrl    = project_share_qr_image_url($slug);
+        $projectUrl    = project_public_absolute_url($slug);
+        $pageTitle     = lang('Projects.share_qr_page_title', ['title' => $title]);
+        $ogTitle       = $pageTitle;
+        $ogDescription = lang('Projects.share_qr_page_description', ['title' => $title]);
+
+        $extraHead = '<meta property="og:type" content="website">'
+            . '<meta property="og:title" content="' . esc($ogTitle, 'attr') . '">'
+            . '<meta property="og:description" content="' . esc($ogDescription, 'attr') . '">'
+            . '<meta property="og:image" content="' . esc($qrImageUrl, 'attr') . '">'
+            . '<meta property="og:image:type" content="image/png">'
+            . '<meta property="og:url" content="' . esc(project_share_qr_page_url($slug), 'attr') . '">'
+            . '<meta name="twitter:card" content="summary_large_image">'
+            . '<meta name="twitter:image" content="' . esc($qrImageUrl, 'attr') . '">'
+            . '<link rel="stylesheet" href="' . esc(public_asset_url('assets/css/projects-program-show.css'), 'attr') . '">';
+
+        return view('front/layout', [
+            'title'           => $pageTitle,
+            'metaDescription' => $ogDescription,
+            'extraHead'       => $extraHead,
+            'main'            => view('front/projects/share_qr', [
+                'project'     => $project,
+                'title'       => $title,
+                'qrImageUrl'  => $qrImageUrl,
+                'projectUrl'  => $projectUrl,
+                'projectHref' => project_public_url($slug),
+            ]),
+            'navActive'      => 'projects',
+            'mainExtraClass' => 'ggz-layout-full',
+        ]);
     }
 
     /**

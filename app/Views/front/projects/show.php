@@ -99,8 +99,10 @@ $sectorCodes = project_sector_codes_from_csv((string) ($project['sectors_csv'] ?
             'launchedDisplay'  => $launchedDisplay,
             'relatedProjects'  => $relatedProjects,
             'projectsListUrl'  => $projectsListUrl,
-            'shareUrl'         => $shareUrl,
-            'currencyLines'       => $currencyLines,
+            'shareUrl'        => $shareUrl,
+            'shareQrImageUrl' => $shareQrImageUrl ?? '',
+            'shareQrPageUrl'  => $shareQrPageUrl ?? '',
+            'currencyLines'      => $currencyLines,
             'currencyRatesHeader' => $currencyRatesHeader,
         ]) ?>
     </div>

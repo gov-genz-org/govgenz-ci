@@ -4,6 +4,27 @@ declare(strict_types=1);
 
 helper(['cms']);
 
+if (! function_exists('project_asset_version')) {
+    /**
+     * @deprecated Préférer public_asset_url() ; conserve la version de déploiement globale.
+     */
+    function project_asset_version(string $relativePublicPath): string
+    {
+        helper('asset');
+
+        return front_asset_version();
+    }
+}
+
+if (! function_exists('project_public_asset_url')) {
+    function project_public_asset_url(string $relativePublicPath): string
+    {
+        helper('asset');
+
+        return public_asset_url($relativePublicPath);
+    }
+}
+
 if (! function_exists('project_body_content_mode')) {
     /**
      * @param array<string, mixed> $project
@@ -542,6 +563,114 @@ if (! function_exists('project_public_url')) {
         }
 
         return localized_site_url($slug);
+    }
+}
+
+if (! function_exists('project_share_qr_image_path')) {
+    function project_share_qr_image_path(string $slug): string
+    {
+        $slug = strtolower(trim($slug, '/'));
+        if (\App\Libraries\SiteContext::projectsPathPrefixEnabled()) {
+            return 'projects/' . $slug . '/share-qr.png';
+        }
+
+        return $slug . '/share-qr.png';
+    }
+}
+
+if (! function_exists('project_share_qr_page_path')) {
+    function project_share_qr_page_path(string $slug): string
+    {
+        $slug = strtolower(trim($slug, '/'));
+        if (\App\Libraries\SiteContext::projectsPathPrefixEnabled()) {
+            return 'projects/' . $slug . '/share';
+        }
+
+        return $slug . '/share';
+    }
+}
+
+if (! function_exists('project_share_qr_absolute_url')) {
+    function project_share_qr_absolute_url(string $relativePath): string
+    {
+        helper('locale');
+        $url = localized_site_url($relativePath);
+        if (str_starts_with($url, '/')) {
+            $url = rtrim((string) base_url(), '/') . $url;
+        }
+
+        return $url;
+    }
+}
+
+if (! function_exists('project_share_qr_image_url')) {
+    function project_share_qr_image_url(string $slug): string
+    {
+        $url = project_share_qr_absolute_url(project_share_qr_image_path($slug));
+        helper('asset');
+        $separator = str_contains($url, '?') ? '&' : '?';
+
+        return $url . $separator . 'v=' . rawurlencode(front_asset_version());
+    }
+}
+
+if (! function_exists('project_share_qr_page_url')) {
+    function project_share_qr_page_url(string $slug): string
+    {
+        return project_share_qr_absolute_url(project_share_qr_page_path($slug));
+    }
+}
+
+if (! function_exists('project_share_social_links')) {
+    /**
+     * Liens de partage.
+     *
+     * Facebook / LinkedIn / X : URL web avec le lien de la fiche (paramètre u= / url=).
+     * WhatsApp : deep link app + texte avec l’URL du projet.
+     *
+     * @return array<string, array{web: string, mobile?: string, app?: string, android?: string}>
+     */
+    function project_share_social_links(string $title, string $projectPageUrl, string $shareQrPageUrl): array
+    {
+        $projectEnc = rawurlencode($projectPageUrl);
+        $waText     = rawurlencode($title . ' — ' . $projectPageUrl);
+        $tweetText  = rawurlencode(lang('Projects.share_qr_social_text', ['title' => $title]));
+
+        return [
+            'facebook' => [
+                'web'    => 'https://www.facebook.com/sharer/sharer.php?u=' . $projectEnc,
+                'mobile' => 'https://m.facebook.com/sharer/sharer.php?u=' . $projectEnc,
+            ],
+            'whatsapp' => [
+                'web'     => 'https://api.whatsapp.com/send?text=' . $waText,
+                'app'     => 'whatsapp://send?text=' . $waText,
+                'android' => 'intent://send?text=' . $waText . '#Intent;scheme=whatsapp;package=com.whatsapp;end',
+            ],
+            'linkedin' => [
+                'web'    => 'https://www.linkedin.com/sharing/share-offsite/?url=' . $projectEnc,
+                'mobile' => 'https://www.linkedin.com/sharing/share-offsite/?url=' . $projectEnc,
+            ],
+            'x' => [
+                'web'    => 'https://twitter.com/intent/tweet?url=' . $projectEnc . '&text=' . $tweetText,
+                'mobile' => 'https://twitter.com/intent/tweet?url=' . $projectEnc . '&text=' . $tweetText,
+            ],
+            'email' => [
+                'web' => 'mailto:?subject=' . rawurlencode(lang('Projects.share_qr_email_subject', ['title' => $title]))
+                    . '&body=' . rawurlencode(lang('Projects.share_qr_email_body', ['title' => $title, 'url' => $projectPageUrl])),
+            ],
+        ];
+    }
+}
+
+if (! function_exists('project_public_absolute_url')) {
+    function project_public_absolute_url(string $slug): string
+    {
+        $url = project_public_url($slug);
+        if (str_starts_with($url, '/')) {
+            return rtrim((string) base_url(), '/') . $url;
+        }
+
+        return $url;
     }
 }
 
