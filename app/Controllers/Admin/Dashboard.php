@@ -8,6 +8,7 @@ use App\Controllers\BaseController;
 use App\Models\CmsMediaModel;
 use App\Models\CmsPageModel;
 use App\Models\CmsPostModel;
+use App\Models\ProjectContributionModel;
 use App\Models\VolunteerApplicationModel;
 
 class Dashboard extends BaseController
@@ -38,6 +39,8 @@ class Dashboard extends BaseController
                 'mediaTotal'      => model(CmsMediaModel::class)->countAllResults(),
                 'volunteersNew'   => model(VolunteerApplicationModel::class)->where('status', 'new')->countAllResults(),
                 'volunteersTotal' => model(VolunteerApplicationModel::class)->countAllResults(),
+                'contributionsNew'   => model(ProjectContributionModel::class)->where('status', ProjectContributionModel::STATUS_NEW)->countAllResults(),
+                'contributionsTotal' => model(ProjectContributionModel::class)->countAllResults(),
                 'recentPages'     => $recentPages,
                 'recentPosts'     => $recentPosts,
             ]),

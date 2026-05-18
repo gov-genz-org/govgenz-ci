@@ -22,6 +22,9 @@ $duration = (int) ($project['duration_months'] ?? 0);
 $mailSub  = rawurlencode($title);
 $sectorCodes       = project_sector_codes_from_csv((string) ($project['sectors_csv'] ?? ''));
 $joinVolunteerUrl  = public_join_url($sectorCodes);
+$showFundBudget    = project_has_financial_funding($project);
+$showFundMaterial  = project_has_material_needs($project);
+$showFundCta       = $showFundBudget || $showFundMaterial;
 ?>
 <aside class="project-sidebar" aria-label="<?= esc(lang('Projects.show_sidebar_aria'), 'attr') ?>">
 
@@ -78,7 +81,9 @@ $joinVolunteerUrl  = public_join_url($sectorCodes);
         <p class="projects-program-show__widget-lead"><?= esc(lang('Projects.show_widget_get_involved_lead')) ?></p>
         <div class="widget-cta">
             <a href="<?= esc($joinVolunteerUrl, 'attr') ?>" class="projects-program-show__btn projects-program-show__btn--red"><?= esc(lang('Projects.show_cta_volunteer')) ?></a>
-            <a href="mailto:partnerships@govgenz.org?subject=<?= esc('Financement — ' . $mailSub, 'attr') ?>" class="projects-program-show__btn projects-program-show__btn--teal"><?= esc(lang('Projects.show_cta_fund')) ?></a>
+            <?php if ($showFundCta) : ?>
+                <button type="button" class="projects-program-show__btn projects-program-show__btn--teal" data-fund-modal-open><?= esc(lang('Projects.show_cta_fund')) ?></button>
+            <?php endif; ?>
             <a href="mailto:projets@govgenz.org?subject=<?= esc('Concept note — ' . $mailSub, 'attr') ?>" class="projects-program-show__btn projects-program-show__btn--ghost"><?= esc(lang('Projects.show_cta_concept')) ?></a>
         </div>
     </div>

@@ -749,7 +749,7 @@ textarea {
 }
 
 /* Hors vocabulaire template (.btn--primary / .btn--ghost) — évite d’écraser FR/EN et les CTA site_govgenz */
-button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill),
+button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill):not(.project-fund-dialog__close):not(.project-fund-form__item-remove):not(.projects-program-show__btn),
 .btn:not(.btn--primary):not(.btn--ghost) {
     display: inline-flex;
     align-items: center;
@@ -776,7 +776,7 @@ button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti_
         border-color 0.2s ease;
 }
 
-button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.projects-program-page__pill):hover,
+button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill):not(.project-fund-dialog__close):not(.project-fund-form__item-remove):not(.projects-program-show__btn):hover,
 .btn:not(.btn--primary):not(.btn--ghost):hover {
     filter: brightness(1.05);
 }

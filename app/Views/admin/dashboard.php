@@ -49,6 +49,21 @@ helper('admin');
             </div>
         </div>
     </div>
+    <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body py-3">
+                <div class="small text-muted text-uppercase">Financements</div>
+                <div class="fs-4 fw-semibold"><?= esc((string) ($contributionsTotal ?? 0)) ?></div>
+                <div class="small mt-1">
+                    <?php if (($contributionsNew ?? 0) > 0) : ?>
+                        <a href="<?= site_url('admin/project-contributions?status=new') ?>" class="badge text-bg-primary text-decoration-none"><?= esc((string) $contributionsNew) ?> à valider</a>
+                    <?php else : ?>
+                        <a href="<?= site_url('admin/project-contributions') ?>" class="text-decoration-none">Voir les propositions →</a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <h2 class="h6 text-muted text-uppercase mb-3 mt-4">Activité récente</h2>
@@ -137,6 +152,12 @@ helper('admin');
         <a class="d-block p-3 border rounded bg-white shadow-sm text-decoration-none text-dark h-100" href="<?= site_url('admin/volunteers') ?>">
             <strong>Volontaires</strong>
             <span class="d-block small text-muted mt-1">Candidatures reçues</span>
+        </a>
+    </li>
+    <li class="col-md-6 col-lg-4">
+        <a class="d-block p-3 border rounded bg-white shadow-sm text-decoration-none text-dark h-100" href="<?= site_url('admin/project-contributions') ?>">
+            <strong>Financements projets</strong>
+            <span class="d-block small text-muted mt-1">Propositions à valider</span>
         </a>
     </li>
 </ul>

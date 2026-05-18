@@ -26,6 +26,7 @@ final class ProjectBodyBlocksRenderer
             $inner .= match ((string) ($b['type'] ?? '')) {
                 'section_rich' => self::sectionRich($b),
                 'budget_table' => self::budgetTable($b, $locale),
+                'material_needs' => self::materialNeeds($b, $locale),
                 'timeline' => self::timeline($b),
                 'kpi_grid' => self::kpiGrid($b),
                 'note_panel' => self::notePanel($b),
@@ -158,6 +159,65 @@ final class ProjectBodyBlocksRenderer
         $html .= '<div class="content-title">' . esc($sectionTitle) . '</div>';
         $html .= '<table class="budget-table"><thead><tr><th>Poste</th><th>Détail</th><th>Montant (Ar)</th></tr></thead><tbody>';
         $html .= $bodyRows . '</tbody></table>';
+        if ($footnote !== '') {
+            $html .= '<p class="small text-muted mt-2 mb-0">' . nl2br(esc($footnote), false) . '</p>';
+        }
+        $html .= '</div>';
+
+        return $html;
+    }
+
+    /**
+     * @param array<string, mixed> $b
+     */
+    private static function materialNeeds(array $b, string $locale): string
+    {
+        unset($locale);
+
+        $sectionTitle = trim((string) ($b['section_title'] ?? ''));
+        if ($sectionTitle === '') {
+            $sectionTitle = (string) lang('Projects.material_needs_default_title');
+        }
+        $rows = $b['rows'] ?? [];
+        if (! is_array($rows) || $rows === []) {
+            return '';
+        }
+
+        $bodyRows = '';
+        foreach ($rows as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+            $item = trim((string) ($row['item'] ?? ''));
+            $quantity = trim((string) ($row['quantity'] ?? ''));
+            $notes = trim((string) ($row['notes'] ?? ''));
+            if ($item === '' && $quantity === '' && $notes === '') {
+                continue;
+            }
+            $bodyRows .= '<tr>';
+            $bodyRows .= '<td>' . esc($item) . '</td>';
+            $bodyRows .= '<td>' . esc($quantity) . '</td>';
+            $bodyRows .= '<td>' . esc($notes) . '</td>';
+            $bodyRows .= '</tr>';
+        }
+
+        if ($bodyRows === '') {
+            return '';
+        }
+
+        $contact = trim((string) ($b['contact'] ?? ''));
+        $footnote = trim((string) ($b['footnote'] ?? ''));
+
+        $html = '<div class="content-section project-material-needs" id="project-material-needs">';
+        $html .= '<div class="content-title">' . esc($sectionTitle) . '</div>';
+        $html .= '<table class="material-needs-table"><thead><tr>';
+        $html .= '<th>' . esc((string) lang('Projects.material_needs_col_item')) . '</th>';
+        $html .= '<th>' . esc((string) lang('Projects.material_needs_col_quantity')) . '</th>';
+        $html .= '<th>' . esc((string) lang('Projects.material_needs_col_notes')) . '</th>';
+        $html .= '</tr></thead><tbody>' . $bodyRows . '</tbody></table>';
+        if ($contact !== '') {
+            $html .= '<p class="material-needs-contact small mb-0 mt-2"><strong>' . esc((string) lang('Projects.material_needs_contact')) . '</strong> ' . esc($contact) . '</p>';
+        }
         if ($footnote !== '') {
             $html .= '<p class="small text-muted mt-2 mb-0">' . nl2br(esc($footnote), false) . '</p>';
         }

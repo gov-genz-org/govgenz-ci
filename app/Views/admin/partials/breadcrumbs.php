@@ -47,6 +47,8 @@ if ($rest === 'pages') {
     $items[] = ['label' => 'Médias', 'url' => null];
 } elseif ($rest === 'volunteers') {
     $items[] = ['label' => 'Volontaires', 'url' => null];
+} elseif ($rest === 'project-contributions') {
+    $items[] = ['label' => 'Financements projets', 'url' => null];
 } elseif ($rest === 'sectors') {
     $items[] = ['label' => 'Secteurs', 'url' => null];
 } elseif ($rest === 'sectors/create') {

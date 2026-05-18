@@ -17,6 +17,7 @@ $mapBlockView = static function (array $block): string {
 
     return match ($t) {
         'budget_table' => 'admin/project_projects/blocks/budget_table',
+        'material_needs' => 'admin/project_projects/blocks/material_needs',
         'timeline' => 'admin/project_projects/blocks/timeline',
         'kpi_grid' => 'admin/project_projects/blocks/kpi_grid',
         'impact_tracker' => 'admin/project_projects/blocks/impact_tracker',
@@ -46,6 +47,7 @@ $mapBlockView = static function (array $block): string {
     <div class="d-flex flex-wrap gap-2 mb-3">
         <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="section_rich">+ Section</button>
         <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="budget_table">+ Budget</button>
+        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="material_needs">+ Besoins matériels</button>
         <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="timeline">+ Calendrier</button>
         <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="kpi_grid">+ KPI</button>
         <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="impact_tracker">+ Suivi d'impact</button>
@@ -61,6 +63,7 @@ $mapBlockView = static function (array $block): string {
 <div id="pp-proto-store" class="d-none" aria-hidden="true">
     <div data-pp-proto="section_rich"><?= view('admin/project_projects/blocks/section_rich', ['i' => '__I__', 'block' => ['type' => 'section_rich']]) ?></div>
     <div data-pp-proto="budget_table"><?= view('admin/project_projects/blocks/budget_table', ['i' => '__I__', 'block' => ['type' => 'budget_table'], 'ppLocale' => $ppLocale]) ?></div>
+    <div data-pp-proto="material_needs"><?= view('admin/project_projects/blocks/material_needs', ['i' => '__I__', 'block' => ['type' => 'material_needs']]) ?></div>
     <div data-pp-proto="timeline"><?= view('admin/project_projects/blocks/timeline', ['i' => '__I__', 'block' => ['type' => 'timeline']]) ?></div>
     <div data-pp-proto="kpi_grid"><?= view('admin/project_projects/blocks/kpi_grid', ['i' => '__I__', 'block' => ['type' => 'kpi_grid']]) ?></div>
     <div data-pp-proto="impact_tracker"><?= view('admin/project_projects/blocks/impact_tracker', ['i' => '__I__', 'block' => ['type' => 'impact_tracker']]) ?></div>

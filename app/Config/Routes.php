@@ -30,9 +30,11 @@ $registerFrontWithoutCatchAll = static function (RouteCollection $routes): void 
         $routes->get('projects', 'Front\\Projects\\Home::index');
         $routes->get('projects/(.+)', 'Front\\Projects\\Home::tail/$1');
         $routes->post('projects/filter', 'Front\\Projects\\Home::filterPost');
+        $routes->post('projects/(:segment)/fund', 'Front\\Projects\\Home::fundSubmit/$1');
     }
     if ($onProjectsVhost) {
         $routes->post('filter', 'Front\\Projects\\Home::filterPost');
+        $routes->post('(:segment)/fund', 'Front\\Projects\\Home::fundSubmit/$1');
     }
 };
 
@@ -95,6 +97,9 @@ $routes->group('admin', ['filter' => 'authadmin'], static function ($routes) {
     $routes->get('volunteers', 'Admin\\Volunteers::index');
     $routes->post('volunteers/status/(:num)', 'Admin\\Volunteers::setStatus/$1');
 
+    $routes->get('project-contributions', 'Admin\\ProjectContributions::index');
+    $routes->post('project-contributions/status/(:num)', 'Admin\\ProjectContributions::setStatus/$1');
+
     $routes->get('sectors', 'Admin\\Sectors::index');
     $routes->get('sectors/create', 'Admin\\Sectors::create');
     $routes->post('sectors/store', 'Admin\\Sectors::store');
@@ -120,6 +125,7 @@ $routes->group('admin', ['filter' => 'authadmin'], static function ($routes) {
 
     $routes->group('', ['filter' => 'adminonly'], static function ($routes) {
         $routes->post('volunteers/clear-table', 'Admin\\Volunteers::clearTable');
+        $routes->post('project-contributions/clear-table', 'Admin\\ProjectContributions::clearTable');
 
         $routes->get('login-events', 'Admin\\LoginEvents::index');
         $routes->get('login-events/export', 'Admin\\LoginEvents::exportCsv');
