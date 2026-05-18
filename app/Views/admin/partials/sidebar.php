@@ -16,6 +16,7 @@ $siteMenuActive    = $section === 'site-menu';
 $postsActive       = $section === 'posts';
 $mediaActive      = $section === 'media';
 $volunteersActive = $section === 'volunteers';
+$projectContributionsActive = $section === 'project-contributions';
 $sectorsActive    = $section === 'sectors';
 $projectProjectsActive = $section === 'project-projects';
 $projectExchangeRatesActive = $section === 'project-exchange-rates';
@@ -45,6 +46,7 @@ $isStaffAdmin      = session()->get('staff_role') === 'admin';
         <p class="admin-sidebar-section-label" role="presentation">Données</p>
         <div class="admin-sidebar-items d-flex flex-column gap-1">
             <a class="nav-link rounded px-3 py-2 <?= $volunteersActive ? 'active bg-dark text-white' : 'text-dark' ?>" href="<?= site_url('admin/volunteers') ?>">Volontaires</a>
+            <a class="nav-link rounded px-3 py-2 <?= $projectContributionsActive ? 'active bg-dark text-white' : 'text-dark' ?>" href="<?= site_url('admin/project-contributions') ?>">Financements projets</a>
             <a class="nav-link rounded px-3 py-2 <?= $sectorsActive ? 'active bg-dark text-white' : 'text-dark' ?>" href="<?= site_url('admin/sectors') ?>">Secteurs</a>
             <a class="nav-link rounded px-3 py-2 <?= $projectProjectsActive ? 'active bg-dark text-white' : 'text-dark' ?>" href="<?= site_url('admin/project-projects') ?>">Projets programme</a>
             <a class="nav-link rounded px-3 py-2 <?= $projectExchangeRatesActive ? 'active bg-dark text-white' : 'text-dark' ?>" href="<?= site_url('admin/project-exchange-rates') ?>">Taux de change</a>

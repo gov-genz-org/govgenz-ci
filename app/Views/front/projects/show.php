@@ -27,8 +27,10 @@ $prog    = $project['progress_percent'];
 $progInt = is_numeric($prog) ? max(0, min(100, (int) $prog)) : null;
 
 $sectorCodes = project_sector_codes_from_csv((string) ($project['sectors_csv'] ?? ''));
+
 ?>
 <article class="projects-program-show" aria-labelledby="project-show-heading">
+
 
     <nav class="projects-program-show__breadcrumb" aria-label="<?= esc(lang('Projects.breadcrumb_aria'), 'attr') ?>">
         <a href="<?= esc($projectsListUrl, 'attr') ?>"><?= esc(lang('Projects.breadcrumb_list')) ?></a>
@@ -102,5 +104,7 @@ $sectorCodes = project_sector_codes_from_csv((string) ($project['sectors_csv'] ?
             'currencyRatesHeader' => $currencyRatesHeader,
         ]) ?>
     </div>
+
+    <?= view('front/projects/partials/fund_modal', ['project' => $project]) ?>
 
 </article>

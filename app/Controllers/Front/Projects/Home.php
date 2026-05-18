@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Controllers\Front\Projects;
 
 use App\Controllers\BaseController;
+use App\Libraries\ProjectContributionNotifier;
 use App\Libraries\SiteContext;
 use App\Models\CmsPageModel;
+use App\Models\ProjectContributionModel;
 use App\Models\ProjectProjectModel;
 use App\Models\SectorModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -353,9 +355,20 @@ class Home extends BaseController
             $meta = trim((string) ($project['excerpt'] ?? ''));
         }
 
+        $showFundBudget   = project_has_financial_funding($project);
+        $showFundMaterial = project_has_material_needs($project);
+        $showFundCta      = $showFundBudget || $showFundMaterial;
+
         $extraHead = '<link rel="stylesheet" href="' . esc(base_url('assets/css/projects-program-show.css'), 'attr') . '">'
             . '<link rel="stylesheet" href="' . esc(base_url('assets/css/project-geo-tooltip.css'), 'attr') . '">'
+            . '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/css/intlTelInput.css">'
             . '<script defer src="' . esc(base_url('js/front/project-geo-tooltip.js'), 'attr') . '"></script>';
+
+        $extraScripts = '';
+        if ($showFundCta) {
+            $extraScripts = '<script defer src="https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/js/intlTelInput.min.js"></script>'
+                . '<script defer src="' . esc(base_url('js/front/project-fund-form.js'), 'attr') . '"></script>';
+        }
 
         return view('front/layout', [
             'title'           => trim((string) ($project['meta_title'] ?? '')) !== ''
@@ -379,7 +392,153 @@ class Home extends BaseController
             ]),
             'navActive'       => 'projects',
             'mainExtraClass'  => 'ggz-layout-full',
+            'extraScripts'    => $extraScripts,
         ]);
+    }
+
+    public function fundSubmit(string $slug): ResponseInterface
+    {
+        helper(['locale', 'language', 'project', 'url']);
+        $locale = SiteContext::locale();
+        $slug   = trim($slug, '/');
+
+        $project = model(ProjectProjectModel::class)->findPublishedBySlug($slug, $locale);
+        if ($project === null) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $showFundBudget   = project_has_financial_funding($project);
+        $showFundMaterial = project_has_material_needs($project);
+        $offerMaterial    = $showFundMaterial || $showFundBudget;
+        if (! $showFundBudget && ! $showFundMaterial) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $type = strtolower(trim((string) $this->request->getPost('contribution_type')));
+        if ($type === 'budget' && ! $showFundBudget) {
+            $type = 'material';
+        }
+        if ($type === 'material' && ! $offerMaterial) {
+            $type = 'budget';
+        }
+        if ($type !== 'budget' && $type !== 'material') {
+            $type = $showFundBudget ? 'budget' : 'material';
+        }
+
+        $errors    = [];
+        $fields    = [];
+        $donorName = '';
+        $contact   = '';
+        $title     = trim((string) ($project['title'] ?? $slug));
+
+        $insertRow = [
+            'project_id'        => (int) ($project['id'] ?? 0) ?: null,
+            'project_slug'      => $slug,
+            'project_title'     => $title,
+            'locale'            => $locale,
+            'contribution_type' => $type,
+            'ip_address'        => $this->request->getIPAddress(),
+            'status'            => ProjectContributionModel::STATUS_NEW,
+            'created_at'        => date('Y-m-d H:i:s'),
+        ];
+
+        if ($type === 'budget') {
+            $rules = [
+                'budget_donor_name'      => 'required|max_length[255]',
+                'budget_phone_country'   => 'required|regex_match[/^\+[0-9]{1,4}$/]',
+                'budget_phone_number'    => 'required|max_length[32]|regex_match[/^[0-9][0-9 .()-]{3,31}$/]',
+                'budget_amount'          => 'required|max_length[120]|regex_match[/\d/]',
+                'budget_remarks'         => 'permit_empty|max_length[4000]',
+            ];
+            if (! $this->validate($rules, project_fund_validation_messages('budget'))) {
+                $errors = $this->validator->getErrors();
+            }
+            $donorName = trim((string) $this->request->getPost('budget_donor_name'));
+            $contact   = project_fund_phone_contact_from_request('budget');
+            $amount    = trim((string) $this->request->getPost('budget_amount'));
+            $remarks   = trim((string) $this->request->getPost('budget_remarks'));
+            $insertRow['donor_name'] = $donorName;
+            $insertRow['contact']    = $contact;
+            $insertRow['amount']     = $amount !== '' ? $amount : null;
+            $insertRow['remarks']    = $remarks !== '' ? $remarks : null;
+            $fields = [
+                lang('Projects.fund_field_name')    => $donorName,
+                lang('Projects.fund_field_phone')   => $contact,
+                lang('Projects.fund_field_amount')  => $amount,
+                lang('Projects.fund_field_remarks') => $remarks,
+            ];
+        } else {
+            $rules = [
+                'material_donor_name'      => 'required|max_length[255]',
+                'material_phone_country'   => 'required|regex_match[/^\+[0-9]{1,4}$/]',
+                'material_phone_number'    => 'required|max_length[32]|regex_match[/^[0-9][0-9 .()-]{3,31}$/]',
+                'material_pickup_location' => 'permit_empty|max_length[255]',
+                'material_remarks'         => 'permit_empty|max_length[4000]',
+            ];
+            if (! $this->validate($rules, project_fund_validation_messages('material'))) {
+                $errors = $this->validator->getErrors();
+            }
+            $materialLines = project_fund_material_lines_from_request();
+            $materialLineErrors = project_fund_validate_material_lines($materialLines);
+            if ($materialLineErrors !== []) {
+                $errors = array_merge($errors, $materialLineErrors);
+            }
+            $donorName = trim((string) $this->request->getPost('material_donor_name'));
+            $contact   = project_fund_phone_contact_from_request('material');
+            $canDeliver = trim((string) $this->request->getPost('material_can_deliver'));
+            $deliveryLabel = '';
+            $canDeliverDb = null;
+            if ($canDeliver === '1') {
+                $deliveryLabel = lang('Projects.fund_delivery_yes');
+                $canDeliverDb  = 1;
+            } elseif ($canDeliver === '0') {
+                $deliveryLabel = lang('Projects.fund_delivery_no');
+                $canDeliverDb  = 0;
+            }
+            $available = trim((string) $this->request->getPost('material_available_from'));
+            $insertRow['donor_name']      = $donorName;
+            $insertRow['contact']         = $contact;
+            $materialStorage              = project_fund_material_storage_from_lines($materialLines);
+            $insertRow['items']           = $materialStorage['items'];
+            $insertRow['quantity']        = $materialStorage['quantity'];
+            $insertRow['available_from']  = $available !== '' ? $available : null;
+            $insertRow['pickup_location'] = trim((string) $this->request->getPost('material_pickup_location')) ?: null;
+            $insertRow['can_deliver']     = $canDeliverDb;
+            $insertRow['remarks']         = trim((string) $this->request->getPost('material_remarks')) ?: null;
+            $fields = [
+                lang('Projects.fund_field_name')      => $donorName,
+                lang('Projects.fund_field_items')     => (string) $insertRow['items'],
+                lang('Projects.fund_field_quantity')  => (string) ($insertRow['quantity'] ?? ''),
+                lang('Projects.fund_field_available') => $available,
+                lang('Projects.fund_field_pickup')    => (string) ($insertRow['pickup_location'] ?? ''),
+                lang('Projects.fund_field_contact')   => $contact,
+                lang('Projects.fund_field_delivery')  => $deliveryLabel,
+                lang('Projects.fund_field_remarks')   => (string) ($insertRow['remarks'] ?? ''),
+            ];
+        }
+
+        $redirectUrl = project_public_url($slug) . '#project-fund';
+
+        if ($errors !== []) {
+            return redirect()->to($redirectUrl)
+                ->withInput()
+                ->with('fund_errors', array_values($errors));
+        }
+
+        $model = model(ProjectContributionModel::class);
+        $model->insert($insertRow);
+        $newId = (int) $model->getInsertID();
+        $adminValidationUrl = $newId > 0
+            ? site_url('admin/project-contributions') . '?status=new#contrib-row-' . $newId
+            : site_url('admin/project-contributions') . '?status=new';
+
+        ProjectContributionNotifier::send($type, $title, $slug, array_merge($fields, [
+            'donor_name' => $donorName,
+            'contact'    => $contact,
+            'email'      => $contact,
+        ]), $adminValidationUrl);
+
+        return redirect()->to($redirectUrl)->with('fund_success', lang('Projects.fund_form_success'));
     }
 
     /**

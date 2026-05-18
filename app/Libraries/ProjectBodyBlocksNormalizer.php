@@ -59,6 +59,7 @@ final class ProjectBodyBlocksNormalizer
             $norm = match ($type) {
                 'section_rich' => self::normalizeSectionRich($blk),
                 'budget_table' => self::normalizeBudgetTable($blk),
+                'material_needs' => self::normalizeMaterialNeeds($blk),
                 'timeline' => self::normalizeTimeline($blk),
                 'kpi_grid' => self::normalizeKpiGrid($blk),
                 'note_panel' => self::normalizeNotePanel($blk),
@@ -168,6 +169,47 @@ final class ProjectBodyBlocksNormalizer
         return [
             'type'          => 'budget_table',
             'section_title' => mb_substr(trim(strip_tags((string) ($blk['section_title'] ?? ''))), 0, 255),
+            'rows'          => $rows,
+            'footnote'      => mb_substr(trim(strip_tags((string) ($blk['footnote'] ?? ''))), 0, 2000),
+        ];
+    }
+
+    /**
+     * @param array<string, mixed> $blk
+     *
+     * @return array<string, mixed>|null
+     */
+    private static function normalizeMaterialNeeds(array $blk): ?array
+    {
+        helper('admin');
+        $rows = [];
+        $raw = $blk['rows'] ?? [];
+        if (is_array($raw)) {
+            foreach ($raw as $row) {
+                if (! is_array($row)) {
+                    continue;
+                }
+                $item = admin_pp_scrub_junk_text(trim(strip_tags((string) ($row['item'] ?? ''))));
+                $quantity = admin_pp_scrub_junk_text(trim(strip_tags((string) ($row['quantity'] ?? ''))));
+                $notes = admin_pp_scrub_junk_text(trim(strip_tags((string) ($row['notes'] ?? ''))));
+                if ($item === '' && $quantity === '' && $notes === '') {
+                    continue;
+                }
+                $rows[] = [
+                    'item'     => $item,
+                    'quantity' => $quantity,
+                    'notes'    => $notes,
+                ];
+            }
+        }
+        if ($rows === []) {
+            return null;
+        }
+
+        return [
+            'type'          => 'material_needs',
+            'section_title' => mb_substr(trim(strip_tags((string) ($blk['section_title'] ?? ''))), 0, 255),
+            'contact'       => mb_substr(trim(strip_tags((string) ($blk['contact'] ?? ''))), 0, 255),
             'rows'          => $rows,
             'footnote'      => mb_substr(trim(strip_tags((string) ($blk['footnote'] ?? ''))), 0, 2000),
         ];
