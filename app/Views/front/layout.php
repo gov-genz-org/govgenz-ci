@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-helper(['locale', 'cms', 'asset']);
+helper(['locale', 'cms', 'asset', 'analytics']);
 
 use App\Libraries\PublicNav;
 use App\Libraries\SiteContext;
@@ -33,6 +33,10 @@ if ($footerCmsHtml !== '' && preg_match('/^<div\s+class="footer__columns(?:\s[^"
     <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/govgenz-template.css'), 'attr') ?>">
     <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/govgenz-front-pages.css'), 'attr') ?>">
     <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/govgenz-bridge.css'), 'attr') ?>">
+    <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/ggz-project-cta-buttons.css'), 'attr') ?>">
+    <?php if (analytics_is_active()) : ?>
+        <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/cookie-consent.css'), 'attr') ?>">
+    <?php endif; ?>
     <?= $extraHead ?? '' ?>
 </head>
 <body class="ggz-public-theme">
@@ -141,7 +145,13 @@ $mainShell = trim('ggz-main-shell ' . trim((string) ($mainExtraClass ?? '')));
     </div>
 </footer>
 
+<?= view('front/partials/cookie_consent') ?>
+
 <script defer src="<?= esc(public_asset_url('js/front/govgenz-template.js'), 'attr') ?>"></script>
+<?php if (analytics_is_active()) : ?>
+    <script defer src="<?= esc(public_asset_url('js/front/analytics-gtag.js'), 'attr') ?>"></script>
+    <script defer src="<?= esc(public_asset_url('js/front/cookie-consent.js'), 'attr') ?>"></script>
+<?php endif; ?>
 <?= $extraScripts ?? '' ?>
 </body>
 </html>

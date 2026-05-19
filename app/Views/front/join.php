@@ -116,7 +116,7 @@ $phoneCountryErr = isset($joinErrors['phone_country']) ? (string) $joinErrors['p
                         </div>
                     </fieldset>
                     <div class="ggz-form-actions">
-                        <button type="submit" class="btn btn--primary"><?= esc(lang('Site.join_submit')) ?></button>
+                        <button type="submit" class="ggz-project-cta-btn ggz-project-cta-btn--teal"><?= esc(lang('Site.join_submit')) ?></button>
                     </div>
                 </form>
             </div>

@@ -20,9 +20,9 @@ class CspHeaderFilter implements FilterInterface
         . "font-src 'self' data: https://cdn.jsdelivr.net https://*.jsdelivr.net https://fonts.gstatic.com; "
         . "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.jsdelivr.net https://fonts.googleapis.com; "
         . "style-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.jsdelivr.net https://fonts.googleapis.com; "
-        . "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.jsdelivr.net; "
-        . "script-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.jsdelivr.net; "
-        . "connect-src 'self' https://cdn.jsdelivr.net https://*.jsdelivr.net;";
+        . "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.jsdelivr.net https://www.googletagmanager.com; "
+        . "script-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.jsdelivr.net https://www.googletagmanager.com; "
+        . "connect-src 'self' https://cdn.jsdelivr.net https://*.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://*.google-analytics.com https://*.analytics.google.com;";
 
     public function before(RequestInterface $request, $arguments = null)
     {

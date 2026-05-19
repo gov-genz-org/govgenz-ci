@@ -1,0 +1,84 @@
+/**
+ * CTA projets (Financer / Annuler) — réutilisable hors fiche projet (cookies, Rejoindre, etc.).
+ */
+:root {
+  --ggz-cta-teal: #17a39e;
+  --ggz-cta-red: #c41e30;
+  --ggz-cta-text-sec: #8c94a8;
+  --ggz-cta-border-dim: rgba(255, 255, 255, 0.07);
+  --ggz-cta-t: 0.2s ease;
+}
+
+.ggz-project-cta-btn,
+#main-content .projects-program-show .projects-program-show__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--ggz-cta-t);
+  text-align: center;
+  margin-top: 0;
+  min-height: auto;
+  letter-spacing: normal;
+  text-transform: none;
+  box-shadow: none;
+}
+
+.ggz-project-cta-btn--red,
+#main-content .projects-program-show .projects-program-show__btn--red {
+  background: var(--ggz-cta-red);
+  color: #fff;
+}
+
+.ggz-project-cta-btn--red:hover,
+#main-content .projects-program-show .projects-program-show__btn--red:hover {
+  background: #a6192a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(196, 30, 48, 0.3);
+  color: #fff;
+  filter: none;
+}
+
+.ggz-project-cta-btn--teal,
+#main-content .projects-program-show .projects-program-show__btn--teal {
+  background: transparent;
+  border: 1.5px solid var(--ggz-cta-teal);
+  color: var(--ggz-cta-teal);
+}
+
+.ggz-project-cta-btn--teal:hover,
+#main-content .projects-program-show .projects-program-show__btn--teal:hover {
+  background: rgba(23, 163, 158, 0.12);
+  transform: translateY(-2px);
+  color: var(--ggz-cta-teal);
+  filter: none;
+}
+
+.ggz-project-cta-btn--ghost,
+#main-content .projects-program-show .projects-program-show__btn--ghost {
+  background: transparent;
+  border: 1.5px solid var(--ggz-cta-border-dim);
+  color: var(--ggz-cta-text-sec);
+}
+
+.ggz-project-cta-btn--ghost:hover,
+#main-content .projects-program-show .projects-program-show__btn--ghost:hover {
+  border-color: var(--ggz-cta-text-sec);
+  color: #fff;
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ggz-project-cta-btn:hover,
+  #main-content .projects-program-show .projects-program-show__btn:hover {
+    transform: none;
+  }
+}

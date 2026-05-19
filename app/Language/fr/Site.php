@@ -80,4 +80,14 @@ return [
     'sector_mines'          => 'Ressources minieres · Tracabilite',
     'sector_security'       => 'Securite civile · Gestion crise',
     'sector_citizen'        => 'Jeunesse · Culture · Diaspora',
+
+    'cookie_title'          => 'Cookies et mesure d’audience',
+    'cookie_text'           => 'Nous utilisons des cookies pour mesurer l’audience du site (nombre de visiteurs, pages vues, provenance, appareils). Ces données nous aident à améliorer le site. Vous pouvez accepter ou refuser les cookies de mesure.',
+    'cookie_item_visitors'  => 'Visiteurs et sessions',
+    'cookie_item_pages'     => 'Pages consultées et parcours',
+    'cookie_item_device'    => 'Type d’appareil et navigateur (statistiques)',
+    'cookie_item_source'    => 'Origine de la visite (recherche, lien direct, etc.)',
+    'cookie_accept'         => 'Accepter',
+    'cookie_reject'         => 'Refuser',
+    'cookie_privacy_link'   => 'En savoir plus',
 ];
