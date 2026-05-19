@@ -62,6 +62,8 @@ $routes->get('admin/login', 'Admin\\Auth::loginForm');
 $routes->post('admin/login', 'Admin\\Auth::loginAttempt');
 $routes->get('admin/logout', 'Admin\\Auth::logout');
 $routes->post('admin/logout', 'Admin\\Auth::logout');
+$routes->get('admin/invite/(:segment)', 'Admin\\AccountSetup::form/$1');
+$routes->post('admin/invite/(:segment)', 'Admin\\AccountSetup::submit/$1');
 
 $routes->group('admin', ['filter' => 'authadmin'], static function ($routes) {
     $routes->get('/', 'Admin\\Dashboard::index');
@@ -143,6 +145,7 @@ $routes->group('admin', ['filter' => 'authadmin'], static function ($routes) {
         $routes->get('staff-users/edit/(:num)', 'Admin\\StaffUsers::edit/$1');
         $routes->post('staff-users/update/(:num)', 'Admin\\StaffUsers::update/$1');
         $routes->post('staff-users/delete/(:num)', 'Admin\\StaffUsers::delete/$1');
+        $routes->post('staff-users/resend-invite/(:num)', 'Admin\\StaffUsers::resendInvite/$1');
         $routes->post('staff-users/clear-table', 'Admin\\StaffUsers::clearTable');
     });
 });

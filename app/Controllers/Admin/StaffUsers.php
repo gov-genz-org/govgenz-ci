@@ -6,6 +6,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Libraries\StaffAuthPolicy;
+use App\Libraries\StaffInvite;
 use App\Models\StaffUserModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -57,25 +58,43 @@ class StaffUsers extends BaseController
 
     public function store(): ResponseInterface
     {
-        $minLen = StaffAuthPolicy::loginPasswordMinLength();
-        $rules   = [
-            'email'    => 'required|valid_email|is_unique[staff_users.email]',
-            'password' => 'required|min_length[' . $minLen . ']',
-            'role'     => 'required|in_list[admin,editor]',
+        $rules = [
+            'email' => 'required|valid_email|is_unique[staff_users.email]',
+            'role'  => 'required|in_list[admin,editor]',
         ];
         if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $model = model(StaffUserModel::class);
-        $model->insert([
-            'email'         => mb_strtolower(trim((string) $this->request->getPost('email'))),
-            'password_hash' => password_hash((string) $this->request->getPost('password'), PASSWORD_DEFAULT),
-            'role'          => $this->request->getPost('role'),
-            'is_active'     => 1,
-        ]);
+        $result = StaffInvite::provisionAndNotify(
+            (string) $this->request->getPost('email'),
+            (string) $this->request->getPost('role'),
+        );
 
-        return $this->adminRedirectToEdit('admin/staff-users', (int) $model->getInsertID(), 'Compte créé.');
+        if (! $result['ok']) {
+            return redirect()->back()->withInput()->with('error', $result['error'] ?? 'Impossible de créer le compte.');
+        }
+
+        $msg = 'Invitation envoyée par e-mail.';
+        if (! $result['email_sent']) {
+            $msg = 'Compte créé, mais l’e-mail d’invitation n’a pas pu être envoyé (vérifiez la configuration SMTP).';
+        }
+
+        return $this->adminRedirectToEdit('admin/staff-users', $result['user_id'], $msg);
+    }
+
+    public function resendInvite(int $id): ResponseInterface
+    {
+        $result = StaffInvite::resendForUserId($id);
+        if (! $result['ok']) {
+            return redirect()->back()->with('error', $result['error'] ?? 'Envoi impossible.');
+        }
+
+        $msg = $result['email_sent']
+            ? 'Invitation renvoyée par e-mail.'
+            : 'Jeton régénéré, mais l’e-mail n’a pas pu être envoyé (vérifiez la configuration SMTP).';
+
+        return redirect()->back()->with('message', $msg);
     }
 
     public function edit(int $id): ResponseInterface|string
@@ -141,7 +160,9 @@ class StaffUsers extends BaseController
             'is_active' => $isActiveNew,
         ];
         if ($pwd !== '') {
-            $data['password_hash'] = password_hash($pwd, PASSWORD_DEFAULT);
+            $data['password_hash']           = password_hash($pwd, PASSWORD_DEFAULT);
+            $data['invite_token_hash']       = null;
+            $data['invite_token_expires_at'] = null;
         }
 
         $model->update($id, $data);

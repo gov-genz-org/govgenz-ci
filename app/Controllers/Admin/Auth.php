@@ -6,6 +6,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Libraries\StaffAuthPolicy;
+use App\Libraries\StaffInvite;
 use App\Libraries\StaffLoginAudit;
 use App\Models\StaffUserModel;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -79,6 +80,15 @@ class Auth extends BaseController
             StaffLoginAudit::record($this->request, 'failure', 'account_disabled', null, $emailRaw);
 
             return redirect()->back()->withInput()->with('error', 'Ce compte est désactivé.');
+        }
+
+        if (StaffInvite::isPending($user)) {
+            StaffLoginAudit::record($this->request, 'failure', 'invite_pending', null, $emailRaw);
+
+            return redirect()->back()->withInput()->with(
+                'error',
+                'Ce compte n’est pas encore activé. Utilisez le lien reçu par e-mail pour choisir votre mot de passe.',
+            );
         }
 
         if (password_needs_rehash((string) $user['password_hash'], PASSWORD_DEFAULT)) {

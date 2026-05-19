@@ -14,7 +14,16 @@ class StaffUserModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['email', 'password_hash', 'role', 'is_active', 'created_at', 'updated_at'];
+    protected $allowedFields    = [
+        'email',
+        'password_hash',
+        'invite_token_hash',
+        'invite_token_expires_at',
+        'role',
+        'is_active',
+        'created_at',
+        'updated_at',
+    ];
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
     protected $useTimestamps      = true;
