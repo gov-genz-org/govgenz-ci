@@ -68,17 +68,25 @@ class CmsPageModel extends Model
 
     /**
      * @param array<string, mixed> $data
+     *
+     * @return array<string, mixed>
      */
-    protected function rememberPublishedPageCacheRow(array $data): void
+    protected function rememberPublishedPageCacheRow(array $data): array
     {
-        $id = (int) ($data['id'] ?? $data[$this->primaryKey] ?? 0);
+        $idRaw = $data['id'] ?? $data[$this->primaryKey] ?? 0;
+        if (is_array($idRaw)) {
+            $idRaw = $idRaw[0] ?? 0;
+        }
+        $id = (int) $idRaw;
         if ($id <= 0) {
             $this->pageCacheRowBefore = null;
 
-            return;
+            return $data;
         }
 
         $this->pageCacheRowBefore = $this->find($id);
+
+        return $data;
     }
 
     /**

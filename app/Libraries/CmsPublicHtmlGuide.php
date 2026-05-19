@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Libraries;
 
+use App\Database\Support\CmsLegalMentionsBodies;
+
 /**
  * Référence des blocs HTML réutilisables (site_govgenz / govgenz-template.css).
  * Utilisé par l’aide admin (aperçu + extraits) — pas de styles inline : tout passe par les classes globales.
@@ -19,7 +21,7 @@ final class CmsPublicHtmlGuide
             [
                 'id'    => 'intro',
                 'title' => 'Bonnes pratiques',
-                'intro' => 'Préférez ces motifs aux styles inline ou aux classes ad hoc. Une page = une section racine avec fond (ex. section.section--qui, section.section--adn) et un div.section__inner.',
+                'intro' => 'Préférez ces motifs aux styles inline ou aux classes ad hoc. Une page = une section racine avec fond (ex. section.section--qui, section.section--adn) et un div.section__inner. Pour les mentions légales / cookies (bandeau analytics), voir le bloc « mentions-legales » ci-dessous.',
                 'html'  => '',
             ],
             [
@@ -58,6 +60,12 @@ final class CmsPublicHtmlGuide
     </ul>
 </div>
 HTML,
+            ],
+            [
+                'id'    => 'legal-mentions',
+                'title' => 'Mentions légales (slug mentions-legales)',
+                'intro' => 'Page obligatoire pour le lien « En savoir plus » du bandeau cookies (analytics.privacyPageSlug). Créez deux pages publiées : locale FR et EN, slug mentions-legales, groupe legal-mentions. Sur-titre, titre et chapô : champs du formulaire (Sur-titre / Titre affiché / Chapô), pas dans le HTML. Le corps = section.section--legal + div.ggz-legal-prose uniquement (h2, paragraphes, listes). Ne recopiez pas de bloc section__header dans le corps. URL : /mentions-legales et /en/mentions-legales.',
+                'html'  => CmsLegalMentionsBodies::guideHtml(),
             ],
             [
                 'id'    => 'section-header',

@@ -16,6 +16,9 @@ $slug   = strtolower(trim((string) ($page['slug'] ?? '')));
 if ($tgroup === 'projects-program-list' || in_array($slug, ['projets-programme', 'projects-program'], true)) {
     $articleClass .= ' ggz-cms-page--projects-program-note';
 }
+if ($slug === 'mentions-legales') {
+    $articleClass .= ' ggz-cms-page--legal';
+}
 ?>
 <?php if ($structuredHero) : ?>
     <?= cms_render_structured_page_hero($page) ?>
