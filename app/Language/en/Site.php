@@ -80,4 +80,14 @@ return [
     'sector_mines'          => 'Mineral resources · Traceability',
     'sector_security'       => 'Civil security · Crisis management',
     'sector_citizen'        => 'Youth · Culture · Diaspora',
+
+    'cookie_title'          => 'Cookies and audience measurement',
+    'cookie_text'           => 'We use cookies to measure site traffic (visitor counts, page views, traffic sources, devices). This helps us improve the site. You can accept or decline analytics cookies.',
+    'cookie_item_visitors'  => 'Visitors and sessions',
+    'cookie_item_pages'     => 'Pages viewed and navigation paths',
+    'cookie_item_device'    => 'Device and browser type (aggregated stats)',
+    'cookie_item_source'    => 'Traffic source (search, direct link, etc.)',
+    'cookie_accept'         => 'Accept',
+    'cookie_reject'         => 'Decline',
+    'cookie_privacy_link'   => 'Learn more',
 ];
