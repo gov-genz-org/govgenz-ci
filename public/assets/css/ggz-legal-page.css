@@ -1,0 +1,172 @@
+/**
+ * Page mentions légales — panneau lisible, titres de section discrets.
+ */
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .section--legal {
+  position: relative;
+  padding: clamp(0.25rem, 2vw, 1rem) 0 clamp(2.75rem, 5vw, 4.5rem);
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-page-hero--structured + article.wysiwyg.ggz-cms-page--legal .section--legal {
+  padding-top: 0.35rem;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .section--legal::before {
+  content: "";
+  position: absolute;
+  inset: -2rem 50% auto;
+  transform: translateX(-50%);
+  width: min(720px, 92vw);
+  height: 220px;
+  background: radial-gradient(ellipse 70% 100% at 50% 0%, rgba(220, 38, 38, 0.1), transparent 72%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .section--legal .section__inner {
+  position: relative;
+  z-index: 1;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .section--legal .section__header {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 0.25rem;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 3.2vw, 2.15rem) clamp(1.35rem, 3vw, 2.1rem);
+  border-radius: 18px;
+  border: 1px solid rgba(56, 67, 88, 0.58);
+  background:
+    linear-gradient(165deg, rgba(28, 36, 54, 0.94) 0%, rgba(16, 22, 36, 0.88) 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 18px 48px rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose::before {
+  content: "";
+  display: block;
+  height: 3px;
+  margin: -0.15rem 0 1.35rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(255, 165, 134, 0.75), rgba(220, 38, 38, 0.55), transparent);
+  opacity: 0.9;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose h2 {
+  scroll-margin-top: 6rem;
+  font-family: var(--font-display, var(--ggz-font-display));
+  font-size: clamp(1.08rem, 2.1vw, 1.32rem);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--text-bright, var(--ggz-text-on-dark));
+  margin: 0 0 0.85rem;
+  padding: 0.15rem 0 0.65rem 0.85rem;
+  border-bottom: 1px solid rgba(56, 67, 88, 0.65);
+  border-left: 3px solid rgba(255, 165, 134, 0.55);
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose h2:not(:first-child) {
+  margin-top: 2rem;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose p {
+  margin: 0 0 0.95rem;
+  font-family: var(--font-body, var(--ggz-font-sans));
+  font-size: 0.9375rem;
+  line-height: 1.68;
+  color: var(--text-secondary, #a8b0c4);
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose p:last-child {
+  margin-bottom: 0;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose ul,
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose ol {
+  margin: 0 0 1.05rem;
+  padding-left: 1.35rem;
+  font-size: 0.9375rem;
+  line-height: 1.62;
+  color: var(--text-secondary, #a8b0c4);
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose li {
+  margin-bottom: 0.4rem;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose ul li::marker {
+  color: var(--red-soft, var(--ggz-peach));
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose a {
+  color: var(--red-soft, var(--ggz-peach));
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(255, 165, 134, 0.4);
+  transition: color 0.18s ease, text-decoration-color 0.18s ease;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose a:hover {
+  color: var(--text-bright, var(--ggz-text-on-dark));
+  text-decoration-color: currentColor;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose a[href^="http"]:not([href*="govgenz.org"])::after {
+  content: " ↗";
+  font-size: 0.78em;
+  opacity: 0.75;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose strong {
+  color: var(--text-bright, var(--ggz-text-on-dark));
+  font-weight: 600;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose code {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.82em;
+  padding: 0.14rem 0.45rem;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(56, 67, 88, 0.7);
+  color: var(--text-bright, var(--ggz-text-on-dark));
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose p.muted,
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose .muted {
+  margin-top: 1.65rem;
+  padding-top: 1.1rem;
+  border-top: 1px dashed rgba(56, 67, 88, 0.55);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--text-muted, var(--ggz-text-meta));
+}
+
+@media (max-width: 640px) {
+  :is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose {
+    padding: 1.2rem 1rem 1.4rem;
+    border-radius: 14px;
+  }
+
+  :is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .section--legal .section__header {
+    margin-bottom: 1.65rem;
+  }
+
+  :is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose h2 {
+    padding-left: 0.65rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--legal .ggz-legal-prose a {
+    transition: none;
+  }
+}

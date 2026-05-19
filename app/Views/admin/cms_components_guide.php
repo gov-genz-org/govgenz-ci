@@ -9,7 +9,7 @@ declare(strict_types=1);
 <div class="mb-4">
     <h1 class="h3 mb-2">Composants HTML du site public</h1>
     <p class="text-muted mb-0">
-        Les blocs ci-dessous reprennent les classes du template (<span class="font-monospace small">section__*</span>, <span class="font-monospace small">cercle__*</span>, <span class="font-monospace small">footer__*</span>, etc.). Sous chaque extrait : un aperçu isolé dans la charte sombre (sans publier de page dédiée). Pour le pied de page éditable, voir les sections «&nbsp;site-footer&nbsp;» (slug réservé).
+        Les blocs ci-dessous reprennent les classes du template (<span class="font-monospace small">section__*</span>, <span class="font-monospace small">cercle__*</span>, <span class="font-monospace small">footer__*</span>, etc.). Sous chaque extrait : un aperçu isolé dans la charte sombre (sans publier de page dédiée). Slugs réservés ou dédiés : <span class="font-monospace small">site-footer</span> (pied de page), <span class="font-monospace small">mentions-legales</span> (cookies / confidentialité).
     </p>
 </div>
 
@@ -24,6 +24,7 @@ declare(strict_types=1);
         $canvas = match ($sec['id']) {
             'wire-full-section' => null,
             'home-program' => null,
+            'legal-mentions' => '__legal__',
             'site-footer' => '__footer__',
             'site-footer-minimal' => '__footer__',
             'section-header' => 'section section--qui',
@@ -43,7 +44,7 @@ declare(strict_types=1);
                 <p class="card-text small text-muted"><?= esc($sec['intro']) ?></p>
 
                 <label class="form-label small fw-semibold mb-1">HTML exemple (copier dans l’éditeur)</label>
-                <textarea class="form-control font-monospace small mb-3" rows="12" readonly spellcheck="false"><?= esc($sec['html']) ?></textarea>
+                <textarea class="form-control font-monospace small mb-3" rows="<?= $sec['id'] === 'legal-mentions' ? '22' : '12' ?>" readonly spellcheck="false"><?= esc($sec['html']) ?></textarea>
 
                 <label class="form-label small fw-semibold mb-1 text-muted">Aperçu charte</label>
                 <div class="cms-guide-sample">
@@ -52,6 +53,16 @@ declare(strict_types=1);
                         <div class="cms-guide-sample__canvas cms-guide-sample__canvas--flush">
                             <div class="ggz-public-theme cms-guide-preview-host ggz-main-shell">
                                 <?= $sec['html'] ?>
+                            </div>
+                        </div>
+                    <?php elseif ($canvas === '__legal__') : ?>
+                        <?php helper('cms'); ?>
+                        <div class="cms-guide-sample__canvas cms-guide-sample__canvas--flush">
+                            <div id="main-content" class="ggz-public-theme cms-guide-preview-host ggz-main-shell">
+                                <?= cms_render_structured_page_hero(\App\Database\Support\CmsLegalMentionsBodies::guidePreviewPage()) ?>
+                                <article class="wysiwyg ggz-cms-fullwidth ggz-cms-page--legal">
+                                    <?= $sec['html'] ?>
+                                </article>
                             </div>
                         </div>
                     <?php elseif ($canvas === '__footer__') : ?>

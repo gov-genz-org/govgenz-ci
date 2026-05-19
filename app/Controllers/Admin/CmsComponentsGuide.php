@@ -19,6 +19,8 @@ class CmsComponentsGuide extends BaseController
 <link rel="stylesheet" href="{$cssBase}govgenz-fonts.css">
 <link rel="stylesheet" href="{$cssBase}govgenz-tokens.css">
 <link rel="stylesheet" href="{$cssBase}govgenz-template.css">
+<link rel="stylesheet" href="{$cssBase}govgenz-bridge.css">
+<link rel="stylesheet" href="{$cssBase}ggz-legal-page.css">
 <link rel="stylesheet" href="{$cssBase}admin-cms-guide-preview.css">
 HTML;
 

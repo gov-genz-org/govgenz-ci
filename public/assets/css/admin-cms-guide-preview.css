@@ -266,3 +266,52 @@
 #main-content .card .card-body .cms-guide-preview-host.ggz-main-shell .muted {
     color: var(--text-tertiary) !important;
 }
+
+/* Hero structuré (mentions légales, etc.) — copie ciblée de govgenz-front-pages */
+.cms-guide-preview-host.ggz-main-shell .ggz-page-hero--structured {
+    padding: 1rem 0;
+    margin-bottom: 0.5rem;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: none;
+}
+
+.cms-guide-preview-host.ggz-main-shell .ggz-page-hero--structured .section__header {
+    text-align: center;
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+.cms-guide-preview-host.ggz-main-shell .ggz-page-hero--structured .section__overline {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    color: var(--red-soft);
+    margin: 0 0 1rem;
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    border-radius: 100px;
+    background: rgba(220, 38, 38, 0.05);
+}
+
+.cms-guide-preview-host.ggz-main-shell .ggz-page-hero--structured :is(h1, h2).section__title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.05;
+    font-weight: 400;
+    color: var(--text-bright);
+    margin: 0 0 1.25rem;
+}
+
+.cms-guide-preview-host.ggz-main-shell .ggz-page-hero--structured .section__lead {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 1.5vw, 1.1rem);
+    font-style: italic;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 700px;
+    margin: 0 auto;
+}
