@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Libraries\StaffInvite;
+
 helper('admin');
 
 /** @var list<array<string, mixed>> $users */
@@ -35,6 +37,7 @@ helper('admin');
         <tr>
             <th><?= admin_list_sort_th('email', 'E-mail', $sort, $dir) ?></th>
             <th><?= admin_list_sort_th('role', 'Rôle', $sort, $dir) ?></th>
+            <th>Activation</th>
             <th><?= admin_list_sort_th('is_active', 'État', $sort, $dir) ?></th>
             <th class="text-end">Actions</th>
         </tr>
@@ -46,10 +49,21 @@ helper('admin');
         $active = (int) ($u['is_active'] ?? 1) === 1;
         $uid = (int) ($u['id'] ?? 0);
         $isSelf = $uid === (int) session()->get('staff_user_id');
+        $pending = StaffInvite::isPending($u);
+        $expired = StaffInvite::isExpired($u);
         ?>
         <tr>
             <td><?= esc((string) ($u['email'] ?? '')) ?></td>
             <td><span class="badge text-bg-secondary"><?= esc($roleLabel) ?></span></td>
+            <td>
+                <?php if ($pending) : ?>
+                    <span class="badge text-bg-warning text-dark">Invitation en attente</span>
+                <?php elseif ($expired) : ?>
+                    <span class="badge text-bg-danger">Lien expiré</span>
+                <?php else : ?>
+                    <span class="badge text-bg-success">Activé</span>
+                <?php endif; ?>
+            </td>
             <td>
                 <?php if ($active) : ?>
                     <span class="badge text-bg-success">Actif</span>
