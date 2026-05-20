@@ -9,6 +9,7 @@
 .ggz-btn,
 .ggz-project-cta-btn,
 #main-content .projects-program-show .projects-program-show__btn,
+#main-content .positions-program-show .positions-program-show__btn,
 .btn.btn--primary,
 .btn.btn--ghost,
 .btn.ggz-btn-urgent,
@@ -39,6 +40,7 @@ button.ggz-btn-urgent {
 .ggz-project-cta-btn--red,
 .ggz-project-cta-btn--primary,
 #main-content .projects-program-show .projects-program-show__btn--red,
+#main-content .positions-program-show .positions-program-show__btn--red,
 .btn.btn--primary,
 .btn.ggz-btn-urgent,
 button.ggz-btn-urgent {
@@ -52,6 +54,7 @@ button.ggz-btn-urgent {
 .ggz-project-cta-btn--red:hover,
 .ggz-project-cta-btn--primary:hover,
 #main-content .projects-program-show .projects-program-show__btn--red:hover,
+#main-content .positions-program-show .positions-program-show__btn--red:hover,
 .btn.btn--primary:hover,
 .btn.ggz-btn-urgent:hover,
 button.ggz-btn-urgent:hover {
@@ -64,15 +67,34 @@ button.ggz-btn-urgent:hover {
 
 .ggz-btn--teal,
 .ggz-project-cta-btn--teal,
-#main-content .projects-program-show .projects-program-show__btn--teal {
+#main-content .projects-program-show .projects-program-show__btn--teal,
+#main-content .positions-program-show .positions-program-show__btn--teal {
   background: transparent;
   border: 1.5px solid var(--ggz-teal);
   color: var(--ggz-teal);
 }
 
+.ggz-btn--warm,
+.ggz-project-cta-btn--warm,
+#main-content .positions-program-show .positions-program-show__btn--warm {
+  background: transparent;
+  border: 1.5px solid var(--ggz-warm, #e88a6a);
+  color: var(--ggz-warm, #e88a6a);
+}
+
+.ggz-btn--warm:hover,
+.ggz-project-cta-btn--warm:hover,
+#main-content .positions-program-show .positions-program-show__btn--warm:hover {
+  background: rgba(232, 138, 106, 0.15);
+  color: var(--ggz-warm, #e88a6a);
+  transform: translateY(-2px);
+  filter: none;
+}
+
 .ggz-btn--teal:hover,
 .ggz-project-cta-btn--teal:hover,
-#main-content .projects-program-show .projects-program-show__btn--teal:hover {
+#main-content .projects-program-show .projects-program-show__btn--teal:hover,
+#main-content .positions-program-show .positions-program-show__btn--teal:hover {
   background: rgba(23, 163, 158, 0.12);
   color: var(--ggz-teal);
   transform: translateY(-2px);
@@ -82,6 +104,7 @@ button.ggz-btn-urgent:hover {
 .ggz-btn--ghost,
 .ggz-project-cta-btn--ghost,
 #main-content .projects-program-show .projects-program-show__btn--ghost,
+#main-content .positions-program-show .positions-program-show__btn--ghost,
 .btn.btn--ghost {
   background: transparent;
   border: 1.5px solid var(--ggz-border-dim);
@@ -91,6 +114,7 @@ button.ggz-btn-urgent:hover {
 .ggz-btn--ghost:hover,
 .ggz-project-cta-btn--ghost:hover,
 #main-content .projects-program-show .projects-program-show__btn--ghost:hover,
+#main-content .positions-program-show .positions-program-show__btn--ghost:hover,
 .btn.btn--ghost:hover {
   border-color: var(--ggz-text-secondary);
   color: var(--ggz-text);
@@ -280,7 +304,9 @@ button.ggz-btn-urgent:hover {
 @media (prefers-reduced-motion: reduce) {
   .ggz-btn:hover,
   .ggz-project-cta-btn:hover,
-  #main-content .projects-program-show .projects-program-show__btn:hover {
+  #main-content .projects-program-show .projects-program-show__btn:hover,
+  #main-content .positions-program-show .positions-program-show__btn--warm:hover,
+  #main-content .positions-program-show .positions-program-show__btn:hover {
     transform: none;
   }
 

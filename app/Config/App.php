@@ -11,6 +11,7 @@ class App extends BaseConfig
     {
         parent::__construct();
         $this->applyProjectsSubdomainBaseUrl();
+        $this->applyPositionsSubdomainBaseUrl();
         $this->applyTimezoneFromEnv();
     }
 
@@ -33,6 +34,20 @@ class App extends BaseConfig
         }
 
         $url = trim((string) env('app.projectsBaseURL', ''));
+        if ($url === '' || filter_var($url, FILTER_VALIDATE_URL) === false) {
+            return;
+        }
+
+        $this->baseURL = rtrim($url, '/ ') . '/';
+    }
+
+    private function applyPositionsSubdomainBaseUrl(): void
+    {
+        if (is_cli() || ! SiteContext::httpHostMatchesPositionsHost()) {
+            return;
+        }
+
+        $url = trim((string) env('app.positionsBaseURL', ''));
         if ($url === '' || filter_var($url, FILTER_VALIDATE_URL) === false) {
             return;
         }

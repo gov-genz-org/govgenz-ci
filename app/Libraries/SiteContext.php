@@ -10,12 +10,15 @@ use CodeIgniter\HTTP\RequestInterface;
  * Contexte site public : locale active et segments d’URL après préfixe éventuel /en.
  *
  * `projects` = même appli servie sur le vhost configuré par app.projectsHost (dossier B FTP).
+ * `positions` = idem pour app.positionsHost (futur sous-domaine).
  */
 final class SiteContext
 {
     public const SITE_MAIN = 'main';
 
     public const SITE_PROJECTS = 'projects';
+
+    public const SITE_POSITIONS = 'positions';
 
     private static string $siteId = self::SITE_MAIN;
 
@@ -41,9 +44,19 @@ final class SiteContext
         self::$siteId = self::SITE_PROJECTS;
     }
 
+    public static function setPositions(): void
+    {
+        self::$siteId = self::SITE_POSITIONS;
+    }
+
     public static function isProjectsSite(): bool
     {
         return self::$siteId === self::SITE_PROJECTS;
+    }
+
+    public static function isPositionsSite(): bool
+    {
+        return self::$siteId === self::SITE_POSITIONS;
     }
 
     /**
@@ -54,6 +67,11 @@ final class SiteContext
      */
     public static function httpHostMatchesProjectsHost(?RequestInterface $request = null): bool
     {
+        return self::httpHostMatchesConfiguredHost('app.projectsHost', $request);
+    }
+
+    private static function httpHostMatchesConfiguredHost(string $envKey, ?RequestInterface $request = null): bool
+    {
         if (is_cli()) {
             return false;
         }
@@ -62,7 +80,7 @@ final class SiteContext
             ? (string) $request->getServer('HTTP_HOST')
             : (string) ($_SERVER['HTTP_HOST'] ?? ''));
 
-        $configured = trim((string) env('app.projectsHost', ''));
+        $configured = trim((string) env($envKey, ''));
         if ($raw === '' || $configured === '') {
             return false;
         }
@@ -89,6 +107,11 @@ final class SiteContext
         $serverPort = isset($_SERVER['SERVER_PORT']) ? (string) $_SERVER['SERVER_PORT'] : '';
 
         return $serverPort !== '' && (string) $cfgParts['port'] === $serverPort;
+    }
+
+    public static function httpHostMatchesPositionsHost(?RequestInterface $request = null): bool
+    {
+        return self::httpHostMatchesConfiguredHost('app.positionsHost', $request);
     }
 
     /**
@@ -119,6 +142,11 @@ final class SiteContext
     public static function projectsPathPrefixEnabled(): bool
     {
         return filter_var(env('app.projectsUsePathPrefix', false), FILTER_VALIDATE_BOOLEAN);
+    }
+
+    public static function positionsPathPrefixEnabled(): bool
+    {
+        return filter_var(env('app.positionsUsePathPrefix', true), FILTER_VALIDATE_BOOLEAN);
     }
 
     public static function id(): string

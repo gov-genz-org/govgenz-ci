@@ -56,8 +56,11 @@ final class PublicNav
             'admin_login' => $seg1 === 'admin' && $seg2 === 'login',
             // Liste programme (URL /projects ou vhost racine) : Front\Projects\Home impose navActive = "projects"
             'projects', 'projets-programme', 'projects-program' => self::isProjectsListMenuActive($navActive, $seg1),
+            // Liste programme positions : Front\Positions\Home impose navActive = "positions"
+            'positions', 'positions-programme', 'positions-program' => self::isPositionsListMenuActive($navActive, $seg1),
             default => ($navActive === '' && $seg1 === $mk)
-                || self::isProjectsDetailMenuActive($navActive, $seg1, $mk),
+                || self::isProjectsDetailMenuActive($navActive, $seg1, $mk)
+                || self::isPositionsDetailMenuActive($navActive, $seg1, $mk),
         };
     }
 
@@ -75,6 +78,26 @@ final class PublicNav
     private static function isProjectsDetailMenuActive(string $navActive, string $seg1, string $mk): bool
     {
         if ($navActive !== 'projects' || $seg1 === '') {
+            return false;
+        }
+
+        return $seg1 === $mk;
+    }
+
+    /**
+     * Entrée menu « liste des positions » (slug path ou slug CMS bandeau liste).
+     */
+    private static function isPositionsListMenuActive(string $navActive, string $seg1): bool
+    {
+        return $navActive === 'positions' && $seg1 === '';
+    }
+
+    /**
+     * Fiche position : même navActive ; le 1er segment public est le slug position.
+     */
+    private static function isPositionsDetailMenuActive(string $navActive, string $seg1, string $mk): bool
+    {
+        if ($navActive !== 'positions' || $seg1 === '') {
             return false;
         }
 

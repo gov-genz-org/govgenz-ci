@@ -114,6 +114,10 @@ body.ggz-public-theme {
     color: var(--text-bright);
 }
 
+.nav a.ggz-nav-end {
+    margin-left: auto;
+}
+
 .nav a.is-active {
     color: var(--text-bright);
 }

@@ -68,6 +68,15 @@ if (! function_exists('cms_page_suppress_outer_hero')) {
     }
 }
 
+if (! function_exists('cms_positions_list_page_slug')) {
+    function cms_positions_list_page_slug(): string
+    {
+        return \App\Libraries\SiteContext::locale() === 'en'
+            ? 'positions-program'
+            : 'positions-programme';
+    }
+}
+
 if (! function_exists('cms_projects_list_page_slug')) {
     /**
      * Slug de page CMS pour le bandeau titre / chapô de la liste publique des projets.
