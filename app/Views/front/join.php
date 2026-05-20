@@ -96,7 +96,8 @@ $phoneCountryErr = isset($joinErrors['phone_country']) ? (string) $joinErrors['p
                         </div>
                         <div class="ggz-field">
                             <label for="email"><?= esc(lang('Site.join_label_email')) ?></label>
-                            <input type="email" name="email" id="email" value="<?= esc(old('email')) ?>" required autocomplete="email" inputmode="email" aria-describedby="email-error">
+                            <input type="email" name="email" id="email" value="<?= esc(old('email')) ?>" required autocomplete="email" inputmode="email" aria-describedby="email-hint email-error">
+                            <p class="ggz-field-hint" id="email-hint"><?= esc(lang('Site.join_email_ack_hint')) ?></p>
                             <p class="ggz-field-error" id="email-error" role="alert" <?= $emailErr === '' ? 'hidden' : '' ?>><?= esc($emailErr) ?></p>
                         </div>
                     </fieldset>

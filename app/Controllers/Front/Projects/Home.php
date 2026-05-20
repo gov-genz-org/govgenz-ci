@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers\Front\Projects;
 
 use App\Controllers\BaseController;
+use App\Libraries\FormSubmissionAckMailer;
 use App\Libraries\ProjectContributionNotifier;
 use App\Libraries\ProjectShareQrGenerator;
 use App\Libraries\SiteContext;
@@ -427,11 +428,12 @@ class Home extends BaseController
             $type = $showFundBudget ? 'budget' : 'material';
         }
 
-        $errors    = [];
-        $fields    = [];
-        $donorName = '';
-        $contact   = '';
-        $title     = trim((string) ($project['title'] ?? $slug));
+        $errors     = [];
+        $fields     = [];
+        $donorName  = '';
+        $donorEmail = '';
+        $contact    = '';
+        $title      = trim((string) ($project['title'] ?? $slug));
 
         $insertRow = [
             'project_id'        => (int) ($project['id'] ?? 0) ?: null,
@@ -449,18 +451,21 @@ class Home extends BaseController
                 'budget_donor_name'      => 'required|max_length[255]',
                 'budget_phone_country'   => 'required|regex_match[/^\+[0-9]{1,4}$/]',
                 'budget_phone_number'    => 'required|max_length[32]|regex_match[/^[0-9][0-9 .()-]{3,31}$/]',
+                'budget_donor_email'     => 'permit_empty|valid_email|max_length[190]',
                 'budget_amount'          => 'required|max_length[120]|regex_match[/\d/]',
                 'budget_remarks'         => 'permit_empty|max_length[4000]',
             ];
             if (! $this->validate($rules, project_fund_validation_messages('budget'))) {
                 $errors = $this->validator->getErrors();
             }
-            $donorName = trim((string) $this->request->getPost('budget_donor_name'));
-            $contact   = project_fund_phone_contact_from_request('budget');
-            $amount    = trim((string) $this->request->getPost('budget_amount'));
-            $remarks   = trim((string) $this->request->getPost('budget_remarks'));
-            $insertRow['donor_name'] = $donorName;
-            $insertRow['contact']    = $contact;
+            $donorName  = trim((string) $this->request->getPost('budget_donor_name'));
+            $donorEmail = trim((string) $this->request->getPost('budget_donor_email'));
+            $contact    = project_fund_phone_contact_from_request('budget');
+            $amount     = trim((string) $this->request->getPost('budget_amount'));
+            $remarks    = trim((string) $this->request->getPost('budget_remarks'));
+            $insertRow['donor_name']  = $donorName;
+            $insertRow['contact']     = $contact;
+            $insertRow['donor_email'] = $donorEmail !== '' ? $donorEmail : null;
             $insertRow['amount']     = $amount !== '' ? $amount : null;
             $insertRow['remarks']    = $remarks !== '' ? $remarks : null;
             $fields = [
@@ -469,11 +474,15 @@ class Home extends BaseController
                 lang('Projects.fund_field_amount')  => $amount,
                 lang('Projects.fund_field_remarks') => $remarks,
             ];
+            if ($donorEmail !== '') {
+                $fields[lang('Projects.fund_field_email')] = $donorEmail;
+            }
         } else {
             $rules = [
                 'material_donor_name'      => 'required|max_length[255]',
                 'material_phone_country'   => 'required|regex_match[/^\+[0-9]{1,4}$/]',
                 'material_phone_number'    => 'required|max_length[32]|regex_match[/^[0-9][0-9 .()-]{3,31}$/]',
+                'material_donor_email'     => 'permit_empty|valid_email|max_length[190]',
                 'material_pickup_location' => 'permit_empty|max_length[255]',
                 'material_remarks'         => 'permit_empty|max_length[4000]',
             ];
@@ -485,8 +494,9 @@ class Home extends BaseController
             if ($materialLineErrors !== []) {
                 $errors = array_merge($errors, $materialLineErrors);
             }
-            $donorName = trim((string) $this->request->getPost('material_donor_name'));
-            $contact   = project_fund_phone_contact_from_request('material');
+            $donorName  = trim((string) $this->request->getPost('material_donor_name'));
+            $donorEmail = trim((string) $this->request->getPost('material_donor_email'));
+            $contact    = project_fund_phone_contact_from_request('material');
             $canDeliver = trim((string) $this->request->getPost('material_can_deliver'));
             $deliveryLabel = '';
             $canDeliverDb = null;
@@ -500,6 +510,7 @@ class Home extends BaseController
             $available = trim((string) $this->request->getPost('material_available_from'));
             $insertRow['donor_name']      = $donorName;
             $insertRow['contact']         = $contact;
+            $insertRow['donor_email']     = $donorEmail !== '' ? $donorEmail : null;
             $materialStorage              = project_fund_material_storage_from_lines($materialLines);
             $insertRow['items']           = $materialStorage['items'];
             $insertRow['quantity']        = $materialStorage['quantity'];
@@ -513,10 +524,13 @@ class Home extends BaseController
                 lang('Projects.fund_field_quantity')  => (string) ($insertRow['quantity'] ?? ''),
                 lang('Projects.fund_field_available') => $available,
                 lang('Projects.fund_field_pickup')    => (string) ($insertRow['pickup_location'] ?? ''),
-                lang('Projects.fund_field_contact')   => $contact,
+                lang('Projects.fund_field_phone')     => $contact,
                 lang('Projects.fund_field_delivery')  => $deliveryLabel,
                 lang('Projects.fund_field_remarks')   => (string) ($insertRow['remarks'] ?? ''),
             ];
+            if ($donorEmail !== '') {
+                $fields[lang('Projects.fund_field_email')] = $donorEmail;
+            }
         }
 
         $redirectUrl = project_public_url($slug) . '#project-fund';
@@ -535,10 +549,25 @@ class Home extends BaseController
             : site_url('admin/project-contributions') . '?status=new';
 
         ProjectContributionNotifier::send($type, $title, $slug, array_merge($fields, [
-            'donor_name' => $donorName,
-            'contact'    => $contact,
-            'email'      => $contact,
-        ]), $adminValidationUrl);
+            'donor_name'  => $donorName,
+            'contact'     => $contact,
+            'donor_email' => $donorEmail,
+        ]), $adminValidationUrl, $locale);
+
+        if ($donorEmail !== '' && filter_var($donorEmail, FILTER_VALIDATE_EMAIL)) {
+            $ackSummary = [];
+            foreach ($fields as $label => $value) {
+                $ackSummary[] = ['label' => $label, 'value' => (string) $value];
+            }
+            FormSubmissionAckMailer::sendProjectFund(
+                $donorEmail,
+                $donorName,
+                $title,
+                $type,
+                $ackSummary,
+                $locale,
+            );
+        }
 
         return redirect()->to($redirectUrl)->with('fund_success', lang('Projects.fund_form_success'));
     }

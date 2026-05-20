@@ -146,6 +146,7 @@ $routes->group('admin', ['filter' => 'authadmin'], static function ($routes) {
         $routes->post('staff-users/update/(:num)', 'Admin\\StaffUsers::update/$1');
         $routes->post('staff-users/delete/(:num)', 'Admin\\StaffUsers::delete/$1');
         $routes->post('staff-users/resend-invite/(:num)', 'Admin\\StaffUsers::resendInvite/$1');
+        $routes->post('staff-users/toggle-notify/(:num)', 'Admin\\StaffUsers::toggleFormNotify/$1');
         $routes->post('staff-users/clear-table', 'Admin\\StaffUsers::clearTable');
     });
 });

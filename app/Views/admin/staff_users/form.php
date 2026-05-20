@@ -8,6 +8,8 @@ use App\Libraries\StaffInvite;
 /** @var array<string, mixed>|null $user */
 /** @var array<string, string> $roles */
 /** @var bool $is_edit */
+/** @var bool $hasNotifyColumn */
+$hasNotifyColumn = $hasNotifyColumn ?? false;
 
 $pwMin = StaffAuthPolicy::loginPasswordMinLength();
 $id = $is_edit ? (int) ($user['id'] ?? 0) : 0;
@@ -79,6 +81,16 @@ $inviteExpiryLabel = $inviteExpiryHours <= 24
                     <option value="0" <?= (string) old('is_active', (string) (int) ($user['is_active'] ?? 1)) === '0' ? 'selected' : '' ?>>Désactivé</option>
                 </select>
             </div>
+            <?php if ($hasNotifyColumn) : ?>
+            <div class="mb-3">
+                <label class="form-label" for="su-notify">Notifications par e-mail (formulaires publics)</label>
+                <select name="notify_form_submissions" id="su-notify" class="form-select" required>
+                    <option value="1" <?= (string) old('notify_form_submissions', (string) (int) ($user['notify_form_submissions'] ?? 1)) === '1' ? 'selected' : '' ?>>Activées — alertes Rejoindre et Financer un projet</option>
+                    <option value="0" <?= (string) old('notify_form_submissions', (string) (int) ($user['notify_form_submissions'] ?? 1)) === '0' ? 'selected' : '' ?>>Désactivées</option>
+                </select>
+                <p class="form-text mb-0">N’affecte pas l’e-mail d’invitation au back-office.</p>
+            </div>
+            <?php endif; ?>
         <?php endif; ?>
 
         <div class="admin-form-actions d-flex flex-wrap gap-2">

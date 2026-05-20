@@ -81,7 +81,19 @@ $typeLabels = [
                 <?php endif; ?>
             </td>
             <td><?= esc((string) ($row['donor_name'] ?? '')) ?></td>
-            <td class="text-break small"><?= esc((string) ($row['contact'] ?? '')) ?></td>
+            <td class="text-break small">
+                <?php
+                $donorMail = trim((string) ($row['donor_email'] ?? ''));
+                $donorPhone = trim((string) ($row['contact'] ?? ''));
+                if ($donorMail !== '') : ?>
+                    <a href="mailto:<?= esc($donorMail, 'attr') ?>"><?= esc($donorMail) ?></a>
+                <?php endif; ?>
+                <?php if ($donorMail !== '' && $donorPhone !== '') : ?><br><?php endif; ?>
+                <?php if ($donorPhone !== '') : ?>
+                    <?= esc($donorPhone) ?>
+                <?php endif; ?>
+                <?php if ($donorMail === '' && $donorPhone === '') : ?>—<?php endif; ?>
+            </td>
             <td>
                 <?php if ($status === ProjectContributionModel::STATUS_NEW) : ?>
                     <span class="badge text-bg-primary">Nouvelle</span>

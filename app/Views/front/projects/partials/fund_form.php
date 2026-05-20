@@ -57,6 +57,7 @@ $fundFieldMsgs = [
         'max_length' => lang('Projects.fund_validation_amount_max'),
     ],
     'budget_remarks'             => ['max_length' => lang('Projects.fund_validation_remarks_max')],
+    'budget_donor_email'         => ['invalid' => lang('Projects.fund_validation_email_invalid')],
     'material_donor_name'      => [
         'required'   => lang('Projects.fund_validation_name_required'),
         'max_length' => lang('Projects.fund_validation_name_max'),
@@ -71,6 +72,7 @@ $fundFieldMsgs = [
     ],
     'material_pickup_location'   => ['max_length' => lang('Projects.fund_validation_pickup_max')],
     'material_remarks'           => ['max_length' => lang('Projects.fund_validation_remarks_max')],
+    'material_donor_email'       => ['invalid' => lang('Projects.fund_validation_email_invalid')],
     'phone_required'             => lang('Projects.fund_validation_phone_required'),
 ];
 $fundValidateRules = [
@@ -78,11 +80,13 @@ $fundValidateRules = [
         ['input' => 'fund-budget-name', 'error' => 'fund-budget-name-error', 'name' => 'budget_donor_name', 'required' => true, 'max' => 255],
         ['input' => 'fund-budget-amount', 'error' => 'fund-budget-amount-error', 'name' => 'budget_amount', 'required' => true, 'max' => 120, 'amount' => true],
         ['input' => 'fund-budget-remarks', 'error' => 'fund-budget-remarks-error', 'name' => 'budget_remarks', 'max' => 4000],
+        ['input' => 'fund-budget-email', 'error' => 'fund-budget-email-error', 'name' => 'budget_donor_email', 'max' => 190, 'email' => true],
     ],
     'material' => [
         ['input' => 'fund-material-name', 'error' => 'fund-material-name-error', 'name' => 'material_donor_name', 'required' => true, 'max' => 255],
         ['input' => 'fund-material-pickup', 'error' => 'fund-material-pickup-error', 'name' => 'material_pickup_location', 'max' => 255],
         ['input' => 'fund-material-remarks', 'error' => 'fund-material-remarks-error', 'name' => 'material_remarks', 'max' => 4000],
+        ['input' => 'fund-material-email', 'error' => 'fund-material-email-error', 'name' => 'material_donor_email', 'max' => 190, 'email' => true],
     ],
 ];
 ?>
@@ -146,6 +150,7 @@ $fundValidateRules = [
             <p class="project-fund-form__field-error" id="fund-budget-name-error" role="alert" hidden></p>
         </div>
         <?= view('front/projects/partials/fund_phone_field', ['prefix' => 'budget']) ?>
+        <?= view('front/projects/partials/fund_email_field', ['prefix' => 'budget']) ?>
         <div class="project-fund-form__field">
             <label class="form-label" for="fund-budget-amount"><?= esc(lang('Projects.fund_field_amount')) ?></label>
             <input type="text" class="form-control" id="fund-budget-amount" name="budget_amount" maxlength="120" value="<?= esc(old('budget_amount', '')) ?>" placeholder="<?= esc(lang('Projects.fund_field_amount_placeholder'), 'attr') ?>" data-fund-validate-input required>
@@ -206,6 +211,7 @@ $fundValidateRules = [
             <p class="project-fund-form__field-error" id="fund-material-pickup-error" role="alert" hidden></p>
         </div>
         <?= view('front/projects/partials/fund_phone_field', ['prefix' => 'material']) ?>
+        <?= view('front/projects/partials/fund_email_field', ['prefix' => 'material']) ?>
         <div class="project-fund-form__field">
             <label class="form-label" for="fund-material-deliver"><?= esc(lang('Projects.fund_field_delivery')) ?></label>
             <select class="form-select" id="fund-material-deliver" name="material_can_deliver">

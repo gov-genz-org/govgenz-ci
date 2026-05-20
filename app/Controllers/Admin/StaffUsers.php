@@ -32,14 +32,17 @@ class StaffUsers extends BaseController
             'asc',
         );
 
+        $staffModel = model(StaffUserModel::class);
+
         return view('admin/layout', [
             'title' => 'Équipe',
             'main'  => view('admin/staff_users/index', [
-                'users' => $list['rows'],
-                'pager' => $list['pager'],
-                'sort'  => $list['sort'],
-                'dir'   => $list['dir'],
-                'roles' => self::ROLE_LABELS,
+                'users'             => $list['rows'],
+                'pager'             => $list['pager'],
+                'sort'              => $list['sort'],
+                'dir'               => $list['dir'],
+                'roles'             => self::ROLE_LABELS,
+                'hasNotifyColumn'   => $staffModel->db->fieldExists('notify_form_submissions', 'staff_users'),
             ]),
         ]);
     }
@@ -104,12 +107,15 @@ class StaffUsers extends BaseController
             return redirect()->to(site_url('admin/staff-users'))->with('error', 'Utilisateur introuvable.');
         }
 
+        $staffModel = model(StaffUserModel::class);
+
         return view('admin/layout', [
             'title' => 'Modifier le compte',
             'main'  => view('admin/staff_users/form', [
-                'user'    => $user,
-                'roles'   => self::ROLE_LABELS,
-                'is_edit' => true,
+                'user'            => $user,
+                'roles'           => self::ROLE_LABELS,
+                'is_edit'         => true,
+                'hasNotifyColumn' => $staffModel->db->fieldExists('notify_form_submissions', 'staff_users'),
             ]),
         ]);
     }
@@ -126,6 +132,9 @@ class StaffUsers extends BaseController
             'role'      => 'required|in_list[admin,editor]',
             'is_active' => 'required|in_list[0,1]',
         ];
+        if ($model->db->fieldExists('notify_form_submissions', 'staff_users')) {
+            $rules['notify_form_submissions'] = 'required|in_list[0,1]';
+        }
         $pwd = trim((string) $this->request->getPost('password'));
         $minLen = StaffAuthPolicy::loginPasswordMinLength();
         if ($pwd !== '') {
@@ -159,6 +168,9 @@ class StaffUsers extends BaseController
             'role'      => $roleNew,
             'is_active' => $isActiveNew,
         ];
+        if ($model->db->fieldExists('notify_form_submissions', 'staff_users')) {
+            $data['notify_form_submissions'] = (int) $this->request->getPost('notify_form_submissions');
+        }
         if ($pwd !== '') {
             $data['password_hash']           = password_hash($pwd, PASSWORD_DEFAULT);
             $data['invite_token_hash']       = null;
@@ -192,6 +204,33 @@ class StaffUsers extends BaseController
         $model->delete($id, true);
 
         return redirect()->back()->with('message', 'Compte supprimé.');
+    }
+
+    public function toggleFormNotify(int $id): ResponseInterface
+    {
+        $model = model(StaffUserModel::class);
+        if (! $model->db->fieldExists('notify_form_submissions', 'staff_users')) {
+            return redirect()->back()->with(
+                'error',
+                'Option indisponible : exécutez les migrations (notify_form_submissions).',
+            );
+        }
+
+        $user = $model->find($id);
+        if ($user === null) {
+            return redirect()->to(site_url('admin/staff-users'))->with('error', 'Utilisateur introuvable.');
+        }
+
+        $current = (int) ($user['notify_form_submissions'] ?? 1);
+        $next    = $current === 1 ? 0 : 1;
+        $model->update($id, ['notify_form_submissions' => $next]);
+
+        $email = (string) ($user['email'] ?? '');
+        $msg   = $next === 1
+            ? 'Notifications formulaires activées pour ' . $email . '.'
+            : 'Notifications formulaires désactivées pour ' . $email . '.';
+
+        return redirect()->back()->with('message', $msg);
     }
 
     public function clearTable(): ResponseInterface

@@ -11,6 +11,8 @@ helper('admin');
 /** @var \CodeIgniter\Pager\Pager $pager */
 /** @var string $sort */
 /** @var string $dir */
+/** @var bool $hasNotifyColumn */
+$hasNotifyColumn = $hasNotifyColumn ?? false;
 ?>
 <h1 class="h3 mb-1">Équipe</h1>
 <p class="text-muted small mb-3">Comptes d’accès au back-office. Seuls les administrateurs voient cet écran.</p>
@@ -39,6 +41,9 @@ helper('admin');
             <th><?= admin_list_sort_th('role', 'Rôle', $sort, $dir) ?></th>
             <th>Activation</th>
             <th><?= admin_list_sort_th('is_active', 'État', $sort, $dir) ?></th>
+            <?php if ($hasNotifyColumn) : ?>
+            <th>Notifications</th>
+            <?php endif; ?>
             <th class="text-end">Actions</th>
         </tr>
     </thead>
@@ -51,6 +56,7 @@ helper('admin');
         $isSelf = $uid === (int) session()->get('staff_user_id');
         $pending = StaffInvite::isPending($u);
         $expired = StaffInvite::isExpired($u);
+        $notifyOn = (int) ($u['notify_form_submissions'] ?? 1) === 1;
         ?>
         <tr>
             <td><?= esc((string) ($u['email'] ?? '')) ?></td>
@@ -71,6 +77,21 @@ helper('admin');
                     <span class="badge text-bg-secondary">Désactivé</span>
                 <?php endif; ?>
             </td>
+            <?php if ($hasNotifyColumn) : ?>
+            <td>
+                <?php if ($notifyOn) : ?>
+                    <span class="badge text-bg-info">E-mails actifs</span>
+                <?php else : ?>
+                    <span class="badge text-bg-secondary">E-mails coupés</span>
+                <?php endif; ?>
+                <form method="post" action="<?= site_url('admin/staff-users/toggle-notify/' . $uid) ?>" class="d-inline mt-1">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="btn btn-outline-secondary btn-sm">
+                        <?= $notifyOn ? 'Désactiver les notifications' : 'Réactiver les notifications' ?>
+                    </button>
+                </form>
+            </td>
+            <?php endif; ?>
             <td class="text-end text-nowrap">
                 <a href="<?= site_url('admin/staff-users/edit/' . $uid) ?>" class="btn btn-outline-primary btn-sm">Modifier</a>
                 <?php if (! $isSelf) : ?>
