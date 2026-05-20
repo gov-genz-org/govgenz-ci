@@ -1,0 +1,291 @@
+/**
+ * Composants réutilisables GovGenZ (boutons, panneau éditorial, tags, cartes lien).
+ *
+ * Boutons : --red / --primary = action qui demande l’attention (soumettre, CTA principal).
+ *           --teal = action positive secondaire. --ghost = annuler / retour.
+ */
+
+/* —— Boutons (genzgov-final + fiche projets) —— */
+.ggz-btn,
+.ggz-project-cta-btn,
+#main-content .projects-program-show .projects-program-show__btn,
+.btn.btn--primary,
+.btn.btn--ghost,
+.btn.ggz-btn-urgent,
+button.ggz-btn-urgent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.5rem;
+  border-radius: var(--ggz-radius-btn);
+  font-family: var(--ggz-font-sans);
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.3;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  letter-spacing: normal;
+  text-transform: none;
+  transition: all var(--ggz-t-base);
+  box-shadow: none;
+  min-height: auto;
+  margin-top: 0;
+}
+
+.ggz-btn--red,
+.ggz-btn--primary,
+.ggz-project-cta-btn--red,
+.ggz-project-cta-btn--primary,
+#main-content .projects-program-show .projects-program-show__btn--red,
+.btn.btn--primary,
+.btn.ggz-btn-urgent,
+button.ggz-btn-urgent {
+  background: var(--ggz-red);
+  color: #fff;
+  border: none;
+}
+
+.ggz-btn--red:hover,
+.ggz-btn--primary:hover,
+.ggz-project-cta-btn--red:hover,
+.ggz-project-cta-btn--primary:hover,
+#main-content .projects-program-show .projects-program-show__btn--red:hover,
+.btn.btn--primary:hover,
+.btn.ggz-btn-urgent:hover,
+button.ggz-btn-urgent:hover {
+  background: var(--ggz-red-hover);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: var(--ggz-shadow-btn-red);
+  filter: none;
+}
+
+.ggz-btn--teal,
+.ggz-project-cta-btn--teal,
+#main-content .projects-program-show .projects-program-show__btn--teal {
+  background: transparent;
+  border: 1.5px solid var(--ggz-teal);
+  color: var(--ggz-teal);
+}
+
+.ggz-btn--teal:hover,
+.ggz-project-cta-btn--teal:hover,
+#main-content .projects-program-show .projects-program-show__btn--teal:hover {
+  background: rgba(23, 163, 158, 0.12);
+  color: var(--ggz-teal);
+  transform: translateY(-2px);
+  filter: none;
+}
+
+.ggz-btn--ghost,
+.ggz-project-cta-btn--ghost,
+#main-content .projects-program-show .projects-program-show__btn--ghost,
+.btn.btn--ghost {
+  background: transparent;
+  border: 1.5px solid var(--ggz-border-dim);
+  color: var(--ggz-text-secondary);
+}
+
+.ggz-btn--ghost:hover,
+.ggz-project-cta-btn--ghost:hover,
+#main-content .projects-program-show .projects-program-show__btn--ghost:hover,
+.btn.btn--ghost:hover {
+  border-color: var(--ggz-text-secondary);
+  color: var(--ggz-text);
+  filter: none;
+}
+
+/* —— Tags / pastilles (liste projets, hero) —— */
+.ggz-tag,
+#main-content .projects-program-page .projects-program-page__tag,
+#main-content .projects-program-show .project-hero .tag {
+  display: inline-block;
+  background: rgba(23, 163, 158, 0.15);
+  color: var(--ggz-teal);
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: none;
+  font-family: var(--ggz-font-sans);
+}
+
+/* —— Panneau prose (mentions légales, presse, CMS long) —— */
+.ggz-editorial-prose,
+.ggz-legal-prose {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 3.2vw, 2.15rem) clamp(1.35rem, 3vw, 2.1rem);
+  border-radius: var(--ggz-radius-card);
+  border: 1px solid var(--ggz-border-panel);
+  background: var(--ggz-gradient-panel);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 18px 48px rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.ggz-editorial-prose::before,
+.ggz-legal-prose::before {
+  content: "";
+  display: block;
+  height: 3px;
+  margin: -0.15rem 0 1.35rem;
+  border-radius: 999px;
+  background: var(--ggz-gradient-panel-accent);
+  opacity: 0.9;
+}
+
+.ggz-editorial-prose h2,
+.ggz-legal-prose h2 {
+  scroll-margin-top: 5rem;
+  font-family: var(--ggz-font-sans);
+  font-size: var(--ggz-type-legal-h2);
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ggz-text);
+  margin: 0 0 0.65rem;
+  padding: 0 0 0.4rem 0.55rem;
+  border-bottom: 1px solid rgba(56, 67, 88, 0.55);
+  border-left: 3px solid rgba(255, 165, 134, 0.45);
+}
+
+.ggz-editorial-prose h2:not(:first-child),
+.ggz-legal-prose h2:not(:first-child) {
+  margin-top: 1.5rem;
+}
+
+.ggz-editorial-prose p,
+.ggz-legal-prose p {
+  margin: 0 0 0.95rem;
+  font-family: var(--ggz-font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.68;
+  color: var(--ggz-text-secondary);
+}
+
+.ggz-editorial-prose p:last-child,
+.ggz-legal-prose p:last-child {
+  margin-bottom: 0;
+}
+
+.ggz-editorial-prose ul,
+.ggz-editorial-prose ol,
+.ggz-legal-prose ul,
+.ggz-legal-prose ol {
+  margin: 0 0 1.05rem;
+  padding-left: 1.35rem;
+  font-size: 0.9375rem;
+  line-height: 1.62;
+  color: var(--ggz-text-secondary);
+}
+
+.ggz-editorial-prose li,
+.ggz-legal-prose li {
+  margin-bottom: 0.4rem;
+}
+
+.ggz-editorial-prose ul li::marker,
+.ggz-legal-prose ul li::marker {
+  color: var(--ggz-warm);
+}
+
+.ggz-editorial-prose a,
+.ggz-legal-prose a {
+  color: var(--ggz-warm);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(255, 165, 134, 0.4);
+  transition: color 0.18s ease, text-decoration-color 0.18s ease;
+}
+
+.ggz-editorial-prose a:hover,
+.ggz-legal-prose a:hover {
+  color: var(--ggz-text);
+  text-decoration-color: currentColor;
+}
+
+.ggz-editorial-prose a[href^="http"]:not([href*="govgenz.org"])::after,
+.ggz-legal-prose a[href^="http"]:not([href*="govgenz.org"])::after {
+  content: " ↗";
+  font-size: 0.78em;
+  opacity: 0.75;
+}
+
+.ggz-editorial-prose strong,
+.ggz-legal-prose strong {
+  color: var(--ggz-text);
+  font-weight: 600;
+}
+
+.ggz-editorial-prose code,
+.ggz-legal-prose code {
+  font-family: var(--ggz-font-mono);
+  font-size: 0.82em;
+  padding: 0.14rem 0.45rem;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(56, 67, 88, 0.7);
+  color: var(--ggz-text);
+}
+
+.ggz-editorial-prose p.muted,
+.ggz-editorial-prose .muted,
+.ggz-legal-prose p.muted,
+.ggz-legal-prose .muted {
+  margin-top: 1.65rem;
+  padding-top: 1.1rem;
+  border-top: 1px dashed rgba(56, 67, 88, 0.55);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--ggz-text-muted);
+}
+
+/* —— Carte CMS générique —— */
+#main-content .card,
+.ggz-card {
+  background: var(--ggz-bg-card-overlay);
+  border: 1px solid var(--ggz-border-dim);
+  border-radius: var(--ggz-radius-card);
+  box-shadow: var(--ggz-shadow-card);
+}
+
+#main-content .card:hover,
+.ggz-card:hover {
+  border-color: rgba(255, 165, 134, 0.22);
+  box-shadow: var(--ggz-shadow-card-hover);
+}
+
+@media (max-width: 640px) {
+  .ggz-editorial-prose,
+  .ggz-legal-prose {
+    padding: 1.2rem 1rem 1.4rem;
+    border-radius: 14px;
+  }
+
+  .ggz-editorial-prose h2,
+  .ggz-legal-prose h2 {
+    padding-left: 0.65rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ggz-btn:hover,
+  .ggz-project-cta-btn:hover,
+  #main-content .projects-program-show .projects-program-show__btn:hover {
+    transform: none;
+  }
+
+  .ggz-editorial-prose a,
+  .ggz-legal-prose a {
+    transition: none;
+  }
+}

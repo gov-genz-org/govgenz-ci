@@ -31,7 +31,7 @@ Configurer **`.env`** (base MySQL ou SQLite selon ton environnement).
 
 - Routes **front** : `/`, `/about`, `/contact`, `/press`, `/join`
 - Routes **admin** : `/admin`, CRUD pages & posts, liste volontaires
-- Charte : `public/assets/css/govgenz-tokens.css`
+- Charte : `govgenz-tokens.css` + `govgenz-components.css` (design system unique)
 
 ## Documentation
 

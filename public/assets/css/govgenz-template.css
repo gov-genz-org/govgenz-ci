@@ -3,56 +3,7 @@
    Design : cosmique militant — mode sombre
    ============================================ */
 
-/* ===== VARIABLES ===== */
-:root {
-  /* Couleurs base */
-  --bg-deepest: #050507;
-  --bg-deep: #0a0a14;
-  --bg-mid: #0f0f1a;
-  --bg-light: #15151f;
-  --bg-elevated: #1e1e2c;
-  
-  /* Accent rouge */
-  --red-primary: #dc2626;
-  --red-deep: #7f1d1d;
-  --red-glow: #ef4444;
-  --red-soft: #fca5a5;
-  --red-pale: #fecaca;
-  
-  /* Accent vert sectoriel */
-  --green-primary: #10b981;
-  --green-deep: #065f46;
-  --green-soft: #6ee7b7;
-  --green-pale: #a7f3d0;
-  
-  /* Accent or ADN */
-  --gold-primary: #fbbf24;
-  --gold-deep: #92400e;
-  --gold-soft: #fed7aa;
-  
-  /* Neutres */
-  --text-bright: #ffffff;
-  --text-primary: #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --text-tertiary: #94a3b8;
-  --text-muted: #64748b;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  
-  /* Typographie */
-  --font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
-  --font-body: 'JetBrains Mono', 'Courier New', monospace;
-  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-  
-  /* Layout */
-  --max-width: 1320px;
-  --gutter: clamp(1.5rem, 4vw, 4rem);
-  --section-pad: clamp(4rem, 10vh, 8rem);
-  
-  /* Easings */
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-}
+/* Variables : govgenz-tokens.css (chargé avant ce fichier) */
 
 /* ===== RESET ===== */
 *, *::before, *::after {
@@ -476,7 +427,8 @@ a.lang-toggle {
   animation: fadeInUp 1s var(--ease-out-expo) 1.1s forwards;
 }
 
-.btn {
+/* Boutons site public uniquement (évite d’écraser Bootstrap dans l’admin) */
+.ggz-public-theme .btn {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -492,25 +444,25 @@ a.lang-toggle {
   overflow: hidden;
 }
 
-.btn--primary {
+.ggz-public-theme .btn--primary {
   background: var(--red-primary);
   color: var(--text-bright);
   box-shadow: 0 4px 20px rgba(220, 38, 38, 0.35);
 }
 
-.btn--primary:hover {
+.ggz-public-theme .btn--primary:hover {
   background: var(--red-glow);
   transform: translateY(-2px);
   box-shadow: 0 8px 28px rgba(220, 38, 38, 0.5);
 }
 
-.btn--ghost {
+.ggz-public-theme .btn--ghost {
   background: transparent;
   color: var(--text-bright);
   border: 1px solid var(--border-strong);
 }
 
-.btn--ghost:hover {
+.ggz-public-theme .btn--ghost:hover {
   border-color: var(--red-soft);
   background: rgba(220, 38, 38, 0.08);
   transform: translateY(-2px);
@@ -593,13 +545,18 @@ a.lang-toggle {
   background: rgba(220, 38, 38, 0.05);
 }
 
+/* Titres de section / page (hero CMS, corps HTML, aperçu admin) */
+.ggz-public-theme :is(h1, h2).section__title,
+.ggz-public-theme :is(h1, h2).ggz-section-title,
 .section__title {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  line-height: 1;
+  font-size: var(--ggz-type-section-title);
+  line-height: 1.05;
   letter-spacing: -0.01em;
+  font-weight: 400;
+  text-transform: none;
   color: var(--text-bright);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .section__lead {
@@ -1492,7 +1449,7 @@ body.js-loaded .cercle.reveal {
     width: 100%;
   }
   
-  .btn {
+  .ggz-public-theme .btn {
     width: 100%;
     justify-content: center;
   }

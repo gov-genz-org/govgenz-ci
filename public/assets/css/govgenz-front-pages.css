@@ -1,5 +1,5 @@
-/* --- Contenu principal --- */
-#main-content {
+/* --- Contenu principal (site public uniquement — pas l’admin) --- */
+body.ggz-public-theme #main-content {
     flex: 1;
     max-width: var(--ggz-max-content);
     margin: 0 auto;
@@ -7,15 +7,16 @@
     width: 100%;
 }
 
-#main-content.ggz-layout-narrow {
+body.ggz-public-theme #main-content.ggz-layout-narrow {
     max-width: var(--ggz-max-narrow);
 }
 
-#main-content.ggz-layout-full {
+body.ggz-public-theme #main-content.ggz-layout-full {
     max-width: var(--ggz-max-wide);
 }
 
-#main-content .ggz-page-hero h1 {
+/* Hero compact legacy (h1 sans .section__title) */
+#main-content .ggz-page-hero h1:not(.section__title):not(.ggz-section-title) {
     font-family: var(--ggz-font-display);
     font-size: clamp(2rem, 4.5vw, 2.85rem);
     line-height: var(--ggz-line-heading);
@@ -24,12 +25,25 @@
     margin: 0 0 0.85rem;
 }
 
+/* Hero structuré : même titre que les pages CMS (presse fiche, mentions, projets…) */
+#main-content .ggz-page-hero.ggz-page-hero--structured :is(h1, h2).section__title,
+#main-content .ggz-page-hero.ggz-page-hero--structured :is(h1, h2).ggz-section-title {
+    font-family: var(--font-display);
+    font-size: var(--ggz-type-section-title);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    font-weight: 400;
+    text-transform: none;
+    color: var(--text-bright);
+    margin: 0 0 1.25rem;
+}
+
 .card {
-    background: var(--ggz-night-blue);
+    background: var(--ggz-bg-card-overlay);
     border-radius: var(--ggz-radius-card);
     padding: 1.5rem 1.35rem;
     margin-bottom: 1rem;
-    border: 1px solid rgba(56, 67, 88, 0.45);
+    border: 1px solid var(--ggz-border-panel);
     box-shadow: var(--ggz-shadow-card);
     transition:
         border-color 0.2s ease,
@@ -157,26 +171,6 @@
     border: 1px solid rgba(220, 38, 38, 0.3);
     border-radius: 100px;
     background: rgba(220, 38, 38, 0.05);
-}
-
-.ggz-page-hero--structured :is(h1, h2).section__title {
-    font-family: var(--font-display);
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    line-height: 1;
-    letter-spacing: -0.01em;
-    font-weight: 400;
-    color: var(--text-bright);
-    margin: 0 0 1.5rem;
-    text-transform: none;
-}
-
-#main-content .ggz-page-hero.ggz-page-hero--structured :is(h1, h2).section__title {
-    font-family: var(--font-display);
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    line-height: 1;
-    letter-spacing: -0.01em;
-    font-weight: 400;
-    margin: 0 0 1.5rem;
 }
 
 .ggz-page-hero--structured .section__lead {
@@ -446,15 +440,15 @@ article.wysiwyg > *:first-child {
     margin-top: 0;
 }
 
-article.wysiwyg h2,
-article.wysiwyg h3 {
+article.wysiwyg h2:not(.section__title):not(.ggz-section-title):where(:not(.ggz-legal-prose *), :not(.ggz-editorial-prose *)),
+article.wysiwyg h3:where(:not(.ggz-legal-prose *), :not(.ggz-editorial-prose *)) {
     line-height: var(--ggz-line-heading);
     margin-top: 1.5rem;
     margin-bottom: 0.65rem;
     font-weight: 800;
 }
 
-article.wysiwyg h2 {
+article.wysiwyg h2:not(.section__title):not(.ggz-section-title):where(:not(.ggz-legal-prose *), :not(.ggz-editorial-prose *)) {
     font-size: 1.35rem;
     letter-spacing: 0.02em;
     text-transform: uppercase;
@@ -823,17 +817,7 @@ button.secondary,
     text-transform: uppercase;
 }
 
-/* CTA fort — rouge charte, à utiliser avec parcimonie */
-button.ggz-btn-urgent,
-.btn.ggz-btn-urgent {
-    background: var(--ggz-red-action);
-    color: var(--ggz-text-on-dark);
-}
-
-button.ggz-btn-urgent:hover,
-.btn.ggz-btn-urgent:hover {
-    filter: brightness(1.08);
-}
+/* CTA fort : styles dans govgenz-components.css (.ggz-btn-urgent, .btn--primary) */
 
 /* --- Listes simples dans une carte --- */
 .card ul {
@@ -1112,12 +1096,12 @@ button.ggz-btn-urgent:hover,
     border-top: 1px solid rgba(56, 67, 88, 0.45);
 }
 
-#main-content.ggz-main-shell .ggz-page-join .ggz-form-actions .ggz-project-cta-btn--teal {
+#main-content.ggz-main-shell .ggz-page-join .ggz-form-actions .ggz-project-cta-btn--red {
     width: 100%;
 }
 
 @media (min-width: 480px) {
-    #main-content.ggz-main-shell .ggz-page-join .ggz-form-actions .ggz-project-cta-btn--teal {
+    #main-content.ggz-main-shell .ggz-page-join .ggz-form-actions .ggz-project-cta-btn--red {
         width: auto;
         min-width: min(100%, 16rem);
     }

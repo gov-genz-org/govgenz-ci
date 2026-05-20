@@ -50,7 +50,7 @@ $sectorCodes = project_sector_codes_from_csv((string) ($project['sectors_csv'] ?
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
-            <h1 id="project-show-heading"><?= esc($title) ?></h1>
+            <h1 id="project-show-heading" class="section__title"><?= esc($title) ?></h1>
             <div class="project-hero-meta">
                 <?php if ($launchedDisplay !== '') : ?>
                     <span>📅 <?= esc(lang('Projects.show_hero_launched')) ?> <strong><?= esc($launchedDisplay) ?></strong></span>

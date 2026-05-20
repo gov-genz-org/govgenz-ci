@@ -1,71 +1,156 @@
-/*
- * GovGenZ — jetons design (sources officielles dans docs/)
- *
- * PDF : 05_CHARTE_GRAPHIQUE_GOV_GENZ.pdf — palette + usages (70 % fonds sombres,
- *       20 % cartes, 10 % rouge action ; rouge réservé urgence/CTA).
- * PDF : 07_MODELES_VISUELS_GOV_GENZ.pdf — modèles visuels (pas de hex dans l’extraction texte).
- *
- * Texte extrait pour recherche : 05_CHARTE_GRAPHIQUE_GOV_GENZ_extracted.txt
+/**
+ * GovGenZ — design system (source unique).
+ * Base : genzgov-final/css/variables.css + charte PDF (docs/GOVGENZ-DESIGN-TOKENS.css).
+ * Les fichiers template / pages consomment les alias --bg-*, --red-* ci-dessous.
  */
 
 :root {
-  /* — Palette charte (noms document 05) — */
-  --ggz-night-deep: #161e2f; /* Nuit profonde — fond principal, couvertures */
-  --ggz-night-blue: #232f49; /* Bleu nuit — cartes, fonds secondaires */
-  --ggz-blue-gray: #384358; /* Gris bleuté — séparateurs, info secondaire */
-  --ggz-peach: #ffa586; /* Pêche — accent humain, citations */
-  --ggz-red-action: #d51a2b; /* Rouge action — urgence, CTA (parcimonieux) */
-  --ggz-bordeaux: #541a2e; /* Bordeaux — gravité, mémoire */
+  /* — Fonds (genzgov-final) — */
+  --ggz-bg: #080d1a;
+  --ggz-bg-section: #0d1524;
+  --ggz-bg-card: #121d30;
+  --ggz-bg-card-overlay: rgba(30, 30, 44, 0.72);
+  --ggz-bg-overlay: rgba(8, 13, 26, 0.7);
 
-  /* Texte sur fond sombre (charte : blanc ou crème ; gris bleu pour métadonnées) */
+  /* — Accents — */
+  --ggz-red: #c41e30;
+  --ggz-red-hover: #a6192a;
+  --ggz-teal: #17a39e;
+  --ggz-warm: #e88a6a;
+  --ggz-peach: #ffa586;
+  --ggz-bordeaux: #541a2e;
+
+  /* — Texte — */
+  --ggz-text: #ffffff;
+  --ggz-text-secondary: #8c94a8;
+  --ggz-text-muted: #5a6478;
   --ggz-text-on-dark: #fafafa;
-  --ggz-text-muted-on-dark: #384358;
-
-  /* Métadonnées lisibles sur fond #161E2F */
   --ggz-text-meta: rgba(250, 250, 250, 0.72);
 
-  /* Typographie — alignée sur govgenz-template.css (polices auto-hébergées) */
-  --ggz-font-sans: 'JetBrains Mono', 'Courier New', monospace;
+  /* — Bordures — */
+  --ggz-border-dim: rgba(255, 255, 255, 0.07);
+  --ggz-border-red: rgba(196, 30, 48, 0.3);
+  --ggz-border-teal: rgba(23, 163, 158, 0.3);
+  --ggz-border-panel: rgba(56, 67, 88, 0.58);
+
+  /* — Typographie (auto-hébergée : govgenz-fonts.css) — */
   --ggz-font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
+  --ggz-font-sans: 'JetBrains Mono', 'Courier New', monospace;
+  --ggz-font-mono: var(--ggz-font-sans);
   --ggz-line-heading: 1.2;
   --ggz-line-body: 1.65;
   --ggz-letter-nav: 0.06em;
+  --ggz-type-section-title: clamp(1.75rem, 4vw, 2.65rem);
+  --ggz-type-legal-h2: clamp(0.8125rem, 1.25vw, 0.9375rem);
 
-  /* Largeur « container » proche du thème WP (~1040px) */
-  --ggz-max-content: 1040px;
+  /* — Espacement & rayons — */
+  --ggz-space-xs: 0.25rem;
+  --ggz-space-sm: 0.5rem;
+  --ggz-space-md: 1rem;
+  --ggz-space-lg: 1.5rem;
+  --ggz-space-xl: 2rem;
+  --ggz-space-2xl: 3rem;
+  --ggz-radius-sm: 3px;
+  --ggz-radius-md: 6px;
+  --ggz-radius-lg: 10px;
+  --ggz-radius-card: 18px;
+  --ggz-radius-btn: 4px;
+  --ggz-t-fast: 0.15s ease;
+  --ggz-t-base: 0.25s ease;
 
-  /* Repères visuels alignés sur govgenz-bull — recolorés charte sombre */
-  --ggz-gradient-page:
-    radial-gradient(ellipse 120% 82% at 50% -28%, rgba(255, 165, 134, 0.14), transparent 52%),
-    radial-gradient(ellipse 72% 48% at 100% 12%, rgba(35, 47, 73, 0.42), transparent 48%),
-    linear-gradient(180deg, var(--ggz-night-deep) 0%, #12192a 100%);
-  --ggz-gradient-hero:
-    radial-gradient(ellipse 92% 56% at 90% -6%, rgba(255, 165, 134, 0.22), transparent 56%),
-    radial-gradient(ellipse 68% 44% at 8% 102%, rgba(84, 26, 46, 0.38), transparent 52%),
-    linear-gradient(168deg, #1a2540 0%, var(--ggz-night-deep) 50%, #141d33 100%);
+  /* — Layout — */
+  --ggz-max-content: min(96vw, 1040px);
+  --ggz-max-wide: min(calc(100vw - 2 * var(--gutter, clamp(1.5rem, 4vw, 4rem))), 96rem);
+  --ggz-max-narrow: 36rem;
+  --ggz-header-offset: 74px;
+  --ggz-gutter: clamp(1.5rem, 4vw, 4rem);
+  --ggz-section-pad: clamp(4rem, 10vh, 8rem);
+
+  /* — Ombres & dégradés — */
   --ggz-shadow-header: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 12px 40px rgba(0, 0, 0, 0.38);
   --ggz-shadow-card: 0 2px 4px rgba(0, 0, 0, 0.14), 0 14px 44px rgba(0, 0, 0, 0.28);
   --ggz-shadow-card-hover: 0 12px 28px rgba(0, 0, 0, 0.34), 0 28px 56px rgba(84, 26, 46, 0.14);
-  --ggz-header-offset: 74px;
-  --ggz-max-wide: min(96vw, 72rem);
-  --ggz-max-narrow: 36rem;
-
+  --ggz-shadow-btn-red: 0 8px 20px rgba(196, 30, 48, 0.35);
+  --ggz-gradient-page:
+    radial-gradient(ellipse 120% 82% at 50% -28%, rgba(255, 165, 134, 0.12), transparent 52%),
+    radial-gradient(ellipse 72% 48% at 100% 12%, rgba(13, 21, 36, 0.55), transparent 48%),
+    linear-gradient(180deg, var(--ggz-bg) 0%, var(--ggz-bg-section) 100%);
+  --ggz-gradient-hero:
+    radial-gradient(ellipse 92% 56% at 90% -6%, rgba(196, 30, 48, 0.18), transparent 56%),
+    radial-gradient(ellipse 68% 44% at 8% 102%, rgba(84, 26, 46, 0.22), transparent 52%),
+    linear-gradient(168deg, var(--ggz-bg-section) 0%, var(--ggz-bg) 50%, #04070f 100%);
+  --ggz-gradient-panel:
+    linear-gradient(165deg, rgba(28, 36, 54, 0.94) 0%, rgba(16, 22, 36, 0.88) 100%);
+  --ggz-gradient-panel-accent: linear-gradient(90deg, transparent, rgba(255, 165, 134, 0.75), rgba(196, 30, 48, 0.55), transparent);
   --ggz-focus-ring: 2px solid var(--ggz-peach);
 
-  /* — Alias compat thème WordPress govgenz-bull (écarts mineurs vs charte) — */
-  --ggz-primary: var(--ggz-night-deep);
-  --ggz-navy: var(--ggz-night-deep);
-  --ggz-blue: var(--ggz-night-blue);
-  --ggz-secondary: #e5e7eb;
+  /* — Alias charte historiques (--ggz-night-* etc.) — */
+  --ggz-night-deep: var(--ggz-bg);
+  --ggz-night-blue: var(--ggz-bg-card);
+  --ggz-blue-gray: var(--ggz-text-muted);
+  --ggz-red-action: var(--ggz-red);
   --ggz-accent: var(--ggz-peach);
-  --ggz-coral: var(--ggz-peach);
-  --ggz-crimson: var(--ggz-peach);
-  --ggz-wine: var(--ggz-bordeaux);
-  --ggz-text-main: #1f2937;
-  --ggz-text: var(--ggz-text-main);
-  --ggz-bg: #f6f7fb;
-  --ggz-border: #e5e7ef;
+  --ggz-primary: var(--ggz-bg);
+  --ggz-navy: var(--ggz-bg);
+  --ggz-blue: var(--ggz-bg-card);
 
-  --ggz-radius-btn: 12px;
-  --ggz-radius-card: 18px;
+  /* — Alias projets (--pp-* → tokens) — */
+  --pp-bg: var(--ggz-bg);
+  --pp-bg-section: var(--ggz-bg-card-overlay);
+  --pp-bg-card: var(--ggz-bg-card-overlay);
+  --pp-text: var(--ggz-text);
+  --pp-card-bg: var(--ggz-bg-card-overlay);
+  --pp-teal: var(--ggz-teal);
+  --pp-red: var(--ggz-red);
+  --pp-warm: var(--ggz-warm);
+  --pp-text-sec: var(--ggz-text-secondary);
+  --pp-text-muted: var(--ggz-text-muted);
+  --pp-border-dim: var(--ggz-border-dim);
+  --pp-border-teal: var(--ggz-border-teal);
+  --pp-border-red: var(--ggz-border-red);
+  --pp-r: var(--ggz-radius-md);
+  --pp-r-card: var(--ggz-radius-md);
+  --pp-t: var(--ggz-t-base);
+  --pp-t-card: var(--ggz-t-base);
+
+  /* — Alias CTA — */
+  --ggz-cta-teal: var(--ggz-teal);
+  --ggz-cta-red: var(--ggz-red);
+  --ggz-cta-text-sec: var(--ggz-text-secondary);
+  --ggz-cta-border-dim: var(--ggz-border-dim);
+  --ggz-cta-t: var(--ggz-t-base);
+
+  /* — Alias govgenz-template.css (:root du template) — */
+  --bg-deepest: #050507;
+  --bg-deep: var(--ggz-bg);
+  --bg-mid: var(--ggz-bg-section);
+  --bg-light: #15151f;
+  --bg-elevated: var(--ggz-bg-card);
+  --red-primary: var(--ggz-red);
+  --red-deep: #7f1d1d;
+  --red-glow: #ef4444;
+  --red-soft: var(--ggz-warm);
+  --red-pale: #fecaca;
+  --green-primary: var(--ggz-teal);
+  --green-deep: #065f46;
+  --green-soft: #6ee7b7;
+  --green-pale: #a7f3d0;
+  --gold-primary: #fbbf24;
+  --gold-deep: #92400e;
+  --gold-soft: #fed7aa;
+  --text-bright: var(--ggz-text);
+  --text-primary: #f1f5f9;
+  --text-secondary: var(--ggz-text-secondary);
+  --text-tertiary: #94a3b8;
+  --text-muted: var(--ggz-text-muted);
+  --border: var(--ggz-border-dim);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --font-display: var(--ggz-font-display);
+  --font-body: var(--ggz-font-sans);
+  --font-mono: var(--ggz-font-mono);
+  --max-width: 1320px;
+  --gutter: var(--ggz-gutter);
+  --section-pad: var(--ggz-section-pad);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
