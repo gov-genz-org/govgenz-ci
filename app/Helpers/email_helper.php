@@ -18,6 +18,53 @@ if (! function_exists('email_absolute_url')) {
     }
 }
 
+if (! function_exists('email_moderator_notification_addresses_from_env')) {
+    /**
+     * Secours si aucun compte staff actif en base (déploiement, migration).
+     *
+     * @return list<string>
+     */
+    function email_moderator_notification_addresses_from_env(): array
+    {
+        $raw = trim((string) env('join.notification.to', ''));
+        if ($raw === '') {
+            return [];
+        }
+
+        $parts = preg_split('/\s*,\s*/', $raw) ?: [];
+        $out   = [];
+        foreach ($parts as $part) {
+            $addr = mb_strtolower(trim($part));
+            if ($addr !== '' && filter_var($addr, FILTER_VALIDATE_EMAIL)) {
+                $out[] = $addr;
+            }
+        }
+
+        return array_values(array_unique($out));
+    }
+}
+
+if (! function_exists('email_moderator_notification_addresses')) {
+    /**
+     * Destinataires modérateurs : comptes staff actifs (table staff_users), sinon join.notification.to.
+     *
+     * @return list<string>
+     */
+    function email_moderator_notification_addresses(): array
+    {
+        try {
+            $fromDb = model(\App\Models\StaffUserModel::class)->notificationEmailAddresses();
+            if ($fromDb !== []) {
+                return $fromDb;
+            }
+        } catch (\Throwable $e) {
+            log_message('error', 'email_moderator_notification_addresses: {msg}', ['msg' => $e->getMessage()]);
+        }
+
+        return email_moderator_notification_addresses_from_env();
+    }
+}
+
 if (! function_exists('email_brand_logo_url')) {
     /**
      * Logo pour les e-mails (PNG de préférence ; override via email.logoUrl).

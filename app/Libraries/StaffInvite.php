@@ -106,14 +106,19 @@ final class StaffInvite
         $payload = self::generateTokenPayload();
         $tempHash = password_hash(bin2hex(random_bytes(32)), PASSWORD_DEFAULT);
 
-        $model->insert([
+        $insert = [
             'email'                   => $email,
             'password_hash'           => $tempHash,
             'role'                    => $role,
             'is_active'               => 1,
             'invite_token_hash'       => $payload['hash'],
             'invite_token_expires_at' => $payload['expires_at'],
-        ]);
+        ];
+        if ($model->db->fieldExists('notify_form_submissions', 'staff_users')) {
+            $insert['notify_form_submissions'] = 1;
+        }
+
+        $model->insert($insert);
 
         $userId = (int) $model->getInsertID();
         if ($userId < 1) {

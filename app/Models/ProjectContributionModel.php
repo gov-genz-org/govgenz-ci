@@ -29,6 +29,7 @@ class ProjectContributionModel extends Model
         'contribution_type',
         'donor_name',
         'contact',
+        'donor_email',
         'amount',
         'items',
         'quantity',

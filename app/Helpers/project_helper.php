@@ -726,6 +726,10 @@ if (! function_exists('project_fund_validation_messages')) {
             'max_length'  => lang('Projects.fund_validation_phone_max'),
             'regex_match' => lang('Site.join_phone_invalid'),
         ];
+        $donorEmail = [
+            'valid_email' => lang('Projects.fund_validation_email_invalid'),
+            'max_length'  => lang('Projects.fund_validation_email_invalid'),
+        ];
         $prefix = $type === 'material' ? 'material' : 'budget';
 
         if ($type === 'material') {
@@ -733,6 +737,7 @@ if (! function_exists('project_fund_validation_messages')) {
                 'material_donor_name'      => $name,
                 $prefix . '_phone_country' => $phoneCountry,
                 $prefix . '_phone_number'  => $phoneNumber,
+                'material_donor_email'     => $donorEmail,
                 'material_pickup_location' => ['max_length' => lang('Projects.fund_validation_pickup_max')],
                 'material_remarks'         => ['max_length' => lang('Projects.fund_validation_remarks_max')],
             ];
@@ -742,6 +747,7 @@ if (! function_exists('project_fund_validation_messages')) {
             'budget_donor_name'      => $name,
             $prefix . '_phone_country' => $phoneCountry,
             $prefix . '_phone_number'  => $phoneNumber,
+            'budget_donor_email'       => $donorEmail,
             'budget_amount'            => [
                 'required'    => lang('Projects.fund_validation_amount_required'),
                 'regex_match' => lang('Projects.fund_validation_amount_invalid'),

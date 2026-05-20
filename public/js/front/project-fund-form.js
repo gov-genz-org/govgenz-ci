@@ -101,6 +101,10 @@
             showFieldError(errorEl, fieldMsg(name, 'invalid'));
             return false;
         }
+        if (rule.email && val !== '' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+            showFieldError(errorEl, fieldMsg(name, 'invalid'));
+            return false;
+        }
         showFieldError(errorEl, '');
         return true;
     }
