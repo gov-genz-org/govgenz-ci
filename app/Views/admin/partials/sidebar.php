@@ -19,6 +19,7 @@ $volunteersActive = $section === 'volunteers';
 $projectContributionsActive = $section === 'project-contributions';
 $sectorsActive    = $section === 'sectors';
 $projectProjectsActive = $section === 'project-projects';
+$positionItemsActive = $section === 'position-items';
 $projectExchangeRatesActive = $section === 'project-exchange-rates';
 $loginEventsActive = $section === 'login-events';
 $staffUsersActive  = $section === 'staff-users';
@@ -58,6 +59,15 @@ $isStaffAdmin      = session()->get('staff_role') === 'admin';
             <a class="nav-link rounded px-3 py-2 <?= $projectContributionsActive ? 'active' : 'text-dark' ?>" href="<?= site_url('admin/project-contributions') ?>">Financements projets</a>
             <a class="nav-link rounded px-3 py-2 <?= $projectProjectsActive ? 'active' : 'text-dark' ?>" href="<?= site_url('admin/project-projects') ?>">Projets programme</a>
             <a class="nav-link rounded px-3 py-2 <?= $projectExchangeRatesActive ? 'active' : 'text-dark' ?>" href="<?= site_url('admin/project-exchange-rates') ?>">Taux de change</a>
+        </div>
+    </div>
+
+    <hr class="admin-sidebar-rule">
+
+    <div class="admin-sidebar-section">
+        <p class="admin-sidebar-section-label" role="presentation">Positions</p>
+        <div class="admin-sidebar-items d-flex flex-column gap-1">
+            <a class="nav-link rounded px-3 py-2 <?= $positionItemsActive ? 'active' : 'text-dark' ?>" href="<?= site_url('admin/position-items') ?>">Positions programme</a>
         </div>
     </div>
 

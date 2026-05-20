@@ -26,13 +26,21 @@ class SiteContextFilter implements FilterInterface
         }
 
         $firstAfterLocale = $segments[0] ?? '';
-        $pathPrefix        = SiteContext::projectsPathPrefixEnabled();
-        $byHost            = SiteContext::httpHostMatchesProjectsHost($request);
-        $byPath            = $pathPrefix && $firstAfterLocale === 'projects';
+        $projectsPrefix   = SiteContext::projectsPathPrefixEnabled();
+        $positionsPrefix  = SiteContext::positionsPathPrefixEnabled();
+        $byProjectsHost   = SiteContext::httpHostMatchesProjectsHost($request);
+        $byProjectsPath   = $projectsPrefix && $firstAfterLocale === 'projects';
+        $byPositionsHost  = SiteContext::httpHostMatchesPositionsHost($request);
+        $byPositionsPath  = $positionsPrefix && $firstAfterLocale === 'positions';
 
-        if ($byHost || $byPath) {
+        if ($byProjectsHost || $byProjectsPath) {
             SiteContext::setProjects();
-            if ($byPath) {
+            if ($byProjectsPath) {
+                array_shift($segments);
+            }
+        } elseif ($byPositionsHost || $byPositionsPath) {
+            SiteContext::setPositions();
+            if ($byPositionsPath) {
                 array_shift($segments);
             }
         } else {
@@ -56,7 +64,15 @@ class SiteContextFilter implements FilterInterface
         if (
             SiteContext::id() === SiteContext::SITE_MAIN
             && $firstAfterLocale === 'projects'
-            && ! $pathPrefix
+            && ! $projectsPrefix
+        ) {
+            throw PageNotFoundException::forPageNotFound('Mini-site réservé à une version ultérieure.');
+        }
+
+        if (
+            SiteContext::id() === SiteContext::SITE_MAIN
+            && $firstAfterLocale === 'positions'
+            && ! $positionsPrefix
         ) {
             throw PageNotFoundException::forPageNotFound('Mini-site réservé à une version ultérieure.');
         }

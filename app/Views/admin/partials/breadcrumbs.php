@@ -67,6 +67,14 @@ if ($rest === 'pages') {
     $items[] = ['label' => 'Modifier', 'url' => null];
 } elseif ($rest === 'project-exchange-rates') {
     $items[] = ['label' => 'Taux de change', 'url' => null];
+} elseif ($rest === 'position-items') {
+    $items[] = ['label' => 'Positions programme', 'url' => null];
+} elseif ($rest === 'position-items/create') {
+    $items[] = ['label' => 'Positions programme', 'url' => site_url('admin/position-items')];
+    $items[] = ['label' => 'Nouvelle position', 'url' => null];
+} elseif (preg_match('#^position-items/edit/\d+$#', $rest)) {
+    $items[] = ['label' => 'Positions programme', 'url' => site_url('admin/position-items')];
+    $items[] = ['label' => 'Modifier', 'url' => null];
 } else {
     return;
 }

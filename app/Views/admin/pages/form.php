@@ -48,6 +48,7 @@ if ($page !== null && ($page['status'] ?? '') === 'published') {
     <?php
     $slugField = strtolower(trim((string) old('slug', $page !== null ? (string) ($page['slug'] ?? '') : '')));
     $isProjectsProgramCmsSlug = in_array($slugField, ['projets-programme', 'projects-program'], true);
+    $isPositionsProgramCmsSlug = in_array($slugField, ['positions-programme', 'positions-program'], true);
     ?>
     <div class="mb-3">
         <label class="form-label" for="slug">Slug (lettres minuscules et tirets)</label>
@@ -63,6 +64,18 @@ if ($page !== null && ($page['status'] ?? '') === 'published') {
                 <span class="d-block mt-2">
                     <a href="<?= esc($lpFr, 'attr') ?>" target="_blank" rel="noopener" class="me-2">Voir la liste publique (FR)</a>
                     <a href="<?= esc($lpEn, 'attr') ?>" target="_blank" rel="noopener">Voir la liste publique (EN)</a>
+                </span>
+            </div>
+        <?php elseif ($isPositionsProgramCmsSlug) : ?>
+            <div class="alert alert-info border py-2 small mt-2 mb-0" role="status">
+                <strong>Page « programme positions » :</strong> bandeau de la liste <code>/positions</code> (ou <code>/en/positions</code>), pas l’URL de cette page CMS.
+                <?php
+                $lpFr = admin_public_positions_program_list_url('fr');
+                $lpEn = admin_public_positions_program_list_url('en');
+                ?>
+                <span class="d-block mt-2">
+                    <a href="<?= esc($lpFr, 'attr') ?>" target="_blank" rel="noopener" class="me-2">Voir la liste publique (FR)</a>
+                    <a href="<?= esc($lpEn, 'attr') ?>" target="_blank" rel="noopener">Voir anglais (liste)</a>
                 </span>
             </div>
         <?php endif; ?>

@@ -5,6 +5,26 @@ declare(strict_types=1);
 /**
  * Utilitaires vues admin (charger avec helper('admin')).
  */
+if (! function_exists('admin_site_url_for_locale')) {
+    /**
+     * URL publique du site principal pour un chemin relatif et une locale explicite
+     * (l’admin ne doit pas dépendre de SiteContext::locale(), souvent « fr »).
+     */
+    function admin_site_url_for_locale(string $relativePath = '', ?string $locale = null): string
+    {
+        helper('url');
+
+        $locale       = $locale === 'en' ? 'en' : 'fr';
+        $relativePath = ltrim($relativePath, '/');
+
+        if ($locale === 'en') {
+            return $relativePath === '' ? site_url('en') : site_url('en/' . $relativePath);
+        }
+
+        return $relativePath === '' ? site_url('/') : site_url($relativePath);
+    }
+}
+
 if (! function_exists('admin_public_page_url')) {
     /**
      * URL publique connue pour une page CMS (slug + locale), sinon null.
@@ -56,7 +76,7 @@ if (! function_exists('admin_public_projects_program_list_url')) {
         $locale = $locale === 'en' ? 'en' : 'fr';
 
         if (\App\Libraries\SiteContext::projectsPathPrefixEnabled()) {
-            return $locale === 'en' ? site_url('en/projects') : site_url('projects');
+            return admin_site_url_for_locale('projects', $locale);
         }
 
         $projectsBase = trim((string) env('app.projectsBaseURL', ''));
@@ -71,9 +91,197 @@ if (! function_exists('admin_public_projects_program_list_url')) {
             return $locale === 'en' ? site_url('en/projects') : site_url('projects');
         }
 
-        $cfg = config('App');
+        $cfg    = config('App');
         $scheme = $cfg->forceGlobalSecureRequests ? 'https' : (parse_url((string) $cfg->baseURL, PHP_URL_SCHEME) ?: 'http');
-        $path    = $locale === 'en' ? '/en/' : '/';
+        $path   = $locale === 'en' ? '/en/' : '/';
+
+        return $scheme . '://' . $host . $path;
+    }
+}
+
+if (! function_exists('admin_public_positions_program_list_url')) {
+    function admin_public_positions_program_list_url(?string $locale = null): string
+    {
+        helper('url');
+        $locale = $locale === 'en' ? 'en' : 'fr';
+
+        if (\App\Libraries\SiteContext::positionsPathPrefixEnabled()) {
+            return admin_site_url_for_locale('positions', $locale);
+        }
+
+        $positionsBase = trim((string) env('app.positionsBaseURL', ''));
+        if ($positionsBase !== '' && filter_var($positionsBase, FILTER_VALIDATE_URL)) {
+            $root = rtrim($positionsBase, '/');
+
+            return $locale === 'en' ? $root . '/en/' : $root . '/';
+        }
+
+        $host = trim((string) env('app.positionsHost', ''));
+        if ($host === '') {
+            return $locale === 'en' ? site_url('en/positions') : site_url('positions');
+        }
+
+        $cfg    = config('App');
+        $scheme = $cfg->forceGlobalSecureRequests ? 'https' : (parse_url((string) $cfg->baseURL, PHP_URL_SCHEME) ?: 'http');
+        $path   = $locale === 'en' ? '/en/' : '/';
+
+        return $scheme . '://' . $host . $path;
+    }
+}
+
+if (! function_exists('admin_public_project_url')) {
+    /**
+     * URL publique d’une fiche projet publiée (slug + locale), sinon null.
+     */
+    function admin_public_project_url(?string $slug, ?string $locale = null): ?string
+    {
+        if ($slug === null || trim($slug) === '') {
+            return null;
+        }
+
+        $locale = $locale === 'en' ? 'en' : 'fr';
+        $slug   = strtolower(trim($slug, '/'));
+        if ($slug === '') {
+            return admin_public_projects_program_list_url($locale);
+        }
+
+        if (\App\Libraries\SiteContext::projectsPathPrefixEnabled()) {
+            return admin_site_url_for_locale('projects/' . $slug, $locale);
+        }
+
+        $projectsBase = trim((string) env('app.projectsBaseURL', ''));
+        if ($projectsBase !== '' && filter_var($projectsBase, FILTER_VALIDATE_URL)) {
+            $root = rtrim($projectsBase, '/');
+            $path = $locale === 'en' ? '/en/' . $slug : '/' . $slug;
+
+            return $root . $path;
+        }
+
+        $host = trim((string) env('app.projectsHost', ''));
+        if ($host === '') {
+            return admin_site_url_for_locale($slug, $locale);
+        }
+
+        $cfg    = config('App');
+        $scheme = $cfg->forceGlobalSecureRequests ? 'https' : (parse_url((string) $cfg->baseURL, PHP_URL_SCHEME) ?: 'http');
+        $path   = $locale === 'en' ? '/en/' . $slug : '/' . $slug;
+
+        return $scheme . '://' . $host . $path;
+    }
+}
+
+if (! function_exists('admin_public_position_url')) {
+    /**
+     * URL publique d’une fiche position publiée (slug + locale), sinon null.
+     */
+    function admin_public_position_url(?string $slug, ?string $locale = null): ?string
+    {
+        if ($slug === null || trim($slug) === '') {
+            return null;
+        }
+
+        $locale = $locale === 'en' ? 'en' : 'fr';
+        $slug   = strtolower(trim($slug, '/'));
+        if ($slug === '') {
+            return admin_public_positions_program_list_url($locale);
+        }
+
+        if (\App\Libraries\SiteContext::positionsPathPrefixEnabled()) {
+            return admin_site_url_for_locale('positions/' . $slug, $locale);
+        }
+
+        $positionsBase = trim((string) env('app.positionsBaseURL', ''));
+        if ($positionsBase !== '' && filter_var($positionsBase, FILTER_VALIDATE_URL)) {
+            $root = rtrim($positionsBase, '/');
+            $path = $locale === 'en' ? '/en/' . $slug : '/' . $slug;
+
+            return $root . $path;
+        }
+
+        $host = trim((string) env('app.positionsHost', ''));
+        if ($host === '') {
+            return admin_site_url_for_locale($slug, $locale);
+        }
+
+        $cfg    = config('App');
+        $scheme = $cfg->forceGlobalSecureRequests ? 'https' : (parse_url((string) $cfg->baseURL, PHP_URL_SCHEME) ?: 'http');
+        $path   = $locale === 'en' ? '/en/' . $slug : '/' . $slug;
+
+        return $scheme . '://' . $host . $path;
+    }
+}
+
+if (! function_exists('admin_translation_partner_nav')) {
+    /**
+     * Lien vers la variante FR/EN liée (même translation_group) pour l’écran d’édition admin.
+     *
+     * @param array<string, mixed>|null $item
+     *
+     * @return array{editUrl: string, publicUrl: ?string, viewLabel: string, editLabel: string}|null
+     */
+    function admin_translation_partner_nav(?array $item, string $modelClass, string $adminEditBasePath): ?array
+    {
+        if ($item === null) {
+            return null;
+        }
+
+        $tg = trim((string) ($item['translation_group'] ?? ''));
+        if ($tg === '') {
+            return null;
+        }
+
+        $loc = strtolower(trim((string) ($item['locale'] ?? 'fr')));
+        if (! in_array($loc, ['fr', 'en'], true)) {
+            $loc = 'fr';
+        }
+        $other = $loc === 'fr' ? 'en' : 'fr';
+
+        $partner = model($modelClass)
+            ->where('translation_group', $tg)
+            ->where('locale', $other)
+            ->first();
+
+        if ($partner === null || ! is_array($partner)) {
+            return null;
+        }
+
+        $partnerId = (int) ($partner['id'] ?? 0);
+        if ($partnerId <= 0) {
+            return null;
+        }
+
+        $editUrl = site_url(rtrim($adminEditBasePath, '/') . '/edit/' . $partnerId);
+
+        $publicUrl = null;
+        $pubState  = strtolower(trim((string) ($partner['publication_state'] ?? $partner['status'] ?? '')));
+        $isPub     = $pubState === 'published';
+
+        if ($isPub) {
+            $partnerSlug = trim((string) ($partner['slug'] ?? ''));
+            if ($partnerSlug !== '') {
+                if ($modelClass === \App\Models\PositionItemModel::class) {
+                    $publicUrl = admin_public_position_url($partnerSlug, $other);
+                } elseif ($modelClass === \App\Models\ProjectProjectModel::class) {
+                    $publicUrl = admin_public_project_url($partnerSlug, $other);
+                } elseif ($modelClass === \App\Models\CmsPostModel::class) {
+                    $publicUrl = admin_public_press_url($partnerSlug, $other);
+                } elseif ($modelClass === \App\Models\CmsPageModel::class) {
+                    $publicUrl = admin_public_page_url($partnerSlug, $other);
+                }
+            }
+        }
+
+        $viewLabel = $other === 'en' ? 'Voir anglais' : 'Voir français';
+        $editLabel = $other === 'en' ? 'Modifier (EN)' : 'Modifier (FR)';
+
+        return [
+            'editUrl'   => $editUrl,
+            'publicUrl' => $publicUrl,
+            'viewLabel' => $viewLabel,
+            'editLabel' => $editLabel,
+        ];
+        $scheme = $cfg->forceGlobalSecureRequests ? 'https' : (parse_url((string) $cfg->baseURL, PHP_URL_SCHEME) ?: 'http');
+        $path   = $locale === 'en' ? '/en/' : '/';
 
         return $scheme . '://' . $host . $path;
     }

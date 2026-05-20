@@ -73,7 +73,9 @@ if (! function_exists('locale_switch_url')) {
         $loc      = SiteContext::locale();
         $segments = SiteContext::publicUriSegments();
 
-        if (! SiteContext::isProjectsSite() && count($segments) === 1) {
+        if (! SiteContext::isProjectsSite()
+            && ! SiteContext::isPositionsSite()
+            && count($segments) === 1) {
             $partnerSlug = cms_page_partner_slug_for_locale_switch((string) $segments[0], $loc);
             if ($partnerSlug !== null) {
                 return $loc === 'fr'
@@ -131,6 +133,88 @@ if (! function_exists('locale_switch_url')) {
                 $segments,
             );
             $tail = implode('/', $mapped);
+
+            return $tail === '' ? $origin . '/' : $origin . '/' . $tail;
+        }
+
+        if (SiteContext::isPositionsSite() && SiteContext::positionsPathPrefixEnabled()) {
+            helper('position');
+
+            $mapPositionSegments = static function (array $segs, string $fromLocale): array {
+                $out = [];
+                foreach ($segs as $s) {
+                    $s = trim((string) $s);
+                    if ($s === '' || $s === 'filter') {
+                        continue;
+                    }
+                    $partner = position_partner_slug_for_locale_switch($s, $fromLocale);
+                    if ($partner !== null) {
+                        $out[] = $partner;
+
+                        continue;
+                    }
+                    $out[] = $fromLocale === 'fr'
+                        ? locale_slug_fr_to_en($s)
+                        : locale_slug_en_to_fr($s);
+                }
+
+                return $out;
+            };
+
+            if ($loc === 'fr') {
+                $mapped = $mapPositionSegments($segments, $loc);
+                $tail   = implode('/', $mapped);
+
+                return $tail === '' ? site_url('en/positions') : site_url('en/positions/' . $tail);
+            }
+
+            $mapped = $mapPositionSegments($segments, $loc);
+            $tail   = implode('/', $mapped);
+
+            return $tail === '' ? site_url('positions') : site_url('positions/' . $tail);
+        }
+
+        if (SiteContext::isPositionsSite()
+            && ! SiteContext::positionsPathPrefixEnabled()
+            && SiteContext::httpHostMatchesPositionsHost(service('request'))) {
+            helper('position');
+            $u      = service('request')->getUri();
+            $origin = $u->getScheme() . '://' . $u->getHost();
+            $port   = $u->getPort();
+            if ($port !== null && ! in_array((int) $port, [80, 443], true)) {
+                $origin .= ':' . $port;
+            }
+
+            $mapPositionSegments = static function (array $segs, string $fromLocale): array {
+                $out = [];
+                foreach ($segs as $s) {
+                    $s = trim((string) $s);
+                    if ($s === '' || $s === 'filter') {
+                        continue;
+                    }
+                    $partner = position_partner_slug_for_locale_switch($s, $fromLocale);
+                    if ($partner !== null) {
+                        $out[] = $partner;
+
+                        continue;
+                    }
+                    $out[] = $fromLocale === 'fr'
+                        ? locale_slug_fr_to_en($s)
+                        : locale_slug_en_to_fr($s);
+                }
+
+                return $out;
+            };
+
+            if ($loc === 'fr') {
+                $mapped = $mapPositionSegments($segments, $loc);
+                $tail   = implode('/', $mapped);
+
+                return $tail === '' ? $origin . '/en/' : $origin . '/en/' . $tail;
+            }
+
+            $mapped = $mapPositionSegments($segments, $loc);
+            $tail   = implode('/', $mapped);
 
             return $tail === '' ? $origin . '/' : $origin . '/' . $tail;
         }
