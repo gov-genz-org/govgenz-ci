@@ -24,7 +24,7 @@ class Preview extends BaseController
      */
     private function warmPreviewSiteContext(?array $row): void
     {
-        helper(['url', 'locale']);
+        helper(['url', 'locale', 'cms']);
 
         $locale = (($row['locale'] ?? 'fr') === 'en') ? 'en' : 'fr';
 
@@ -52,8 +52,6 @@ class Preview extends BaseController
         }
 
         $this->warmPreviewSiteContext($page);
-
-        helper(['cms']);
 
         $title      = '(Brouillon) ' . ($page['title'] ?? 'Page');
         $ribbonText = 'Brouillon — aperçu de la dernière version enregistrée (pas les changements non sauvegardés dans ce formulaire).';

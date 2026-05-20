@@ -1,0 +1,111 @@
+/**
+ * Section Presse — liste : grille .cercles verticale ; fiche : gabarit mentions légales (ggz-legal-page.css).
+ */
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-page.section--press {
+  padding: clamp(0.5rem, 2vw, 1.25rem) 0 clamp(2.5rem, 5vw, 4rem);
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-layout.section__inner {
+  max-width: var(--ggz-max-wide, min(calc(100vw - 2 * var(--gutter)), 96rem));
+  width: 100%;
+}
+
+/* --- Liste --- */
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-page .ggz-press-page__hero.section__header {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-cercles.cercles {
+  --ggz-press-cercle-width: 14rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--ggz-press-cercle-width)), var(--ggz-press-cercle-width)));
+  justify-content: center;
+  justify-items: stretch;
+  margin-bottom: 0;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell a.ggz-press-cercle.cercle {
+  display: block;
+  height: 100%;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell a.ggz-press-cercle.cercle:focus-visible {
+  outline: 2px solid var(--red-soft, #fca5a5);
+  outline-offset: 3px;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-cercle .cercle__sub {
+  margin-bottom: 0.75rem;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-cercle .cercle__sub time {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-cercle .cercle__title {
+  margin-top: 0;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-cercle__cta {
+  margin-top: 0.25rem;
+  font-style: normal;
+  font-weight: 600;
+  color: var(--red-soft);
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-empty.cercle {
+  text-align: center;
+  width: 100%;
+  padding: 2.5rem 1.5rem;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-empty .muted a {
+  color: var(--ggz-peach);
+  font-weight: 600;
+}
+
+/* --- Fiche détail (compléments hors ggz-legal-page.css) --- */
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-page-hero--structured .ggz-press-hero-meta {
+  margin: 0.85rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted, var(--ggz-text-meta));
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-page-hero--structured .ggz-press-hero-meta time {
+  font: inherit;
+  color: inherit;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-detail__breadcrumb {
+  max-width: var(--max-width, 1320px);
+  margin: 0 auto;
+  padding: 0.85rem clamp(1.25rem, 4vw, 2rem) 0.5rem;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--press .ggz-press-back-row {
+  max-width: 46rem;
+  margin: 1.75rem auto 0;
+  text-align: left;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(#main-content, .cms-guide-preview-host).ggz-main-shell a.ggz-press-cercle.cercle {
+    transition-duration: 0.01ms !important;
+  }
+
+  :is(#main-content, .cms-guide-preview-host).ggz-main-shell a.ggz-press-cercle.cercle:hover {
+    transform: none;
+  }
+}

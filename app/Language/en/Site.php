@@ -76,6 +76,9 @@ return [
     'press_overline'     => 'MEDIA',
     'press_show_overline' => 'RELEASE',
     'press_published_label' => 'Published',
+    'press_sidebar_aria'  => 'Press actions',
+    'press_sidebar_title' => 'Press',
+    'press_sidebar_lead'  => 'Browse other releases or reach the communications team.',
     'home_missing_title' => 'Home',
     'home_missing_message' => 'No published page with slug "home" was found. Create it in Administration > Pages, then run migrations if you expect the initial page set.',
 
