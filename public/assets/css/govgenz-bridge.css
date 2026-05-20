@@ -1,6 +1,6 @@
 /**
- * Pont entre le template statique site_govgenz (govgenz-template.css)
- * et les vues CodeIgniter (CMS, presse, formulaires — govgenz-front-pages.css).
+ * Pont layout CodeIgniter ↔ template (nav, shell, hero CMS, prose page).
+ * Typo rubriques CMS : govgenz-cms-shell.css
  */
 
 body.ggz-public-theme {
@@ -13,37 +13,8 @@ body.ggz-public-theme {
     position: relative;
     z-index: 10;
     flex: 1;
-    /* Aligner govgenz-front-pages (--ggz-*) sur le template site_govgenz (variables :root du template) */
-    --ggz-font-display: var(--font-display);
-    --ggz-font-sans: var(--font-body);
-    --ggz-line-heading: 1.12;
-    --ggz-line-body: 1.65;
-    --ggz-peach: var(--red-soft);
-    --ggz-red-action: var(--red-primary);
-    --ggz-bordeaux: var(--red-deep);
-    --ggz-night-deep: var(--bg-deep);
-    --ggz-night-blue: var(--bg-elevated);
-    --ggz-blue-gray: var(--text-muted);
-    --ggz-text-on-dark: var(--text-primary);
-    --ggz-text-meta: var(--text-tertiary);
-    --ggz-max-content: min(96vw, var(--max-width));
-    /* Gabarit « pleine largeur » : nettement plus large que la colonne éditoriale (pas une copie de --max-width) */
-    --ggz-max-wide: min(calc(100vw - 2 * var(--gutter)), 96rem);
-    --ggz-gradient-hero:
-        radial-gradient(ellipse 92% 56% at 90% -6%, rgba(220, 38, 38, 0.2), transparent 56%),
-        radial-gradient(ellipse 68% 44% at 8% 102%, rgba(124, 45, 18, 0.28), transparent 52%),
-        linear-gradient(168deg, var(--bg-light) 0%, var(--bg-deep) 45%, var(--bg-mid) 100%);
-    --ggz-gradient-page:
-        radial-gradient(ellipse 120% 82% at 50% -28%, rgba(220, 38, 38, 0.12), transparent 52%),
-        radial-gradient(ellipse 72% 48% at 100% 12%, rgba(30, 30, 44, 0.55), transparent 48%),
-        linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 100%);
-    --ggz-shadow-card: 0 16px 56px rgba(0, 0, 0, 0.35);
-    --ggz-shadow-card-hover: 0 12px 28px rgba(220, 38, 38, 0.18), 0 28px 56px rgba(0, 0, 0, 0.28);
 }
 
-/*
- * Accueil pleine largeur : comme le statique, pas une seule grande carte autour de tout le HTML.
- */
 #main-content.ggz-main-shell.ggz-layout-full article.wysiwyg.ggz-home-wysiwyg {
     margin-top: 0;
     padding: 0;
@@ -55,185 +26,23 @@ body.ggz-public-theme {
     -webkit-backdrop-filter: none;
 }
 
-/* Titres éditoriaux : même registre que .section__title du template */
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) h2:not(.cercle__title) {
-    font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: -0.01em;
-    text-transform: none;
-    color: var(--text-bright);
-    font-size: clamp(2rem, 5vw, 3.25rem);
-    line-height: 1.05;
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) section.cms-section > header > h2 {
-    font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: -0.01em;
-    color: var(--text-bright);
-    font-size: clamp(2rem, 5vw, 3.25rem);
-    line-height: 1.05;
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) h3 {
-    font-family: var(--font-body);
-    font-weight: 600;
-    color: var(--text-secondary);
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) blockquote {
-    border-left-color: var(--red-primary);
-    background: rgba(220, 38, 38, 0.06);
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) a.btn {
-    text-decoration: none;
-}
-
-/* Pages « shell » site_govgenz dans le CMS : pas de carte prose globale */
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg).ggz-cms-fullwidth {
-    margin-top: 0;
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg).ggz-cms-fullwidth a.tile {
-    color: inherit;
-    text-decoration: none;
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg).ggz-cms-fullwidth a.tile:hover {
-    color: inherit;
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg).ggz-cms-fullwidth a.fn-card {
-    color: inherit;
-    text-decoration: none;
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg).ggz-cms-fullwidth a.fn-card:hover {
-    color: inherit;
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg).ggz-cms-fullwidth a.contact-block {
-    color: inherit;
-    text-decoration: none;
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg).ggz-cms-fullwidth a.contact-block:hover {
-    color: inherit;
-}
-
-/*
- * En-tête rubrique (site_govgenz) — pilotée uniquement par CSS :
- * balises .section__* (copie du statique) ou .ggz-section-* (éditeurs / ancien seed).
- */
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .section__header,
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .ggz-section-intro {
-    text-align: center;
-    margin-bottom: 4rem;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .section__overline,
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .ggz-section-kicker {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.35em;
-    text-transform: none;
-    color: var(--red-soft);
-    margin: 0 0 1rem;
-    display: inline-block;
-    padding: 0.4rem 1rem;
-    border: 1px solid rgba(220, 38, 38, 0.3);
-    border-radius: 100px;
-    background: rgba(220, 38, 38, 0.05);
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) :is(h1, h2).section__title,
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) :is(h1, h2).ggz-section-title {
-    font-family: var(--font-display);
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    line-height: 1;
-    letter-spacing: -0.01em;
-    font-weight: 400;
-    color: var(--text-bright);
-    margin: 0 0 1.5rem;
-    text-transform: none;
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .section__lead,
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .ggz-section-lead {
-    font-family: var(--font-body);
-    font-size: clamp(1rem, 1.5vw, 1.15rem);
-    font-style: italic;
-    font-weight: 400;
-    color: var(--text-secondary);
-    line-height: 1.7;
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .section__header .section__meta {
-    margin: 0.75rem 0 0;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .section__header .section__meta time {
-    color: inherit;
-}
-
-#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) h1.contact-card__title {
-    font-family: var(--font-display);
-    font-size: clamp(2.2rem, 5vw, 3.5rem);
-    line-height: 1.1;
-    font-weight: 400;
-    letter-spacing: -0.01em;
-    color: var(--text-bright);
-    margin: 1rem 0 1rem;
-}
-
-#main-content.ggz-main-shell .section__inner > .ggz-breadcrumb {
-    margin-bottom: 1.25rem;
-}
-
-/* Hero CMS : même vocabulaire que le template (verre / bord fines) */
 #main-content .ggz-page-hero {
     border-color: var(--border-strong);
-    background:
-        radial-gradient(ellipse 85% 55% at 92% -8%, rgba(220, 38, 38, 0.12), transparent 58%),
-        radial-gradient(ellipse 55% 40% at 4% 108%, rgba(124, 45, 18, 0.14), transparent 52%),
-        linear-gradient(165deg, rgba(30, 30, 44, 0.92) 0%, rgba(15, 15, 26, 0.72) 100%);
+    background: var(--ggz-gradient-hero);
     box-shadow: 0 12px 48px rgba(0, 0, 0, 0.28);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 }
 
-/* Typo du h1 hero : govgenz-front-pages.css (#main-content .ggz-page-hero h1) */
-
-/* Corps éditorial : panneau lisible sans « grosse carte » unique titre + texte */
-#main-content .wysiwyg.ggz-page-prose {
+#main-content .wysiwyg.ggz-page-prose:not(.ggz-legal-prose):not(.ggz-editorial-prose) {
     margin-top: 1.35rem;
     padding: clamp(1.35rem, 2.8vw, 2rem) clamp(1.25rem, 3vw, 2.15rem);
-    border-radius: 14px;
+    border-radius: var(--ggz-radius-lg);
     border: 1px solid var(--border);
-    background: rgba(21, 21, 31, 0.58);
+    background: var(--ggz-bg-card-overlay);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    box-shadow: 0 16px 56px rgba(0, 0, 0, 0.26);
+    box-shadow: var(--ggz-shadow-card);
 }
 
 #main-content.ggz-main-shell .wysiwyg.ggz-page-prose h2 {
@@ -266,15 +75,6 @@ body.ggz-public-theme {
     line-height: 1.65;
 }
 
-/* Formulaires / cartes : même famille que le shell template */
-#main-content .card {
-    background: rgba(30, 30, 44, 0.58);
-    border-color: var(--border-strong);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 14px 52px rgba(0, 0, 0, 0.28);
-}
-
 #main-content > .ggz-alert {
     font-family: var(--font-mono);
     font-size: 0.8125rem;
@@ -283,7 +83,6 @@ body.ggz-public-theme {
     border-color: var(--border-strong);
 }
 
-/* Accessibilité */
 .ggz-skip-link {
     position: absolute;
     left: -9999px;
@@ -315,7 +114,6 @@ body.ggz-public-theme {
     color: var(--text-bright);
 }
 
-/* État actif : défini par PHP (pages dynamiques) */
 .nav a.is-active {
     color: var(--text-bright);
 }

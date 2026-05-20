@@ -6,10 +6,11 @@ declare(strict_types=1);
  * @var list<array{id:string,title:string,intro:string,html:string}> $sections
  */
 ?>
-<div class="mb-4">
+<div class="mb-4 admin-cms-guide-lead">
     <h1 class="h3 mb-2">Composants HTML du site public</h1>
     <p class="text-muted mb-0">
-        Les blocs ci-dessous reprennent les classes du template (<span class="font-monospace small">section__*</span>, <span class="font-monospace small">cercle__*</span>, <span class="font-monospace small">footer__*</span>, etc.). Sous chaque extrait : un aperçu isolé dans la charte sombre (sans publier de page dédiée). Slugs réservés ou dédiés : <span class="font-monospace small">site-footer</span> (pied de page), <span class="font-monospace small">mentions-legales</span> (cookies / confidentialité).
+        Classes du template (<code>section__*</code>, <code>cercle__*</code>, <code>footer__*</code>, <code>ggz-legal-prose</code>, etc.) avec aperçu charte sombre sous chaque extrait.
+        CTA principal : <code>.btn--primary</code> (rouge). Slugs réservés : <code>site-footer</code>, <code>mentions-legales</code>.
     </p>
 </div>
 
@@ -52,13 +53,15 @@ declare(strict_types=1);
                     <?php if ($canvas === null) : ?>
                         <div class="cms-guide-sample__canvas cms-guide-sample__canvas--flush">
                             <div class="ggz-public-theme cms-guide-preview-host ggz-main-shell">
-                                <?= $sec['html'] ?>
+                                <article class="wysiwyg ggz-shell-wysiwyg ggz-cms-fullwidth">
+                                    <?= $sec['html'] ?>
+                                </article>
                             </div>
                         </div>
                     <?php elseif ($canvas === '__legal__') : ?>
                         <?php helper('cms'); ?>
                         <div class="cms-guide-sample__canvas cms-guide-sample__canvas--flush">
-                            <div id="main-content" class="ggz-public-theme cms-guide-preview-host ggz-main-shell">
+                            <div class="ggz-public-theme cms-guide-preview-host ggz-main-shell">
                                 <?= cms_render_structured_page_hero(\App\Database\Support\CmsLegalMentionsBodies::guidePreviewPage()) ?>
                                 <article class="wysiwyg ggz-cms-fullwidth ggz-cms-page--legal">
                                     <?= $sec['html'] ?>

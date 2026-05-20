@@ -17,10 +17,12 @@ class CmsComponentsGuide extends BaseController
         $cssBase = base_url('assets/css/');
         $extra   = <<<HTML
 <link rel="stylesheet" href="{$cssBase}govgenz-fonts.css">
-<link rel="stylesheet" href="{$cssBase}govgenz-tokens.css">
+<link rel="stylesheet" href="{$cssBase}govgenz-components.css">
 <link rel="stylesheet" href="{$cssBase}govgenz-template.css">
-<link rel="stylesheet" href="{$cssBase}govgenz-bridge.css">
+<link rel="stylesheet" href="{$cssBase}govgenz-cms-shell.css">
 <link rel="stylesheet" href="{$cssBase}ggz-legal-page.css">
+<link rel="stylesheet" href="{$cssBase}ggz-press-page.css">
+<link rel="stylesheet" href="{$cssBase}govgenz-guide-preview-parity.css">
 <link rel="stylesheet" href="{$cssBase}admin-cms-guide-preview.css">
 HTML;
 

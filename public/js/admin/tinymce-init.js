@@ -411,7 +411,7 @@
             ' .cms-lead { margin: 0; font-size: 1.02rem; line-height: 1.55; }' +
             ' .section__header { text-align: center; max-width: 800px; margin: 0 auto 1.5rem; }' +
             ' .section__overline { display: inline-block; margin: 0 0 0.75rem; padding: 0.35rem 0.9rem; border-radius: 100px; border: 1px solid rgba(220,38,38,0.35); font-family: ui-monospace, monospace; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.28em; color: #b91c1c; background: rgba(220,38,38,0.06); }' +
-            ' .section__title { font-family: "Bebas Neue", "Arial Narrow", sans-serif; font-size: clamp(1.75rem, 4vw, 2.6rem); line-height: 1.05; letter-spacing: -0.02em; font-weight: 400; margin: 0 0 0.65rem; color: #111827; }' +
+            ' .section__title, .ggz-section-title { font-family: "Bebas Neue", "Arial Narrow", sans-serif; font-size: clamp(1.75rem, 4vw, 2.65rem); line-height: 1.05; letter-spacing: -0.01em; font-weight: 400; text-transform: none; margin: 0 0 1.25rem; color: #fafafa; }' +
             ' .section__lead { font-style: italic; font-size: 1rem; line-height: 1.65; color: #374151; max-width: 700px; margin: 0 auto; }',
         setup(editor) {
             if (editor.id === 'pp-body') {
