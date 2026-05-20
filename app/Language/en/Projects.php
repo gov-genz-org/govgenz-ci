@@ -67,6 +67,8 @@ return [
     'show_share_social_whatsapp' => 'Share on WhatsApp',
     'show_share_social_linkedin' => 'Share on LinkedIn',
     'show_share_social_x'        => 'Share on X',
+    'show_share_social_tiktok'   => 'Share on TikTok',
+    'show_share_tiktok_done'     => 'Link copied — paste in TikTok',
     'show_share_social_email'    => 'Share by email',
     'share_qr_page_title'        => 'QR code — {title}',
     'share_qr_page_heading'      => 'Project QR code',
