@@ -29,17 +29,23 @@ Configurer **`.env`** (base MySQL ou SQLite selon ton environnement).
 
 ## État MVP
 
-- Routes **front** : `/`, `/about`, `/contact`, `/press`, `/join`
-- Routes **admin** : `/admin`, CRUD pages & posts, liste volontaires
-- Charte : `govgenz-tokens.css` + `govgenz-components.css` (design system unique)
+- Routes **front** : pages CMS (`/qui-sommes-nous`, …), `/contact`, `/press`, `/join`, programmes **`/projects`** et **`/positions`** (préfixe chemin ou sous-domaine selon `.env`)
+- Routes **admin** : `/admin`, CMS, menu du site, projets programme, positions, presse, volontaires
+- **CSS front** : pile documentée dans **[docs/CSS-ARCHITECTURE.md](docs/CSS-ARCHITECTURE.md)** — jetons `govgenz-tokens.css`, composants `govgenz-components.css` (boutons `--red` / `--teal` / `--ghost`, tags, cartes), template + shell CMS + pages + bridge ; feuilles **optionnelles** par page via `extraHead` (`projects-program-*.css`, `positions-program-*.css`, `program-body-blocks.css`, etc.)
+
+## CI/CD
+
+Pipeline GitHub Actions (tests, build, déploiement FTP staging/prod) et configuration des rulesets : **[docs/CI-CD.md](docs/CI-CD.md)**.
 
 ## Documentation
 
 | Document | Rôle |
 |----------|------|
+| [CI-CD.md](docs/CI-CD.md) | Branches, rulesets, secrets FTP, workflow |
+| [CSS-ARCHITECTURE.md](docs/CSS-ARCHITECTURE.md) | **Ordre de chargement CSS**, front vs admin, programmes projets/positions, règles `.section__title` |
 | [GOVGENZ.md](../docs/GOVGENZ.md) | Vision, MVP, architecture |
 | [GOVGENZ-CONCEPTION.md](../docs/GOVGENZ-CONCEPTION.md) | Modèle de données, routes |
-| [GOVGENZ-DESIGN-TOKENS.css](../docs/GOVGENZ-DESIGN-TOKENS.css) | Source des jetons CSS |
+| [GOVGENZ-DESIGN-TOKENS.css](../docs/GOVGENZ-DESIGN-TOKENS.css) | Source des jetons CSS (référence ; appli = `public/assets/css/govgenz-tokens.css`) |
 
 Schéma SQL & Docker : **`../govgenz-local/`**.
 
@@ -169,3 +175,12 @@ app.projectsBaseURL = 'http://projects.localhost:8082/'
 Ajouter `127.0.0.1 projects.localhost` dans `/etc/hosts`, configurer le vhost Docker ou un second port si besoin — le code accepte `projects.localhost` avec le port `8082` du `.env` lorsque `HTTP_HOST` ne contient pas le port.
 
 Fichiers de référence : **`env.production.example`** (section sous-domaine), **`deploy/host-b/`**.
+
+## Module Positions (même principe que Projets)
+
+| Mode | Exemple | Variable `.env` |
+|------|---------|-----------------|
+| Préfixe chemin | `https://genzgov.org/positions/…` | `app.positionsUsePathPrefix = true` |
+| Sous-domaine | `https://positions.genzgov.org/…` | `app.positionsUsePathPrefix = false` + `app.positionsHost` |
+
+Détection : `SiteContext` + `SiteContextFilter` (hôte `positions.*` ou segment `/positions/`). Styles dédiés : `positions-program-list.css`, `positions-program-show.css` (réutilisent les classes fiche `projects-program-show` + variantes `--pp-*` / boutons dans `govgenz-components.css`). Voir **[docs/CSS-ARCHITECTURE.md](docs/CSS-ARCHITECTURE.md)**.
