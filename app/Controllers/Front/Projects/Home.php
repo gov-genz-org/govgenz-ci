@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Controllers\Front\Projects;
 
 use App\Controllers\BaseController;
+use App\Libraries\CmsProgramListHero;
 use App\Libraries\FormSubmissionAckMailer;
+use App\Libraries\ProgramListFilter;
 use App\Libraries\ProjectContributionNotifier;
 use App\Libraries\ProjectShareQrGenerator;
+use App\Libraries\SectorSelectOptions;
 use App\Libraries\SiteContext;
 use App\Models\CmsPageModel;
 use App\Models\ProjectContributionModel;
@@ -31,11 +34,7 @@ class Home extends BaseController
         $projectModel = model(ProjectProjectModel::class);
         $sectorModel  = model(SectorModel::class);
 
-        $sectorOptions = $sectorModel->optionsForSelect();
-        $sectorOptionsNorm = [];
-        foreach ($sectorOptions as $k => $v) {
-            $sectorOptionsNorm[strtolower((string) $k)] = (string) $v;
-        }
+        $sectorOptionsNorm = SectorSelectOptions::normalizedForSelect($sectorModel);
         $sectorFilterPills = $sectorModel->optionsForProjectFilterPills($locale);
 
         $statusLabels = [
@@ -48,31 +47,11 @@ class Home extends BaseController
         $filterSectors  = [];
 
         $listPage = model(CmsPageModel::class)->getPublishedBySlug(cms_projects_list_page_slug());
-
-        $heroOverline = '';
-        $heroTitle    = lang('Projects.default_list_title');
-        $heroLead     = '';
-        $layoutTitle  = lang('Projects.default_layout_title');
-        $layoutMeta   = '';
-
-        if ($listPage !== null) {
-            $heroOverline = trim((string) ($listPage['hero_overline'] ?? ''));
-            $ht           = trim((string) ($listPage['hero_title'] ?? ''));
-            $heroTitle    = $ht !== '' ? $ht : trim((string) ($listPage['title'] ?? ''));
-            if ($heroTitle === '') {
-                $heroTitle = lang('Projects.default_list_title');
-            }
-            $heroLead = trim((string) ($listPage['hero_lead'] ?? ''));
-
-            $mt = trim((string) ($listPage['meta_title'] ?? ''));
-            if ($mt !== '') {
-                $layoutTitle = $mt;
-            }
-            $md = trim((string) ($listPage['meta_description'] ?? ''));
-            if ($md !== '') {
-                $layoutMeta = $md;
-            }
-        }
+        $hero     = CmsProgramListHero::resolve(
+            $listPage,
+            lang('Projects.default_list_title'),
+            lang('Projects.default_layout_title'),
+        );
 
         $allPublished = $projectModel->listPublishedRecent(100, $locale);
         $projects     = $this->filterPublishedProjects($allPublished, $filterStatuses, $filterSectors);
@@ -135,8 +114,8 @@ class Home extends BaseController
         }
 
         return view('front/layout', [
-            'title'           => $layoutTitle,
-            'metaDescription' => $layoutMeta,
+            'title'           => $hero['layoutTitle'],
+            'metaDescription' => $hero['layoutMeta'],
             'extraHead'       => $extraHead,
             'main'            => view('front/projects/home', [
                 'segments'           => SiteContext::publicUriSegments(),
@@ -156,9 +135,9 @@ class Home extends BaseController
                 'filterPostUrl'      => projects_program_filter_post_url(),
                 'csrfTokenName'      => csrf_token(),
                 'csrfHash'           => csrf_hash(),
-                'heroOverline'       => $heroOverline,
-                'heroTitle'          => $heroTitle,
-                'heroLead'           => $heroLead,
+                'heroOverline'       => $hero['heroOverline'],
+                'heroTitle'          => $hero['heroTitle'],
+                'heroLead'           => $hero['heroLead'],
             ]),
             'navActive'       => 'projects',
             'mainExtraClass'  => $mainExtra,
@@ -183,11 +162,7 @@ class Home extends BaseController
         $projectModel = model(ProjectProjectModel::class);
         $sectorModel  = model(SectorModel::class);
 
-        $sectorOptions = $sectorModel->optionsForSelect();
-        $sectorOptionsNorm = [];
-        foreach ($sectorOptions as $k => $v) {
-            $sectorOptionsNorm[strtolower((string) $k)] = (string) $v;
-        }
+        $sectorOptionsNorm = SectorSelectOptions::normalizedForSelect($sectorModel);
         $sectorFilterPills = $sectorModel->optionsForProjectFilterPills($locale);
         $allowedSector     = array_keys($sectorFilterPills);
 
@@ -204,8 +179,8 @@ class Home extends BaseController
             $payload = [];
         }
 
-        $filterStatuses = $this->sanitizeFilterList($payload['status'] ?? null, $allowedStatus);
-        $filterSectors  = $this->sanitizeFilterList($payload['sector'] ?? null, $allowedSector);
+        $filterStatuses = ProgramListFilter::sanitizeList($payload['status'] ?? null, $allowedStatus);
+        $filterSectors  = ProgramListFilter::sanitizeList($payload['sector'] ?? null, $allowedSector);
 
         $allPublished = $projectModel->listPublishedRecent(100, $locale);
         $projects     = $this->filterPublishedProjects($allPublished, $filterStatuses, $filterSectors);
@@ -240,66 +215,17 @@ class Home extends BaseController
     }
 
     /**
-     * @param list<string> $allowed
-     *
-     * @return list<string>
-     */
-    private function sanitizeFilterList(mixed $raw, array $allowed): array
-    {
-        if ($allowed === []) {
-            return [];
-        }
-
-        if ($raw === null || $raw === '') {
-            return [];
-        }
-
-        if (! is_array($raw)) {
-            $raw = [$raw];
-        }
-
-        $lookup = array_fill_keys($allowed, true);
-        $seen   = [];
-        foreach ($raw as $v) {
-            $s = strtolower(trim((string) $v));
-            if ($s === '' || ! isset($lookup[$s])) {
-                continue;
-            }
-            $seen[$s] = true;
-        }
-
-        return array_keys($seen);
-    }
-
-    /**
      * @param list<array<string, mixed>> $rows
-     * @param list<string>               $filterStatuses codes métier ; vide = pas de filtre sur le statut
-     * @param list<string>               $filterSectors  codes secteurs (minuscules) ; vide = pas de filtre secteur
+     * @param list<string>               $filterStatuses
+     * @param list<string>               $filterSectors
      *
      * @return list<array<string, mixed>>
      */
     private function filterPublishedProjects(array $rows, array $filterStatuses, array $filterSectors): array
     {
-        $out = [];
-        foreach ($rows as $row) {
-            if (! is_array($row)) {
-                continue;
-            }
-            if ($filterStatuses !== [] && ! in_array((string) ($row['project_status'] ?? ''), $filterStatuses, true)) {
-                continue;
-            }
-            if ($filterSectors !== []) {
-                $csv   = strtolower((string) ($row['sectors_csv'] ?? ''));
-                $codes = array_filter(array_map('trim', explode(',', $csv)));
-                $codes = array_map(static fn (string $c): string => strtolower($c), $codes);
-                if (array_intersect($codes, $filterSectors) === []) {
-                    continue;
-                }
-            }
-            $out[] = $row;
-        }
+        $rows = ProgramListFilter::filterByExactField($rows, $filterStatuses, 'project_status');
 
-        return $out;
+        return ProgramListFilter::filterBySectors($rows, $filterSectors);
     }
 
     /**

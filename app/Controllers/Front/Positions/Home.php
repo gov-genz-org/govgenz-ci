@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Controllers\Front\Positions;
 
 use App\Controllers\BaseController;
+use App\Libraries\CmsProgramListHero;
+use App\Libraries\ProgramListFilter;
 use App\Libraries\ProjectShareQrGenerator;
+use App\Libraries\SectorSelectOptions;
 use App\Libraries\SiteContext;
 use App\Models\CmsPageModel;
 use App\Models\PositionItemModel;
@@ -24,11 +27,7 @@ class Home extends BaseController
         $itemModel   = model(PositionItemModel::class);
         $sectorModel = model(SectorModel::class);
 
-        $sectorOptions = $sectorModel->optionsForSelect();
-        $sectorOptionsNorm = [];
-        foreach ($sectorOptions as $k => $v) {
-            $sectorOptionsNorm[strtolower((string) $k)] = (string) $v;
-        }
+        $sectorOptionsNorm = SectorSelectOptions::normalizedForSelect($sectorModel);
         $sectorFilterPills = $sectorModel->optionsForProjectFilterPills($locale);
         $typeLabels        = position_type_labels();
 
@@ -36,31 +35,11 @@ class Home extends BaseController
         $filterSectors = [];
 
         $listPage = model(CmsPageModel::class)->getPublishedBySlug(cms_positions_list_page_slug());
-
-        $heroOverline = '';
-        $heroTitle    = lang('Positions.default_list_title');
-        $heroLead     = '';
-        $layoutTitle  = lang('Positions.default_layout_title');
-        $layoutMeta   = '';
-
-        if ($listPage !== null) {
-            $heroOverline = trim((string) ($listPage['hero_overline'] ?? ''));
-            $ht           = trim((string) ($listPage['hero_title'] ?? ''));
-            $heroTitle    = $ht !== '' ? $ht : trim((string) ($listPage['title'] ?? ''));
-            if ($heroTitle === '') {
-                $heroTitle = lang('Positions.default_list_title');
-            }
-            $heroLead = trim((string) ($listPage['hero_lead'] ?? ''));
-
-            $mt = trim((string) ($listPage['meta_title'] ?? ''));
-            if ($mt !== '') {
-                $layoutTitle = $mt;
-            }
-            $md = trim((string) ($listPage['meta_description'] ?? ''));
-            if ($md !== '') {
-                $layoutMeta = $md;
-            }
-        }
+        $hero     = CmsProgramListHero::resolve(
+            $listPage,
+            lang('Positions.default_list_title'),
+            lang('Positions.default_layout_title'),
+        );
 
         $allPublished = $itemModel->listPublishedRecent(100, $locale);
         $positions    = $this->filterPublished($allPublished, $filterTypes, $filterSectors);
@@ -96,8 +75,8 @@ class Home extends BaseController
         }
 
         return view('front/layout', [
-            'title'           => $layoutTitle,
-            'metaDescription' => $layoutMeta,
+            'title'           => $hero['layoutTitle'],
+            'metaDescription' => $hero['layoutMeta'],
             'extraHead'       => $extraHead,
             'main'            => view('front/positions/home', [
                 'positions'           => $positions,
@@ -115,9 +94,9 @@ class Home extends BaseController
                 'filterPostUrl'       => positions_program_filter_post_url(),
                 'csrfTokenName'       => csrf_token(),
                 'csrfHash'            => csrf_hash(),
-                'heroOverline'        => $heroOverline,
-                'heroTitle'           => $heroTitle,
-                'heroLead'            => $heroLead,
+                'heroOverline'        => $hero['heroOverline'],
+                'heroTitle'           => $hero['heroTitle'],
+                'heroLead'            => $hero['heroLead'],
             ]),
             'navActive'      => 'positions',
             'mainExtraClass' => $mainExtra,
@@ -139,11 +118,7 @@ class Home extends BaseController
         $itemModel   = model(PositionItemModel::class);
         $sectorModel = model(SectorModel::class);
 
-        $sectorOptions = $sectorModel->optionsForSelect();
-        $sectorOptionsNorm = [];
-        foreach ($sectorOptions as $k => $v) {
-            $sectorOptionsNorm[strtolower((string) $k)] = (string) $v;
-        }
+        $sectorOptionsNorm = SectorSelectOptions::normalizedForSelect($sectorModel);
         $sectorFilterPills = $sectorModel->optionsForProjectFilterPills($locale);
         $allowedSector     = array_keys($sectorFilterPills);
         $typeLabels        = position_type_labels();
@@ -154,8 +129,8 @@ class Home extends BaseController
             $payload = [];
         }
 
-        $filterTypes   = $this->sanitizeFilterList($payload['type'] ?? null, $allowedTypes);
-        $filterSectors = $this->sanitizeFilterList($payload['sector'] ?? null, $allowedSector);
+        $filterTypes   = ProgramListFilter::sanitizeList($payload['type'] ?? null, $allowedTypes);
+        $filterSectors = ProgramListFilter::sanitizeList($payload['sector'] ?? null, $allowedSector);
 
         $allPublished = $itemModel->listPublishedRecent(100, $locale);
         $positions    = $this->filterPublished($allPublished, $filterTypes, $filterSectors);
@@ -290,12 +265,8 @@ class Home extends BaseController
     {
         $locale = SiteContext::locale();
         $sectorModel = model(SectorModel::class);
-        $sectorFilterPills = $sectorModel->optionsForProjectFilterPills($locale);
-        $sectorOptions = $sectorModel->optionsForSelect();
-        $sectorOptionsNorm = [];
-        foreach ($sectorOptions as $k => $v) {
-            $sectorOptionsNorm[strtolower((string) $k)] = (string) $v;
-        }
+        $sectorFilterPills  = $sectorModel->optionsForProjectFilterPills($locale);
+        $sectorOptionsNorm  = SectorSelectOptions::normalizedForSelect($sectorModel);
 
         $meta = trim((string) ($item['meta_description'] ?? ''));
         if ($meta === '') {
@@ -352,35 +323,6 @@ class Home extends BaseController
     }
 
     /**
-     * @param list<string> $allowed
-     *
-     * @return list<string>
-     */
-    private function sanitizeFilterList(mixed $raw, array $allowed): array
-    {
-        if ($allowed === []) {
-            return [];
-        }
-        if ($raw === null || $raw === '') {
-            return [];
-        }
-        if (! is_array($raw)) {
-            $raw = [$raw];
-        }
-        $lookup = array_fill_keys($allowed, true);
-        $seen   = [];
-        foreach ($raw as $v) {
-            $s = strtolower(trim((string) $v));
-            if ($s === '' || ! isset($lookup[$s])) {
-                continue;
-            }
-            $seen[$s] = true;
-        }
-
-        return array_keys($seen);
-    }
-
-    /**
      * @param list<array<string, mixed>> $rows
      * @param list<string>               $filterTypes
      * @param list<string>               $filterSectors
@@ -389,27 +331,21 @@ class Home extends BaseController
      */
     private function filterPublished(array $rows, array $filterTypes, array $filterSectors): array
     {
-        $out = [];
-        foreach ($rows as $row) {
-            if (! is_array($row)) {
-                continue;
-            }
-            if ($filterTypes !== []) {
+        if ($filterTypes !== []) {
+            $out = [];
+            foreach ($rows as $row) {
+                if (! is_array($row)) {
+                    continue;
+                }
                 $codes = position_types_from_csv((string) ($row['types_csv'] ?? ''));
                 if (array_intersect($codes, $filterTypes) === []) {
                     continue;
                 }
+                $out[] = $row;
             }
-            if ($filterSectors !== []) {
-                $csv   = strtolower((string) ($row['sectors_csv'] ?? ''));
-                $codes = array_filter(array_map('trim', explode(',', $csv)));
-                if (array_intersect($codes, $filterSectors) === []) {
-                    continue;
-                }
-            }
-            $out[] = $row;
+            $rows = $out;
         }
 
-        return $out;
+        return ProgramListFilter::filterBySectors($rows, $filterSectors);
     }
 }
