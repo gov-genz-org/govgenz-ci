@@ -59,6 +59,7 @@ if (! in_array($localeSel, ['fr', 'en'], true)) {
     <div class="mb-3">
         <label class="form-label" for="css_class">Classes CSS (optionnel)</label>
         <input type="text" name="css_class" id="css_class" class="form-control" maxlength="80" value="<?= esc($cssClass) ?>" placeholder="Ex. ggz-nav-admin">
+        <div class="form-text">Les liens visibles sont centrés dans la barre. <code>ggz-nav-end</code> n’est plus utilisé pour la mise en page.</div>
     </div>
     <div class="mb-3">
         <label class="form-label" for="is_active">Visible dans le menu</label>

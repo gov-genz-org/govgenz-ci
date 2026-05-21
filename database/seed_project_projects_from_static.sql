@@ -132,7 +132,7 @@ INSERT INTO project_projects (slug, locale, translation_group, title, excerpt, b
   0,
   '💧 Eau Potable 2026',
   'Eau Potable 2026 — 50 points d''eau potable dans les Hauts Plateaux. GoV Gen Z Madagascar.',
-NULL,
+  NULL,
   '2026-05-15 15:38:36',
   '2026-05-15 15:38:36',
   NULL
@@ -236,7 +236,7 @@ INSERT INTO project_projects (slug, locale, translation_group, title, excerpt, b
   5,
   '⚖️ Accès à la Justice — Jeunes',
   'Accès à la Justice — Jeunes — 500 paralegals et 20 centres d''aide juridique. GoV Gen Z Madagascar.',
-NULL,
+  NULL,
   '2026-05-15 15:38:36',
   '2026-05-15 15:38:36',
   NULL
