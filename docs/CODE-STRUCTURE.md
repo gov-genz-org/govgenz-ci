@@ -105,7 +105,7 @@ $extraHead = FrontPageAssets::projectsProgramList();
 
 ## Prochaines étapes (backlog)
 
-1. Libellés restants : hero / mode contenu / aperçus page CMS, textes longs staff (invitation), alertes slug programme.
+1. Libellés restants : dashboard et index admin, textes longs staff (invitation).
 2. Switcher optionnel de locale UI admin (`en/Admin.php` déjà prêt).
 3. Tests feature (DB) dans la CI si/base de test dédiée.
 
