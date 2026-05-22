@@ -13,33 +13,33 @@ helper('admin');
 /** @var array<string, array<string, true>> $translationLocalesByGroup */
 ?>
 <h1 class="h3 mb-1"><?= esc(lang('Admin.title_posts')) ?></h1>
-<p class="text-muted small mb-3">Communiqués et articles affichés sous <strong>/press</strong>.</p>
+<p class="text-muted small mb-3"><?= lang('Admin.help_posts_intro') ?></p>
 <div class="d-flex flex-wrap align-items-end gap-2 gap-md-3 mb-3">
     <a href="<?= site_url('admin/posts/create') ?>" class="btn btn-primary btn-sm"><?= esc(lang('Admin.breadcrumb_post_new')) ?></a>
     <form method="get" action="<?= site_url('admin/posts') ?>" class="d-flex flex-wrap align-items-end gap-2 ms-md-auto">
         <?= admin_list_sort_hidden_fields($sort, $dir) ?>
         <div>
-            <label class="small text-muted mb-0 d-block" for="posts-search-q">Recherche</label>
-            <input type="search" name="q" id="posts-search-q" value="<?= esc($searchQuery) ?>" class="form-control form-control-sm" placeholder="Titre ou slug…" maxlength="120" autocomplete="off">
+            <label class="small text-muted mb-0 d-block" for="posts-search-q"><?= esc(lang('Admin.filter_search')) ?></label>
+            <input type="search" name="q" id="posts-search-q" value="<?= esc($searchQuery) ?>" class="form-control form-control-sm" placeholder="<?= esc(lang('Admin.placeholder_title_slug'), 'attr') ?>" maxlength="120" autocomplete="off">
         </div>
         <div>
-            <label class="small text-muted mb-0 d-block" for="filter-post-status">Statut</label>
+            <label class="small text-muted mb-0 d-block" for="filter-post-status"><?= esc(lang('Admin.filter_status')) ?></label>
             <select name="status" id="filter-post-status" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
-                <option value="" <?= $filterStatus === 'all' ? 'selected' : '' ?>>Tous</option>
+                <option value="" <?= $filterStatus === 'all' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_all_masc')) ?></option>
                 <option value="published" <?= $filterStatus === 'published' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_published')) ?></option>
                 <option value="draft" <?= $filterStatus === 'draft' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_draft')) ?></option>
             </select>
         </div>
-        <button type="submit" class="btn btn-outline-secondary btn-sm">Rechercher</button>
+        <button type="submit" class="btn btn-outline-secondary btn-sm"><?= esc(lang('Admin.action_search')) ?></button>
     </form>
 </div>
 
 <?php if ($posts === []) : ?>
     <div class="admin-empty">
-        <p class="mb-2 text-muted">Aucun article pour ce filtre.</p>
+        <p class="mb-2 text-muted"><?= esc(lang('Admin.empty_no_posts')) ?></p>
         <div class="d-flex flex-wrap gap-2 justify-content-center">
-            <a href="<?= site_url('admin/posts/create') ?>" class="btn btn-primary btn-sm">Rédiger un article</a>
-            <a href="<?= site_url('admin/media') ?>" class="btn btn-outline-secondary btn-sm">Médiathèque (illustrations)</a>
+            <a href="<?= site_url('admin/posts/create') ?>" class="btn btn-primary btn-sm"><?= esc(lang('Admin.action_write_post')) ?></a>
+            <a href="<?= site_url('admin/media') ?>" class="btn btn-outline-secondary btn-sm"><?= esc(lang('Admin.empty_media_for_posts')) ?></a>
         </div>
     </div>
 <?php else : ?>
@@ -51,7 +51,7 @@ helper('admin');
         <th><?= admin_list_sort_th('title', lang('Admin.col_title'), $sort, $dir) ?></th>
         <th><?= admin_list_sort_th('status', lang('Admin.col_status'), $sort, $dir) ?></th>
         <th><?= admin_list_sort_th('published_at', lang('Admin.col_published_at'), $sort, $dir) ?></th>
-        <th class="text-end">Actions</th>
+        <th class="text-end"><?= esc(lang('Admin.col_actions')) ?></th>
     </tr></thead>
     <tbody>
     <?php foreach ($posts as $post) :
@@ -77,7 +77,7 @@ helper('admin');
             <td class="small text-nowrap"><?= admin_format_datetime($post['published_at'] ?? null) ?></td>
             <td class="text-end text-nowrap">
                 <?php if (($post['status'] ?? '') === 'published') : ?>
-                    <a href="<?= site_url('press/' . $post['slug']) ?>" class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener">Voir</a>
+                    <a href="<?= site_url('press/' . $post['slug']) ?>" class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener"><?= esc(lang('Admin.action_view')) ?></a>
                 <?php endif; ?>
                 <a href="<?= site_url('admin/posts/edit/' . $post['id']) ?>" class="btn btn-outline-secondary btn-sm"><?= esc(lang('Admin.action_edit')) ?></a>
                 <form action="<?= site_url('admin/posts/duplicate/' . $post['id']) ?>" method="post" class="d-inline">
@@ -94,5 +94,5 @@ helper('admin');
     </tbody>
 </table>
 </div>
-<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => 'résultat(s)']) ?>
+<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => lang('Admin.pager_results')]) ?>
 <?php endif; ?>

@@ -10,7 +10,7 @@ helper('admin');
 /** @var string $dir */
 ?>
 <h1 class="h3 mb-1"><?= esc(lang('Admin.nav_site_menu')) ?></h1>
-<p class="text-muted small mb-3">Liens affichés dans l’en-tête du site public. Cliquez sur un en-tête de colonne pour trier.</p>
+<p class="text-muted small mb-3"><?= esc(lang('Admin.help_sitemenu_index')) ?></p>
 
 <div class="mb-3">
     <a href="<?= site_url('admin/site-menu/create') ?>" class="btn btn-primary btn-sm"><?= esc(lang('Admin.breadcrumb_menu_new')) ?></a>
@@ -18,7 +18,7 @@ helper('admin');
 
 <?php if ($items === []) : ?>
     <div class="admin-empty">
-        <p class="mb-2 text-muted">Aucune entrée. Exécutez les migrations ou ajoutez un lien.</p>
+        <p class="mb-2 text-muted"><?= esc(lang('Admin.empty_no_menu')) ?></p>
         <a href="<?= site_url('admin/site-menu/create') ?>" class="btn btn-primary btn-sm"><?= esc(lang('Admin.action_create_menu_entry')) ?></a>
     </div>
 <?php else : ?>
@@ -30,10 +30,10 @@ helper('admin');
         <th scope="col"><?= admin_list_sort_th('sort_order', lang('Admin.col_order'), $sort, $dir) ?></th>
         <th scope="col"><?= admin_list_sort_th('label', lang('Admin.col_label'), $sort, $dir) ?></th>
         <th scope="col"><?= admin_list_sort_th('href_kind', lang('Admin.col_type'), $sort, $dir) ?></th>
-        <th scope="col">Cible</th>
-        <th scope="col">Surlignage</th>
+        <th scope="col"><?= esc(lang('Admin.col_target')) ?></th>
+        <th scope="col"><?= esc(lang('Admin.col_highlight')) ?></th>
         <th scope="col"><?= admin_list_sort_th('is_active', lang('Admin.col_active'), $sort, $dir) ?></th>
-        <th scope="col" class="text-end">Actions</th>
+        <th scope="col" class="text-end"><?= esc(lang('Admin.col_actions')) ?></th>
     </tr>
     </thead>
     <tbody>
@@ -49,14 +49,14 @@ helper('admin');
             <td><code class="small"><?= esc((string) ($row['match_key'] ?? '')) ?></code></td>
             <td>
                 <?php if ((int) ($row['is_active'] ?? 0) === 1) : ?>
-                    <span class="badge text-bg-success">Oui</span>
+                    <span class="badge text-bg-success"><?= esc(lang('Admin.ui_yes')) ?></span>
                 <?php else : ?>
-                    <span class="badge text-bg-secondary">Non</span>
+                    <span class="badge text-bg-secondary"><?= esc(lang('Admin.ui_no')) ?></span>
                 <?php endif; ?>
             </td>
             <td class="text-end text-nowrap">
                 <a href="<?= site_url('admin/site-menu/edit/' . $id) ?>" class="btn btn-sm btn-outline-primary"><?= esc(lang('Admin.action_edit')) ?></a>
-                <form action="<?= site_url('admin/site-menu/delete/' . $id) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="Supprimer cette entrée du menu ?">
+                <form action="<?= site_url('admin/site-menu/delete/' . $id) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="<?= esc(lang('Admin.confirm_delete_menu_entry'), 'attr') ?>">
                     <?= csrf_field() ?>
                     <button type="submit" class="btn btn-sm btn-outline-danger"><?= esc(lang('Admin.action_delete')) ?></button>
                 </form>
@@ -66,5 +66,5 @@ helper('admin');
     </tbody>
 </table>
 </div>
-<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => 'entrée(s)']) ?>
+<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => lang('Admin.pager_entries')]) ?>
 <?php endif; ?>

@@ -41,7 +41,7 @@ $isLocalHost = in_array($host, ['localhost', '127.0.0.1', '::1'], true);
             </form>
             <?php if (ENVIRONMENT === 'development' && $isLocalHost) : ?>
                 <details class="mt-4 small text-muted">
-                    <summary class="text-secondary" style="cursor: pointer;">Compte de développement</summary>
+                    <summary class="text-secondary" style="cursor: pointer;"><?= esc(lang('Admin.auth_dev_account')) ?></summary>
                     <p class="mb-0 mt-2"><code>admin@govgenz.local</code> / <code>changeme</code></p>
                 </details>
             <?php endif; ?>

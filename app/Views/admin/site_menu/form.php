@@ -48,7 +48,7 @@ if (! in_array($localeSel, ['fr', 'en'], true)) {
     </div>
     <div class="mb-3">
         <label class="form-label" for="href_target"><?= esc(lang('Admin.form_sitemenu_target')) ?></label>
-        <input type="text" name="href_target" id="href_target" class="form-control" maxlength="512" value="<?= esc($target) ?>" placeholder="Vide pour « Accueil », sinon slug, chemin ou URL complète">
+        <input type="text" name="href_target" id="href_target" class="form-control" maxlength="512" value="<?= esc($target) ?>" placeholder="<?= esc(lang('Admin.ph_menu_href_target'), 'attr') ?>">
         <div class="form-text"><?= esc(lang('Admin.form_sitemenu_target_help')) ?></div>
     </div>
     <div class="mb-3">

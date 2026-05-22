@@ -15,38 +15,38 @@ use App\Models\ProjectContributionModel;
 $isStaffAdmin = session()->get('staff_role') === 'admin';
 
 $typeLabels = [
-    ProjectContributionModel::TYPE_BUDGET   => 'Financement (budget)',
-    ProjectContributionModel::TYPE_MATERIAL => 'Apport matériel',
+    ProjectContributionModel::TYPE_BUDGET   => lang('Admin.contrib_type_budget'),
+    ProjectContributionModel::TYPE_MATERIAL => lang('Admin.contrib_type_material'),
 ];
 ?>
 <h1 class="h3 mb-1"><?= esc(lang('Admin.title_contributions')) ?></h1>
-<p class="text-muted small mb-3">Demandes envoyées depuis le formulaire <strong>Financer ce projet</strong> sur les fiches publiées. Une proposition <strong>validée</strong> apparaît sur la fiche FR et EN du projet (nom et type de soutien, sans coordonnées).</p>
+<p class="text-muted small mb-3"><?= lang('Admin.help_contributions_intro') ?></p>
 
 <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
     <form method="get" action="<?= site_url('admin/project-contributions') ?>" class="d-flex align-items-center gap-2">
         <?= admin_list_sort_hidden_fields($sort, $dir) ?>
-        <label class="small text-muted mb-0" for="contrib-filter">Afficher</label>
+        <label class="small text-muted mb-0" for="contrib-filter"><?= esc(lang('Admin.filter_show')) ?></label>
         <select name="status" id="contrib-filter" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
-            <option value="" <?= $filter === 'all' ? 'selected' : '' ?>>Toutes</option>
-            <option value="new" <?= $filter === 'new' ? 'selected' : '' ?>>Nouvelles</option>
-            <option value="reviewed" <?= $filter === 'reviewed' ? 'selected' : '' ?>>Validées</option>
-            <option value="rejected" <?= $filter === 'rejected' ? 'selected' : '' ?>>Refusées</option>
+            <option value="" <?= $filter === 'all' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_all')) ?></option>
+            <option value="new" <?= $filter === 'new' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_new_fem')) ?></option>
+            <option value="reviewed" <?= $filter === 'reviewed' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_validated_fem')) ?></option>
+            <option value="rejected" <?= $filter === 'rejected' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_rejected_fem')) ?></option>
         </select>
     </form>
     <?php if ($isStaffAdmin && $rows !== []) : ?>
         <form method="post" action="<?= site_url('admin/project-contributions/clear-table') ?>" class="ms-md-auto"
-              onsubmit="return confirm('Supprimer toutes les propositions ? Cette action est irréversible.');">
+              onsubmit="return confirm(<?= json_encode(lang('Admin.confirm_clear_contributions'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>);">
             <?= csrf_field() ?>
-            <button type="submit" class="btn btn-outline-danger btn-sm">Vider la table</button>
+            <button type="submit" class="btn btn-outline-danger btn-sm"><?= esc(lang('Admin.action_clear_table')) ?></button>
         </form>
     <?php endif; ?>
 </div>
 
 <?php if ($rows === []) : ?>
     <div class="admin-empty">
-        <p class="mb-2 text-muted"><?= $filter === 'all' ? 'Aucune proposition pour le moment.' : 'Aucune proposition pour ce filtre.' ?></p>
+        <p class="mb-2 text-muted"><?= esc($filter === 'all' ? lang('Admin.empty_no_contributions') : lang('Admin.empty_no_contributions_filter')) ?></p>
         <?php if ($filter !== 'all') : ?>
-            <a href="<?= site_url('admin/project-contributions') ?>" class="btn btn-outline-secondary btn-sm">Voir toutes</a>
+            <a href="<?= site_url('admin/project-contributions') ?>" class="btn btn-outline-secondary btn-sm"><?= esc(lang('Admin.action_view_all')) ?></a>
         <?php endif; ?>
     </div>
 <?php else : ?>
@@ -58,9 +58,9 @@ $typeLabels = [
         <th scope="col"><?= admin_list_sort_th('contribution_type', lang('Admin.col_type'), $sort, $dir) ?></th>
         <th scope="col"><?= admin_list_sort_th('project_title', lang('Admin.col_project'), $sort, $dir) ?></th>
         <th scope="col"><?= admin_list_sort_th('donor_name', lang('Admin.col_name'), $sort, $dir) ?></th>
-        <th scope="col">Contact</th>
+        <th scope="col"><?= esc(lang('Admin.col_contact')) ?></th>
         <th scope="col"><?= admin_list_sort_th('status', lang('Admin.col_status'), $sort, $dir) ?></th>
-        <th scope="col" class="text-end">Actions</th>
+        <th scope="col" class="text-end"><?= esc(lang('Admin.col_actions')) ?></th>
     </tr>
     </thead>
     <tbody>
@@ -96,36 +96,36 @@ $typeLabels = [
             </td>
             <td>
                 <?php if ($status === ProjectContributionModel::STATUS_NEW) : ?>
-                    <span class="badge text-bg-primary">Nouvelle</span>
+                    <span class="badge text-bg-primary"><?= esc(lang('Admin.status_new_fem')) ?></span>
                 <?php elseif ($status === ProjectContributionModel::STATUS_REVIEWED) : ?>
-                    <span class="badge text-bg-success">Validée (publiée)</span>
+                    <span class="badge text-bg-success"><?= esc(lang('Admin.status_validated_published')) ?></span>
                 <?php elseif ($status === ProjectContributionModel::STATUS_REJECTED) : ?>
-                    <span class="badge text-bg-secondary">Refusée</span>
+                    <span class="badge text-bg-secondary"><?= esc(lang('Admin.status_rejected_fem')) ?></span>
                 <?php else : ?>
                     <span class="badge text-bg-secondary"><?= esc($status) ?></span>
                 <?php endif; ?>
             </td>
             <td class="text-end text-nowrap">
-                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#contribDetailModal" data-contrib-id="<?= $id ?>">Détail</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#contribDetailModal" data-contrib-id="<?= $id ?>"><?= esc(lang('Admin.action_detail')) ?></button>
                 <?php if ($status !== ProjectContributionModel::STATUS_REVIEWED) : ?>
                     <form action="<?= site_url('admin/project-contributions/status/' . $id) ?>" method="post" class="d-inline ms-1">
                         <?= csrf_field() ?>
                         <input type="hidden" name="status" value="reviewed">
-                        <button type="submit" class="btn btn-outline-success btn-sm" title="Affiche la proposition sur la fiche projet (sans contact)">Valider et publier</button>
+                        <button type="submit" class="btn btn-outline-success btn-sm" title="<?= esc(lang('Admin.tooltip_validate_publish'), 'attr') ?>"><?= esc(lang('Admin.action_validate_publish')) ?></button>
                     </form>
                 <?php endif; ?>
                 <?php if ($status !== ProjectContributionModel::STATUS_REJECTED) : ?>
                     <form action="<?= site_url('admin/project-contributions/status/' . $id) ?>" method="post" class="d-inline ms-1">
                         <?= csrf_field() ?>
                         <input type="hidden" name="status" value="rejected">
-                        <button type="submit" class="btn btn-outline-danger btn-sm">Refuser</button>
+                        <button type="submit" class="btn btn-outline-danger btn-sm"><?= esc(lang('Admin.action_reject')) ?></button>
                     </form>
                 <?php endif; ?>
                 <?php if ($status !== ProjectContributionModel::STATUS_NEW) : ?>
                     <form action="<?= site_url('admin/project-contributions/status/' . $id) ?>" method="post" class="d-inline ms-1">
                         <?= csrf_field() ?>
                         <input type="hidden" name="status" value="new">
-                        <button type="submit" class="btn btn-outline-secondary btn-sm">Nouvelle</button>
+                        <button type="submit" class="btn btn-outline-secondary btn-sm"><?= esc(lang('Admin.status_new_short')) ?></button>
                     </form>
                 <?php endif; ?>
             </td>
@@ -141,39 +141,39 @@ $typeLabels = [
     ?>
 <div id="contrib-detail-<?= $id ?>" class="d-none">
     <dl class="row mb-0 small">
-        <dt class="col-sm-4">Type</dt>
+        <dt class="col-sm-4"><?= esc(lang('Admin.detail_type')) ?></dt>
         <dd class="col-sm-8 mb-2"><?= esc($typeLabels[$ctype] ?? $ctype) ?></dd>
-        <dt class="col-sm-4">Projet</dt>
+        <dt class="col-sm-4"><?= esc(lang('Admin.detail_project')) ?></dt>
         <dd class="col-sm-8 mb-2"><?= esc((string) ($row['project_title'] ?? '')) ?> <span class="text-muted">(<?= esc((string) ($row['project_slug'] ?? '')) ?>)</span></dd>
-        <dt class="col-sm-4">Locale</dt>
+        <dt class="col-sm-4"><?= esc(lang('Admin.col_locale')) ?></dt>
         <dd class="col-sm-8 mb-2"><?= esc((string) ($row['locale'] ?? '')) ?></dd>
         <?php if ($ctype === ProjectContributionModel::TYPE_BUDGET) : ?>
-            <dt class="col-sm-4">Montant proposé</dt>
+            <dt class="col-sm-4"><?= esc(lang('Admin.detail_amount')) ?></dt>
             <dd class="col-sm-8 mb-2"><?= esc((string) ($row['amount'] ?? '')) !== '' ? esc((string) $row['amount']) : '—' ?></dd>
         <?php else : ?>
-            <dt class="col-sm-4">Article(s)</dt>
+            <dt class="col-sm-4"><?= esc(lang('Admin.detail_items')) ?></dt>
             <dd class="col-sm-8 mb-2"><?= nl2br(esc((string) ($row['items'] ?? ''))) ?></dd>
-            <dt class="col-sm-4">Quantité</dt>
+            <dt class="col-sm-4"><?= esc(lang('Admin.detail_quantity')) ?></dt>
             <dd class="col-sm-8 mb-2"><?= esc((string) ($row['quantity'] ?? '')) !== '' ? esc((string) $row['quantity']) : '—' ?></dd>
-            <dt class="col-sm-4">Disponible à partir du</dt>
+            <dt class="col-sm-4"><?= esc(lang('Admin.detail_available_from')) ?></dt>
             <dd class="col-sm-8 mb-2"><?= esc((string) ($row['available_from'] ?? '')) !== '' ? esc((string) $row['available_from']) : '—' ?></dd>
-            <dt class="col-sm-4">Lieu récupération</dt>
+            <dt class="col-sm-4"><?= esc(lang('Admin.detail_pickup')) ?></dt>
             <dd class="col-sm-8 mb-2"><?= esc((string) ($row['pickup_location'] ?? '')) !== '' ? esc((string) $row['pickup_location']) : '—' ?></dd>
-            <dt class="col-sm-4">Livraison</dt>
+            <dt class="col-sm-4"><?= esc(lang('Admin.detail_delivery')) ?></dt>
             <dd class="col-sm-8 mb-2">
                 <?php
                 $del = $row['can_deliver'] ?? null;
                 if ($del === null || $del === '') {
                     echo '—';
                 } elseif ((string) $del === '1') {
-                    echo 'Oui';
+                    echo esc(lang('Admin.answer_yes'));
                 } else {
-                    echo 'Non';
+                    echo esc(lang('Admin.answer_no'));
                 }
                 ?>
             </dd>
         <?php endif; ?>
-        <dt class="col-sm-4">Remarques</dt>
+        <dt class="col-sm-4"><?= esc(lang('Admin.detail_remarks')) ?></dt>
         <dd class="col-sm-8 mb-0">
             <?php $remarks = trim((string) ($row['remarks'] ?? '')); ?>
             <?= $remarks !== '' ? nl2br(esc($remarks)) : '—' ?>
@@ -186,8 +186,8 @@ $typeLabels = [
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title h5" id="contribDetailModalLabel">Détail proposition</h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                <h2 class="modal-title h5" id="contribDetailModalLabel"><?= esc(lang('Admin.modal_contrib_detail')) ?></h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?= esc(lang('Admin.ui_close'), 'attr') ?>"></button>
             </div>
             <div class="modal-body" id="contribDetailModalBody"></div>
         </div>
@@ -205,11 +205,11 @@ $typeLabels = [
         var src = id ? document.getElementById('contrib-detail-' + id) : null;
         var body = document.getElementById('contribDetailModalBody');
         if (body) {
-            body.innerHTML = src ? src.innerHTML : '<p class="text-muted mb-0">Contenu introuvable.</p>';
+            body.innerHTML = src ? src.innerHTML : <?= json_encode('<p class="text-muted mb-0">' . lang('Admin.content_not_found') . '</p>', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
         }
     });
 })();
 </script>
 
-<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => 'proposition(s)']) ?>
+<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => lang('Admin.pager_proposals')]) ?>
 <?php endif; ?>

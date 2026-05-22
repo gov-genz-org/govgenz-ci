@@ -66,7 +66,7 @@ foreach (PositionItemModel::typeCodes() as $typeCode) {
 }
 ?>
 <h1 class="h3 mb-1"><?= esc($isEdit ? lang('Admin.form_position_edit') : lang('Admin.form_position_new')) ?></h1>
-<p class="text-muted small mb-3">Carte liste (résumé visible) + sections détaillées (accordéon / fiche).</p>
+<p class="text-muted small mb-3"><?= esc(lang('Admin.help_pi_form_intro')) ?></p>
 
 <?php if ($publicPreviewUrl !== null || $translationPartnerNav !== null) : ?>
     <p class="mb-3 d-flex flex-wrap gap-2">
@@ -106,11 +106,11 @@ foreach (PositionItemModel::typeCodes() as $typeCode) {
             <label for="pi-locale" class="form-label"><?= esc(lang('Admin.form_label_locale')) ?></label>
             <?php if ($isEdit) : ?>
                 <input type="text" id="pi-locale" class="form-control bg-light" readonly
-                       value="<?= esc($ppLocale === 'en' ? 'English' : 'Français') ?>">
+                       value="<?= esc($ppLocale === 'en' ? lang('Admin.form_locale_en_short') : lang('Admin.form_locale_fr_short')) ?>">
             <?php else : ?>
                 <select name="locale" id="pi-locale" class="form-select" required>
-                    <option value="fr" <?= $ppLocale === 'fr' ? 'selected' : '' ?>>Français</option>
-                    <option value="en" <?= $ppLocale === 'en' ? 'selected' : '' ?>>English</option>
+                    <option value="fr" <?= $ppLocale === 'fr' ? 'selected' : '' ?>><?= esc(lang('Admin.form_locale_fr_short')) ?></option>
+                    <option value="en" <?= $ppLocale === 'en' ? 'selected' : '' ?>><?= esc(lang('Admin.form_locale_en_short')) ?></option>
                 </select>
             <?php endif; ?>
         </div>

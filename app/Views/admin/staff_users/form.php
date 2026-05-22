@@ -16,27 +16,27 @@ $id = $is_edit ? (int) ($user['id'] ?? 0) : 0;
 $invitePending = $is_edit && $user !== null && StaffInvite::isPending($user);
 $inviteExpiryHours = StaffInvite::expiryHours();
 $inviteExpiryLabel = $inviteExpiryHours <= 24
-    ? '24 heures'
-    : ((int) ceil($inviteExpiryHours / 24) . ' jours');
+    ? lang('Admin.staff_invite_expiry_24h')
+    : lang('Admin.staff_invite_expiry_days', [(string) (int) ceil($inviteExpiryHours / 24)]);
 ?>
 <h1 class="h3 mb-2"><?= esc($is_edit ? lang('Admin.form_staff_edit') : lang('Admin.form_staff_invite')) ?></h1>
 <p class="text-muted small mb-4">
     <?php if ($is_edit) : ?>
         <?php if ($invitePending) : ?>
-            <span class="badge text-bg-warning text-dark">Invitation en attente</span>
-            — le collaborateur doit ouvrir le lien reçu par e-mail pour choisir son mot de passe.
+            <span class="badge text-bg-warning text-dark"><?= esc(lang('Admin.badge_invite_pending')) ?></span>
+            <?= esc(lang('Admin.help_staff_invite_pending')) ?>
         <?php else : ?>
-            Laisser le mot de passe vide pour ne pas le changer. Minimum <?= (int) $pwMin ?> caractères si renseigné.
+            <?= esc(lang('Admin.help_staff_password_optional', [(string) (int) $pwMin])) ?>
         <?php endif; ?>
     <?php else : ?>
-        Saisissez l’e-mail et le rôle : un e-mail d’activation est envoyé (lien valable <?= esc($inviteExpiryLabel) ?>).
+        <?= esc(lang('Admin.help_staff_invite_create', [$inviteExpiryLabel])) ?>
     <?php endif; ?>
 </p>
 
 <?php if ($is_edit && $invitePending) : ?>
     <form method="post" action="<?= site_url('admin/staff-users/resend-invite/' . $id) ?>" class="mb-3">
         <?= csrf_field() ?>
-        <button type="submit" class="btn btn-outline-primary btn-sm">Renvoyer l’e-mail d’invitation</button>
+        <button type="submit" class="btn btn-outline-primary btn-sm"><?= esc(lang('Admin.action_resend_invite')) ?></button>
     </form>
 <?php endif; ?>
 

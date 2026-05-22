@@ -142,7 +142,7 @@ $budgetSuffixesJson = json_encode([
         <div class="col-md-6">
             <label for="pp-tg" class="form-label"><?= esc(lang('Admin.form_pp_translation_group')) ?></label>
             <input type="text" name="translation_group" id="pp-tg" class="form-control font-monospace" maxlength="64"
-                   placeholder="ex. id du projet FR ou libellé partagé"
+                   placeholder="<?= esc(lang('Admin.ph_project_translation_group'), 'attr') ?>"
                    value="<?= esc($ppTg) ?>">
             <div class="form-text"><?= esc(lang('Admin.form_pp_translation_group_help')) ?></div>
         </div>

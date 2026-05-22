@@ -36,13 +36,13 @@ helper(['form', 'admin', 'position']);
         <div>
             <label class="small text-muted mb-0 d-block" for="pi-pub"><?= esc(lang('Admin.filter_pub_state')) ?></label>
             <select name="pub" id="pi-pub" class="form-select form-select-sm" onchange="this.form.submit()">
-                <option value="" <?= $filterPub === 'all' ? 'selected' : '' ?>>Toutes</option>
+                <option value="" <?= $filterPub === 'all' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_all')) ?></option>
                 <?php foreach ($pubLabels as $k => $lab) : ?>
                     <option value="<?= esc($k) ?>" <?= $filterPub === $k ? 'selected' : '' ?>><?= esc($lab) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
-        <button type="submit" class="btn btn-sm btn-outline-secondary">Filtrer</button>
+        <button type="submit" class="btn btn-sm btn-outline-secondary"><?= esc(lang('Admin.action_filter')) ?></button>
     </form>
 </div>
 
@@ -60,7 +60,7 @@ helper(['form', 'admin', 'position']);
         </thead>
         <tbody>
         <?php if ($rows === []) : ?>
-            <tr><td colspan="6" class="text-muted">Aucune position.</td></tr>
+            <tr><td colspan="6" class="text-muted"><?= esc(lang('Admin.empty_no_positions')) ?></td></tr>
         <?php else : ?>
             <?php foreach ($rows as $row) :
                 $id = (int) ($row['id'] ?? 0);
@@ -85,14 +85,14 @@ helper(['form', 'admin', 'position']);
                     <td class="small text-muted"><?= esc((string) ($row['updated_at'] ?? '')) ?></td>
                     <td class="text-end text-nowrap">
                         <?php if ($preview !== null) : ?>
-                            <a href="<?= esc($preview, 'attr') ?>" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener">Voir</a>
+                            <a href="<?= esc($preview, 'attr') ?>" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener"><?= esc(lang('Admin.action_view')) ?></a>
                         <?php endif; ?>
                         <a href="<?= site_url('admin/position-items/edit/' . $id) ?>" class="btn btn-sm btn-outline-secondary"><?= esc(lang('Admin.action_modify')) ?></a>
                         <form method="post" action="<?= site_url('admin/position-items/duplicate/' . $id) ?>" class="d-inline">
                             <?= csrf_field() ?>
                             <button type="submit" class="btn btn-sm btn-outline-secondary" <?= $duplicateTradDisabled ? 'disabled title="' . esc(lang('Admin.tooltip_duplicate_trad_disabled'), 'attr') . '"' : '' ?>><?= esc(lang('Admin.action_duplicate_trad')) ?></button>
                         </form>
-                        <form method="post" action="<?= site_url('admin/position-items/delete/' . $id) ?>" class="d-inline" onsubmit="return confirm('Supprimer cette position ?');">
+                        <form method="post" action="<?= site_url('admin/position-items/delete/' . $id) ?>" class="d-inline" onsubmit="return confirm(<?= json_encode(lang('Admin.confirm_delete_position'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>);">
                             <?= csrf_field() ?>
                             <button type="submit" class="btn btn-sm btn-outline-danger"><?= esc(lang('Admin.action_delete')) ?></button>
                         </form>

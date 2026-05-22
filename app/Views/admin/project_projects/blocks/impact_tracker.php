@@ -20,7 +20,7 @@ $style = strtolower(trim((string) ($b['heading_style'] ?? 'teal')));
 if (! in_array($style, ['default', 'warm', 'teal'], true)) {
     $style = 'teal';
 }
-$defaultTitle = "🎯 Suivi d'impact — Résultats actuels";
+$defaultTitle = lang('Admin.block_impact_default_title');
 ?>
 <div class="project-block-row card mb-3 border-secondary">
     <div class="card-header py-2 d-flex justify-content-between align-items-center flex-wrap gap-2">

@@ -13,7 +13,7 @@ declare(strict_types=1);
             <div class="text-center mb-4">
                 <div class="fw-bold text-dark fs-5 mb-1">GovGenZ</div>
                 <h1 class="h5 text-secondary mb-0 fw-normal"><?= esc(lang('Admin.auth_invite_setup_title')) ?></h1>
-                <p class="small text-secondary mb-0 mt-2">Choisissez votre mot de passe pour accéder au back-office.</p>
+                <p class="small text-secondary mb-0 mt-2"><?= esc(lang('Admin.auth_invite_setup_intro')) ?></p>
             </div>
 
             <p class="small text-muted mb-3"><?= esc(lang('Admin.auth_account_label')) ?> <strong><?= esc($email) ?></strong></p>
@@ -34,6 +34,6 @@ declare(strict_types=1);
         </div>
     </div>
     <p class="text-center small text-muted mt-4 mb-0">
-        <a href="<?= site_url('admin/login') ?>" class="text-decoration-none text-secondary">Déjà activé ? Se connecter</a>
+        <a href="<?= site_url('admin/login') ?>" class="text-decoration-none text-secondary"><?= esc(lang('Admin.auth_invite_already_active')) ?></a>
     </p>
 </div>

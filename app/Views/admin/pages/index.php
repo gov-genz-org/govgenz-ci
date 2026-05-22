@@ -99,6 +99,6 @@ helper('admin');
     </tbody>
 </table>
 </div>
-<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => 'résultat(s)']) ?>
+<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => lang('Admin.pager_results')]) ?>
 <?php endif; ?>
 

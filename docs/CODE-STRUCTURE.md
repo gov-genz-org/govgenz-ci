@@ -105,7 +105,7 @@ $extraHead = FrontPageAssets::projectsProgramList();
 
 ## Prochaines étapes (backlog)
 
-1. Libellés restants : dashboard et index admin, textes longs staff (invitation).
+1. Libellés restants : titres/intros du guide CMS (`CmsComponentsGuide` + sections dynamiques), rôles staff traduits côté PHP si besoin.
 2. Switcher optionnel de locale UI admin (`en/Admin.php` déjà prêt).
 3. Tests feature (DB) dans la CI si/base de test dédiée.
 

@@ -11,15 +11,15 @@ helper('admin');
 /** @var string $dir */
 ?>
 <h1 class="h3 mb-1"><?= esc(lang('Admin.title_media')) ?></h1>
-<p class="text-muted small mb-3">Glissez-déposez des fichiers ci-dessous (images, SVG, PDF), ou insérez une image depuis le bouton « Médias » dans l’éditeur des pages et articles.</p>
+<p class="text-muted small mb-3"><?= esc(lang('Admin.help_media_intro')) ?></p>
 
 <form id="admin-media-csrf" class="d-none"><?= csrf_field() ?></form>
 <div id="media-dropzone" class="dropzone border rounded mb-4 p-3 bg-white"></div>
 
 <?php if ($totalMedia === 0) : ?>
     <div class="admin-empty">
-        <p class="mb-2 text-muted">Aucun fichier pour le moment.</p>
-        <p class="small text-muted mb-3">Utilisez la zone en pointillés ci-dessus pour envoyer des images, des SVG ou des PDF.</p>
+        <p class="mb-2 text-muted"><?= esc(lang('Admin.empty_no_media_files')) ?></p>
+        <p class="small text-muted mb-3"><?= esc(lang('Admin.help_media_dropzone')) ?></p>
         <div class="d-flex flex-wrap gap-2 justify-content-center">
             <a href="<?= site_url('admin/pages/create') ?>" class="btn btn-outline-secondary btn-sm"><?= esc(lang('Admin.breadcrumb_page_new')) ?></a>
             <a href="<?= site_url('admin/posts/create') ?>" class="btn btn-outline-secondary btn-sm"><?= esc(lang('Admin.breadcrumb_post_new')) ?></a>
@@ -28,11 +28,11 @@ helper('admin');
 <?php else : ?>
 <div class="row mb-3 g-2 align-items-end">
     <div class="col-md-6 col-lg-4">
-        <label class="form-label small text-muted mb-1" for="media-search">Filtrer par nom</label>
+        <label class="form-label small text-muted mb-1" for="media-search"><?= esc(lang('Admin.form_media_filter_name')) ?></label>
         <input type="search" class="form-control form-control-sm" id="media-search" placeholder="<?= esc(lang('Admin.placeholder_media_grid'), 'attr') ?>" autocomplete="off">
     </div>
     <div class="col-auto ms-md-auto small text-muted d-flex flex-wrap gap-2 align-items-center">
-        <span class="text-muted">Tri :</span>
+        <span class="text-muted"><?= esc(lang('Admin.label_sort_colon')) ?></span>
         <?= admin_list_sort_th('id', lang('Admin.col_added'), $sort, $dir) ?>
         <?= admin_list_sort_th('original_name', lang('Admin.col_name'), $sort, $dir) ?>
         <?= admin_list_sort_th('size_bytes', lang('Admin.col_size'), $sort, $dir) ?>
@@ -61,9 +61,9 @@ helper('admin');
                         <div class="small text-truncate" title="<?= esc($name) ?>"><?= esc($name) ?></div>
                         <div class="small text-muted"><?= esc(number_format((int) ($row['size_bytes'] ?? 0))) ?> o</div>
                         <div class="d-flex flex-wrap gap-1 mt-2">
-                            <button type="button" class="btn btn-outline-secondary btn-sm js-copy-media-url" data-url="<?= esc($url, 'attr') ?>">Copier l’URL</button>
-                            <a href="<?= esc($url) ?>" class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener">Ouvrir</a>
-                            <form action="<?= site_url('admin/media/delete/' . (int) ($row['id'] ?? 0)) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="Supprimer ce fichier de la médiathèque et du disque ?">
+                            <button type="button" class="btn btn-outline-secondary btn-sm js-copy-media-url" data-url="<?= esc($url, 'attr') ?>"><?= esc(lang('Admin.action_copy_url')) ?></button>
+                            <a href="<?= esc($url) ?>" class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener"><?= esc(lang('Admin.action_open')) ?></a>
+                            <form action="<?= site_url('admin/media/delete/' . (int) ($row['id'] ?? 0)) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="<?= esc(lang('Admin.confirm_delete_media'), 'attr') ?>">
                                 <?= csrf_field() ?>
                                 <button type="submit" class="btn btn-outline-danger btn-sm"><?= esc(lang('Admin.action_delete')) ?></button>
                             </form>
@@ -73,6 +73,6 @@ helper('admin');
             </div>
         <?php endforeach; ?>
     </div>
-<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => 'fichier(s)']) ?>
+<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => lang('Admin.pager_files')]) ?>
 <script defer src="<?= base_url('js/admin/media-library-grid.js') ?>"></script>
 <?php endif; ?>

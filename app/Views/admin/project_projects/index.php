@@ -38,28 +38,28 @@ helper(['form', 'admin']);
         <div>
             <label class="small text-muted mb-0 d-block" for="pp-st"><?= esc(lang('Admin.filter_business_status')) ?></label>
             <select name="status" id="pp-st" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
-                <option value="" <?= $filterStatus === 'all' ? 'selected' : '' ?>>Tous</option>
+                <option value="" <?= $filterStatus === 'all' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_all_masc')) ?></option>
                 <?php foreach ($statusLabels as $k => $lab) : ?>
                     <option value="<?= esc($k) ?>" <?= $filterStatus === $k ? 'selected' : '' ?>><?= esc($lab) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
         <div>
-            <label class="small text-muted mb-0 d-block" for="pp-pub">Publication</label>
+            <label class="small text-muted mb-0 d-block" for="pp-pub"><?= esc(lang('Admin.filter_pub_state')) ?></label>
             <select name="pub" id="pp-pub" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
-                <option value="" <?= $filterPub === 'all' ? 'selected' : '' ?>>Toutes</option>
+                <option value="" <?= $filterPub === 'all' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_all')) ?></option>
                 <?php foreach ($pubLabels as $k => $lab) : ?>
                     <option value="<?= esc($k) ?>" <?= $filterPub === $k ? 'selected' : '' ?>><?= esc($lab) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
-        <button type="submit" class="btn btn-outline-secondary btn-sm">Filtrer</button>
+        <button type="submit" class="btn btn-outline-secondary btn-sm"><?= esc(lang('Admin.action_filter')) ?></button>
     </form>
 </div>
 
 <?php if ($rows === []) : ?>
     <div class="admin-empty">
-        <p class="mb-2 text-muted">Aucun projet pour ce filtre.</p>
+        <p class="mb-2 text-muted"><?= esc(lang('Admin.empty_no_projects_filter')) ?></p>
         <a href="<?= site_url('admin/project-projects/create') ?>" class="btn btn-outline-primary btn-sm"><?= esc(lang('Admin.action_create_project')) ?></a>
     </div>
 <?php else : ?>
@@ -112,5 +112,5 @@ helper(['form', 'admin']);
     </tbody>
 </table>
 </div>
-<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => 'résultat(s)']) ?>
+<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => lang('Admin.pager_results')]) ?>
 <?php endif; ?>
