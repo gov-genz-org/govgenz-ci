@@ -14,7 +14,7 @@ helper(['form', 'admin', 'position']);
 /** @var string $dir */
 /** @var array<string, array<string, true>> $translationLocalesByGroup */
 ?>
-<h1 class="h3 mb-1">Positions (programme)</h1>
+<h1 class="h3 mb-1"><?= esc(lang('Admin.title_positions_program')) ?></h1>
 <div class="alert alert-light border small mb-3" role="note">
     <p class="mb-2">Fiches dynamiques sur <code>/positions</code>. Bandeau liste : pages CMS <code>positions-programme</code> (FR) et <code>positions-program</code> (EN).</p>
     <p class="mb-0 d-flex flex-wrap gap-3">
@@ -25,7 +25,7 @@ helper(['form', 'admin', 'position']);
 </div>
 
 <div class="d-flex flex-wrap align-items-end gap-2 mb-3">
-    <a href="<?= site_url('admin/position-items/create') ?>" class="btn btn-primary btn-sm">Nouvelle position</a>
+    <a href="<?= site_url('admin/position-items/create') ?>" class="btn btn-primary btn-sm"><?= esc(lang('Admin.breadcrumb_position_new')) ?></a>
     <form method="get" action="<?= site_url('admin/position-items') ?>" class="d-flex flex-wrap align-items-end gap-2 ms-md-auto">
         <?= admin_list_sort_hidden_fields($sort, $dir) ?>
         <div>
@@ -97,7 +97,7 @@ helper(['form', 'admin', 'position']);
                         <a href="<?= site_url('admin/position-items/edit/' . $id) ?>" class="btn btn-sm btn-outline-secondary">Modifier</a>
                         <form method="post" action="<?= site_url('admin/position-items/duplicate/' . $id) ?>" class="d-inline">
                             <?= csrf_field() ?>
-                            <button type="submit" class="btn btn-sm btn-outline-secondary" <?= $duplicateTradDisabled ? 'disabled title="Une traduction existe déjà pour l’autre langue."' : '' ?>>Dupliquer trad</button>
+                            <button type="submit" class="btn btn-sm btn-outline-secondary" <?= $duplicateTradDisabled ? 'disabled title="' . esc(lang('Admin.tooltip_duplicate_trad_disabled'), 'attr') . '"' : '' ?>><?= esc(lang('Admin.action_duplicate_trad')) ?></button>
                         </form>
                         <form method="post" action="<?= site_url('admin/position-items/delete/' . $id) ?>" class="d-inline" onsubmit="return confirm('Supprimer cette position ?');">
                             <?= csrf_field() ?>

@@ -9,11 +9,11 @@ helper('admin');
 /** @var string $sort */
 /** @var string $dir */
 ?>
-<h1 class="h3 mb-1">Menu du site</h1>
+<h1 class="h3 mb-1"><?= esc(lang('Admin.nav_site_menu')) ?></h1>
 <p class="text-muted small mb-3">Liens affichés dans l’en-tête du site public. Cliquez sur un en-tête de colonne pour trier.</p>
 
 <div class="mb-3">
-    <a href="<?= site_url('admin/site-menu/create') ?>" class="btn btn-primary btn-sm">Nouvelle entrée</a>
+    <a href="<?= site_url('admin/site-menu/create') ?>" class="btn btn-primary btn-sm"><?= esc(lang('Admin.breadcrumb_menu_new')) ?></a>
 </div>
 
 <?php if ($items === []) : ?>

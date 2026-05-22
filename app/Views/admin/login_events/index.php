@@ -20,7 +20,7 @@ if ($queryParams !== []) {
     $exportUrl .= '?' . http_build_query($queryParams);
 }
 ?>
-<h1 class="h3 mb-1">Journal de connexion</h1>
+<h1 class="h3 mb-1"><?= esc(lang('Admin.title_login_events')) ?></h1>
 <p class="text-muted small mb-3">Tentatives sur le formulaire de connexion rédaction (succès, échecs, limitation).</p>
 
 <div class="d-flex flex-wrap align-items-end gap-2 gap-md-3 mb-3">

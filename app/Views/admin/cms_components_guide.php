@@ -7,7 +7,7 @@ declare(strict_types=1);
  */
 ?>
 <div class="mb-4 admin-cms-guide-lead">
-    <h1 class="h3 mb-2">Composants HTML du site public</h1>
+    <h1 class="h3 mb-2"><?= esc(lang('Admin.title_cms_components')) ?></h1>
     <p class="text-muted mb-0">
         Classes du template (<code>section__*</code>, <code>cercle__*</code>, <code>footer__*</code>, <code>ggz-legal-prose</code>, etc.) avec aperçu charte sombre sous chaque extrait.
         CTA principal : <code>.btn--primary</code> (rouge). Slugs réservés : <code>site-footer</code>, <code>mentions-legales</code>.

@@ -13,7 +13,7 @@ $jpy = old('jpy_ariary', (string) ($config['jpy_ariary'] ?? '30'));
 $fcfa = old('fcfa_ariary', (string) ($config['fcfa_ariary'] ?? '7.5'));
 $errors = session('errors') ?? [];
 ?>
-<h1 class="h3 mb-1">Taux de change (fiches projet)</h1>
+<h1 class="h3 mb-1"><?= esc(lang('Admin.title_exchange_rates')) ?></h1>
 <p class="text-muted small mb-3">
     Ces valeurs alimentent le widget « Équivalences budgétaires » sur chaque fiche projet publiée
     (conversion depuis le budget en ariary).

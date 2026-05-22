@@ -54,7 +54,7 @@ class Volunteers extends BaseController
     {
         $status = $this->request->getPost('status');
         if (! is_string($status) || ! in_array($status, ['new', 'reviewed'], true)) {
-            return redirect()->back()->with('error', 'Statut invalide.');
+            return redirect()->back()->with('error', lang('Admin.error_invalid_status'));
         }
 
         $model = model(VolunteerApplicationModel::class);

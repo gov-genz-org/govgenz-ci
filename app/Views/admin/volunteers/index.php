@@ -14,7 +14,7 @@ use App\Controllers\Front\Join;
 
 $isStaffAdmin = session()->get('staff_role') === 'admin';
 ?>
-<h1 class="h3 mb-1">Candidatures volontaires</h1>
+<h1 class="h3 mb-1"><?= esc(lang('Admin.title_volunteers')) ?></h1>
 <p class="text-muted small mb-3">Demandes envoyées depuis le formulaire <strong>Rejoindre</strong> du site public.</p>
 
 <div class="d-flex flex-wrap align-items-center gap-2 mb-3">

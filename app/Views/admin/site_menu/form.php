@@ -17,7 +17,7 @@ if (! in_array($localeSel, ['fr', 'en'], true)) {
     $localeSel = 'fr';
 }
 ?>
-<h1 class="h3 mb-1"><?= $item ? 'Éditer une entrée du menu' : 'Nouvelle entrée du menu' ?></h1>
+<h1 class="h3 mb-1"><?= esc($item ? lang('Admin.form_menu_edit') : lang('Admin.form_menu_new')) ?></h1>
 <p class="text-muted small mb-3">Le <strong>surlignage</strong> détermine quel lien est marqué « actif » selon la page ouverte : <code>home</code>, <code>press</code>, <code>join</code>, <code>contact</code>, <code>admin_login</code>, ou le slug d’une page CMS pour les URLs simples. Pour un lien externe sans surlignage, utilisez <code>none</code>.</p>
 
 <form action="<?= esc($action, 'attr') ?>" method="post" accept-charset="UTF-8">

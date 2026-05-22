@@ -62,7 +62,7 @@ class ProjectContributions extends BaseController
             ProjectContributionModel::STATUS_REJECTED,
         ];
         if (! is_string($status) || ! in_array($status, $allowed, true)) {
-            return redirect()->back()->with('error', 'Statut invalide.');
+            return redirect()->back()->with('error', lang('Admin.error_invalid_status'));
         }
 
         $model = model(ProjectContributionModel::class);

@@ -10,8 +10,8 @@ helper('admin');
 /** @var string $dir */
 ?>
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
-    <h1 class="h3 mb-0">Secteurs</h1>
-    <a class="btn btn-primary btn-sm" href="<?= site_url('admin/sectors/create') ?>">Nouveau secteur</a>
+    <h1 class="h3 mb-0"><?= esc(lang('Admin.title_sectors')) ?></h1>
+    <a class="btn btn-primary btn-sm" href="<?= site_url('admin/sectors/create') ?>"><?= esc(lang('Admin.breadcrumb_sector_new')) ?></a>
 </div>
 <p class="text-muted small mb-3">
     Libellés <strong>français</strong> et <strong>anglais</strong> (site public + formulaire Rejoindre + projets).
@@ -57,7 +57,7 @@ helper('admin');
                     </td>
                     <td class="text-end text-nowrap">
                         <a class="btn btn-outline-secondary btn-sm" href="<?= site_url('admin/sectors/edit/' . $id) ?>">Modifier</a>
-                        <form action="<?= site_url('admin/sectors/delete/' . $id) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="Supprimer définitivement ce secteur ?">
+                        <form action="<?= site_url('admin/sectors/delete/' . $id) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="<?= esc(lang('Admin.confirm_delete_sector'), 'attr') ?>">
                             <?= csrf_field() ?>
                             <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
                         </form>

@@ -14,7 +14,23 @@ return [
     // Erreurs formulaires communes
     'error_slug_locale_taken'     => 'Ce slug est déjà utilisé pour cette langue.',
     'error_blocks_mode_empty'     => 'Mode blocs : ajoutez au moins un bloc valide.',
+    'error_blocks_sections_empty' => 'Mode blocs : ajoutez au moins une section valide (ex. avec un titre).',
+    'error_hero_media_missing'    => 'Image hero : média introuvable (vérifiez l’identifiant dans la médiathèque).',
     'error_translation_exists'    => 'Une variante existe déjà pour cette langue dans ce groupe de traduction.',
+    'error_invalid_status'        => 'Statut invalide.',
+    'error_media_not_found'       => 'Média introuvable.',
+    'error_auth_invalid'          => 'Identifiants invalides.',
+    'error_auth_disabled'         => 'Ce compte est désactivé.',
+    'error_invite_invalid'        => 'Ce lien d’invitation est invalide ou expiré. Demandez un nouvel envoi à un administrateur.',
+    'error_password_save_failed'  => 'Impossible d’enregistrer le mot de passe. Le lien a peut-être expiré.',
+    'error_user_not_found'        => 'Utilisateur introuvable.',
+    'error_cannot_delete_self'    => 'Vous ne pouvez pas supprimer votre propre compte.',
+    'error_cannot_delete_last_admin' => 'Impossible de supprimer le dernier administrateur actif.',
+    'error_session_invalid'       => 'Session invalide.',
+    'error_staff_create_failed'   => 'Impossible de créer le compte.',
+    'error_staff_resend_failed'   => 'Envoi impossible.',
+    'error_notify_migration'      => 'Option indisponible : exécutez les migrations (notify_form_submissions).',
+    'error_record_not_found_after_save' => 'Enregistrement introuvable après sauvegarde.',
 
     // Interface admin (layout, sidebar, modales)
     'ui_close'              => 'Fermer',
@@ -97,4 +113,57 @@ return [
     'flash_volunteers_cleared'    => 'Toutes les candidatures volontaires ont été supprimées.',
     'flash_exchange_rates_saved'  => 'Taux de change enregistrés.',
     'flash_login_events_cleared'  => 'Le journal de connexion a été vidé.',
+    'flash_staff_notify_on'       => 'Notifications formulaires activées pour {0}.',
+    'flash_staff_notify_off'      => 'Notifications formulaires désactivées pour {0}.',
+
+    // Actions listes / formulaires
+    'action_duplicate_trad'         => 'Dupliquer trad',
+    'tooltip_duplicate_trad_disabled' => 'Une traduction existe déjà pour l’autre langue.',
+    'action_view'                   => 'Voir',
+    'action_view_site'              => 'Site',
+    'confirm_delete_project'        => 'Supprimer définitivement ce projet ?',
+    'confirm_delete_page'           => 'Supprimer définitivement cette page ?',
+    'confirm_delete_post'           => 'Supprimer définitivement cet article ?',
+    'confirm_delete_sector'         => 'Supprimer définitivement ce secteur ?',
+    'confirm_delete_staff'          => 'Supprimer définitivement ce compte ? Cette action est irréversible.',
+
+    // Titres écrans (index)
+    'title_dashboard'               => 'Tableau de bord',
+    'title_pages'                   => 'Pages',
+    'title_posts'                   => 'Articles',
+    'title_media'                   => 'Médiathèque',
+    'title_volunteers'              => 'Candidatures volontaires',
+    'title_sectors'                 => 'Secteurs',
+    'title_projects_program'        => 'Projets (programme)',
+    'title_positions_program'       => 'Positions (programme)',
+    'title_contributions'           => 'Propositions de financement',
+    'title_exchange_rates'          => 'Taux de change (fiches projet)',
+    'title_login_events'            => 'Journal de connexion',
+    'title_staff'                   => 'Équipe',
+    'title_cms_components'          => 'Composants HTML du site public',
+
+    // Titres formulaires
+    'form_project_edit'             => 'Modifier le projet',
+    'form_project_new'              => 'Nouveau projet',
+    'form_position_edit'            => 'Modifier la position',
+    'form_position_new'             => 'Nouvelle position',
+    'form_page_edit'                => 'Éditer la page',
+    'form_page_new'                 => 'Nouvelle page',
+    'form_post_edit'                => 'Éditer l’article',
+    'form_post_new'                 => 'Nouvel article',
+    'form_sector_edit'              => 'Modifier un secteur',
+    'form_sector_new'               => 'Nouveau secteur',
+    'form_menu_edit'                => 'Éditer une entrée du menu',
+    'form_menu_new'                 => 'Nouvelle entrée du menu',
+    'form_staff_edit'               => 'Modifier le compte',
+    'form_staff_invite'             => 'Inviter un compte',
+
+    // Auth (écrans non connectés)
+    'auth_login_title'              => 'Connexion rédaction',
+    'auth_invite_invalid_title'     => 'Lien d’invitation invalide',
+    'auth_invite_setup_title'       => 'Activer votre compte',
+
+    // Aide formulaires (extraits)
+    'help_project_locale'           => 'Une fiche par langue. Pour la version anglaise, utilisez « Dupliquer trad » dans la liste des projets.',
+    'help_page_translation_group'   => 'Même identifiant pour lier les versions FR/EN d’une même page. Optionnel : un groupe est auto-attribué à la création, et le bouton « Dupliquer trad » le reprend automatiquement.',
 ];

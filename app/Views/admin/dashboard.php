@@ -9,7 +9,7 @@ helper('admin');
 
 ?>
 
-<h1 class="h3 mb-3">Tableau de bord</h1>
+<h1 class="h3 mb-3"><?= esc(lang('Admin.title_dashboard')) ?></h1>
 <p class="text-muted mb-4">Connecté en tant que <?= esc(session()->get('staff_email') ?? '') ?></p>
 
 <div class="row g-3 mb-4">

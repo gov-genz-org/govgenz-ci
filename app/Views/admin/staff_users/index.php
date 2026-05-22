@@ -14,7 +14,7 @@ helper('admin');
 /** @var bool $hasNotifyColumn */
 $hasNotifyColumn = $hasNotifyColumn ?? false;
 ?>
-<h1 class="h3 mb-1">Équipe</h1>
+<h1 class="h3 mb-1"><?= esc(lang('Admin.title_staff')) ?></h1>
 <p class="text-muted small mb-3">Comptes d’accès au back-office. Seuls les administrateurs voient cet écran.</p>
 
 <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
@@ -96,7 +96,7 @@ $hasNotifyColumn = $hasNotifyColumn ?? false;
                 <a href="<?= site_url('admin/staff-users/edit/' . $uid) ?>" class="btn btn-outline-primary btn-sm">Modifier</a>
                 <?php if (! $isSelf) : ?>
                     <form method="post" action="<?= site_url('admin/staff-users/delete/' . $uid) ?>" class="d-inline ms-1"
-                          onsubmit="return confirm('Supprimer définitivement ce compte ? Cette action est irréversible.');">
+                          onsubmit="return confirm(<?= json_encode(lang('Admin.confirm_delete_staff'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>);">
                         <?= csrf_field() ?>
                         <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
                     </form>

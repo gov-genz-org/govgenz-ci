@@ -12,13 +12,13 @@ helper('admin');
 /** @var string $dir */
 /** @var array<string, array<string, true>> $translationLocalesByGroup */
 ?>
-<h1 class="h3 mb-1">Pages</h1>
+<h1 class="h3 mb-1"><?= esc(lang('Admin.title_pages')) ?></h1>
 <p class="text-muted small mb-3">Pages fixes du site (accueil, à propos, contact…). Seules les URL connues du routage ont un lien « Site ».</p>
 <div class="alert alert-secondary py-2 px-3 small mb-3" role="note">
     <strong>Pied de page (colonnes)</strong> : pour les modifier depuis l’admin, créez une page <strong>publiée</strong> avec le slug exact <code>site-footer</code> (une variante FR et une EN). Son corps remplace les trois colonnes du footer&nbsp;; la route publique <code>/site-footer</code> est désactivée. La marque (logo, devise, ligne légale) reste dans le gabarit tant que vous ne demandez pas de les sortir aussi en CMS.
 </div>
 <div class="d-flex flex-wrap align-items-end gap-2 gap-md-3 mb-3">
-    <a href="<?= site_url('admin/pages/create') ?>" class="btn btn-primary btn-sm">Nouvelle page</a>
+    <a href="<?= site_url('admin/pages/create') ?>" class="btn btn-primary btn-sm"><?= esc(lang('Admin.breadcrumb_page_new')) ?></a>
     <form method="get" action="<?= site_url('admin/pages') ?>" class="d-flex flex-wrap align-items-end gap-2 ms-md-auto">
         <?= admin_list_sort_hidden_fields($sort, $dir) ?>
         <div>
@@ -89,9 +89,9 @@ helper('admin');
                 <a href="<?= site_url('admin/pages/edit/' . $p['id']) ?>" class="btn btn-outline-secondary btn-sm">Éditer</a>
                 <form action="<?= site_url('admin/pages/duplicate/' . $p['id']) ?>" method="post" class="d-inline">
                     <?= csrf_field() ?>
-                    <button type="submit" class="btn btn-outline-primary btn-sm" <?= $duplicateTradDisabled ? 'disabled title="Une traduction existe déjà pour l’autre langue."' : '' ?>>Dupliquer trad</button>
+                    <button type="submit" class="btn btn-outline-primary btn-sm" <?= $duplicateTradDisabled ? 'disabled title="' . esc(lang('Admin.tooltip_duplicate_trad_disabled'), 'attr') . '"' : '' ?>><?= esc(lang('Admin.action_duplicate_trad')) ?></button>
                 </form>
-                <form action="<?= site_url('admin/pages/delete/' . $p['id']) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="Supprimer définitivement cette page ?">
+                <form action="<?= site_url('admin/pages/delete/' . $p['id']) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="<?= esc(lang('Admin.confirm_delete_page'), 'attr') ?>">
                     <?= csrf_field() ?>
                     <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
                 </form>

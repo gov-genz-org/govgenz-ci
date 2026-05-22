@@ -100,10 +100,13 @@ $extraHead = FrontPageAssets::projectsProgramList();
 | Assets page Rejoindre | `head_assets/join.php`, `head_assets/join_scripts.php`, `FrontPageAssets::join()` |
 | Libellés chrome admin | Sidebar, layout, breadcrumbs, modale confirm — `lang('Admin.nav_*')`, `Admin.ui_*` |
 | Flash enregistrement admin | `flash_*_created` / `flash_*_updated` dans les contrôleurs CRUD |
+| Erreurs admin (contrôleurs) | `error_*` dans `Admin.php` — Auth, Pages, Posts, Staff, etc. |
+| Libellés vues admin (listes/form) | Titres, Dupliquer trad, confirmations suppression, auth |
 
 ## Prochaines étapes (backlog)
 
-1. Étendre `lang('Admin.*')` aux formulaires d’édition admin (boutons, champs, listes).
-2. Migrer les erreurs admin encore en dur (`Pages`, `Posts`, `Auth`, etc.).
+1. Libellés restants dans les vues admin (colonnes tableaux, aides longues, validation `SiteMenu`).
+2. Switcher optionnel de locale UI admin (`en/Admin.php` déjà prêt).
+3. Tests feature (DB) dans la CI si/base de test dédiée.
 
 Voir aussi [CI-CD.md](CI-CD.md) pour le pipeline de déploiement.

@@ -19,7 +19,7 @@ $typeLabels = [
     ProjectContributionModel::TYPE_MATERIAL => 'Apport matériel',
 ];
 ?>
-<h1 class="h3 mb-1">Propositions de financement</h1>
+<h1 class="h3 mb-1"><?= esc(lang('Admin.title_contributions')) ?></h1>
 <p class="text-muted small mb-3">Demandes envoyées depuis le formulaire <strong>Financer ce projet</strong> sur les fiches publiées. Une proposition <strong>validée</strong> apparaît sur la fiche FR et EN du projet (nom et type de soutien, sans coordonnées).</p>
 
 <div class="d-flex flex-wrap align-items-center gap-2 mb-3">

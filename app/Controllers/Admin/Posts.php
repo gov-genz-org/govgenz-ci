@@ -79,7 +79,7 @@ class Posts extends BaseController
         $locale = LocaleSlug::normalizeLocale($this->request->getPost('locale'));
         $model  = model(CmsPostModel::class);
         if ($model->where('slug', $slug)->where('locale', $locale)->first() !== null) {
-            return redirect()->back()->withInput()->with('error', 'Ce slug existe déjà pour cette langue.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_slug_locale_taken'));
         }
 
         $status = $this->request->getPost('status');
@@ -144,7 +144,7 @@ class Posts extends BaseController
         $locale = LocaleSlug::normalizeLocale($this->request->getPost('locale'));
         $other  = $model->where('slug', $slug)->where('locale', $locale)->where('id !=', $id)->first();
         if ($other !== null) {
-            return redirect()->back()->withInput()->with('error', 'Ce slug existe déjà pour cette langue.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_slug_locale_taken'));
         }
 
         $status = $this->request->getPost('status');
@@ -201,7 +201,7 @@ class Posts extends BaseController
         $partner = $model->where('translation_group', $group)->where('locale', $targetLocale)->first();
         if ($partner !== null) {
             return redirect()->to(site_url('admin/posts'))
-                ->with('error', 'Une variante existe déjà pour cette langue dans ce groupe de traduction.');
+                ->with('error', lang('Admin.error_translation_exists'));
         }
 
         $newTitle = trim((string) ($src['title'] ?? '')) . ($targetLocale === 'en' ? ' (EN)' : ' (FR)');

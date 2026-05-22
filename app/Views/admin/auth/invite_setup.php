@@ -12,7 +12,7 @@ declare(strict_types=1);
         <div class="card-body p-4 p-sm-5">
             <div class="text-center mb-4">
                 <div class="fw-bold text-dark fs-5 mb-1">GovGenZ</div>
-                <h1 class="h5 text-secondary mb-0 fw-normal">Activer votre compte</h1>
+                <h1 class="h5 text-secondary mb-0 fw-normal"><?= esc(lang('Admin.auth_invite_setup_title')) ?></h1>
                 <p class="small text-secondary mb-0 mt-2">Choisissez votre mot de passe pour accéder au back-office.</p>
             </div>
 

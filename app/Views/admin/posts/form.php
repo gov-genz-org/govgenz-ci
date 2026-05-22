@@ -17,7 +17,7 @@ if ($post !== null && ($post['status'] ?? '') === 'published' && ($post['slug'] 
     $previewUrl = admin_public_press_url((string) ($post['slug'] ?? ''), (string) ($post['locale'] ?? 'fr'));
 }
 ?>
-<h1 class="h3 mb-1"><?= $post ? 'Éditer l’article' : 'Nouvel article' ?></h1>
+<h1 class="h3 mb-1"><?= esc($post ? lang('Admin.form_post_edit') : lang('Admin.form_post_new')) ?></h1>
 <p class="text-muted small mb-3">Article visible sur le site uniquement lorsque le statut est <strong>Publié</strong>.</p>
 
 <?php if ($previewUrl !== null) : ?>

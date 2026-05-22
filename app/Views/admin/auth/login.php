@@ -13,7 +13,7 @@ $isLocalHost = in_array($host, ['localhost', '127.0.0.1', '::1'], true);
         <div class="card-body p-4 p-sm-5">
             <div class="text-center mb-4">
                 <div class="fw-bold text-dark fs-5 mb-1">GovGenZ</div>
-                <h1 class="h5 text-secondary mb-0 fw-normal">Connexion rédaction</h1>
+                <h1 class="h5 text-secondary mb-0 fw-normal"><?= esc(lang('Admin.auth_login_title')) ?></h1>
                 <p class="small text-secondary mb-0 mt-2">Accès réservé au personnel autorisé.</p>
             </div>
 

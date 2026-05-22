@@ -12,10 +12,10 @@ helper('admin');
 /** @var string $dir */
 /** @var array<string, array<string, true>> $translationLocalesByGroup */
 ?>
-<h1 class="h3 mb-1">Articles</h1>
+<h1 class="h3 mb-1"><?= esc(lang('Admin.title_posts')) ?></h1>
 <p class="text-muted small mb-3">Communiqués et articles affichés sous <strong>/press</strong>.</p>
 <div class="d-flex flex-wrap align-items-end gap-2 gap-md-3 mb-3">
-    <a href="<?= site_url('admin/posts/create') ?>" class="btn btn-primary btn-sm">Nouvel article</a>
+    <a href="<?= site_url('admin/posts/create') ?>" class="btn btn-primary btn-sm"><?= esc(lang('Admin.breadcrumb_post_new')) ?></a>
     <form method="get" action="<?= site_url('admin/posts') ?>" class="d-flex flex-wrap align-items-end gap-2 ms-md-auto">
         <?= admin_list_sort_hidden_fields($sort, $dir) ?>
         <div>
@@ -82,9 +82,9 @@ helper('admin');
                 <a href="<?= site_url('admin/posts/edit/' . $post['id']) ?>" class="btn btn-outline-secondary btn-sm">Éditer</a>
                 <form action="<?= site_url('admin/posts/duplicate/' . $post['id']) ?>" method="post" class="d-inline">
                     <?= csrf_field() ?>
-                    <button type="submit" class="btn btn-outline-primary btn-sm" <?= $duplicateTradDisabled ? 'disabled title="Une traduction existe déjà pour l’autre langue."' : '' ?>>Dupliquer trad</button>
+                    <button type="submit" class="btn btn-outline-primary btn-sm" <?= $duplicateTradDisabled ? 'disabled title="' . esc(lang('Admin.tooltip_duplicate_trad_disabled'), 'attr') . '"' : '' ?>><?= esc(lang('Admin.action_duplicate_trad')) ?></button>
                 </form>
-                <form action="<?= site_url('admin/posts/delete/' . $post['id']) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="Supprimer définitivement cet article ?">
+                <form action="<?= site_url('admin/posts/delete/' . $post['id']) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="<?= esc(lang('Admin.confirm_delete_post'), 'attr') ?>">
                     <?= csrf_field() ?>
                     <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
                 </form>

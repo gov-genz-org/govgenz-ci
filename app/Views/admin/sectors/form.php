@@ -19,7 +19,7 @@ $email = old('contact_email', $isEdit ? (string) ($sector['contact_email'] ?? ''
 $sort = old('sort_order', $isEdit ? (string) (int) ($sector['sort_order'] ?? 0) : (string) ($nextOrder ?? 10));
 $active = old('is_active', $isEdit ? (string) ((int) ($sector['is_active'] ?? 1)) : '1');
 ?>
-<h1 class="h3 mb-1"><?= $isEdit ? 'Modifier un secteur' : 'Nouveau secteur' ?></h1>
+<h1 class="h3 mb-1"><?= esc($isEdit ? lang('Admin.form_sector_edit') : lang('Admin.form_sector_new')) ?></h1>
 <p class="text-muted small mb-3">
     <strong>FR</strong> = texte affiché quand la langue du site est le français ;
     <strong>EN</strong> = texte when the site locale is English (including <code>/en/…</code>).

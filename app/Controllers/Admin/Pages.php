@@ -84,7 +84,7 @@ class Pages extends BaseController
         $locale = LocaleSlug::normalizeLocale($this->request->getPost('locale'));
         $model  = model(CmsPageModel::class);
         if ($model->where('slug', $slug)->where('locale', $locale)->first() !== null) {
-            return redirect()->back()->withInput()->with('error', 'Ce slug existe déjà pour cette langue.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_slug_locale_taken'));
         }
 
         helper('cms');
@@ -92,12 +92,12 @@ class Pages extends BaseController
         $mode       = CmsPageBodyNormalizer::contentMode($this->request);
         $blocksJson = CmsPageBodyNormalizer::bodyBlocksJson($this->request);
         if ($mode === 'blocks' && ($blocksJson === null || $blocksJson === '' || $blocksJson === '[]')) {
-            return redirect()->back()->withInput()->with('error', 'Mode blocs : ajoutez au moins une section valide (ex. avec un titre).');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_blocks_sections_empty'));
         }
 
         $hero = CmsHeroPayload::fromPost($this->request);
         if ($hero['hero_image_id'] !== null && model(CmsMediaModel::class)->find($hero['hero_image_id']) === null) {
-            return redirect()->back()->withInput()->with('error', 'Image hero : média introuvable (vérifiez l’identifiant dans la médiathèque).');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_hero_media_missing'));
         }
 
         $tgrp = LocaleSlug::normalizeTranslationGroup($this->request->getPost('translation_group'));
@@ -161,7 +161,7 @@ class Pages extends BaseController
         $locale = LocaleSlug::normalizeLocale($this->request->getPost('locale'));
         $other  = $model->where('slug', $slug)->where('locale', $locale)->where('id !=', $id)->first();
         if ($other !== null) {
-            return redirect()->back()->withInput()->with('error', 'Ce slug existe déjà pour cette langue.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_slug_locale_taken'));
         }
 
         helper('cms');
@@ -169,12 +169,12 @@ class Pages extends BaseController
         $mode       = CmsPageBodyNormalizer::contentMode($this->request);
         $blocksJson = CmsPageBodyNormalizer::bodyBlocksJson($this->request);
         if ($mode === 'blocks' && ($blocksJson === null || $blocksJson === '' || $blocksJson === '[]')) {
-            return redirect()->back()->withInput()->with('error', 'Mode blocs : ajoutez au moins une section valide (ex. avec un titre).');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_blocks_sections_empty'));
         }
 
         $hero = CmsHeroPayload::fromPost($this->request);
         if ($hero['hero_image_id'] !== null && model(CmsMediaModel::class)->find($hero['hero_image_id']) === null) {
-            return redirect()->back()->withInput()->with('error', 'Image hero : média introuvable (vérifiez l’identifiant dans la médiathèque).');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_hero_media_missing'));
         }
 
         $tgrpIn = trim((string) $this->request->getPost('translation_group'));
@@ -242,7 +242,7 @@ class Pages extends BaseController
         $partner = $model->where('translation_group', $group)->where('locale', $targetLocale)->first();
         if ($partner !== null) {
             return redirect()->to(site_url('admin/pages'))
-                ->with('error', 'Une variante existe déjà pour cette langue dans ce groupe de traduction.');
+                ->with('error', lang('Admin.error_translation_exists'));
         }
 
         $newTitle = trim((string) ($src['title'] ?? '')) . ($targetLocale === 'en' ? ' (EN)' : ' (FR)');

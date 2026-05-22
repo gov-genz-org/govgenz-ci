@@ -164,7 +164,7 @@ class Media extends BaseController
         $model = model(CmsMediaModel::class);
         $row   = $model->find($id);
         if ($row === null) {
-            return redirect()->to(site_url('admin/media'))->with('error', 'Média introuvable.');
+            return redirect()->to(site_url('admin/media'))->with('error', lang('Admin.error_media_not_found'));
         }
 
         $path = FCPATH . 'uploads/cms/' . ($row['stored_filename'] ?? '');

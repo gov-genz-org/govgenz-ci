@@ -16,7 +16,7 @@ helper(['form', 'admin']);
 /** @var string $dir */
 /** @var array<string, array<string, true>> $translationLocalesByGroup */
 ?>
-<h1 class="h3 mb-1">Projets (programme)</h1>
+<h1 class="h3 mb-1"><?= esc(lang('Admin.title_projects_program')) ?></h1>
 <div class="alert alert-light border small mb-3" role="note">
     <p class="mb-2"><strong>Fiches projet</strong> (ci‑dessous) : contenu dynamique aligné sur <code>site_govgenz/projects-govgenz</code>, tables <code>project_*</code>.</p>
     <p class="mb-2"><strong>Bandeau de la liste publique</strong> <code>/projects</code> (titre, chapô, méta) : ce n’est pas ce tableau — il est alimenté par des <strong>pages CMS</strong> dont les slugs sont fixés dans le code :</p>
@@ -33,7 +33,7 @@ helper(['form', 'admin']);
 </div>
 
 <div class="d-flex flex-wrap align-items-end gap-2 mb-3">
-    <a href="<?= site_url('admin/project-projects/create') ?>" class="btn btn-primary btn-sm">Nouveau projet</a>
+    <a href="<?= site_url('admin/project-projects/create') ?>" class="btn btn-primary btn-sm"><?= esc(lang('Admin.breadcrumb_project_new')) ?></a>
     <form method="get" action="<?= site_url('admin/project-projects') ?>" class="d-flex flex-wrap align-items-end gap-2 ms-md-auto">
         <?= admin_list_sort_hidden_fields($sort, $dir) ?>
         <div>
@@ -113,9 +113,9 @@ helper(['form', 'admin']);
                         <a href="<?= site_url('admin/project-projects/edit/' . $id) ?>" class="btn btn-outline-primary btn-sm">Modifier</a>
                         <form action="<?= site_url('admin/project-projects/duplicate/' . $id) ?>" method="post" class="d-inline">
                             <?= csrf_field() ?>
-                            <button type="submit" class="btn btn-outline-primary btn-sm" <?= $duplicateTradDisabled ? 'disabled title="Une traduction existe déjà pour l’autre langue."' : '' ?>>Dupliquer trad</button>
+                            <button type="submit" class="btn btn-outline-primary btn-sm" <?= $duplicateTradDisabled ? 'disabled title="' . esc(lang('Admin.tooltip_duplicate_trad_disabled'), 'attr') . '"' : '' ?>><?= esc(lang('Admin.action_duplicate_trad')) ?></button>
                         </form>
-                        <form action="<?= site_url('admin/project-projects/delete/' . $id) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="Supprimer définitivement ce projet ?">
+                        <form action="<?= site_url('admin/project-projects/delete/' . $id) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="<?= esc(lang('Admin.confirm_delete_project'), 'attr') ?>">
                             <?= csrf_field() ?>
                             <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
                         </form>

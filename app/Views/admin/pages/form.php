@@ -18,7 +18,7 @@ if ($page !== null && ($page['status'] ?? '') === 'published') {
     $previewUrl = admin_public_page_url((string) ($page['slug'] ?? ''), (string) ($page['locale'] ?? 'fr'));
 }
 ?>
-<h1 class="h3 mb-1"><?= $page ? 'Éditer la page' : 'Nouvelle page' ?></h1>
+<h1 class="h3 mb-1"><?= esc($page ? lang('Admin.form_page_edit') : lang('Admin.form_page_new')) ?></h1>
 <p class="text-muted small mb-3">Édition par <strong>éditeur HTML</strong> ou par <strong>blocs structurés</strong> (titres, indicateurs, boutons) sans toucher aux classes CSS.</p>
 
 <?php if ($previewUrl !== null) : ?>
@@ -94,7 +94,7 @@ if ($page !== null && ($page['status'] ?? '') === 'published') {
     <div class="mb-3">
         <label class="form-label" for="translation_group">Groupe de traduction</label>
         <input type="text" name="translation_group" id="translation_group" class="form-control" maxlength="64" value="<?= esc(old('translation_group', $page !== null ? (string) ($page['translation_group'] ?? '') : '')) ?>" autocomplete="off">
-        <div class="form-text">Même identifiant pour lier les versions FR/EN d’une même page. Optionnel : un groupe est auto-attribué à la création, et le bouton « Dupliquer trad » le reprend automatiquement.</div>
+        <div class="form-text"><?= esc(lang('Admin.help_page_translation_group')) ?></div>
     </div>
     <div class="mb-3">
         <label class="form-label" for="title">Titre</label>

@@ -19,7 +19,7 @@ $inviteExpiryLabel = $inviteExpiryHours <= 24
     ? '24 heures'
     : ((int) ceil($inviteExpiryHours / 24) . ' jours');
 ?>
-<h1 class="h3 mb-2"><?= $is_edit ? 'Modifier le compte' : 'Inviter un compte' ?></h1>
+<h1 class="h3 mb-2"><?= esc($is_edit ? lang('Admin.form_staff_edit') : lang('Admin.form_staff_invite')) ?></h1>
 <p class="text-muted small mb-4">
     <?php if ($is_edit) : ?>
         <?php if ($invitePending) : ?>

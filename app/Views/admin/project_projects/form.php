@@ -95,7 +95,7 @@ $budgetSuffixesJson = json_encode([
     ],
 ], JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
 ?>
-<h1 class="h3 mb-1"><?= $isEdit ? 'Modifier le projet' : 'Nouveau projet' ?></h1>
+<h1 class="h3 mb-1"><?= esc($isEdit ? lang('Admin.form_project_edit') : lang('Admin.form_project_new')) ?></h1>
 <p class="text-muted small mb-3">
     Remplissez la <strong>carte</strong> (liste + en-tête), puis les <strong>sections</strong> du détail avec les boutons « + Section », « + Budget », etc.
     Aucune compétence technique requise.
@@ -139,7 +139,7 @@ $budgetSuffixesJson = json_encode([
                     <option value="en" <?= $ppLocale === 'en' ? 'selected' : '' ?>>English (en)</option>
                 </select>
             <?php endif; ?>
-            <div class="form-text">Une fiche par langue. Pour la version anglaise, utilisez « Dupliquer trad » dans la liste des projets.</div>
+            <div class="form-text"><?= esc(lang('Admin.help_project_locale')) ?></div>
         </div>
         <?php if ($canUseAdvancedHtml) : ?>
         <div class="col-md-6">

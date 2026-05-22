@@ -65,7 +65,7 @@ foreach (PositionItemModel::typeCodes() as $typeCode) {
     $typeTipsAdmin[$typeCode] = position_type_tip($typeCode, $ppLocale);
 }
 ?>
-<h1 class="h3 mb-1"><?= $isEdit ? 'Modifier la position' : 'Nouvelle position' ?></h1>
+<h1 class="h3 mb-1"><?= esc($isEdit ? lang('Admin.form_position_edit') : lang('Admin.form_position_new')) ?></h1>
 <p class="text-muted small mb-3">Carte liste (résumé visible) + sections détaillées (accordéon / fiche).</p>
 
 <?php if ($publicPreviewUrl !== null || $translationPartnerNav !== null) : ?>

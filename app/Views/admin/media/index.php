@@ -10,7 +10,7 @@ helper('admin');
 /** @var string $sort */
 /** @var string $dir */
 ?>
-<h1 class="h3 mb-1">Médiathèque</h1>
+<h1 class="h3 mb-1"><?= esc(lang('Admin.title_media')) ?></h1>
 <p class="text-muted small mb-3">Glissez-déposez des fichiers ci-dessous (images, SVG, PDF), ou insérez une image depuis le bouton « Médias » dans l’éditeur des pages et articles.</p>
 
 <form id="admin-media-csrf" class="d-none"><?= csrf_field() ?></form>
@@ -21,8 +21,8 @@ helper('admin');
         <p class="mb-2 text-muted">Aucun fichier pour le moment.</p>
         <p class="small text-muted mb-3">Utilisez la zone en pointillés ci-dessus pour envoyer des images, des SVG ou des PDF.</p>
         <div class="d-flex flex-wrap gap-2 justify-content-center">
-            <a href="<?= site_url('admin/pages/create') ?>" class="btn btn-outline-secondary btn-sm">Nouvelle page</a>
-            <a href="<?= site_url('admin/posts/create') ?>" class="btn btn-outline-secondary btn-sm">Nouvel article</a>
+            <a href="<?= site_url('admin/pages/create') ?>" class="btn btn-outline-secondary btn-sm"><?= esc(lang('Admin.breadcrumb_page_new')) ?></a>
+            <a href="<?= site_url('admin/posts/create') ?>" class="btn btn-outline-secondary btn-sm"><?= esc(lang('Admin.breadcrumb_post_new')) ?></a>
         </div>
     </div>
 <?php else : ?>

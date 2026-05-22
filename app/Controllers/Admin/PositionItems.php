@@ -262,7 +262,7 @@ class PositionItems extends BaseController
 
         if ($model->where('translation_group', $group)->where('locale', $targetLocale)->first() !== null) {
             return redirect()->to(site_url('admin/position-items'))
-                ->with('error', 'Une variante existe déjà pour cette langue dans ce groupe.');
+                ->with('error', lang('Admin.error_translation_exists'));
         }
 
         $titleBase = trim((string) ($src['title'] ?? 'Sans titre'));
