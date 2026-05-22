@@ -14,11 +14,11 @@ $ph = $ph ?? ['phase_label' => '', 'duration' => '', 'step_title' => '', 'body' 
     <div class="row g-2">
         <div class="col-md-4">
             <label class="form-label small"><?= esc(lang('Admin.block_phase_label')) ?></label>
-            <input type="text" name="<?= esc($rp, 'attr') ?>[phase_label]" class="form-control form-control-sm" value="<?= esc((string) ($ph['phase_label'] ?? '')) ?>" placeholder="Phase 1">
+            <input type="text" name="<?= esc($rp, 'attr') ?>[phase_label]" class="form-control form-control-sm" value="<?= esc((string) ($ph['phase_label'] ?? '')) ?>" placeholder="<?= esc(lang('Admin.ph_block_phase'), 'attr') ?>">
         </div>
         <div class="col-md-8">
             <label class="form-label small"><?= esc(lang('Admin.block_phase_duration')) ?></label>
-            <input type="text" name="<?= esc($rp, 'attr') ?>[duration]" class="form-control form-control-sm" value="<?= esc((string) ($ph['duration'] ?? '')) ?>" placeholder="0 – 8 mois">
+            <input type="text" name="<?= esc($rp, 'attr') ?>[duration]" class="form-control form-control-sm" value="<?= esc((string) ($ph['duration'] ?? '')) ?>" placeholder="<?= esc(lang('Admin.ph_block_duration'), 'attr') ?>">
         </div>
         <div class="col-12">
             <label class="form-label small"><?= esc(lang('Admin.block_phase_step_title')) ?></label>

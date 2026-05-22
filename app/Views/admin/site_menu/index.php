@@ -19,7 +19,7 @@ helper('admin');
 <?php if ($items === []) : ?>
     <div class="admin-empty">
         <p class="mb-2 text-muted">Aucune entrée. Exécutez les migrations ou ajoutez un lien.</p>
-        <a href="<?= site_url('admin/site-menu/create') ?>" class="btn btn-primary btn-sm">Créer une entrée</a>
+        <a href="<?= site_url('admin/site-menu/create') ?>" class="btn btn-primary btn-sm"><?= esc(lang('Admin.action_create_menu_entry')) ?></a>
     </div>
 <?php else : ?>
 <div class="table-responsive admin-table-wrap shadow-sm rounded border bg-white">

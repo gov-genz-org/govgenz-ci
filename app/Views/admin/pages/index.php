@@ -71,9 +71,9 @@ helper('admin');
             <td><?= esc($p['title']) ?></td>
             <td>
                 <?php if (($p['status'] ?? '') === 'published') : ?>
-                    <span class="badge text-bg-success">Publié</span>
+                    <span class="badge text-bg-success"><?= esc(lang('Admin.filter_published')) ?></span>
                 <?php else : ?>
-                    <span class="badge text-bg-warning text-dark">Brouillon</span>
+                    <span class="badge text-bg-warning text-dark"><?= esc(lang('Admin.filter_draft')) ?></span>
                 <?php endif; ?>
             </td>
             <td>

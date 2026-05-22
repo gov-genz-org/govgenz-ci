@@ -60,7 +60,7 @@ helper(['form', 'admin']);
 <?php if ($rows === []) : ?>
     <div class="admin-empty">
         <p class="mb-2 text-muted">Aucun projet pour ce filtre.</p>
-        <a href="<?= site_url('admin/project-projects/create') ?>" class="btn btn-outline-primary btn-sm">Créer un projet</a>
+        <a href="<?= site_url('admin/project-projects/create') ?>" class="btn btn-outline-primary btn-sm"><?= esc(lang('Admin.action_create_project')) ?></a>
     </div>
 <?php else : ?>
 <div class="table-responsive admin-table-wrap shadow-sm rounded border bg-white">

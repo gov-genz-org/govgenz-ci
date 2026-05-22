@@ -19,11 +19,11 @@ if ($page !== null && ($page['status'] ?? '') === 'published') {
 }
 ?>
 <h1 class="h3 mb-1"><?= esc($page ? lang('Admin.form_page_edit') : lang('Admin.form_page_new')) ?></h1>
-<p class="text-muted small mb-3">Édition par <strong>éditeur HTML</strong> ou par <strong>blocs structurés</strong> (titres, indicateurs, boutons) sans toucher aux classes CSS.</p>
+<p class="text-muted small mb-3"><?= lang('Admin.help_pages_form_intro') ?></p>
 
 <?php if ($previewUrl !== null) : ?>
     <div class="alert alert-light border py-2 small mb-3">
-        <strong>Aperçu public :</strong>
+        <strong><?= esc(lang('Admin.label_public_preview')) ?></strong>
         <a href="<?= esc($previewUrl) ?>" target="_blank" rel="noopener" class="ms-1"><?= esc($previewUrl) ?></a>
     </div>
 <?php endif; ?>
@@ -51,7 +51,7 @@ if ($page !== null && ($page['status'] ?? '') === 'published') {
     $isPositionsProgramCmsSlug = in_array($slugField, ['positions-programme', 'positions-program'], true);
     ?>
     <div class="mb-3">
-        <label class="form-label" for="slug">Slug (lettres minuscules et tirets)</label>
+        <label class="form-label" for="slug"><?= esc(lang('Admin.form_label_slug_pages')) ?></label>
         <input type="text" name="slug" id="slug" class="form-control" value="<?= esc(old('slug', $page !== null ? $page['slug'] : '')) ?>" required>
         <?php if ($isProjectsProgramCmsSlug) : ?>
             <div class="alert alert-info border py-2 small mt-2 mb-0" role="status">
@@ -87,17 +87,17 @@ if ($page !== null && ($page['status'] ?? '') === 'published') {
         } ?>
         <label class="form-label" for="locale"><?= esc(lang('Admin.form_label_locale')) ?></label>
         <select name="locale" id="locale" class="form-select" style="max-width:16rem">
-            <option value="fr" <?= $pageLocale === 'fr' ? 'selected' : '' ?>>Français (sans préfixe d’URL)</option>
-            <option value="en" <?= $pageLocale === 'en' ? 'selected' : '' ?>>English (/en/…)</option>
+            <option value="fr" <?= $pageLocale === 'fr' ? 'selected' : '' ?>><?= esc(lang('Admin.form_locale_fr_url')) ?></option>
+            <option value="en" <?= $pageLocale === 'en' ? 'selected' : '' ?>><?= esc(lang('Admin.form_locale_en_url')) ?></option>
         </select>
     </div>
     <div class="mb-3">
-        <label class="form-label" for="translation_group">Groupe de traduction</label>
+        <label class="form-label" for="translation_group"><?= esc(lang('Admin.form_label_translation_group')) ?></label>
         <input type="text" name="translation_group" id="translation_group" class="form-control" maxlength="64" value="<?= esc(old('translation_group', $page !== null ? (string) ($page['translation_group'] ?? '') : '')) ?>" autocomplete="off">
         <div class="form-text"><?= esc(lang('Admin.help_page_translation_group')) ?></div>
     </div>
     <div class="mb-3">
-        <label class="form-label" for="title">Titre</label>
+        <label class="form-label" for="title"><?= esc(lang('Admin.form_label_title')) ?></label>
         <input type="text" name="title" id="title" class="form-control" value="<?= esc(old('title', $page !== null ? $page['title'] : '')) ?>" required>
     </div>
 
@@ -141,22 +141,22 @@ if ($page !== null && ($page['status'] ?? '') === 'published') {
 
     <div id="cms-html-panel" class="<?= $contentMode === 'blocks' ? 'd-none' : '' ?>">
         <div class="mb-3">
-            <label class="form-label" for="body_html">Contenu HTML</label>
+            <label class="form-label" for="body_html"><?= esc(lang('Admin.form_label_body_html')) ?></label>
             <textarea name="body_html" id="body_html" class="form-control" rows="14"><?= old('body_html', $page !== null ? ($page['body_html'] ?? '') : '') ?></textarea>
-            <div class="form-text">Éditeur visuel : bouton <strong>Blocs</strong> pour insérer des gabarits dans le HTML ; menu <strong>Formats → Typo GovGenZ</strong>. À l’ouverture de <strong>Code source</strong>, le HTML est automatiquement indenté pour lecture (vous pouvez l’éditer puis Enregistrer). <strong>Alt</strong> obligatoire sur les images.</div>
+            <div class="form-text"><?= lang('Admin.help_pages_tinymce') ?></div>
         </div>
     </div>
 
     <?= view('admin/pages/blocks_builder', ['blocksForForm' => $blocksForForm, 'contentMode' => $contentMode]) ?>
 
     <div class="mb-3">
-        <label class="form-label" for="status">Statut</label>
+        <label class="form-label" for="status"><?= esc(lang('Admin.form_label_status')) ?></label>
         <select name="status" id="status" class="form-select">
             <?php
             $st = old('status', $page !== null ? $page['status'] : 'draft');
             ?>
-            <option value="draft" <?= $st === 'draft' ? 'selected' : '' ?>>Brouillon</option>
-            <option value="published" <?= $st === 'published' ? 'selected' : '' ?>>Publié</option>
+            <option value="draft" <?= $st === 'draft' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_draft')) ?></option>
+            <option value="published" <?= $st === 'published' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_published')) ?></option>
         </select>
     </div>
     <div class="mb-3">
@@ -172,11 +172,11 @@ if ($page !== null && ($page['status'] ?? '') === 'published') {
         <div class="form-text">Largeur du bloc de contenu pour les visiteurs. Les valeurs personnalisées héritées d’anciennes saisies restent possibles jusqu’à ce que vous sélectionniez une option standard.</div>
     </div>
     <div class="mb-3">
-        <label class="form-label" for="meta_title">Meta title</label>
+        <label class="form-label" for="meta_title"><?= esc(lang('Admin.form_label_meta_title')) ?></label>
         <input type="text" name="meta_title" id="meta_title" class="form-control" value="<?= esc(old('meta_title', $page !== null ? ($page['meta_title'] ?? '') : '')) ?>">
     </div>
     <div class="mb-3">
-        <label class="form-label" for="meta_description">Meta description</label>
+        <label class="form-label" for="meta_description"><?= esc(lang('Admin.form_label_meta_description')) ?></label>
         <textarea name="meta_description" id="meta_description" class="form-control" rows="2"><?= esc(old('meta_description', $page !== null ? ($page['meta_description'] ?? '') : '')) ?></textarea>
     </div>
 

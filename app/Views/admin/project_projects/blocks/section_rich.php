@@ -26,7 +26,7 @@ if (! in_array($style, ['default', 'warm', 'teal'], true)) {
         <div class="row g-2 mb-2">
             <div class="col-md-8">
                 <label class="form-label small"><?= esc(lang('Admin.block_section_title')) ?></label>
-                <input type="text" name="<?= esc($pfx, 'attr') ?>[heading]" class="form-control form-control-sm" maxlength="255" value="<?= esc((string) ($b['heading'] ?? '')) ?>" placeholder="ex. 📰 Le problème">
+                <input type="text" name="<?= esc($pfx, 'attr') ?>[heading]" class="form-control form-control-sm" maxlength="255" value="<?= esc((string) ($b['heading'] ?? '')) ?>" placeholder="<?= esc(lang('Admin.ph_block_section_problem'), 'attr') ?>">
             </div>
             <div class="col-md-4">
                 <label class="form-label small"><?= esc(lang('Admin.block_section_style')) ?></label>

@@ -42,11 +42,11 @@ $lineRows[] = ['item' => '', 'quantity' => '', 'notes' => ''];
         <input type="hidden" name="<?= esc($pfx, 'attr') ?>[type]" value="material_needs">
         <div class="mb-2">
             <label class="form-label small"><?= esc(lang('Admin.block_section_title')) ?></label>
-            <input type="text" name="<?= esc($pfx, 'attr') ?>[section_title]" class="form-control form-control-sm" maxlength="255" value="<?= esc((string) ($b['section_title'] ?? '')) ?>" placeholder="📦 Ressources matérielles recherchées">
+            <input type="text" name="<?= esc($pfx, 'attr') ?>[section_title]" class="form-control form-control-sm" maxlength="255" value="<?= esc((string) ($b['section_title'] ?? '')) ?>" placeholder="<?= esc(lang('Admin.ph_block_material_title'), 'attr') ?>">
         </div>
         <div class="mb-2">
             <label class="form-label small"><?= esc(lang('Admin.block_coord_contact')) ?></label>
-            <input type="text" name="<?= esc($pfx, 'attr') ?>[contact]" class="form-control form-control-sm" maxlength="255" value="<?= esc((string) ($b['contact'] ?? '')) ?>" placeholder="Email ou téléphone">
+            <input type="text" name="<?= esc($pfx, 'attr') ?>[contact]" class="form-control form-control-sm" maxlength="255" value="<?= esc((string) ($b['contact'] ?? '')) ?>" placeholder="<?= esc(lang('Admin.ph_block_contact'), 'attr') ?>">
         </div>
         <div class="mb-2">
             <label class="form-label small"><?= esc(lang('Admin.block_table_note')) ?></label>

@@ -44,7 +44,7 @@ $defaultTitle = "🎯 Suivi d'impact — Résultats actuels";
             </div>
             <div class="col-12">
                 <label class="form-label small"><?= esc(lang('Admin.block_note_under_title')) ?></label>
-                <input type="text" name="<?= esc($pfx, 'attr') ?>[note]" class="form-control form-control-sm" maxlength="500" value="<?= esc((string) ($b['note'] ?? '')) ?>" placeholder="Données au …">
+                <input type="text" name="<?= esc($pfx, 'attr') ?>[note]" class="form-control form-control-sm" maxlength="500" value="<?= esc((string) ($b['note'] ?? '')) ?>" placeholder="<?= esc(lang('Admin.ph_block_impact_note'), 'attr') ?>">
             </div>
         </div>
         <div class="pp-repeatable" data-pp-repeat-key="rows">

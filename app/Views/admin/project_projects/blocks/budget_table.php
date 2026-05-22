@@ -45,7 +45,7 @@ $lineRows[] = ['poste' => '', 'detail' => '', 'montant' => ''];
         <input type="hidden" name="<?= esc($pfx, 'attr') ?>[type]" value="budget_table">
         <div class="mb-2">
             <label class="form-label small"><?= esc(lang('Admin.block_section_title')) ?></label>
-            <input type="text" name="<?= esc($pfx, 'attr') ?>[section_title]" class="form-control form-control-sm" maxlength="255" value="<?= esc((string) ($b['section_title'] ?? '')) ?>" placeholder="💰 Budget détaillé">
+            <input type="text" name="<?= esc($pfx, 'attr') ?>[section_title]" class="form-control form-control-sm" maxlength="255" value="<?= esc((string) ($b['section_title'] ?? '')) ?>" placeholder="<?= esc(lang('Admin.ph_block_budget_title'), 'attr') ?>">
         </div>
         <div class="mb-2">
             <label class="form-label small"><?= esc(lang('Admin.block_table_note')) ?></label>

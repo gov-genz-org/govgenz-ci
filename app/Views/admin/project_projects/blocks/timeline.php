@@ -27,7 +27,7 @@ $phases = admin_pp_repeat_object_rows(
         <input type="hidden" name="<?= esc($pfx, 'attr') ?>[type]" value="timeline">
         <div class="mb-2">
             <label class="form-label small"><?= esc(lang('Admin.block_section_title')) ?></label>
-            <input type="text" name="<?= esc($pfx, 'attr') ?>[section_title]" class="form-control form-control-sm" maxlength="255" value="<?= esc((string) ($b['section_title'] ?? '')) ?>" placeholder="📅 Calendrier">
+            <input type="text" name="<?= esc($pfx, 'attr') ?>[section_title]" class="form-control form-control-sm" maxlength="255" value="<?= esc((string) ($b['section_title'] ?? '')) ?>" placeholder="<?= esc(lang('Admin.ph_block_timeline_title'), 'attr') ?>">
         </div>
         <div class="pp-repeatable" data-pp-repeat-key="phases">
             <div class="pp-repeat-body">

@@ -87,9 +87,9 @@ helper('admin');
                                 <span class="small text-muted"><code class="small"><?= esc((string) ($rp['slug'] ?? '')) ?></code> · <?= admin_format_datetime($rp['updated_at'] ?? null) ?></span>
                             </div>
                             <?php if (($rp['status'] ?? '') === 'published') : ?>
-                                <span class="badge text-bg-success align-self-center flex-shrink-0">Publié</span>
+                                <span class="badge text-bg-success align-self-center flex-shrink-0"><?= esc(lang('Admin.filter_published')) ?></span>
                             <?php else : ?>
-                                <span class="badge text-bg-warning text-dark align-self-center flex-shrink-0">Brouillon</span>
+                                <span class="badge text-bg-warning text-dark align-self-center flex-shrink-0"><?= esc(lang('Admin.filter_draft')) ?></span>
                             <?php endif; ?>
                         </li>
                     <?php endforeach; ?>
@@ -116,9 +116,9 @@ helper('admin');
                                 <span class="small text-muted"><code class="small"><?= esc((string) ($post['slug'] ?? '')) ?></code> · <?= admin_format_datetime($post['updated_at'] ?? null) ?></span>
                             </div>
                             <?php if (($post['status'] ?? '') === 'published') : ?>
-                                <span class="badge text-bg-success align-self-center flex-shrink-0">Publié</span>
+                                <span class="badge text-bg-success align-self-center flex-shrink-0"><?= esc(lang('Admin.filter_published')) ?></span>
                             <?php else : ?>
-                                <span class="badge text-bg-warning text-dark align-self-center flex-shrink-0">Brouillon</span>
+                                <span class="badge text-bg-warning text-dark align-self-center flex-shrink-0"><?= esc(lang('Admin.filter_draft')) ?></span>
                             <?php endif; ?>
                         </li>
                     <?php endforeach; ?>

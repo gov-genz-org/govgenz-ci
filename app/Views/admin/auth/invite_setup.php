@@ -29,7 +29,7 @@ declare(strict_types=1);
                     <input type="password" name="password_confirm" id="password_confirm" class="form-control form-control-lg" required minlength="<?= (int) $passwordMin ?>" autocomplete="new-password">
                     <p class="form-text small mb-0"><?= esc($passwordHint) ?></p>
                 </div>
-                <button type="submit" class="btn btn-dark btn-lg w-100">Enregistrer et se connecter</button>
+                <button type="submit" class="btn btn-dark btn-lg w-100"><?= esc(lang('Admin.auth_save_and_login')) ?></button>
             </form>
         </div>
     </div>

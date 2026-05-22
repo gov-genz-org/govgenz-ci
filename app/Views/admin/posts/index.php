@@ -26,8 +26,8 @@ helper('admin');
             <label class="small text-muted mb-0 d-block" for="filter-post-status">Statut</label>
             <select name="status" id="filter-post-status" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
                 <option value="" <?= $filterStatus === 'all' ? 'selected' : '' ?>>Tous</option>
-                <option value="published" <?= $filterStatus === 'published' ? 'selected' : '' ?>>Publié</option>
-                <option value="draft" <?= $filterStatus === 'draft' ? 'selected' : '' ?>>Brouillon</option>
+                <option value="published" <?= $filterStatus === 'published' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_published')) ?></option>
+                <option value="draft" <?= $filterStatus === 'draft' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_draft')) ?></option>
             </select>
         </div>
         <button type="submit" class="btn btn-outline-secondary btn-sm">Rechercher</button>
@@ -69,9 +69,9 @@ helper('admin');
             <td><?= esc($post['title']) ?></td>
             <td>
                 <?php if (($post['status'] ?? '') === 'published') : ?>
-                    <span class="badge text-bg-success">Publié</span>
+                    <span class="badge text-bg-success"><?= esc(lang('Admin.filter_published')) ?></span>
                 <?php else : ?>
-                    <span class="badge text-bg-warning text-dark">Brouillon</span>
+                    <span class="badge text-bg-warning text-dark"><?= esc(lang('Admin.filter_draft')) ?></span>
                 <?php endif; ?>
             </td>
             <td class="small text-nowrap"><?= admin_format_datetime($post['published_at'] ?? null) ?></td>
