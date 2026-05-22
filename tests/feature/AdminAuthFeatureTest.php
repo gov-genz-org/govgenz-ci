@@ -15,9 +15,10 @@ final class AdminAuthFeatureTest extends CIUnitTestCase
 
     public function testLoginFormIsReachable(): void
     {
+        service('language')->setLocale('fr');
         $result = $this->get('/admin/login');
         $result->assertOK();
-        $result->assertSee('Connexion rédaction');
+        $result->assertSee(lang('Admin.auth_login_title'));
     }
 
     public function testLogoutViaGetRedirectsToAdminArea(): void

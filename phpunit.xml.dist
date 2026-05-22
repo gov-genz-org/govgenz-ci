@@ -24,6 +24,13 @@
         <testdoxText outputFile="build/logs/testdox.txt"/>
         <junit outputFile="build/logs/logfile.xml"/>
     </logging>
+    <coverage>
+        <report>
+            <html outputDirectory="build/coverage/html" lowUpperBound="50" highLowerBound="80"/>
+            <text outputFile="build/coverage/summary.txt" showOnlySummary="true"/>
+            <clover outputFile="build/coverage/clover.xml"/>
+        </report>
+    </coverage>
     <source>
         <include>
             <directory suffix=".php">./app</directory>

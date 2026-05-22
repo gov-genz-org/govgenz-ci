@@ -27,8 +27,8 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
-          extensions: intl, mbstring, mysqli, sqlite3
-          coverage: none
+          extensions: intl, mbstring, mysqli, sqlite3, pcov
+          coverage: pcov
 
       - uses: actions/cache@v4
         with:
@@ -39,8 +39,18 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
 
-      - name: PHPUnit (unitaires — sans intégration BDD complète)
-        run: vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite Unit
+      - name: PHPUnit (Unit + App, sans BDD MySQL projet)
+        run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-text --coverage-clover build/coverage/clover.xml
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpunit-coverage
+          path: |
+            build/coverage/
+            build/logs/logfile.xml
+          if-no-files-found: ignore
 
       - name: env.example changed
         if: github.event_name == 'pull_request'

@@ -30,7 +30,7 @@ Fichier : [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
 
 | Check GitHub (ruleset) | Job | Contenu |
 |------------------------|-----|---------|
-| `ci/test` | `test` | `composer install` + PHPUnit (suite **Unit** uniquement) |
+| `ci/test` | `test` | `composer install` + PHPUnit (**Unit** + **App**, PCOV, rapport Clover/HTML en artefact) |
 | `ci/build` | `build` | `composer install --no-dev`, `php spark list`, artefact release |
 
 Les noms de jobs (`name: ci/test`, `name: ci/build`) doivent correspondre **exactement** aux statuts requis dans les rulesets.
@@ -140,7 +140,16 @@ Sans `DEPLOY_GENERATE_ENV=true`, rien ne change : édition manuelle du `.env` su
 
 ### CI (tests) — toujours sans `.env` serveur
 
-PHPUnit utilise SQLite en mémoire ; les secrets BDD ne servent qu’aux jobs **deploy**.
+PHPUnit exécute les suites **Unit** (`tests/unit/`) et **App** (`tests/feature/`, etc.) avec **PCOV** (résumé dans les logs, artefact `phpunit-coverage` : HTML + Clover). Pas de MySQL projet : les tests d’intégration lourds restent skipped ou sur SQLite d’exemple.
+
+Reproduire localement (Docker) :
+
+```bash
+cd govgenz-local
+docker compose exec web bash -lc 'cd /var/www/html && vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-text'
+```
+
+Les secrets BDD ne servent qu’aux jobs **deploy**.
 
 ### Secrets FTP ≠ secrets application
 

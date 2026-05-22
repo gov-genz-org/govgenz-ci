@@ -58,7 +58,7 @@ $extraHead = FrontPageAssets::projectsProgramList();
 ### i18n
 
 - **Front public** : `lang('Projects.*')`, fichiers `app/Language/`
-- **Admin** : encore beaucoup de libellés en dur en français — à migrer progressivement vers `app/Language/fr/Admin.php`
+- **Admin** : vues + contrôleurs sur `lang('Admin.*')` — `app/Language/fr/Admin.php` et `en/Admin.php` (parité des clés). UI admin en français par défaut ; `en` prépare une locale future.
 
 ### Multi-site (genzgov.org / projects / positions)
 
@@ -103,10 +103,38 @@ $extraHead = FrontPageAssets::projectsProgramList();
 | Erreurs admin (contrôleurs) | `error_*` dans `Admin.php` — Auth, Pages, Posts, Staff, etc. |
 | Libellés vues admin (listes/form) | Titres, Dupliquer trad, confirmations suppression, auth |
 
+## Tests (régression admin i18n)
+
+La CI exécute `vendor/bin/phpunit --testsuite Unit` (sans BDD complète) :
+
+| Fichier | Rôle |
+|---------|------|
+| `tests/unit/AdminLangIntegrityTest.php` | Parité clés `fr`/`en`, clés `lang('Admin.*')` référencées présentes, smoke `lang()` |
+| `tests/unit/AdminPublicRoutesTest.php` | GET login / invite invalide / logout — HTML contient les libellés attendus |
+| `tests/feature/AdminAuthFeatureTest.php` | CSRF logout, throttle (skipped sans migrations) — lancer localement si besoin |
+
+Avant push après une grosse passe admin : lancer la suite Unit ci-dessus.
+
+### Couverture de code (PCOV)
+
+Périmètre PHPUnit : `app/` hors `Views/` et `Routes.php` (voir `phpunit.xml.dist`).
+
+```bash
+# Depuis govgenz-local (PCOV dans l’image web après rebuild)
+docker compose exec web bash -lc 'cd /var/www/html && vendor/bin/phpunit --coverage-text --coverage-html build/coverage/html'
+
+# Ou script helper
+../govgenz-ci/scripts/test-coverage-docker.sh
+```
+
+Rapport HTML : `govgenz-ci/build/coverage/html/index.html`. Composer : `composer test:coverage` (dans le conteneur).
+
+La couverture **globale** reste limitée tant que contrôleurs, modèles et migrations ne sont pas couverts par des tests d’intégration BDD ; les tests Unit ciblent surtout **Libraries** et **Helpers** testables sans base.
+
 ## Prochaines étapes (backlog)
 
 1. Libellés restants : titres/intros du guide CMS (`CmsComponentsGuide` + sections dynamiques), rôles staff traduits côté PHP si besoin.
 2. Switcher optionnel de locale UI admin (`en/Admin.php` déjà prêt).
-3. Tests feature (DB) dans la CI si/base de test dédiée.
+3. Tests feature avec BDD (login throttling, CRUD admin) dans la CI si base de test dédiée.
 
 Voir aussi [CI-CD.md](CI-CD.md) pour le pipeline de déploiement.
