@@ -94,8 +94,8 @@ $inviteExpiryLabel = $inviteExpiryHours <= 24
         <?php endif; ?>
 
         <div class="admin-form-actions d-flex flex-wrap gap-2">
-            <button type="submit" class="btn btn-dark"><?= $is_edit ? 'Enregistrer' : 'Envoyer l’invitation' ?></button>
-            <a href="<?= site_url('admin/staff-users') ?>" class="btn btn-outline-secondary">Annuler</a>
+            <button type="submit" class="btn btn-dark"><?= esc(lang($is_edit ? 'Admin.action_save' : 'Admin.action_send_invite')) ?></button>
+            <a href="<?= site_url('admin/staff-users') ?>" class="btn btn-outline-secondary"><?= esc(lang('Admin.action_cancel')) ?></a>
         </div>
     </div>
 </form>

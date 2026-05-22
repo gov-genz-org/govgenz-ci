@@ -24,34 +24,34 @@ $defaultTitle = "🎯 Suivi d'impact — Résultats actuels";
 ?>
 <div class="project-block-row card mb-3 border-secondary">
     <div class="card-header py-2 d-flex justify-content-between align-items-center flex-wrap gap-2">
-        <span class="fw-semibold small mb-0">Bloc · Suivi d'impact</span>
-        <button type="button" class="btn btn-sm btn-outline-danger project-block-remove">Retirer</button>
+        <span class="fw-semibold small mb-0"><?= esc(lang('Admin.block_type_impact')) ?></span>
+        <button type="button" class="btn btn-sm btn-outline-danger project-block-remove"><?= esc(lang('Admin.block_remove')) ?></button>
     </div>
     <div class="card-body">
         <input type="hidden" name="<?= esc($pfx, 'attr') ?>[type]" value="impact_tracker">
         <div class="row g-2 mb-2">
             <div class="col-md-8">
-                <label class="form-label small">Titre de section</label>
+                <label class="form-label small"><?= esc(lang('Admin.block_section_title')) ?></label>
                 <input type="text" name="<?= esc($pfx, 'attr') ?>[section_title]" class="form-control form-control-sm" maxlength="255" value="<?= esc((string) ($b['section_title'] ?? $defaultTitle)) ?>">
             </div>
             <div class="col-md-4">
-                <label class="form-label small">Style titre</label>
+                <label class="form-label small"><?= esc(lang('Admin.block_style_title_short')) ?></label>
                 <select name="<?= esc($pfx, 'attr') ?>[heading_style]" class="form-select form-select-sm">
-                    <option value="default" <?= $style === 'default' ? 'selected' : '' ?>>Neutre</option>
-                    <option value="warm" <?= $style === 'warm' ? 'selected' : '' ?>>Warm</option>
-                    <option value="teal" <?= $style === 'teal' ? 'selected' : '' ?>>Teal</option>
+                    <option value="default" <?= $style === 'default' ? 'selected' : '' ?>><?= esc(lang('Admin.block_style_default')) ?></option>
+                    <option value="warm" <?= $style === 'warm' ? 'selected' : '' ?>><?= esc(lang('Admin.block_style_warm')) ?></option>
+                    <option value="teal" <?= $style === 'teal' ? 'selected' : '' ?>><?= esc(lang('Admin.block_style_teal')) ?></option>
                 </select>
             </div>
             <div class="col-12">
-                <label class="form-label small">Note (sous le titre)</label>
+                <label class="form-label small"><?= esc(lang('Admin.block_note_under_title')) ?></label>
                 <input type="text" name="<?= esc($pfx, 'attr') ?>[note]" class="form-control form-control-sm" maxlength="500" value="<?= esc((string) ($b['note'] ?? '')) ?>" placeholder="Données au …">
             </div>
         </div>
         <div class="pp-repeatable" data-pp-repeat-key="rows">
             <div class="row g-2 mb-1 small fw-semibold text-muted d-none d-md-flex align-items-center">
-                <div class="col-md-4">Libellé</div>
-                <div class="col-md">Chiffres / texte</div>
-                <div class="col-md-2">Barre %</div>
+                <div class="col-md-4"><?= esc(lang('Admin.block_row_label')) ?></div>
+                <div class="col-md"><?= esc(lang('Admin.block_row_figures')) ?></div>
+                <div class="col-md-2"><?= esc(lang('Admin.block_row_bar')) ?></div>
                 <div class="col-auto ms-auto" style="width:2.75rem"></div>
             </div>
             <div class="pp-repeat-body">
@@ -62,7 +62,7 @@ $defaultTitle = "🎯 Suivi d'impact — Résultats actuels";
                         ]) ?>
                     <?php endforeach; ?>
             </div>
-            <button type="button" class="btn btn-sm btn-outline-primary pp-repeat-add mt-2">+ Ligne</button>
+            <button type="button" class="btn btn-sm btn-outline-primary pp-repeat-add mt-2"><?= esc(lang('Admin.block_add_line')) ?></button>
             <template class="pp-repeat-template">
                 <?= view('admin/project_projects/blocks/impact_tracker_row', [
                     'rp'  => $pfx . '[rows][__RI__]',

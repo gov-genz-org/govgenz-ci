@@ -90,7 +90,7 @@ $active = old('is_active', $isEdit ? (string) ((int) ($sector['is_active'] ?? 1)
     </div>
 
     <div class="mt-4 d-flex flex-wrap gap-2">
-        <button type="submit" class="btn btn-primary"><?= $isEdit ? 'Enregistrer' : 'Créer' ?></button>
-        <a class="btn btn-outline-secondary" href="<?= site_url('admin/sectors') ?>">Annuler</a>
+        <button type="submit" class="btn btn-primary"><?= esc(lang($isEdit ? 'Admin.action_save' : 'Admin.action_create')) ?></button>
+        <a class="btn btn-outline-secondary" href="<?= site_url('admin/sectors') ?>"><?= esc(lang('Admin.action_cancel')) ?></a>
     </div>
 </form>

@@ -14,27 +14,24 @@ $fcfa = old('fcfa_ariary', (string) ($config['fcfa_ariary'] ?? '7.5'));
 $errors = session('errors') ?? [];
 ?>
 <h1 class="h3 mb-1"><?= esc(lang('Admin.title_exchange_rates')) ?></h1>
-<p class="text-muted small mb-3">
-    Ces valeurs alimentent le widget « Équivalences budgétaires » sur chaque fiche projet publiée
-    (conversion depuis le budget en ariary).
-</p>
+<p class="text-muted small mb-3"><?= esc(lang('Admin.form_exchange_intro')) ?></p>
 
 <form method="post" action="<?= site_url('admin/project-exchange-rates/update') ?>" class="border rounded bg-white shadow-sm p-3 p-md-4">
     <?= csrf_field() ?>
 
     <div class="row g-3">
         <div class="col-md-4">
-            <label for="per-label" class="form-label">Libellé affiché</label>
+            <label for="per-label" class="form-label"><?= esc(lang('Admin.form_exchange_label')) ?></label>
             <input type="text" name="label_year" id="per-label" class="form-control <?= isset($errors['label_year']) ? 'is-invalid' : '' ?>"
                    maxlength="32" required value="<?= esc($labelYear) ?>">
-            <div class="form-text">Ex. <code>2026</code> → « Taux approx. 2026 »</div>
+            <div class="form-text"><?= esc(lang('Admin.form_exchange_label_hint')) ?></div>
             <?php if (isset($errors['label_year'])) : ?>
                 <div class="invalid-feedback"><?= esc($errors['label_year']) ?></div>
             <?php endif; ?>
         </div>
     </div>
 
-    <h2 class="h6 text-uppercase text-muted border-bottom pb-2 mt-4 mb-3">1 unité de devise = … ariary (Ar)</h2>
+    <h2 class="h6 text-uppercase text-muted border-bottom pb-2 mt-4 mb-3"><?= esc(lang('Admin.form_exchange_rates_heading')) ?></h2>
 
     <div class="row g-3">
         <div class="col-md-4">
@@ -80,7 +77,7 @@ $errors = session('errors') ?? [];
     </div>
 
     <div class="mt-4 d-flex flex-wrap gap-2">
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-        <a href="<?= site_url('admin/project-projects') ?>" class="btn btn-outline-secondary">Retour aux projets</a>
+        <button type="submit" class="btn btn-primary"><?= esc(lang('Admin.action_save')) ?></button>
+        <a href="<?= site_url('admin/project-projects') ?>" class="btn btn-outline-secondary"><?= esc(lang('Admin.form_exchange_back_projects')) ?></a>
     </div>
 </form>

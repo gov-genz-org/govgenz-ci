@@ -92,8 +92,8 @@ if ($post !== null && ($post['status'] ?? '') === 'published' && ($post['slug'] 
 
     <div class="admin-form-actions">
         <div class="d-flex flex-wrap gap-2">
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
-            <a href="<?= site_url('admin/posts') ?>" class="btn btn-outline-secondary">Annuler</a>
+            <button type="submit" class="btn btn-primary"><?= esc(lang('Admin.action_save')) ?></button>
+            <a href="<?= site_url('admin/posts') ?>" class="btn btn-outline-secondary"><?= esc(lang('Admin.action_cancel')) ?></a>
         </div>
     </div>
 </form>

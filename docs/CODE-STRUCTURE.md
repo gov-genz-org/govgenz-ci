@@ -105,7 +105,7 @@ $extraHead = FrontPageAssets::projectsProgramList();
 
 ## Prochaines étapes (backlog)
 
-1. Libellés restants : champs détaillés des formulaires (projets, positions, blocs), options `SiteMenu`, guide CMS.
+1. Libellés restants : sous-champs des blocs projet (puces, timeline, sources), formulaires pages/posts, guide CMS.
 2. Switcher optionnel de locale UI admin (`en/Admin.php` déjà prêt).
 3. Tests feature (DB) dans la CI si/base de test dédiée.
 

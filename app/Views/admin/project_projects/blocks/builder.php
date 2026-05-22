@@ -30,9 +30,7 @@ $mapBlockView = static function (array $block): string {
 };
 ?>
 <div id="pp-blocks-panel" class="<?= $contentMode === 'blocks' ? '' : 'd-none' ?>">
-    <p class="text-muted small mb-2">
-        Utilisez les boutons ci-dessous pour ajouter ou réordonner les sections du détail.
-    </p>
+    <p class="text-muted small mb-2"><?= esc(lang('Admin.block_builder_help')) ?></p>
 
     <div id="pp-blocks-container" class="mb-2">
         <?php foreach ($blocksForForm as $idx => $block) : ?>
@@ -45,17 +43,17 @@ $mapBlockView = static function (array $block): string {
     </div>
 
     <div class="d-flex flex-wrap gap-2 mb-3">
-        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="section_rich">+ Section</button>
-        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="budget_table">+ Budget</button>
-        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="material_needs">+ Besoins matériels</button>
-        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="timeline">+ Calendrier</button>
-        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="kpi_grid">+ KPI</button>
-        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="impact_tracker">+ Suivi d'impact</button>
-        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="note_panel">+ Encadré</button>
-        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="team">+ Équipe</button>
-        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="sources">+ Sources</button>
+        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="section_rich"><?= esc(lang('Admin.block_add_section')) ?></button>
+        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="budget_table"><?= esc(lang('Admin.block_add_budget')) ?></button>
+        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="material_needs"><?= esc(lang('Admin.block_add_material')) ?></button>
+        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="timeline"><?= esc(lang('Admin.block_add_timeline')) ?></button>
+        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="kpi_grid"><?= esc(lang('Admin.block_add_kpi')) ?></button>
+        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="impact_tracker"><?= esc(lang('Admin.block_add_impact')) ?></button>
+        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="note_panel"><?= esc(lang('Admin.block_add_note')) ?></button>
+        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="team"><?= esc(lang('Admin.block_add_team')) ?></button>
+        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="sources"><?= esc(lang('Admin.block_add_sources')) ?></button>
         <?php if ($canUseAdvancedHtml) : ?>
-        <button type="button" class="btn btn-sm btn-outline-secondary" data-pp-add="html">+ HTML libre</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-pp-add="html"><?= esc(lang('Admin.block_add_html')) ?></button>
         <?php endif; ?>
     </div>
 </div>

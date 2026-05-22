@@ -23,49 +23,49 @@ if (! in_array($localeSel, ['fr', 'en'], true)) {
 <form action="<?= esc($action, 'attr') ?>" method="post" accept-charset="UTF-8">
     <?= csrf_field() ?>
     <div class="mb-3">
-        <label class="form-label" for="label">Libellé</label>
+        <label class="form-label" for="label"><?= esc(lang('Admin.form_sitemenu_label')) ?></label>
         <input type="text" name="label" id="label" class="form-control" required maxlength="255" value="<?= esc(old('label', $item !== null ? (string) ($item['label'] ?? '') : '')) ?>">
     </div>
     <div class="mb-3">
-        <label class="form-label" for="locale">Langue du menu</label>
+        <label class="form-label" for="locale"><?= esc(lang('Admin.form_sitemenu_locale')) ?></label>
         <select name="locale" id="locale" class="form-select" style="max-width:16rem">
-            <option value="fr" <?= $localeSel === 'fr' ? 'selected' : '' ?>>Français (URLs sans préfixe)</option>
-            <option value="en" <?= $localeSel === 'en' ? 'selected' : '' ?>>English (/en/…)</option>
+            <option value="fr" <?= $localeSel === 'fr' ? 'selected' : '' ?>><?= esc(lang('Admin.form_sitemenu_locale_fr')) ?></option>
+            <option value="en" <?= $localeSel === 'en' ? 'selected' : '' ?>><?= esc(lang('Admin.form_sitemenu_locale_en')) ?></option>
         </select>
     </div>
     <div class="mb-3">
-        <label class="form-label" for="sort_order">Ordre (tri croissant)</label>
+        <label class="form-label" for="sort_order"><?= esc(lang('Admin.form_sitemenu_sort')) ?></label>
         <input type="number" name="sort_order" id="sort_order" class="form-control" style="max-width:12rem" min="0" step="1" value="<?= esc($sort) ?>">
     </div>
     <div class="mb-3">
-        <label class="form-label" for="href_kind">Type de lien</label>
+        <label class="form-label" for="href_kind"><?= esc(lang('Admin.form_sitemenu_href_kind')) ?></label>
         <select name="href_kind" id="href_kind" class="form-select" style="max-width:28rem">
-            <option value="home" <?= $kind === 'home' ? 'selected' : '' ?>>Accueil (racine du site)</option>
-            <option value="segment" <?= $kind === 'segment' ? 'selected' : '' ?>>Segment interne (une partie d’URL, ex. qui-sommes-nous)</option>
-            <option value="path" <?= $kind === 'path' ? 'selected' : '' ?>>Chemin interne (plusieurs segments, ex. admin/login)</option>
-            <option value="external" <?= $kind === 'external' ? 'selected' : '' ?>>URL externe (https://…)</option>
+            <option value="home" <?= $kind === 'home' ? 'selected' : '' ?>><?= esc(lang('Admin.form_sitemenu_kind_home')) ?></option>
+            <option value="segment" <?= $kind === 'segment' ? 'selected' : '' ?>><?= esc(lang('Admin.form_sitemenu_kind_segment')) ?></option>
+            <option value="path" <?= $kind === 'path' ? 'selected' : '' ?>><?= esc(lang('Admin.form_sitemenu_kind_path')) ?></option>
+            <option value="external" <?= $kind === 'external' ? 'selected' : '' ?>><?= esc(lang('Admin.form_sitemenu_kind_external')) ?></option>
         </select>
     </div>
     <div class="mb-3">
-        <label class="form-label" for="href_target">Cible</label>
+        <label class="form-label" for="href_target"><?= esc(lang('Admin.form_sitemenu_target')) ?></label>
         <input type="text" name="href_target" id="href_target" class="form-control" maxlength="512" value="<?= esc($target) ?>" placeholder="Vide pour « Accueil », sinon slug, chemin ou URL complète">
-        <div class="form-text">Pour « Accueil », laissez vide. Pour Presse / Contact, un seul segment (press, contact…).</div>
+        <div class="form-text"><?= esc(lang('Admin.form_sitemenu_target_help')) ?></div>
     </div>
     <div class="mb-3">
-        <label class="form-label" for="match_key">Clé de surlignage</label>
+        <label class="form-label" for="match_key"><?= esc(lang('Admin.form_sitemenu_match_key')) ?></label>
         <input type="text" name="match_key" id="match_key" class="form-control" required maxlength="190" pattern="[a-z0-9_-]+" value="<?= esc($mk) ?>">
-        <div class="form-text">Exemples : <code>home</code>, <code>qui-sommes-nous</code>, <code>admin_login</code>, <code>none</code>.</div>
+        <div class="form-text"><?= esc(lang('Admin.form_sitemenu_match_key_help')) ?></div>
     </div>
     <div class="mb-3">
-        <label class="form-label" for="css_class">Classes CSS (optionnel)</label>
+        <label class="form-label" for="css_class"><?= esc(lang('Admin.form_sitemenu_css')) ?></label>
         <input type="text" name="css_class" id="css_class" class="form-control" maxlength="80" value="<?= esc($cssClass) ?>" placeholder="Ex. ggz-nav-admin">
-        <div class="form-text">Les liens visibles sont centrés dans la barre. <code>ggz-nav-end</code> n’est plus utilisé pour la mise en page.</div>
+        <div class="form-text"><?= esc(lang('Admin.form_sitemenu_css_help')) ?></div>
     </div>
     <div class="mb-3">
-        <label class="form-label" for="is_active">Visible dans le menu</label>
+        <label class="form-label" for="is_active"><?= esc(lang('Admin.form_sitemenu_visible')) ?></label>
         <select name="is_active" id="is_active" class="form-select" style="max-width:16rem">
-            <option value="1" <?= $active === '1' ? 'selected' : '' ?>>Oui</option>
-            <option value="0" <?= $active === '0' ? 'selected' : '' ?>>Non</option>
+            <option value="1" <?= $active === '1' ? 'selected' : '' ?>><?= esc(lang('Admin.form_sitemenu_yes')) ?></option>
+            <option value="0" <?= $active === '0' ? 'selected' : '' ?>><?= esc(lang('Admin.form_sitemenu_no')) ?></option>
         </select>
     </div>
     <div class="admin-form-actions d-flex flex-wrap gap-2">
