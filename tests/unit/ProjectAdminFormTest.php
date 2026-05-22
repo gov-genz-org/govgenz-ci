@@ -55,4 +55,28 @@ final class ProjectAdminFormTest extends CIUnitTestCase
 
         $this->assertArrayHasKey('budget_scale', $errors);
     }
+
+    public function testBudgetPayloadFromPostBuildsAriary(): void
+    {
+        helper('project');
+        $request = IncomingRequestFactory::withPost([
+            'budget_amount' => '2.5',
+            'budget_scale'  => \App\Models\ProjectProjectModel::BUDGET_SCALE_BILLION,
+        ]);
+
+        $payload = ProjectAdminForm::budgetPayloadFromPost($request, 'fr');
+
+        $this->assertSame(2.5, $payload['budget_amount']);
+        $this->assertSame(2_500_000_000, $payload['budget_ariary']);
+        $this->assertNotEmpty($payload['budget_display']);
+    }
+
+    public function testBudgetPayloadFromPostEmptyReturnsNulls(): void
+    {
+        $request = IncomingRequestFactory::withPost(['budget_amount' => '']);
+
+        $payload = ProjectAdminForm::budgetPayloadFromPost($request, 'fr');
+
+        $this->assertNull($payload['budget_ariary']);
+    }
 }

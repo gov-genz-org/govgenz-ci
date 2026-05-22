@@ -42,4 +42,29 @@ final class ProgramListFilterTest extends CIUnitTestCase
         $this->assertCount(1, $filtered);
         $this->assertSame('actif', $filtered[0]['project_status']);
     }
+
+    public function testSanitizeListReturnsEmptyWhenAllowedEmpty(): void
+    {
+        $this->assertSame([], ProgramListFilter::sanitizeList(['actif'], []));
+    }
+
+    public function testFilterBySectorsNoFilterReturnsAllRows(): void
+    {
+        $rows = [['sectors_csv' => 'health']];
+        $this->assertSame($rows, ProgramListFilter::filterBySectors($rows, []));
+    }
+
+    public function testFilterByPositionTypes(): void
+    {
+        helper('position');
+        $rows = [
+            ['id' => 1, 'types_csv' => 'denial, praise'],
+            ['id' => 2, 'types_csv' => 'solution'],
+        ];
+
+        $filtered = ProgramListFilter::filterByPositionTypes($rows, ['denial']);
+
+        $this->assertCount(1, $filtered);
+        $this->assertSame(1, $filtered[0]['id']);
+    }
 }

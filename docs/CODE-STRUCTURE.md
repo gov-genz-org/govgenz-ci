@@ -111,6 +111,7 @@ La CI exécute `vendor/bin/phpunit --testsuite Unit` (sans BDD complète) :
 |---------|------|
 | `tests/unit/AdminLangIntegrityTest.php` | Parité clés `fr`/`en`, clés `lang('Admin.*')` référencées présentes, smoke `lang()` |
 | `tests/unit/AdminPublicRoutesTest.php` | GET login / invite invalide / logout — HTML contient les libellés attendus |
+| `tests/unit/StaffInviteTest.php`, `LocaleHelperTest.php`, `AdminUrlHelperTest.php`, … | Libraries / helpers (slug, invite, datetime, blocs CMS, géo cache, filtres liste) |
 | `tests/feature/AdminAuthFeatureTest.php` | CSRF logout, throttle (skipped sans migrations) — lancer localement si besoin |
 
 Avant push après une grosse passe admin : lancer la suite Unit ci-dessus.

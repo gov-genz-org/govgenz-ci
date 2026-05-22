@@ -34,4 +34,13 @@ final class CmsProgramListHeroTest extends CIUnitTestCase
         $this->assertSame('Layout', $hero['layoutTitle']);
         $this->assertSame('', $hero['layoutMeta']);
     }
+
+    public function testResolveUsesPageTitleWhenHeroTitleEmpty(): void
+    {
+        $hero = CmsProgramListHero::resolve([
+            'title' => 'Page title',
+        ], 'Default', 'Layout');
+
+        $this->assertSame('Page title', $hero['heroTitle']);
+    }
 }
