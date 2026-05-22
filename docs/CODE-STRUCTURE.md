@@ -121,12 +121,11 @@ Avant push après une grosse passe admin : lancer la suite Unit ci-dessus.
 Périmètre PHPUnit : `app/` hors `Views/` et `Routes.php` (voir `phpunit.xml.dist`).
 
 ```bash
-# Depuis govgenz-local (PCOV dans l’image web après rebuild)
-docker compose exec web bash -lc 'cd /var/www/html && vendor/bin/phpunit --coverage-text --coverage-html build/coverage/html'
-
-# Ou script helper
-../govgenz-ci/scripts/test-coverage-docker.sh
+cd ../govgenz-local
+docker compose exec web bash -lc 'cd /var/www/html && vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-text --coverage-clover build/coverage/clover.xml'
 ```
+
+Rapport HTML : `build/coverage/html/index.html` — script : `scripts/test-coverage-docker.sh`
 
 Rapport HTML : `govgenz-ci/build/coverage/html/index.html`. Composer : `composer test:coverage` (dans le conteneur).
 

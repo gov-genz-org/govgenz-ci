@@ -12,7 +12,8 @@ cd "${LOCAL_DIR}"
 docker compose exec web bash -lc '
   cd /var/www/html
   mkdir -p build/coverage
-  vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-text --coverage-html build/coverage/html
+  vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-text --coverage-clover build/coverage/clover.xml
   echo ""
-  echo "Rapport HTML : build/coverage/html/index.html (dans govgenz-ci)"
+  echo "Rapport HTML : build/coverage/html/index.html"
+  echo "Clover     : build/coverage/clover.xml"
 '
