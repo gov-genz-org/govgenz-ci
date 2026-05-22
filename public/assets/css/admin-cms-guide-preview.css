@@ -40,9 +40,6 @@
   padding: 1.25rem 1rem 1.5rem;
 }
 
-#main-content .card .card-body .cms-guide-preview-host.ggz-main-shell .muted {
-  color: var(--text-tertiary) !important;
-}
 
 /* Hero accueil : pas d’animation dans l’aperçu (évite opacity:0 du template) */
 .cms-guide-preview-host.ggz-main-shell .hero__title-1,

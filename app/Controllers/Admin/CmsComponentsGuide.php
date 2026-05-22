@@ -8,7 +8,7 @@ use App\Controllers\BaseController;
 use App\Libraries\CmsPublicHtmlGuide;
 
 /**
- * Aide éditoriale : snippets HTML + aperçu charte (styles isolés, sans page publique).
+ * Aide éditoriale : snippets HTML + aperçu charte (CSS public scopé à .cms-guide-preview-host).
  */
 class CmsComponentsGuide extends BaseController
 {
@@ -20,6 +20,7 @@ class CmsComponentsGuide extends BaseController
 <link rel="stylesheet" href="{$cssBase}govgenz-components.css">
 <link rel="stylesheet" href="{$cssBase}govgenz-template.css">
 <link rel="stylesheet" href="{$cssBase}govgenz-cms-shell.css">
+<link rel="stylesheet" href="{$cssBase}govgenz-cms-guide-front-scoped.css">
 <link rel="stylesheet" href="{$cssBase}ggz-legal-page.css">
 <link rel="stylesheet" href="{$cssBase}ggz-press-page.css">
 <link rel="stylesheet" href="{$cssBase}govgenz-guide-preview-parity.css">
