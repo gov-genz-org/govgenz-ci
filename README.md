@@ -49,7 +49,8 @@ Voir aussi [`docs/CODE-STRUCTURE.md`](docs/CODE-STRUCTURE.md) et [`docs/CI-CD.md
 
 ## CI/CD
 
-Checks **`ci/test`** (PHPUnit + couverture) et **`ci/build`** : **[docs/CI-CD.md](docs/CI-CD.md)**.
+Checks **`ci/test`** (PHPUnit + couverture) et **`ci/build`** : **[docs/CI-CD.md](docs/CI-CD.md)**.  
+Merge **`develop` → `main`** : déploiement prod FTP puis tag Git auto (`v1.0.0`, `v1.0.1`, …).
 
 ## Documentation
 

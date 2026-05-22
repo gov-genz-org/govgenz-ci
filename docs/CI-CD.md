@@ -18,11 +18,23 @@ Dépôt : [gov-genz-org/govgenz-ci](https://github.com/gov-genz-org/govgenz-ci)
 
 ```text
 feature/*  ──PR──► develop  ──(CI)──► merge  ──► deploy FTP staging
-develop    ──PR──► main     ──(CI)──► merge  ──► deploy FTP production
+develop    ──PR──► main     ──(CI)──► merge  ──► deploy FTP production  ──► tag `v*`
 hotfix/*   ──PR──► main + develop (rebase des deux si besoin)
 ```
 
 Les jobs de déploiement ne tournent **pas** sur les pull requests, uniquement après merge (push sur `develop` ou `main`).
+
+### Tags de release (`main`)
+
+Après un **push sur `main`** réussi (typiquement merge de `develop`) et un **`deploy/production` vert**, le job **`release/tag`** :
+
+1. Calcule le prochain tag semver avec [`deploy/next-release-tag.sh`](../deploy/next-release-tag.sh) (`v1.0.0`, puis `v1.0.1`, `v1.0.2`, … selon les tags existants).
+2. Crée un **tag annoté** sur le commit déployé et le pousse sur `origin`.
+3. Ne recrée pas de tag si ce commit a déjà un tag `v*.*.*` (re-run du workflow).
+
+Exemples : `git fetch --tags && git tag -l 'v*' --sort=-v:refname | tail -5`
+
+Le workflow a besoin de la permission **`contents: write`** (déjà accordée au job `release/tag`).
 
 ## CI (GitHub Actions)
 
@@ -41,6 +53,7 @@ Jobs optionnels (non requis par ruleset) :
 |-----|---------|------|
 | `deploy/staging` | `develop` | FTP → environnement staging |
 | `deploy/production` | `main` | FTP → production |
+| `release/tag` | `main` (après deploy prod OK) | Tag Git annoté `vMAJOR.MINOR.PATCH` (semver auto) |
 
 ### Fichiers jamais écrasés par FTP
 

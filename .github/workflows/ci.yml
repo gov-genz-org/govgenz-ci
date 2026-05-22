@@ -346,3 +346,49 @@ jobs:
             **/writable/debugbar/**
             **/writable/uploads/**
             **/public/uploads/**
+
+  # Tag Git après merge sur main (ex. develop → main) et déploiement prod réussi.
+  release-tag:
+    name: release/tag
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute next release tag
+        id: tag
+        run: |
+          chmod +x deploy/next-release-tag.sh
+          if git tag --points-at HEAD | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            existing=$(git tag --points-at HEAD | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
+            echo "already_tagged=true" >> "$GITHUB_OUTPUT"
+            echo "name=${existing}" >> "$GITHUB_OUTPUT"
+            echo "HEAD déjà tagué : ${existing}"
+            exit 0
+          fi
+          name=$(./deploy/next-release-tag.sh)
+          echo "already_tagged=false" >> "$GITHUB_OUTPUT"
+          echo "name=${name}" >> "$GITHUB_OUTPUT"
+          echo "Prochain tag : ${name}"
+
+      - name: Create and push annotated tag
+        if: steps.tag.outputs.already_tagged != 'true'
+        env:
+          TAG: ${{ steps.tag.outputs.name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$TAG" -m "$(cat <<EOF
+          Production release ${TAG}
+
+          Commit: ${{ github.sha }}
+          Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          EOF
+          )"
+          git push origin "$TAG"
+          echo "::notice::Tag ${TAG} créé sur origin (commit ${{ github.sha }})"
