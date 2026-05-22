@@ -95,4 +95,32 @@ final class ProgramListFilter
 
         return $out;
     }
+
+    /**
+     * @param list<array<string, mixed>> $rows
+     * @param list<string>               $filterTypes
+     *
+     * @return list<array<string, mixed>>
+     */
+    public static function filterByPositionTypes(array $rows, array $filterTypes): array
+    {
+        if ($filterTypes === []) {
+            return $rows;
+        }
+
+        helper('position');
+        $out = [];
+        foreach ($rows as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+            $codes = position_types_from_csv((string) ($row['types_csv'] ?? ''));
+            if (array_intersect($codes, $filterTypes) === []) {
+                continue;
+            }
+            $out[] = $row;
+        }
+
+        return $out;
+    }
 }

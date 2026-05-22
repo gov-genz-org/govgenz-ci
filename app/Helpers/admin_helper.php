@@ -287,22 +287,6 @@ if (! function_exists('admin_translation_partner_nav')) {
     }
 }
 
-if (! function_exists('admin_public_project_url')) {
-    /**
-     * URL publique d’une fiche projet publiée (slug + locale), sinon null.
-     */
-    function admin_public_project_url(?string $slug, ?string $locale = null): ?string
-    {
-        if ($slug === null || trim($slug) === '') {
-            return null;
-        }
-
-        helper(['project', 'url']);
-
-        return project_public_url(trim($slug));
-    }
-}
-
 if (! function_exists('admin_staff_is_editor_only')) {
     /** Modérateur / rédacteur : pas admin technique. */
     function admin_staff_is_editor_only(): bool

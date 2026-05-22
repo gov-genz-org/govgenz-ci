@@ -6,6 +6,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Libraries\LocaleSlug;
+use App\Libraries\ProjectAdminForm;
 use App\Libraries\ProjectBodyBlocksNormalizer;
 use App\Libraries\ProjectBudgetTableSync;
 use App\Libraries\ProjectGeographyPayload;
@@ -78,22 +79,22 @@ class ProjectProjects extends BaseController
 
     public function create()
     {
-        $formData = $this->projectFormViewData(null);
+        $formData = ProjectAdminForm::formViewData(null);
 
         return view('admin/layout', [
             'title'         => 'Nouveau projet',
             'main'          => view('admin/project_projects/form', $formData),
-            'extraScripts'  => $this->projectFormScripts($formData),
+            'extraScripts'  => ProjectAdminForm::editorScripts($formData),
         ]);
     }
 
     public function store(): ResponseInterface
     {
-        if (! $this->validate($this->rules(false))) {
+        if (! $this->validate(ProjectAdminForm::validationRules(false))) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $budgetErrors = $this->validateBudgetPost();
+        $budgetErrors = ProjectAdminForm::validateBudgetPost($this->request);
         if ($budgetErrors !== []) {
             return redirect()->back()->withInput()->with('errors', $budgetErrors);
         }
@@ -104,7 +105,7 @@ class ProjectProjects extends BaseController
         }
 
         $locale = LocaleSlug::normalizeLocale((string) $this->request->getPost('locale'));
-        $budgetPayload = $this->budgetPayloadFromPost($locale);
+        $budgetPayload = ProjectAdminForm::budgetPayloadFromPost($this->request, $locale);
         $geoPayload    = ProjectGeographyPayload::fromRequest($this->request);
 
         $model = model(ProjectProjectModel::class);
@@ -112,7 +113,7 @@ class ProjectProjects extends BaseController
             return redirect()->back()->withInput()->with('error', 'Ce slug est déjà utilisé pour cette langue.');
         }
 
-        $bodyPayload = $this->resolveBodyPayload(null);
+        $bodyPayload = ProjectAdminForm::resolveBodyPayload($this->request,null);
         if ($bodyPayload === null) {
             return redirect()->back()->withInput()->with('error', 'Mode blocs : ajoutez au moins un bloc valide.');
         }
@@ -133,13 +134,13 @@ class ProjectProjects extends BaseController
             'locale'             => $locale,
             'translation_group'  => $tgIn === '' ? null : $tgIn,
             'title'              => trim((string) $this->request->getPost('title')),
-            'excerpt'            => $this->nullableString('excerpt'),
+            'excerpt'            => ProjectAdminForm::nullableString($this->request, 'excerpt'),
             'body'               => $bodyPayload['body'],
             'body_content_mode'  => $bodyPayload['body_content_mode'],
             'body_blocks'        => $bodyPayload['body_blocks'],
             'project_status'     => (string) $this->request->getPost('project_status'),
             'publication_state'  => $pubState,
-            'sectors_csv'        => $this->sectorsCsvFromPost(),
+            'sectors_csv'        => ProjectAdminForm::sectorsCsvFromPost($this->request),
             'volunteers_count'   => max(0, (int) $this->request->getPost('volunteers_count')),
             'budget_display'     => $budgetPayload['budget_display'],
             'budget_amount'      => $budgetPayload['budget_amount'],
@@ -147,11 +148,11 @@ class ProjectProjects extends BaseController
             'budget_ariary'      => $budgetPayload['budget_ariary'],
             'geography'          => $geoPayload['geography'],
             'geography_data'     => $geoPayload['geography_data'],
-            'launched_at'        => $this->nullableDate('launched_at'),
-            'duration_months'    => $this->nullableUInt('duration_months'),
-            'progress_percent'   => $this->nullableProgress('progress_percent'),
-            'meta_title'         => $this->nullableString('meta_title'),
-            'meta_description'   => $this->nullableString('meta_description'),
+            'launched_at'        => ProjectAdminForm::nullableDate($this->request, 'launched_at'),
+            'duration_months'    => ProjectAdminForm::nullableUInt($this->request, 'duration_months'),
+            'progress_percent'   => ProjectAdminForm::nullableProgress($this->request, 'progress_percent'),
+            'meta_title'         => ProjectAdminForm::nullableString($this->request, 'meta_title'),
+            'meta_description'   => ProjectAdminForm::nullableString($this->request, 'meta_description'),
             'published_at'       => $publishedAt,
         ]);
 
@@ -171,12 +172,12 @@ class ProjectProjects extends BaseController
             throw PageNotFoundException::forPageNotFound();
         }
 
-        $formData = $this->projectFormViewData($project);
+        $formData = ProjectAdminForm::formViewData($project);
 
         return view('admin/layout', [
             'title'         => 'Modifier le projet',
             'main'          => view('admin/project_projects/form', $formData),
-            'extraScripts'  => $this->projectFormScripts($formData),
+            'extraScripts'  => ProjectAdminForm::editorScripts($formData),
         ]);
     }
 
@@ -188,11 +189,11 @@ class ProjectProjects extends BaseController
             throw PageNotFoundException::forPageNotFound();
         }
 
-        if (! $this->validate($this->rules(true))) {
+        if (! $this->validate(ProjectAdminForm::validationRules(true))) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $budgetErrors = $this->validateBudgetPost();
+        $budgetErrors = ProjectAdminForm::validateBudgetPost($this->request);
         if ($budgetErrors !== []) {
             return redirect()->back()->withInput()->with('errors', $budgetErrors);
         }
@@ -203,7 +204,7 @@ class ProjectProjects extends BaseController
         }
 
         $locale = LocaleSlug::normalizeLocale((string) ($project['locale'] ?? 'fr'));
-        $budgetPayload = $this->budgetPayloadFromPost($locale);
+        $budgetPayload = ProjectAdminForm::budgetPayloadFromPost($this->request, $locale);
         $geoPayload    = ProjectGeographyPayload::fromRequest($this->request);
 
         $other = $model->where('slug', $slug)->where('locale', $locale)->where('id !=', $id)->first();
@@ -211,7 +212,7 @@ class ProjectProjects extends BaseController
             return redirect()->back()->withInput()->with('error', 'Ce slug est déjà utilisé pour cette langue.');
         }
 
-        $bodyPayload = $this->resolveBodyPayload($project);
+        $bodyPayload = ProjectAdminForm::resolveBodyPayload($this->request,$project);
         if ($bodyPayload === null) {
             return redirect()->back()->withInput()->with('error', 'Mode blocs : ajoutez au moins un bloc valide.');
         }
@@ -241,13 +242,13 @@ class ProjectProjects extends BaseController
             'slug'               => $slug,
             'translation_group'  => $tgIn,
             'title'              => trim((string) $this->request->getPost('title')),
-            'excerpt'            => $this->nullableString('excerpt'),
+            'excerpt'            => ProjectAdminForm::nullableString($this->request, 'excerpt'),
             'body'               => $bodyPayload['body'],
             'body_content_mode'  => $bodyPayload['body_content_mode'],
             'body_blocks'        => $bodyPayload['body_blocks'],
             'project_status'     => (string) $this->request->getPost('project_status'),
             'publication_state'  => $pubState,
-            'sectors_csv'        => $this->sectorsCsvFromPost(),
+            'sectors_csv'        => ProjectAdminForm::sectorsCsvFromPost($this->request),
             'volunteers_count'   => max(0, (int) $this->request->getPost('volunteers_count')),
             'budget_display'     => $budgetPayload['budget_display'],
             'budget_amount'      => $budgetPayload['budget_amount'],
@@ -255,11 +256,11 @@ class ProjectProjects extends BaseController
             'budget_ariary'      => $budgetPayload['budget_ariary'],
             'geography'          => $geoPayload['geography'],
             'geography_data'     => $geoPayload['geography_data'],
-            'launched_at'        => $this->nullableDate('launched_at'),
-            'duration_months'    => $this->nullableUInt('duration_months'),
-            'progress_percent'   => $this->nullableProgress('progress_percent'),
-            'meta_title'         => $this->nullableString('meta_title'),
-            'meta_description'   => $this->nullableString('meta_description'),
+            'launched_at'        => ProjectAdminForm::nullableDate($this->request, 'launched_at'),
+            'duration_months'    => ProjectAdminForm::nullableUInt($this->request, 'duration_months'),
+            'progress_percent'   => ProjectAdminForm::nullableProgress($this->request, 'progress_percent'),
+            'meta_title'         => ProjectAdminForm::nullableString($this->request, 'meta_title'),
+            'meta_description'   => ProjectAdminForm::nullableString($this->request, 'meta_description'),
             'published_at'       => $publishedAt,
         ]);
 
@@ -302,7 +303,7 @@ class ProjectProjects extends BaseController
             $baseTargetSlug = 'projet-' . $targetLocale;
         }
 
-        $targetSlug = $this->buildUniqueSlugForProjectLocale($baseTargetSlug, $targetLocale, $model);
+        $targetSlug = ProjectAdminForm::uniqueSlugForLocale($baseTargetSlug, $targetLocale, $model);
 
         $sourceGroup = trim((string) ($src['translation_group'] ?? ''));
         $group       = $sourceGroup !== '' ? $sourceGroup : (string) $id;
@@ -354,342 +355,5 @@ class ProjectProjects extends BaseController
         return redirect()
             ->to(site_url('admin/project-projects/edit/' . $newId))
             ->with('message', 'Traduction créée en ' . strtoupper($targetLocale) . ' (brouillon).');
-    }
-
-    /**
-     * Slug unique pour une locale donnée (équivalent admin pages).
-     */
-    private function buildUniqueSlugForProjectLocale(string $baseSlug, string $locale, ProjectProjectModel $model): string
-    {
-        $slug = LocaleSlug::normalizeSlug($baseSlug);
-        if ($slug === '') {
-            $slug = 'projet-' . $locale;
-        }
-
-        $candidate = $slug;
-        $i         = 2;
-        while ($model->where('slug', $candidate)->where('locale', $locale)->first() !== null) {
-            $candidate = $slug . '-' . $i;
-            $i++;
-            if ($i > 500) {
-                break;
-            }
-        }
-
-        return $candidate;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function rules(bool $isEdit): array
-    {
-        $statusList = implode(',', array_keys(ProjectProjectModel::projectStatusLabels()));
-        $pubList     = implode(',', array_keys(ProjectProjectModel::publicationStateLabels()));
-
-        $rules = [
-            'slug'               => 'required|max_length[160]',
-            'title'              => 'required|max_length[255]',
-            'excerpt'            => 'permit_empty',
-            'body'               => 'permit_empty',
-            'body_content_mode'  => 'required|in_list[html,blocks]',
-            'project_status'     => 'required|in_list[' . $statusList . ']',
-            'publication_state'  => 'required|in_list[' . $pubList . ']',
-            'volunteers_count'   => 'permit_empty|integer',
-            'budget_amount'      => 'permit_empty|decimal',
-            'budget_scale'       => 'permit_empty|in_list[' . implode(',', ProjectProjectModel::budgetScaleCodes()) . ']',
-            'launched_at'        => 'permit_empty|valid_date',
-            'duration_months'    => 'permit_empty|integer',
-            'progress_percent'   => 'permit_empty|integer|less_than_equal_to[100]',
-            'meta_title'         => 'permit_empty|max_length[255]',
-            'meta_description'   => 'permit_empty|max_length[512]',
-            'translation_group'  => 'permit_empty|max_length[64]',
-        ];
-
-        if (! $isEdit) {
-            $rules['locale'] = 'required|in_list[fr,en]';
-        }
-
-        return $rules;
-    }
-
-    private function nullableString(string $field): ?string
-    {
-        $v = trim((string) $this->request->getPost($field));
-
-        return $v === '' ? null : $v;
-    }
-
-    private function nullableDate(string $field): ?string
-    {
-        $v = trim((string) $this->request->getPost($field));
-        if ($v === '') {
-            return null;
-        }
-
-        return $v;
-    }
-
-    private function nullableUInt(string $field): ?int
-    {
-        $v = trim((string) $this->request->getPost($field));
-        if ($v === '') {
-            return null;
-        }
-
-        return max(0, (int) $v);
-    }
-
-    private function nullableProgress(string $field): ?int
-    {
-        $v = trim((string) $this->request->getPost($field));
-        if ($v === '') {
-            return null;
-        }
-        $n = (int) $v;
-
-        return max(0, min(100, $n));
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function validateBudgetPost(): array
-    {
-        $amountRaw = trim((string) $this->request->getPost('budget_amount'));
-        if ($amountRaw === '') {
-            return [];
-        }
-
-        $errors = [];
-        if (! is_numeric($amountRaw) || (float) $amountRaw <= 0) {
-            $errors['budget_amount'] = 'Indiquez un montant numérique strictement positif.';
-        }
-
-        $scale = (string) $this->request->getPost('budget_scale');
-        if (! in_array($scale, ProjectProjectModel::budgetScaleCodes(), true)) {
-            $errors['budget_scale'] = 'Choisissez une unité explicite (millions, milliards, etc.).';
-        }
-
-        return $errors;
-    }
-
-    /**
-     * @return array{
-     *   budget_amount: float|null,
-     *   budget_scale: string|null,
-     *   budget_ariary: int|null,
-     *   budget_display: string|null
-     * }
-     */
-    private function budgetPayloadFromPost(string $locale): array
-    {
-        helper('project');
-
-        $amountRaw = trim((string) $this->request->getPost('budget_amount'));
-        if ($amountRaw === '' || ! is_numeric($amountRaw) || (float) $amountRaw <= 0) {
-            return [
-                'budget_amount'  => null,
-                'budget_scale'   => null,
-                'budget_ariary'  => null,
-                'budget_display' => null,
-            ];
-        }
-
-        $scale = (string) $this->request->getPost('budget_scale');
-        if (! in_array($scale, ProjectProjectModel::budgetScaleCodes(), true)) {
-            $scale = ProjectProjectModel::BUDGET_SCALE_MILLION;
-        }
-
-        $amount = (float) $amountRaw;
-
-        return [
-            'budget_amount'  => $amount,
-            'budget_scale'   => $scale,
-            'budget_ariary'  => project_budget_ariary_from_parts($amount, $scale),
-            'budget_display' => project_format_budget_display_from_parts($amount, $scale, $locale),
-        ];
-    }
-
-    private function sectorsCsvFromPost(): string
-    {
-        $raw = $this->request->getPost('sectors');
-        if (! is_array($raw)) {
-            return '';
-        }
-        $allowed = [];
-        foreach (model(SectorModel::class)->listOrdered() as $row) {
-            $c = strtolower(trim((string) ($row['code'] ?? '')));
-            if ($c !== '') {
-                $allowed[$c] = true;
-            }
-        }
-        $out = [];
-        foreach ($raw as $code) {
-            if (! is_string($code)) {
-                continue;
-            }
-            $code = strtolower(trim($code));
-            if ($code !== '' && isset($allowed[$code])) {
-                $out[] = $code;
-            }
-        }
-        $out = array_values(array_unique($out));
-
-        return implode(',', $out);
-    }
-
-    /**
-     * @param array{bodyContentMode: string, canUseAdvancedHtml: bool} $formData
-     */
-    private function projectFormScripts(array $formData): string
-    {
-        $scripts = '<script defer src="' . esc(base_url('js/admin/project-budget-preview.js'), 'attr') . '"></script>'
-            . '<script defer src="' . esc(base_url('js/admin/project-block-repeatable.js?v=6'), 'attr') . '"></script>'
-            . '<script defer src="' . esc(base_url('js/admin/project-budget-table-sync.js'), 'attr') . '"></script>'
-            . '<script defer src="' . esc(base_url('js/admin/project-geography-form.js'), 'attr') . '"></script>'
-            . '<script defer src="' . esc(base_url('js/admin/project-blocks-form.js'), 'attr') . '"></script>';
-        if ($formData['canUseAdvancedHtml']) {
-            $scripts = $this->editorFormExtraScriptsForSelector('#pp-body') . $scripts;
-        }
-
-        return $scripts;
-    }
-
-    /**
-     * @return array{
-     *   project: array<string, mixed>|null,
-     *   sectors: list<array<string, mixed>>,
-     *   blocksForForm: list<array<string, mixed>>,
-     *   bodyContentMode: string,
-     *   canUseAdvancedHtml: bool,
-     *   bodyLockedLegacyHtml: bool,
-     *   publicPreviewUrl: ?string
-     * }
-     */
-    private function projectFormViewData(?array $project): array
-    {
-        helper('admin');
-
-        $oldBlocks = old('blocks');
-        if (is_array($oldBlocks)) {
-            $blocksForForm = array_values($oldBlocks);
-        } elseif ($project !== null) {
-            $blocksForForm = ProjectBodyBlocksNormalizer::blocksForForm((string) ($project['body_blocks'] ?? ''));
-        } else {
-            $blocksForForm = [];
-        }
-
-        $existingMode = $project !== null ? strtolower(trim((string) ($project['body_content_mode'] ?? 'html'))) : 'blocks';
-        if (! in_array($existingMode, ['html', 'blocks'], true)) {
-            $existingMode = $project !== null ? 'html' : 'blocks';
-        }
-
-        $bodyStored   = $project !== null ? trim((string) ($project['body'] ?? '')) : '';
-        $blocksStored = $project !== null ? trim((string) ($project['body_blocks'] ?? '')) : '';
-        $hasBlocks    = $blocksStored !== '' && $blocksStored !== '[]';
-
-        $defaultMode = $project === null ? 'blocks' : $existingMode;
-        if ($project !== null && $bodyStored !== '' && ! $hasBlocks) {
-            $defaultMode = 'html';
-        }
-        $bodyMode = old('body_content_mode', $defaultMode);
-        if (! in_array($bodyMode, ['html', 'blocks'], true)) {
-            $bodyMode = $defaultMode;
-        }
-
-        $canUseAdvancedHtml = ! admin_staff_is_editor_only();
-
-        if (! $canUseAdvancedHtml) {
-            $bodyMode = $existingMode === 'html' ? 'html' : 'blocks';
-        }
-
-        if ($project === null && $blocksForForm === [] && $bodyMode === 'blocks') {
-            $blocksForForm = [
-                [
-                    'type'          => 'section_rich',
-                    'heading'       => '',
-                    'heading_style' => 'warm',
-                    'intro'         => '',
-                    'bullets'       => [],
-                    'extra_paragraphs' => [],
-                ],
-            ];
-        }
-
-        $previewUrl = null;
-        if ($project !== null
-            && (string) ($project['publication_state'] ?? '') === ProjectProjectModel::PUBLICATION_PUBLISHED
-        ) {
-            $previewUrl = admin_public_project_url(
-                (string) ($project['slug'] ?? ''),
-                (string) ($project['locale'] ?? 'fr')
-            );
-        }
-
-        return [
-            'project'              => $project,
-            'sectors'              => model(SectorModel::class)->listOrdered(),
-            'blocksForForm'        => $blocksForForm,
-            'bodyContentMode'      => $bodyMode,
-            'canUseAdvancedHtml'   => $canUseAdvancedHtml,
-            'bodyLockedLegacyHtml' => ! $canUseAdvancedHtml && $existingMode === 'html',
-            'bodyStoredHtml'       => $bodyStored,
-            'bodyOrphanHtml'       => $bodyStored !== '' && $hasBlocks && $existingMode === 'blocks',
-            'publicPreviewUrl'     => $previewUrl,
-        ];
-    }
-
-    /**
-     * @param array<string, mixed>|null $existingProject
-     *
-     * @return array{body: ?string, body_content_mode: string, body_blocks: ?string}|null
-     */
-    private function resolveBodyPayload(?array $existingProject): ?array
-    {
-        helper('admin');
-
-        if (admin_staff_is_editor_only()) {
-            if ($existingProject !== null
-                && strtolower(trim((string) ($existingProject['body_content_mode'] ?? ''))) === 'html'
-            ) {
-                return [
-                    'body'              => $existingProject['body'] ?? null,
-                    'body_content_mode' => 'html',
-                    'body_blocks'       => null,
-                ];
-            }
-
-            $blocksJson = ProjectBodyBlocksNormalizer::bodyBlocksJsonIgnoringMode($this->request);
-            if ($blocksJson === null || $blocksJson === '' || $blocksJson === '[]') {
-                return null;
-            }
-
-            return [
-                'body'              => null,
-                'body_content_mode' => 'blocks',
-                'body_blocks'       => $blocksJson,
-            ];
-        }
-
-        $mode = ProjectBodyBlocksNormalizer::contentMode($this->request);
-        $blocksJson = ProjectBodyBlocksNormalizer::bodyBlocksJson($this->request);
-        if ($mode === 'blocks') {
-            if ($blocksJson === null || $blocksJson === '' || $blocksJson === '[]') {
-                return null;
-            }
-
-            return [
-                'body'              => null,
-                'body_content_mode' => 'blocks',
-                'body_blocks'       => $blocksJson,
-            ];
-        }
-
-        return [
-            'body'              => $this->nullableString('body'),
-            'body_content_mode' => 'html',
-            'body_blocks'       => null,
-        ];
     }
 }

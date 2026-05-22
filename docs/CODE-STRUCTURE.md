@@ -82,11 +82,25 @@ $extraHead = FrontPageAssets::projectsProgramList();
 - `Controllers/Front/Page.php` — contrôleur fin
 - `Models/CmsPageModel.php` — cache publication
 
-## Prochaines étapes (backlog refactor)
+## Refactors livrés (backlog initial)
 
-1. Trait ou base pour `Front\Projects\Home` + `Front\Positions\Home` (index / filterPost).
-2. Service `ProjectContributionSubmit` pour alléger `fundSubmit`.
-3. Library `ProjectAdminForm` pour `Admin/ProjectProjects`.
+| Élément | Fichier |
+|---------|---------|
+| Slug / locale centralisés | `Libraries/LocaleSlug.php` |
+| Assets front | `Libraries/FrontPageAssets.php`, `Views/front/partials/head_assets/` |
+| Stats liste projets | `Libraries/ProgramListProjectStats.php` |
+| Stats liste positions | `Libraries/ProgramListPositionStats.php` |
+| Filtre positions (types) | `ProgramListFilter::filterByPositionTypes()` |
+| Trait listes programme | `Controllers/Front/Traits/ProgramListFrontTrait.php` |
+| Formulaire contribution | `Libraries/ProjectContributionSubmitter.php` |
+| Formulaire admin projet | `Libraries/ProjectAdminForm.php` |
+| Lang admin (début) | `Language/fr/Admin.php`, `Language/en/Admin.php` |
+
+## Prochaines étapes (backlog)
+
+1. Factoriser entièrement `filterPost` projets/positions dans une Library de config (réponses JSON).
+2. Découper `admin_helper.php` en `admin_url_helper.php`, `admin_datetime_helper.php`, `admin_list_helper.php`.
+3. Étendre `lang('Admin.*')` aux flash messages et libellés des contrôleurs admin.
 4. Partial `head_assets/join.php` pour `Front/Join.php`.
 
 Voir aussi [CI-CD.md](CI-CD.md) pour le pipeline de déploiement.

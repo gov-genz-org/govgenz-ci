@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Controllers\Front\Positions;
 
 use App\Controllers\BaseController;
+use App\Controllers\Front\Traits\ProgramListFrontTrait;
+use App\Libraries\ProgramListPositionStats;
 use App\Libraries\CmsProgramListHero;
 use App\Libraries\FrontPageAssets;
 use App\Libraries\ProgramListFilter;
@@ -19,6 +21,8 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class Home extends BaseController
 {
+    use ProgramListFrontTrait;
+
     public function index()
     {
         helper(['locale', 'cms', 'language', 'position']);
@@ -44,35 +48,13 @@ class Home extends BaseController
 
         $allPublished = $itemModel->listPublishedRecent(100, $locale);
         $positions    = $this->filterPublished($allPublished, $filterTypes, $filterSectors);
-
-        $publishedCount = (int) $itemModel
-            ->where('publication_state', PositionItemModel::PUBLICATION_PUBLISHED)
-            ->where('locale', $locale)
-            ->countAllResults();
-
-        $sectorCodesSeen = [];
-        foreach ($allPublished as $r) {
-            if (! is_array($r)) {
-                continue;
-            }
-            foreach (array_filter(array_map('trim', explode(',', (string) ($r['sectors_csv'] ?? '')))) as $code) {
-                $c = strtolower($code);
-                if ($c !== '') {
-                    $sectorCodesSeen[$c] = true;
-                }
-            }
-        }
+        $stats        = ProgramListPositionStats::fromPublishedRows($allPublished, $itemModel);
 
         $positionsListUrl = SiteContext::positionsPathPrefixEnabled()
             ? localized_site_url('positions')
             : localized_site_url('');
 
         $extraHead = FrontPageAssets::positionsProgramList();
-
-        $mainExtra = $listPage !== null ? cms_layout_main_class($listPage['layout_key'] ?? null) : 'ggz-layout-full';
-        if (trim($mainExtra) === '') {
-            $mainExtra = 'ggz-layout-full';
-        }
 
         return view('front/layout', [
             'title'           => $hero['layoutTitle'],
@@ -85,11 +67,7 @@ class Home extends BaseController
                 'typeLabels'          => $typeLabels,
                 'filterTypes'         => $filterTypes,
                 'filterSectors'       => $filterSectors,
-                'stats'               => [
-                    'published_count' => $publishedCount,
-                    'sectors_covered' => count($sectorCodesSeen),
-                    'types_count'     => count(PositionItemModel::typeCodes()),
-                ],
+                'stats'               => $stats,
                 'positionsListUrl'    => $positionsListUrl,
                 'filterPostUrl'       => positions_program_filter_post_url(),
                 'csrfTokenName'       => csrf_token(),
@@ -99,7 +77,7 @@ class Home extends BaseController
                 'heroLead'            => $hero['heroLead'],
             ]),
             'navActive'      => 'positions',
-            'mainExtraClass' => $mainExtra,
+            'mainExtraClass' => $this->programListMainExtraClass($listPage),
         ]);
     }
 
@@ -107,10 +85,8 @@ class Home extends BaseController
     {
         helper(['locale', 'language', 'position']);
 
-        $accept = $this->request->getHeaderLine('Accept');
-        $xhr    = $this->request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest';
-        if (! $xhr && ! str_contains($accept, 'application/json')) {
-            return $this->response->setStatusCode(406)->setJSON(['ok' => false, 'error' => 'json']);
+        if ($reject = $this->rejectProgramListJsonFilter($this->request, $this->response)) {
+            return $reject;
         }
 
         $locale = SiteContext::locale();
@@ -328,20 +304,7 @@ class Home extends BaseController
      */
     private function filterPublished(array $rows, array $filterTypes, array $filterSectors): array
     {
-        if ($filterTypes !== []) {
-            $out = [];
-            foreach ($rows as $row) {
-                if (! is_array($row)) {
-                    continue;
-                }
-                $codes = position_types_from_csv((string) ($row['types_csv'] ?? ''));
-                if (array_intersect($codes, $filterTypes) === []) {
-                    continue;
-                }
-                $out[] = $row;
-            }
-            $rows = $out;
-        }
+        $rows = ProgramListFilter::filterByPositionTypes($rows, $filterTypes);
 
         return ProgramListFilter::filterBySectors($rows, $filterSectors);
     }
