@@ -7,7 +7,9 @@ namespace App\Controllers\Front\Projects;
 use App\Controllers\BaseController;
 use App\Libraries\CmsProgramListHero;
 use App\Libraries\FormSubmissionAckMailer;
+use App\Libraries\FrontPageAssets;
 use App\Libraries\ProgramListFilter;
+use App\Libraries\ProgramListProjectStats;
 use App\Libraries\ProjectContributionNotifier;
 use App\Libraries\ProjectShareQrGenerator;
 use App\Libraries\SectorSelectOptions;
@@ -56,57 +58,13 @@ class Home extends BaseController
         $allPublished = $projectModel->listPublishedRecent(100, $locale);
         $projects     = $this->filterPublishedProjects($allPublished, $filterStatuses, $filterSectors);
 
-        $activeCount = (int) $projectModel
-            ->where('publication_state', ProjectProjectModel::PUBLICATION_PUBLISHED)
-            ->where('locale', $locale)
-            ->where('project_status', ProjectProjectModel::STATUS_ACTIF)
-            ->countAllResults();
-
-        $volRow = $projectModel
-            ->selectSum('volunteers_count', 'vsum')
-            ->where('publication_state', ProjectProjectModel::PUBLICATION_PUBLISHED)
-            ->where('locale', $locale)
-            ->first();
-        $volTotal = (int) ($volRow['vsum'] ?? 0);
-
-        $aggRows = model(ProjectProjectModel::class)
-            ->select('budget_ariary, budget_display, sectors_csv')
-            ->where('publication_state', ProjectProjectModel::PUBLICATION_PUBLISHED)
-            ->where('locale', $locale)
-            ->findAll();
-
-        $budgetSumAriary = 0.0;
-        $budgetParsed    = false;
-        $sectorCodesSeen = [];
-        foreach ($aggRows as $r) {
-            if (! is_array($r)) {
-                continue;
-            }
-            $parsed = project_budget_ariary_for_project($r);
-            if ($parsed !== null) {
-                $budgetSumAriary += $parsed;
-                $budgetParsed = true;
-            }
-            foreach (array_filter(array_map('trim', explode(',', (string) ($r['sectors_csv'] ?? '')))) as $code) {
-                $c = strtolower($code);
-                if ($c !== '') {
-                    $sectorCodesSeen[$c] = true;
-                }
-            }
-        }
-        $sectorsCoveredCount = count($sectorCodesSeen);
-        $budgetTotalDisplay  = $budgetParsed
-            ? project_format_budget_ariary_sum($budgetSumAriary, $locale)
-            : lang('Projects.stats_value_emdash');
+        $stats = ProgramListProjectStats::forLocale($locale, $projectModel);
 
         $projectsListUrl = SiteContext::projectsPathPrefixEnabled()
             ? localized_site_url('projects')
             : localized_site_url('');
 
-        $extraHead = '<link rel="stylesheet" href="' . esc(public_asset_url('assets/css/projects-program-list.css'), 'attr') . '">'
-            . '<link rel="stylesheet" href="' . esc(public_asset_url('assets/css/project-geo-tooltip.css'), 'attr') . '">'
-            . '<script defer src="' . esc(public_asset_url('js/front/projects-program-filters.js'), 'attr') . '"></script>'
-            . '<script defer src="' . esc(public_asset_url('js/front/project-geo-tooltip.js'), 'attr') . '"></script>';
+        $extraHead = FrontPageAssets::projectsProgramList();
 
         $mainExtra = $listPage !== null ? cms_layout_main_class($listPage['layout_key'] ?? null) : 'ggz-layout-full';
         if (trim($mainExtra) === '') {
@@ -125,12 +83,7 @@ class Home extends BaseController
                 'statusLabels'       => $statusLabels,
                 'filterStatuses'     => $filterStatuses,
                 'filterSectors'      => $filterSectors,
-                'stats'              => [
-                    'active_projects'      => $activeCount,
-                    'volunteers_sum'       => $volTotal,
-                    'sectors_covered'      => $sectorsCoveredCount,
-                    'budget_total_display' => $budgetTotalDisplay,
-                ],
+                'stats'              => $stats,
                 'projectsListUrl'    => $projectsListUrl,
                 'filterPostUrl'      => projects_program_filter_post_url(),
                 'csrfTokenName'      => csrf_token(),
@@ -286,16 +239,8 @@ class Home extends BaseController
         $showFundMaterial = project_has_material_needs($project);
         $showFundCta      = $showFundBudget || $showFundMaterial;
 
-        $extraHead = '<link rel="stylesheet" href="' . esc(public_asset_url('assets/css/projects-program-show.css'), 'attr') . '">'
-            . '<link rel="stylesheet" href="' . esc(public_asset_url('assets/css/project-geo-tooltip.css'), 'attr') . '">'
-            . '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/css/intlTelInput.css">'
-            . '<script defer src="' . esc(public_asset_url('js/front/project-geo-tooltip.js'), 'attr') . '"></script>';
-
-        $extraScripts = '<script defer src="' . esc(public_asset_url('js/front/project-share.js'), 'attr') . '"></script>';
-        if ($showFundCta) {
-            $extraScripts .= '<script defer src="https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/js/intlTelInput.min.js"></script>'
-                . '<script defer src="' . esc(public_asset_url('js/front/project-fund-form.js'), 'attr') . '"></script>';
-        }
+        $extraHead    = FrontPageAssets::projectsProgramShowHead();
+        $extraScripts = FrontPageAssets::projectsProgramShowScripts($showFundCta);
 
         return view('front/layout', [
             'title'           => trim((string) ($project['meta_title'] ?? '')) !== ''

@@ -6,6 +6,7 @@ namespace App\Controllers\Front\Positions;
 
 use App\Controllers\BaseController;
 use App\Libraries\CmsProgramListHero;
+use App\Libraries\FrontPageAssets;
 use App\Libraries\ProgramListFilter;
 use App\Libraries\ProjectShareQrGenerator;
 use App\Libraries\SectorSelectOptions;
@@ -66,8 +67,7 @@ class Home extends BaseController
             ? localized_site_url('positions')
             : localized_site_url('');
 
-        $extraHead = '<link rel="stylesheet" href="' . esc(public_asset_url('assets/css/positions-program-list.css'), 'attr') . '">'
-            . '<script defer src="' . esc(public_asset_url('js/front/positions-program-filters.js'), 'attr') . '"></script>';
+        $extraHead = FrontPageAssets::positionsProgramList();
 
         $mainExtra = $listPage !== null ? cms_layout_main_class($listPage['layout_key'] ?? null) : 'ggz-layout-full';
         if (trim($mainExtra) === '') {
@@ -291,18 +291,15 @@ class Home extends BaseController
         $shareQrImageUrl  = position_share_qr_image_url($slug);
         $shareQrPageUrl   = position_share_qr_page_url($slug);
 
-        $extraHead = '<link rel="stylesheet" href="' . esc(public_asset_url('assets/css/program-body-blocks.css'), 'attr') . '">'
-            . '<link rel="stylesheet" href="' . esc(public_asset_url('assets/css/projects-program-show.css'), 'attr') . '">'
-            . '<link rel="stylesheet" href="' . esc(public_asset_url('assets/css/positions-program-show.css'), 'attr') . '">';
-        $extraScripts = '<script defer src="' . esc(public_asset_url('js/front/project-share.js'), 'attr') . '"></script>';
+        $positionAssets = FrontPageAssets::positionsProgramShow();
 
         return view('front/layout', [
             'title'           => trim((string) ($item['meta_title'] ?? '')) !== ''
                 ? (string) $item['meta_title']
                 : (string) ($item['title'] ?? lang('Positions.default_project_title')),
             'metaDescription' => $meta,
-            'extraHead'       => $extraHead,
-            'extraScripts'    => $extraScripts,
+            'extraHead'       => $positionAssets['head'],
+            'extraScripts'    => $positionAssets['scripts'],
             'main'            => view('front/positions/show', [
                 'item'               => $item,
                 'slug'               => $slug,

@@ -6,6 +6,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Libraries\CmsHeroPayload;
+use App\Libraries\LocaleSlug;
 use App\Libraries\CmsPageBodyNormalizer;
 use App\Models\CmsMediaModel;
 use App\Models\CmsPageModel;
@@ -79,8 +80,8 @@ class Pages extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $slug   = $this->normalizedSlug($this->request->getPost('slug'));
-        $locale = $this->normalizedLocale($this->request->getPost('locale'));
+        $slug   = LocaleSlug::normalizeSlug($this->request->getPost('slug'));
+        $locale = LocaleSlug::normalizeLocale($this->request->getPost('locale'));
         $model  = model(CmsPageModel::class);
         if ($model->where('slug', $slug)->where('locale', $locale)->first() !== null) {
             return redirect()->back()->withInput()->with('error', 'Ce slug existe déjà pour cette langue.');
@@ -99,7 +100,7 @@ class Pages extends BaseController
             return redirect()->back()->withInput()->with('error', 'Image hero : média introuvable (vérifiez l’identifiant dans la médiathèque).');
         }
 
-        $tgrp = $this->normalizedTranslationGroup($this->request->getPost('translation_group'));
+        $tgrp = LocaleSlug::normalizeTranslationGroup($this->request->getPost('translation_group'));
 
         $model->insert([
             'slug'               => $slug,
@@ -156,8 +157,8 @@ class Pages extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $slug   = $this->normalizedSlug($this->request->getPost('slug'));
-        $locale = $this->normalizedLocale($this->request->getPost('locale'));
+        $slug   = LocaleSlug::normalizeSlug($this->request->getPost('slug'));
+        $locale = LocaleSlug::normalizeLocale($this->request->getPost('locale'));
         $other  = $model->where('slug', $slug)->where('locale', $locale)->where('id !=', $id)->first();
         if ($other !== null) {
             return redirect()->back()->withInput()->with('error', 'Ce slug existe déjà pour cette langue.');
@@ -216,9 +217,9 @@ class Pages extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        $srcLocale    = $this->normalizedLocale($src['locale'] ?? 'fr');
+        $srcLocale    = LocaleSlug::normalizeLocale($src['locale'] ?? 'fr');
         $targetLocale = $srcLocale === 'fr' ? 'en' : 'fr';
-        $srcSlug      = $this->normalizedSlug($src['slug'] ?? '');
+        $srcSlug      = LocaleSlug::normalizeSlug($src['slug'] ?? '');
 
         if ($srcSlug === 'home') {
             $baseTargetSlug = 'home';
@@ -338,28 +339,9 @@ class Pages extends BaseController
             . '<script defer src="' . esc(base_url('js/admin/cms-blocks-form.js'), 'attr') . '"></script>';
     }
 
-    private function normalizedSlug(?string $slug): string
-    {
-        return strtolower(trim((string) $slug));
-    }
-
-    private function normalizedLocale(?string $locale): string
-    {
-        $locale = strtolower(trim((string) $locale));
-
-        return in_array($locale, ['fr', 'en'], true) ? $locale : 'fr';
-    }
-
-    private function normalizedTranslationGroup($raw): ?string
-    {
-        $g = trim((string) $raw);
-
-        return $g !== '' ? $g : null;
-    }
-
     private function buildUniqueSlugForLocale(string $baseSlug, string $locale): string
     {
-        $slug = $this->normalizedSlug($baseSlug);
+        $slug = LocaleSlug::normalizeSlug($baseSlug);
         if ($slug === '') {
             $slug = 'page-' . $locale;
         }

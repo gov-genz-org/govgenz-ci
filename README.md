@@ -42,6 +42,7 @@ Pipeline GitHub Actions (tests, build, déploiement FTP staging/prod) et configu
 | Document | Rôle |
 |----------|------|
 | [CI-CD.md](docs/CI-CD.md) | Branches, rulesets, secrets FTP, workflow |
+| [CODE-STRUCTURE.md](docs/CODE-STRUCTURE.md) | Où mettre la logique (Controllers, Libraries, Views) |
 | [CSS-ARCHITECTURE.md](docs/CSS-ARCHITECTURE.md) | **Ordre de chargement CSS**, front vs admin, programmes projets/positions, règles `.section__title` |
 | [GOVGENZ.md](../docs/GOVGENZ.md) | Vision, MVP, architecture |
 | [GOVGENZ-CONCEPTION.md](../docs/GOVGENZ-CONCEPTION.md) | Modèle de données, routes |

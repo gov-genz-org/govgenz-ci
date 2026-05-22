@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Libraries\LocaleSlug;
 use App\Libraries\ProjectBodyBlocksNormalizer;
 use App\Libraries\ProjectBudgetTableSync;
 use App\Libraries\ProjectGeographyPayload;
@@ -97,12 +98,12 @@ class ProjectProjects extends BaseController
             return redirect()->back()->withInput()->with('errors', $budgetErrors);
         }
 
-        $slug = $this->normalizeSlug((string) $this->request->getPost('slug'));
+        $slug = LocaleSlug::normalizeSlug((string) $this->request->getPost('slug'));
         if ($slug === '') {
             return redirect()->back()->withInput()->with('errors', ['slug' => 'Slug invalide.']);
         }
 
-        $locale = $this->normalizeLocale((string) $this->request->getPost('locale'));
+        $locale = LocaleSlug::normalizeLocale((string) $this->request->getPost('locale'));
         $budgetPayload = $this->budgetPayloadFromPost($locale);
         $geoPayload    = ProjectGeographyPayload::fromRequest($this->request);
 
@@ -196,12 +197,12 @@ class ProjectProjects extends BaseController
             return redirect()->back()->withInput()->with('errors', $budgetErrors);
         }
 
-        $slug = $this->normalizeSlug((string) $this->request->getPost('slug'));
+        $slug = LocaleSlug::normalizeSlug((string) $this->request->getPost('slug'));
         if ($slug === '') {
             return redirect()->back()->withInput()->with('errors', ['slug' => 'Slug invalide.']);
         }
 
-        $locale = $this->normalizeLocale((string) ($project['locale'] ?? 'fr'));
+        $locale = LocaleSlug::normalizeLocale((string) ($project['locale'] ?? 'fr'));
         $budgetPayload = $this->budgetPayloadFromPost($locale);
         $geoPayload    = ProjectGeographyPayload::fromRequest($this->request);
 
@@ -285,10 +286,10 @@ class ProjectProjects extends BaseController
             throw PageNotFoundException::forPageNotFound();
         }
 
-        $srcLocale    = $this->normalizeLocale((string) ($src['locale'] ?? 'fr'));
+        $srcLocale    = LocaleSlug::normalizeLocale((string) ($src['locale'] ?? 'fr'));
         $targetLocale = $srcLocale === 'fr' ? 'en' : 'fr';
 
-        $srcSlug = $this->normalizeSlug((string) ($src['slug'] ?? ''));
+        $srcSlug = LocaleSlug::normalizeSlug((string) ($src['slug'] ?? ''));
         if ($srcSlug === '') {
             $srcSlug = 'projet';
         }
@@ -296,7 +297,7 @@ class ProjectProjects extends BaseController
         $baseTargetSlug = $srcLocale === 'fr'
             ? locale_slug_fr_to_en($srcSlug)
             : locale_slug_en_to_fr($srcSlug);
-        $baseTargetSlug = $this->normalizeSlug($baseTargetSlug);
+        $baseTargetSlug = LocaleSlug::normalizeSlug($baseTargetSlug);
         if ($baseTargetSlug === '') {
             $baseTargetSlug = 'projet-' . $targetLocale;
         }
@@ -360,7 +361,7 @@ class ProjectProjects extends BaseController
      */
     private function buildUniqueSlugForProjectLocale(string $baseSlug, string $locale, ProjectProjectModel $model): string
     {
-        $slug = $this->normalizeSlug($baseSlug);
+        $slug = LocaleSlug::normalizeSlug($baseSlug);
         if ($slug === '') {
             $slug = 'projet-' . $locale;
         }
@@ -410,23 +411,6 @@ class ProjectProjects extends BaseController
         }
 
         return $rules;
-    }
-
-    private function normalizeLocale(string $raw): string
-    {
-        $s = strtolower(trim($raw));
-
-        return in_array($s, ['fr', 'en'], true) ? $s : 'fr';
-    }
-
-    private function normalizeSlug(string $raw): string
-    {
-        $s = mb_strtolower(trim($raw), 'UTF-8');
-        $s = preg_replace('/[^a-z0-9\-]+/u', '-', $s) ?? '';
-        $s = preg_replace('/-+/', '-', $s) ?? '';
-        $s = trim($s, '-');
-
-        return $s;
     }
 
     private function nullableString(string $field): ?string

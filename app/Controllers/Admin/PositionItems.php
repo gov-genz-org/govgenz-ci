@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Libraries\LocaleSlug;
 use App\Libraries\ProjectBodyBlocksNormalizer;
 use App\Models\PositionItemModel;
 use App\Models\SectorModel;
@@ -82,12 +83,12 @@ class PositionItems extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $slug = $this->normalizeSlug((string) $this->request->getPost('slug'));
+        $slug = LocaleSlug::normalizeSlug((string) $this->request->getPost('slug'));
         if ($slug === '') {
             return redirect()->back()->withInput()->with('errors', ['slug' => 'Slug invalide.']);
         }
 
-        $locale = $this->normalizeLocale((string) $this->request->getPost('locale'));
+        $locale = LocaleSlug::normalizeLocale((string) $this->request->getPost('locale'));
         $model  = model(PositionItemModel::class);
         if ($model->where('slug', $slug)->where('locale', $locale)->first() !== null) {
             return redirect()->back()->withInput()->with('error', 'Ce slug est déjà utilisé pour cette langue.');
@@ -158,12 +159,12 @@ class PositionItems extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $slug = $this->normalizeSlug((string) $this->request->getPost('slug'));
+        $slug = LocaleSlug::normalizeSlug((string) $this->request->getPost('slug'));
         if ($slug === '') {
             return redirect()->back()->withInput()->with('errors', ['slug' => 'Slug invalide.']);
         }
 
-        $locale = $this->normalizeLocale((string) ($item['locale'] ?? 'fr'));
+        $locale = LocaleSlug::normalizeLocale((string) ($item['locale'] ?? 'fr'));
         if ($model->where('slug', $slug)->where('locale', $locale)->where('id !=', $id)->first() !== null) {
             return redirect()->back()->withInput()->with('error', 'Ce slug est déjà utilisé pour cette langue.');
         }
@@ -231,9 +232,9 @@ class PositionItems extends BaseController
             throw PageNotFoundException::forPageNotFound();
         }
 
-        $srcLocale    = $this->normalizeLocale((string) ($src['locale'] ?? 'fr'));
+        $srcLocale    = LocaleSlug::normalizeLocale((string) ($src['locale'] ?? 'fr'));
         $targetLocale = $srcLocale === 'fr' ? 'en' : 'fr';
-        $srcSlug      = $this->normalizeSlug((string) ($src['slug'] ?? ''));
+        $srcSlug      = LocaleSlug::normalizeSlug((string) ($src['slug'] ?? ''));
         if ($srcSlug === '') {
             $srcSlug = 'position';
         }
@@ -241,7 +242,7 @@ class PositionItems extends BaseController
         $baseTargetSlug = $srcLocale === 'fr'
             ? locale_slug_fr_to_en($srcSlug)
             : locale_slug_en_to_fr($srcSlug);
-        $baseTargetSlug = $this->normalizeSlug($baseTargetSlug);
+        $baseTargetSlug = LocaleSlug::normalizeSlug($baseTargetSlug);
         if ($baseTargetSlug === '') {
             $baseTargetSlug = 'position-' . $targetLocale;
         }
@@ -314,22 +315,6 @@ class PositionItems extends BaseController
         }
 
         return $rules;
-    }
-
-    private function normalizeLocale(string $raw): string
-    {
-        $s = strtolower(trim($raw));
-
-        return in_array($s, ['fr', 'en'], true) ? $s : 'fr';
-    }
-
-    private function normalizeSlug(string $raw): string
-    {
-        $s = mb_strtolower(trim($raw), 'UTF-8');
-        $s = preg_replace('/[^a-z0-9\-]+/u', '-', $s) ?? '';
-        $s = preg_replace('/-+/', '-', $s) ?? '';
-
-        return trim($s, '-');
     }
 
     private function nullableString(string $field): ?string
