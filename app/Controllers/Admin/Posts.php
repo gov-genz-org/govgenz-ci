@@ -109,7 +109,7 @@ class Posts extends BaseController
             $model->update($newId, ['translation_group' => (string) $newId]);
         }
 
-        return $this->adminRedirectToEdit('admin/posts', $newId, 'Article créé.');
+        return $this->adminRedirectToEdit('admin/posts', $newId, lang('Admin.flash_post_created'));
     }
 
     public function edit(int $id)
@@ -170,7 +170,7 @@ class Posts extends BaseController
             'meta_description'   => $this->request->getPost('meta_description') ?: null,
         ]);
 
-        return $this->adminRedirectToEdit('admin/posts', $id, 'Article mis à jour.');
+        return $this->adminRedirectToEdit('admin/posts', $id, lang('Admin.flash_post_updated'));
     }
 
     public function duplicate(int $id): ResponseInterface

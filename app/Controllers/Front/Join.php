@@ -6,6 +6,7 @@ namespace App\Controllers\Front;
 
 use App\Controllers\BaseController;
 use App\Libraries\FormSubmissionAckMailer;
+use App\Libraries\FrontPageAssets;
 use App\Libraries\VolunteerJoinNotifier;
 use App\Models\SectorModel;
 use App\Models\VolunteerApplicationModel;
@@ -14,22 +15,7 @@ class Join extends BaseController
 {
     public function index()
     {
-        helper(['url', 'asset']);
-        $multiSelectBase = base_url('assets/vendor/multi-select-dropdown-js/1.0.3/');
-        $joinCssUrl      = esc(public_asset_url('assets/css/join-enhancements.css'), 'attr');
-        $joinJsUrl       = esc(public_asset_url('js/front/join-enhancements.js'), 'attr');
-
-        $extraHead = <<<HTML
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/css/intlTelInput.css">
-<link rel="stylesheet" href="{$multiSelectBase}MultiSelect.min.css">
-<link rel="stylesheet" href="{$joinCssUrl}">
-HTML;
-        $extraScripts = <<<HTML
-<script defer src="https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/js/intlTelInput.min.js"></script>
-<script defer src="{$multiSelectBase}MultiSelect.min.js"></script>
-<script defer src="{$joinJsUrl}"></script>
-HTML;
-
+        $joinAssets         = FrontPageAssets::join();
         $preselectedSectors = self::normalizeSectorKeys($this->request->getGet('sector'));
 
         return view('front/layout', [
@@ -40,8 +26,8 @@ HTML;
             ]),
             'navActive'       => 'join',
             'mainExtraClass'  => 'ggz-layout-full',
-            'extraHead'       => $extraHead,
-            'extraScripts'    => $extraScripts,
+            'extraHead'       => $joinAssets['head'],
+            'extraScripts'    => $joinAssets['scripts'],
         ]);
     }
 

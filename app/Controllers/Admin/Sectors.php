@@ -70,7 +70,7 @@ class Sectors extends BaseController
         $model   = model(SectorModel::class);
         $model->insert($payload);
 
-        return $this->adminRedirectToEdit('admin/sectors', (int) $model->getInsertID(), 'Secteur créé.');
+        return $this->adminRedirectToEdit('admin/sectors', (int) $model->getInsertID(), lang('Admin.flash_sector_created'));
     }
 
     public function edit(int $id)
@@ -107,7 +107,7 @@ class Sectors extends BaseController
 
         $model->update($id, $payload);
 
-        return $this->adminRedirectToEdit('admin/sectors', $id, 'Secteur mis à jour.');
+        return $this->adminRedirectToEdit('admin/sectors', $id, lang('Admin.flash_sector_updated'));
     }
 
     public function delete(int $id): ResponseInterface

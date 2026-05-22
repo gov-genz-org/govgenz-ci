@@ -162,7 +162,7 @@ class ProjectProjects extends BaseController
             $model->update($newId, ['translation_group' => $tgFinal]);
         }
 
-        return $this->adminRedirectToEdit('admin/project-projects', $newId, 'Projet créé.');
+        return $this->adminRedirectToEdit('admin/project-projects', $newId, lang('Admin.flash_project_created'));
     }
 
     public function edit(int $id): string
@@ -264,7 +264,7 @@ class ProjectProjects extends BaseController
             'published_at'       => $publishedAt,
         ]);
 
-        return $this->adminRedirectToEdit('admin/project-projects', $id, 'Projet mis à jour.');
+        return $this->adminRedirectToEdit('admin/project-projects', $id, lang('Admin.flash_project_updated'));
     }
 
     public function delete(int $id): ResponseInterface

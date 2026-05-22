@@ -58,7 +58,7 @@ class SiteMenu extends BaseController
         $model = model(SiteNavItemModel::class);
         $model->insert($this->payloadFromPost());
 
-        return $this->adminRedirectToEdit('admin/site-menu', (int) $model->getInsertID(), 'Entrée de menu créée.');
+        return $this->adminRedirectToEdit('admin/site-menu', (int) $model->getInsertID(), lang('Admin.flash_menu_entry_created'));
     }
 
     public function edit(int $id)
@@ -89,7 +89,7 @@ class SiteMenu extends BaseController
 
         $model->update($id, $this->payloadFromPost());
 
-        return $this->adminRedirectToEdit('admin/site-menu', $id, 'Entrée de menu mise à jour.');
+        return $this->adminRedirectToEdit('admin/site-menu', $id, lang('Admin.flash_menu_entry_updated'));
     }
 
     public function delete(int $id): ResponseInterface

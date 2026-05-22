@@ -39,4 +39,13 @@ final class FrontPageAssets
             'scripts' => view('front/partials/head_assets/positions_program_show_scripts'),
         ];
     }
+
+    /** @return array{head: string, scripts: string} */
+    public static function join(): array
+    {
+        return [
+            'head'    => view('front/partials/head_assets/join'),
+            'scripts' => view('front/partials/head_assets/join_scripts'),
+        ];
+    }
 }

@@ -128,7 +128,7 @@ class PositionItems extends BaseController
             $model->update($newId, ['translation_group' => $tgFinal]);
         }
 
-        return $this->adminRedirectToEdit('admin/position-items', $newId, 'Position créée.');
+        return $this->adminRedirectToEdit('admin/position-items', $newId, lang('Admin.flash_position_created'));
     }
 
     public function edit(int $id): string
@@ -209,7 +209,7 @@ class PositionItems extends BaseController
             'published_at'       => $publishedAt,
         ]);
 
-        return $this->adminRedirectToEdit('admin/position-items', $id, 'Position mise à jour.');
+        return $this->adminRedirectToEdit('admin/position-items', $id, lang('Admin.flash_position_updated'));
     }
 
     public function delete(int $id): ResponseInterface

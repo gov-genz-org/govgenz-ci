@@ -78,9 +78,9 @@ class StaffUsers extends BaseController
             return redirect()->back()->withInput()->with('error', $result['error'] ?? 'Impossible de créer le compte.');
         }
 
-        $msg = 'Invitation envoyée par e-mail.';
+        $msg = lang('Admin.flash_staff_invite_sent');
         if (! $result['email_sent']) {
-            $msg = 'Compte créé, mais l’e-mail d’invitation n’a pas pu être envoyé (vérifiez la configuration SMTP).';
+            $msg = lang('Admin.flash_staff_created_no_email');
         }
 
         return $this->adminRedirectToEdit('admin/staff-users', $result['user_id'], $msg);
@@ -94,8 +94,8 @@ class StaffUsers extends BaseController
         }
 
         $msg = $result['email_sent']
-            ? 'Invitation renvoyée par e-mail.'
-            : 'Jeton régénéré, mais l’e-mail n’a pas pu être envoyé (vérifiez la configuration SMTP).';
+            ? lang('Admin.flash_staff_invite_resent')
+            : lang('Admin.flash_staff_token_no_email');
 
         return redirect()->back()->with('message', $msg);
     }
@@ -179,7 +179,7 @@ class StaffUsers extends BaseController
 
         $model->update($id, $data);
 
-        return $this->adminRedirectToEdit('admin/staff-users', $id, 'Compte mis à jour.');
+        return $this->adminRedirectToEdit('admin/staff-users', $id, lang('Admin.flash_staff_updated'));
     }
 
     public function delete(int $id): ResponseInterface

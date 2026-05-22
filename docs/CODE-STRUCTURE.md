@@ -97,10 +97,13 @@ $extraHead = FrontPageAssets::projectsProgramList();
 | Lang admin | `Language/fr/Admin.php`, `Language/en/Admin.php` (flash, erreurs, traduction) |
 | Filtre JSON listes programme | `Libraries/FrontProgramListFilter.php` |
 | Helpers admin découpés | `admin_url_helper.php`, `admin_translation_helper.php`, `admin_list_helper.php`, `admin_datetime_helper.php`, `admin_form_helper.php`, `admin_staff_helper.php` |
+| Assets page Rejoindre | `head_assets/join.php`, `head_assets/join_scripts.php`, `FrontPageAssets::join()` |
+| Libellés chrome admin | Sidebar, layout, breadcrumbs, modale confirm — `lang('Admin.nav_*')`, `Admin.ui_*` |
+| Flash enregistrement admin | `flash_*_created` / `flash_*_updated` dans les contrôleurs CRUD |
 
 ## Prochaines étapes (backlog)
 
-1. Étendre `lang('Admin.*')` aux libellés des vues admin et messages « enregistré » restants.
-2. Partial `head_assets/join.php` pour `Front/Join.php`.
+1. Étendre `lang('Admin.*')` aux formulaires d’édition admin (boutons, champs, listes).
+2. Migrer les erreurs admin encore en dur (`Pages`, `Posts`, `Auth`, etc.).
 
 Voir aussi [CI-CD.md](CI-CD.md) pour le pipeline de déploiement.
