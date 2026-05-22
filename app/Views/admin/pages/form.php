@@ -85,7 +85,7 @@ if ($page !== null && ($page['status'] ?? '') === 'published') {
         <?php if (! in_array($pageLocale, ['fr', 'en'], true)) {
             $pageLocale = 'fr';
         } ?>
-        <label class="form-label" for="locale">Langue</label>
+        <label class="form-label" for="locale"><?= esc(lang('Admin.form_label_locale')) ?></label>
         <select name="locale" id="locale" class="form-select" style="max-width:16rem">
             <option value="fr" <?= $pageLocale === 'fr' ? 'selected' : '' ?>>Français (sans préfixe d’URL)</option>
             <option value="en" <?= $pageLocale === 'en' ? 'selected' : '' ?>>English (/en/…)</option>

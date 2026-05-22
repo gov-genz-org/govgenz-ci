@@ -16,16 +16,16 @@ declare(strict_types=1);
                 <p class="small text-secondary mb-0 mt-2">Choisissez votre mot de passe pour accéder au back-office.</p>
             </div>
 
-            <p class="small text-muted mb-3">Compte : <strong><?= esc($email) ?></strong></p>
+            <p class="small text-muted mb-3"><?= esc(lang('Admin.auth_account_label')) ?> <strong><?= esc($email) ?></strong></p>
 
             <form action="<?= site_url('admin/invite/' . esc($token, 'url')) ?>" method="post" accept-charset="UTF-8">
                 <?= csrf_field() ?>
                 <div class="mb-3">
-                    <label for="password" class="form-label small fw-semibold text-secondary">Mot de passe</label>
+                    <label for="password" class="form-label small fw-semibold text-secondary"><?= esc(lang('Admin.auth_password_label')) ?></label>
                     <input type="password" name="password" id="password" class="form-control form-control-lg" required minlength="<?= (int) $passwordMin ?>" autocomplete="new-password" autofocus>
                 </div>
                 <div class="mb-4">
-                    <label for="password_confirm" class="form-label small fw-semibold text-secondary">Confirmer le mot de passe</label>
+                    <label for="password_confirm" class="form-label small fw-semibold text-secondary"><?= esc(lang('Admin.auth_password_confirm')) ?></label>
                     <input type="password" name="password_confirm" id="password_confirm" class="form-control form-control-lg" required minlength="<?= (int) $passwordMin ?>" autocomplete="new-password">
                     <p class="form-text small mb-0"><?= esc($passwordHint) ?></p>
                 </div>

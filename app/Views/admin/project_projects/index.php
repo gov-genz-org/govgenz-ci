@@ -17,39 +17,26 @@ helper(['form', 'admin']);
 /** @var array<string, array<string, true>> $translationLocalesByGroup */
 ?>
 <h1 class="h3 mb-1"><?= esc(lang('Admin.title_projects_program')) ?></h1>
-<div class="alert alert-light border small mb-3" role="note">
-    <p class="mb-2"><strong>Fiches projet</strong> (ci‑dessous) : contenu dynamique aligné sur <code>site_govgenz/projects-govgenz</code>, tables <code>project_*</code>.</p>
-    <p class="mb-2"><strong>Bandeau de la liste publique</strong> <code>/projects</code> (titre, chapô, méta) : ce n’est pas ce tableau — il est alimenté par des <strong>pages CMS</strong> dont les slugs sont fixés dans le code :</p>
-    <ul class="mb-2 ps-3">
-        <li>FR : <code>projets-programme</code></li>
-        <li>EN : <code>projects-program</code></li>
-    </ul>
-    <p class="mb-2 text-muted">Même <strong>groupe de traduction</strong> sur les deux lignes CMS. Le corps HTML de ces pages n’apparaît pas sur la liste ; seuls les champs « hero » sont utilisés.</p>
-    <p class="mb-0 d-flex flex-wrap gap-3 align-items-center">
-        <a href="<?= site_url('admin/pages') ?>" class="btn btn-sm btn-outline-secondary">Pages CMS</a>
-        <a href="<?= esc(admin_public_projects_program_list_url('fr'), 'attr') ?>" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary">Liste publique (FR)</a>
-        <a href="<?= esc(admin_public_projects_program_list_url('en'), 'attr') ?>" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary">Liste publique (EN)</a>
-    </p>
-</div>
+<?= view('admin/partials/notes/projects_program') ?>
 
 <div class="d-flex flex-wrap align-items-end gap-2 mb-3">
     <a href="<?= site_url('admin/project-projects/create') ?>" class="btn btn-primary btn-sm"><?= esc(lang('Admin.breadcrumb_project_new')) ?></a>
     <form method="get" action="<?= site_url('admin/project-projects') ?>" class="d-flex flex-wrap align-items-end gap-2 ms-md-auto">
         <?= admin_list_sort_hidden_fields($sort, $dir) ?>
         <div>
-            <label class="small text-muted mb-0 d-block" for="pp-q">Recherche</label>
-            <input type="search" name="q" id="pp-q" value="<?= esc($searchQuery) ?>" class="form-control form-control-sm" placeholder="Titre ou slug…" maxlength="120">
+            <label class="small text-muted mb-0 d-block" for="pp-q"><?= esc(lang('Admin.filter_search')) ?></label>
+            <input type="search" name="q" id="pp-q" value="<?= esc($searchQuery) ?>" class="form-control form-control-sm" placeholder="<?= esc(lang('Admin.placeholder_title_slug'), 'attr') ?>" maxlength="120">
         </div>
         <div>
-            <label class="small text-muted mb-0 d-block" for="pp-loc">Langue</label>
+            <label class="small text-muted mb-0 d-block" for="pp-loc"><?= esc(lang('Admin.filter_locale')) ?></label>
             <select name="loc" id="pp-loc" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
-                <option value="" <?= $filterLocale === 'all' ? 'selected' : '' ?>>Toutes</option>
+                <option value="" <?= $filterLocale === 'all' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_all')) ?></option>
                 <option value="fr" <?= $filterLocale === 'fr' ? 'selected' : '' ?>>FR</option>
                 <option value="en" <?= $filterLocale === 'en' ? 'selected' : '' ?>>EN</option>
             </select>
         </div>
         <div>
-            <label class="small text-muted mb-0 d-block" for="pp-st">Statut métier</label>
+            <label class="small text-muted mb-0 d-block" for="pp-st"><?= esc(lang('Admin.filter_business_status')) ?></label>
             <select name="status" id="pp-st" class="form-select form-select-sm" style="width:auto" onchange="this.form.submit()">
                 <option value="" <?= $filterStatus === 'all' ? 'selected' : '' ?>>Tous</option>
                 <?php foreach ($statusLabels as $k => $lab) : ?>
@@ -80,13 +67,13 @@ helper(['form', 'admin']);
 <table class="table table-hover align-middle mb-0 small">
     <thead class="table-light">
         <tr>
-            <th><?= admin_list_sort_th('slug', 'Slug', $sort, $dir) ?></th>
-            <th><?= admin_list_sort_th('locale', 'Langue', $sort, $dir) ?></th>
-            <th><?= admin_list_sort_th('title', 'Titre', $sort, $dir) ?></th>
-            <th><?= admin_list_sort_th('project_status', 'Statut', $sort, $dir) ?></th>
-            <th><?= admin_list_sort_th('publication_state', 'Publication', $sort, $dir) ?></th>
-            <th><?= admin_list_sort_th('updated_at', 'Maj', $sort, $dir) ?></th>
-            <th class="text-end">Actions</th>
+            <th><?= admin_list_sort_th('slug', lang('Admin.col_slug'), $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('locale', lang('Admin.col_locale'), $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('title', lang('Admin.col_title'), $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('project_status', lang('Admin.col_status'), $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('publication_state', lang('Admin.col_publication'), $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('updated_at', lang('Admin.col_updated'), $sort, $dir) ?></th>
+            <th class="text-end"><?= esc(lang('Admin.col_actions')) ?></th>
         </tr>
     </thead>
     <tbody>
@@ -110,14 +97,14 @@ helper(['form', 'admin']);
             <td><span class="badge <?= $pub === 'published' ? 'text-bg-success' : 'text-bg-warning' ?>"><?= esc($pubLabels[$pub] ?? $pub) ?></span></td>
             <td class="text-nowrap"><?= admin_format_datetime($row['updated_at'] ?? null) ?></td>
                     <td class="text-end text-nowrap">
-                        <a href="<?= site_url('admin/project-projects/edit/' . $id) ?>" class="btn btn-outline-primary btn-sm">Modifier</a>
+                        <a href="<?= site_url('admin/project-projects/edit/' . $id) ?>" class="btn btn-outline-primary btn-sm"><?= esc(lang('Admin.action_modify')) ?></a>
                         <form action="<?= site_url('admin/project-projects/duplicate/' . $id) ?>" method="post" class="d-inline">
                             <?= csrf_field() ?>
                             <button type="submit" class="btn btn-outline-primary btn-sm" <?= $duplicateTradDisabled ? 'disabled title="' . esc(lang('Admin.tooltip_duplicate_trad_disabled'), 'attr') . '"' : '' ?>><?= esc(lang('Admin.action_duplicate_trad')) ?></button>
                         </form>
                         <form action="<?= site_url('admin/project-projects/delete/' . $id) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="<?= esc(lang('Admin.confirm_delete_project'), 'attr') ?>">
                             <?= csrf_field() ?>
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                            <button type="submit" class="btn btn-outline-danger btn-sm"><?= esc(lang('Admin.action_delete')) ?></button>
                         </form>
                     </td>
         </tr>

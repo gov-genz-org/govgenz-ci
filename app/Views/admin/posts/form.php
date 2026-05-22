@@ -45,7 +45,7 @@ if ($post !== null && ($post['status'] ?? '') === 'published' && ($post['slug'] 
         <?php if (! in_array($postLocale, ['fr', 'en'], true)) {
             $postLocale = 'fr';
         } ?>
-        <label class="form-label" for="locale">Langue</label>
+        <label class="form-label" for="locale"><?= esc(lang('Admin.form_label_locale')) ?></label>
         <select name="locale" id="locale" class="form-select" style="max-width:16rem">
             <option value="fr" <?= $postLocale === 'fr' ? 'selected' : '' ?>>Français</option>
             <option value="en" <?= $postLocale === 'en' ? 'selected' : '' ?>>English</option>

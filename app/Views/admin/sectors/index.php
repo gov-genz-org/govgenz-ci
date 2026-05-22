@@ -26,14 +26,14 @@ helper('admin');
     <table class="table table-sm table-hover align-middle mb-0">
         <thead class="table-light">
             <tr>
-                <th scope="col"><?= admin_list_sort_th('code', 'Code', $sort, $dir) ?></th>
+                <th scope="col"><?= admin_list_sort_th('code', lang('Admin.col_code'), $sort, $dir) ?></th>
                 <th scope="col">Code filtre FR</th>
                 <th scope="col">Code filtre EN</th>
-                <th scope="col"><?= admin_list_sort_th('label_fr', 'Libellé FR', $sort, $dir) ?></th>
+                <th scope="col"><?= admin_list_sort_th('label_fr', lang('Admin.col_label_fr'), $sort, $dir) ?></th>
                 <th scope="col">Label EN</th>
-                <th scope="col"><?= admin_list_sort_th('contact_email', 'E-mail', $sort, $dir) ?></th>
-                <th scope="col" class="text-end"><?= admin_list_sort_th('sort_order', 'Ordre', $sort, $dir) ?></th>
-                <th scope="col" class="text-center" style="width:5.5rem"><?= admin_list_sort_th('is_active', 'Actif', $sort, $dir) ?></th>
+                <th scope="col"><?= admin_list_sort_th('contact_email', lang('Admin.col_email'), $sort, $dir) ?></th>
+                <th scope="col" class="text-end"><?= admin_list_sort_th('sort_order', lang('Admin.col_order'), $sort, $dir) ?></th>
+                <th scope="col" class="text-center" style="width:5.5rem"><?= admin_list_sort_th('is_active', lang('Admin.col_active'), $sort, $dir) ?></th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -56,10 +56,10 @@ helper('admin');
                         </span>
                     </td>
                     <td class="text-end text-nowrap">
-                        <a class="btn btn-outline-secondary btn-sm" href="<?= site_url('admin/sectors/edit/' . $id) ?>">Modifier</a>
+                        <a class="btn btn-outline-secondary btn-sm" href="<?= site_url('admin/sectors/edit/' . $id) ?>"><?= esc(lang('Admin.action_modify')) ?></a>
                         <form action="<?= site_url('admin/sectors/delete/' . $id) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="<?= esc(lang('Admin.confirm_delete_sector'), 'attr') ?>">
                             <?= csrf_field() ?>
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                            <button type="submit" class="btn btn-outline-danger btn-sm"><?= esc(lang('Admin.action_delete')) ?></button>
                         </form>
                     </td>
                 </tr>

@@ -26,13 +26,13 @@ helper('admin');
 <table class="table table-striped align-middle mb-0">
     <thead class="table-light">
     <tr>
-        <th scope="col"><?= admin_list_sort_th('locale', 'Langue', $sort, $dir) ?></th>
-        <th scope="col"><?= admin_list_sort_th('sort_order', 'Ordre', $sort, $dir) ?></th>
-        <th scope="col"><?= admin_list_sort_th('label', 'Libellé', $sort, $dir) ?></th>
-        <th scope="col"><?= admin_list_sort_th('href_kind', 'Type', $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('locale', lang('Admin.col_locale'), $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('sort_order', lang('Admin.col_order'), $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('label', lang('Admin.col_label'), $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('href_kind', lang('Admin.col_type'), $sort, $dir) ?></th>
         <th scope="col">Cible</th>
         <th scope="col">Surlignage</th>
-        <th scope="col"><?= admin_list_sort_th('is_active', 'Actif', $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('is_active', lang('Admin.col_active'), $sort, $dir) ?></th>
         <th scope="col" class="text-end">Actions</th>
     </tr>
     </thead>
@@ -55,10 +55,10 @@ helper('admin');
                 <?php endif; ?>
             </td>
             <td class="text-end text-nowrap">
-                <a href="<?= site_url('admin/site-menu/edit/' . $id) ?>" class="btn btn-sm btn-outline-primary">Éditer</a>
+                <a href="<?= site_url('admin/site-menu/edit/' . $id) ?>" class="btn btn-sm btn-outline-primary"><?= esc(lang('Admin.action_edit')) ?></a>
                 <form action="<?= site_url('admin/site-menu/delete/' . $id) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="Supprimer cette entrée du menu ?">
                     <?= csrf_field() ?>
-                    <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                    <button type="submit" class="btn btn-sm btn-outline-danger"><?= esc(lang('Admin.action_delete')) ?></button>
                 </form>
             </td>
         </tr>

@@ -46,11 +46,11 @@ helper('admin');
 <div class="table-responsive admin-table-wrap shadow-sm rounded border bg-white">
 <table class="table table-striped align-middle mb-0">
     <thead class="table-light"><tr>
-        <th><?= admin_list_sort_th('locale', 'Langue', $sort, $dir) ?></th>
-        <th><?= admin_list_sort_th('slug', 'Slug', $sort, $dir) ?></th>
-        <th><?= admin_list_sort_th('title', 'Titre', $sort, $dir) ?></th>
-        <th><?= admin_list_sort_th('status', 'Statut', $sort, $dir) ?></th>
-        <th><?= admin_list_sort_th('published_at', 'Publié le', $sort, $dir) ?></th>
+        <th><?= admin_list_sort_th('locale', lang('Admin.col_locale'), $sort, $dir) ?></th>
+        <th><?= admin_list_sort_th('slug', lang('Admin.col_slug'), $sort, $dir) ?></th>
+        <th><?= admin_list_sort_th('title', lang('Admin.col_title'), $sort, $dir) ?></th>
+        <th><?= admin_list_sort_th('status', lang('Admin.col_status'), $sort, $dir) ?></th>
+        <th><?= admin_list_sort_th('published_at', lang('Admin.col_published_at'), $sort, $dir) ?></th>
         <th class="text-end">Actions</th>
     </tr></thead>
     <tbody>
@@ -79,14 +79,14 @@ helper('admin');
                 <?php if (($post['status'] ?? '') === 'published') : ?>
                     <a href="<?= site_url('press/' . $post['slug']) ?>" class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener">Voir</a>
                 <?php endif; ?>
-                <a href="<?= site_url('admin/posts/edit/' . $post['id']) ?>" class="btn btn-outline-secondary btn-sm">Éditer</a>
+                <a href="<?= site_url('admin/posts/edit/' . $post['id']) ?>" class="btn btn-outline-secondary btn-sm"><?= esc(lang('Admin.action_edit')) ?></a>
                 <form action="<?= site_url('admin/posts/duplicate/' . $post['id']) ?>" method="post" class="d-inline">
                     <?= csrf_field() ?>
                     <button type="submit" class="btn btn-outline-primary btn-sm" <?= $duplicateTradDisabled ? 'disabled title="' . esc(lang('Admin.tooltip_duplicate_trad_disabled'), 'attr') . '"' : '' ?>><?= esc(lang('Admin.action_duplicate_trad')) ?></button>
                 </form>
                 <form action="<?= site_url('admin/posts/delete/' . $post['id']) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="<?= esc(lang('Admin.confirm_delete_post'), 'attr') ?>">
                     <?= csrf_field() ?>
-                    <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                    <button type="submit" class="btn btn-outline-danger btn-sm"><?= esc(lang('Admin.action_delete')) ?></button>
                 </form>
             </td>
         </tr>

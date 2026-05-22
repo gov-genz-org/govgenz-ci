@@ -54,12 +54,12 @@ $typeLabels = [
 <table class="table table-hover align-middle mb-0">
     <thead class="table-light">
     <tr>
-        <th scope="col"><?= admin_list_sort_th('created_at', 'Date', $sort, $dir) ?></th>
-        <th scope="col"><?= admin_list_sort_th('contribution_type', 'Type', $sort, $dir) ?></th>
-        <th scope="col"><?= admin_list_sort_th('project_title', 'Projet', $sort, $dir) ?></th>
-        <th scope="col"><?= admin_list_sort_th('donor_name', 'Nom', $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('created_at', lang('Admin.col_date'), $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('contribution_type', lang('Admin.col_type'), $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('project_title', lang('Admin.col_project'), $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('donor_name', lang('Admin.col_name'), $sort, $dir) ?></th>
         <th scope="col">Contact</th>
-        <th scope="col"><?= admin_list_sort_th('status', 'Statut', $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('status', lang('Admin.col_status'), $sort, $dir) ?></th>
         <th scope="col" class="text-end">Actions</th>
     </tr>
     </thead>

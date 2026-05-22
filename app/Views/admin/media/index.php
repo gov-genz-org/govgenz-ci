@@ -29,13 +29,13 @@ helper('admin');
 <div class="row mb-3 g-2 align-items-end">
     <div class="col-md-6 col-lg-4">
         <label class="form-label small text-muted mb-1" for="media-search">Filtrer par nom</label>
-        <input type="search" class="form-control form-control-sm" id="media-search" placeholder="Tapez pour réduire la grille…" autocomplete="off">
+        <input type="search" class="form-control form-control-sm" id="media-search" placeholder="<?= esc(lang('Admin.placeholder_media_grid'), 'attr') ?>" autocomplete="off">
     </div>
     <div class="col-auto ms-md-auto small text-muted d-flex flex-wrap gap-2 align-items-center">
         <span class="text-muted">Tri :</span>
-        <?= admin_list_sort_th('id', 'Date d’ajout', $sort, $dir) ?>
-        <?= admin_list_sort_th('original_name', 'Nom', $sort, $dir) ?>
-        <?= admin_list_sort_th('size_bytes', 'Taille', $sort, $dir) ?>
+        <?= admin_list_sort_th('id', lang('Admin.col_added'), $sort, $dir) ?>
+        <?= admin_list_sort_th('original_name', lang('Admin.col_name'), $sort, $dir) ?>
+        <?= admin_list_sort_th('size_bytes', lang('Admin.col_size'), $sort, $dir) ?>
     </div>
 </div>
     <div id="media-library-grid" class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
@@ -65,7 +65,7 @@ helper('admin');
                             <a href="<?= esc($url) ?>" class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener">Ouvrir</a>
                             <form action="<?= site_url('admin/media/delete/' . (int) ($row['id'] ?? 0)) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="Supprimer ce fichier de la médiathèque et du disque ?">
                                 <?= csrf_field() ?>
-                                <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                                <button type="submit" class="btn btn-outline-danger btn-sm"><?= esc(lang('Admin.action_delete')) ?></button>
                             </form>
                         </div>
                     </div>

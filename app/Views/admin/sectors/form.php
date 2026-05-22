@@ -20,12 +20,7 @@ $sort = old('sort_order', $isEdit ? (string) (int) ($sector['sort_order'] ?? 0) 
 $active = old('is_active', $isEdit ? (string) ((int) ($sector['is_active'] ?? 1)) : '1');
 ?>
 <h1 class="h3 mb-1"><?= esc($isEdit ? lang('Admin.form_sector_edit') : lang('Admin.form_sector_new')) ?></h1>
-<p class="text-muted small mb-3">
-    <strong>FR</strong> = texte affiché quand la langue du site est le français ;
-    <strong>EN</strong> = texte when the site locale is English (including <code>/en/…</code>).
-    Le <strong>code</strong> sert aux formulaires et à la base (volontaires, projets) : il est figé après création.
-    Les <strong>codes filtre FR / EN</strong> (courts) s’affichent sur les pastilles « Secteur » de la liste projets selon la langue du site ; les libellés longs restent pour les tuiles et cartes.
-</p>
+<p class="text-muted small mb-3"><?= esc(lang('Admin.help_sectors_form')) ?></p>
 
 <form method="post" action="<?= esc($action, 'attr') ?>" class="border rounded bg-white shadow-sm p-3 p-md-4" accept-charset="UTF-8">
     <?= csrf_field() ?>

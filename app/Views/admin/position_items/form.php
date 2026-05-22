@@ -71,7 +71,7 @@ foreach (PositionItemModel::typeCodes() as $typeCode) {
 <?php if ($publicPreviewUrl !== null || $translationPartnerNav !== null) : ?>
     <p class="mb-3 d-flex flex-wrap gap-2">
         <?php if ($publicPreviewUrl !== null) : ?>
-            <a href="<?= esc($publicPreviewUrl, 'attr') ?>" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener">Voir la fiche publiée</a>
+            <a href="<?= esc($publicPreviewUrl, 'attr') ?>" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener"><?= esc(lang('Admin.action_view_published_record')) ?></a>
         <?php endif; ?>
         <?php if ($translationPartnerNav !== null) : ?>
             <a href="<?= esc($translationPartnerNav['editUrl'], 'attr') ?>" class="btn btn-sm btn-outline-secondary"><?= esc($translationPartnerNav['editLabel']) ?></a>
@@ -103,7 +103,7 @@ foreach (PositionItemModel::typeCodes() as $typeCode) {
                    value="<?= esc(old('title', $isEdit ? (string) ($item['title'] ?? '') : '')) ?>">
         </div>
         <div class="col-md-6">
-            <label for="pi-locale" class="form-label">Langue</label>
+            <label for="pi-locale" class="form-label"><?= esc(lang('Admin.form_label_locale')) ?></label>
             <?php if ($isEdit) : ?>
                 <input type="text" id="pi-locale" class="form-control bg-light" readonly
                        value="<?= esc($ppLocale === 'en' ? 'English' : 'Français') ?>">

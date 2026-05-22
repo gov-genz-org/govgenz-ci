@@ -37,12 +37,12 @@ $hasNotifyColumn = $hasNotifyColumn ?? false;
 <table class="table table-striped align-middle mb-0">
     <thead class="table-light">
         <tr>
-            <th><?= admin_list_sort_th('email', 'E-mail', $sort, $dir) ?></th>
-            <th><?= admin_list_sort_th('role', 'Rôle', $sort, $dir) ?></th>
-            <th>Activation</th>
-            <th><?= admin_list_sort_th('is_active', 'État', $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('email', lang('Admin.col_email'), $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('role', lang('Admin.col_role'), $sort, $dir) ?></th>
+            <th><?= esc(lang('Admin.col_activation')) ?></th>
+            <th><?= admin_list_sort_th('is_active', lang('Admin.col_state'), $sort, $dir) ?></th>
             <?php if ($hasNotifyColumn) : ?>
-            <th>Notifications</th>
+            <th><?= esc(lang('Admin.col_notifications')) ?></th>
             <?php endif; ?>
             <th class="text-end">Actions</th>
         </tr>
@@ -93,12 +93,12 @@ $hasNotifyColumn = $hasNotifyColumn ?? false;
             </td>
             <?php endif; ?>
             <td class="text-end text-nowrap">
-                <a href="<?= site_url('admin/staff-users/edit/' . $uid) ?>" class="btn btn-outline-primary btn-sm">Modifier</a>
+                <a href="<?= site_url('admin/staff-users/edit/' . $uid) ?>" class="btn btn-outline-primary btn-sm"><?= esc(lang('Admin.action_modify')) ?></a>
                 <?php if (! $isSelf) : ?>
                     <form method="post" action="<?= site_url('admin/staff-users/delete/' . $uid) ?>" class="d-inline ms-1"
                           onsubmit="return confirm(<?= json_encode(lang('Admin.confirm_delete_staff'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>);">
                         <?= csrf_field() ?>
-                        <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                        <button type="submit" class="btn btn-outline-danger btn-sm"><?= esc(lang('Admin.action_delete')) ?></button>
                     </form>
                 <?php endif; ?>
             </td>

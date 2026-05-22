@@ -18,7 +18,7 @@ if (! in_array($localeSel, ['fr', 'en'], true)) {
 }
 ?>
 <h1 class="h3 mb-1"><?= esc($item ? lang('Admin.form_menu_edit') : lang('Admin.form_menu_new')) ?></h1>
-<p class="text-muted small mb-3">Le <strong>surlignage</strong> détermine quel lien est marqué « actif » selon la page ouverte : <code>home</code>, <code>press</code>, <code>join</code>, <code>contact</code>, <code>admin_login</code>, ou le slug d’une page CMS pour les URLs simples. Pour un lien externe sans surlignage, utilisez <code>none</code>.</p>
+<p class="text-muted small mb-3"><?= esc(lang('Admin.help_sitemenu_form')) ?></p>
 
 <form action="<?= esc($action, 'attr') ?>" method="post" accept-charset="UTF-8">
     <?= csrf_field() ?>
@@ -69,7 +69,7 @@ if (! in_array($localeSel, ['fr', 'en'], true)) {
         </select>
     </div>
     <div class="admin-form-actions d-flex flex-wrap gap-2">
-        <button type="submit" class="btn btn-primary"><?= $item ? 'Enregistrer' : 'Créer' ?></button>
-        <a href="<?= site_url('admin/site-menu') ?>" class="btn btn-outline-secondary">Annuler</a>
+        <button type="submit" class="btn btn-primary"><?= esc($item ? lang('Admin.action_save') : lang('Admin.action_create')) ?></button>
+        <a href="<?= site_url('admin/site-menu') ?>" class="btn btn-outline-secondary"><?= esc(lang('Admin.action_cancel')) ?></a>
     </div>
 </form>

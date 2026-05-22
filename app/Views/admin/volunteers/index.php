@@ -51,11 +51,11 @@ $isStaffAdmin = session()->get('staff_role') === 'admin';
 <table class="table table-hover align-middle mb-0">
     <thead class="table-light">
     <tr>
-        <th scope="col"><?= admin_list_sort_th('created_at', 'Date', $sort, $dir) ?></th>
-        <th scope="col"><?= admin_list_sort_th('full_name', 'Nom', $sort, $dir) ?></th>
-        <th scope="col"><?= admin_list_sort_th('email', 'E-mail', $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('created_at', lang('Admin.col_date'), $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('full_name', lang('Admin.col_name'), $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('email', lang('Admin.col_email'), $sort, $dir) ?></th>
         <th scope="col">Téléphone</th>
-        <th scope="col"><?= admin_list_sort_th('status', 'Statut', $sort, $dir) ?></th>
+        <th scope="col"><?= admin_list_sort_th('status', lang('Admin.col_status'), $sort, $dir) ?></th>
         <th scope="col" class="text-end">Actions</th>
     </tr>
     </thead>

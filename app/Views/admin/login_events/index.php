@@ -57,13 +57,13 @@ if ($queryParams !== []) {
 <table class="table table-striped align-middle mb-0 small">
     <thead class="table-light">
         <tr>
-            <th><?= admin_list_sort_th('created_at', 'Date', $sort, $dir) ?></th>
-            <th><?= admin_list_sort_th('outcome', 'Résultat', $sort, $dir) ?></th>
-            <th>Détail</th>
-            <th><?= admin_list_sort_th('email_attempt', 'E-mail', $sort, $dir) ?></th>
-            <th><?= admin_list_sort_th('staff_user_id', 'ID staff', $sort, $dir) ?></th>
-            <th>IP</th>
-            <th>Navigateur</th>
+            <th><?= admin_list_sort_th('created_at', lang('Admin.col_date'), $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('outcome', lang('Admin.col_outcome'), $sort, $dir) ?></th>
+            <th><?= esc(lang('Admin.col_detail')) ?></th>
+            <th><?= admin_list_sort_th('email_attempt', lang('Admin.col_email'), $sort, $dir) ?></th>
+            <th><?= admin_list_sort_th('staff_user_id', lang('Admin.col_staff_id'), $sort, $dir) ?></th>
+            <th><?= esc(lang('Admin.col_ip')) ?></th>
+            <th><?= esc(lang('Admin.col_browser')) ?></th>
         </tr>
     </thead>
     <tbody>

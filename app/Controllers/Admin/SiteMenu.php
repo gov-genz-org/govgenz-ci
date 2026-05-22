@@ -30,7 +30,7 @@ class SiteMenu extends BaseController
         );
 
         return view('admin/layout', [
-            'title' => 'Menu du site',
+            'title' => lang('Admin.nav_site_menu'),
             'main'  => view('admin/site_menu/index', [
                 'items' => $list['rows'],
                 'pager' => $list['pager'],
@@ -43,7 +43,7 @@ class SiteMenu extends BaseController
     public function create()
     {
         return view('admin/layout', [
-            'title' => 'Menu — nouvelle entrée',
+            'title' => lang('Admin.title_site_menu_create'),
             'main'  => view('admin/site_menu/form', ['item' => null]),
         ]);
     }
@@ -70,7 +70,7 @@ class SiteMenu extends BaseController
         }
 
         return view('admin/layout', [
-            'title' => 'Menu — éditer',
+            'title' => lang('Admin.title_site_menu_edit'),
             'main'  => view('admin/site_menu/form', ['item' => $item]),
         ]);
     }
@@ -113,26 +113,26 @@ class SiteMenu extends BaseController
 
         $label = trim((string) $this->request->getPost('label'));
         if ($label === '') {
-            $errors['label'] = 'Le libellé est obligatoire.';
+            $errors['label'] = lang('Admin.error_sitemenu_label_required');
         } elseif (mb_strlen($label) > 255) {
-            $errors['label'] = 'Libellé trop long (255 caractères max).';
+            $errors['label'] = lang('Admin.error_sitemenu_label_too_long');
         }
 
         $locale = strtolower(trim((string) $this->request->getPost('locale')));
         if (! in_array($locale, ['fr', 'en'], true)) {
-            $errors['locale'] = 'Langue invalide.';
+            $errors['locale'] = lang('Admin.error_sitemenu_locale_invalid');
         }
 
         $kind = strtolower(trim((string) $this->request->getPost('href_kind')));
         if (! in_array($kind, ['home', 'segment', 'path', 'external'], true)) {
-            $errors['href_kind'] = 'Type de lien invalide.';
+            $errors['href_kind'] = lang('Admin.error_sitemenu_href_kind');
         }
 
         $mk = strtolower(trim((string) $this->request->getPost('match_key')));
         if ($mk === '') {
-            $errors['match_key'] = 'La clé de surlignage est obligatoire (ex. home, press, slug de page).';
+            $errors['match_key'] = lang('Admin.error_sitemenu_match_key_required');
         } elseif (! preg_match('/^[a-z0-9_-]+$/', $mk)) {
-            $errors['match_key'] = 'Utilisez uniquement lettres minuscules, chiffres, tirets et underscores.';
+            $errors['match_key'] = lang('Admin.error_sitemenu_match_key_format');
         }
 
         $target = trim((string) $this->request->getPost('href_target'));
@@ -141,35 +141,35 @@ class SiteMenu extends BaseController
             // ok
         } elseif ($kind === 'external') {
             if ($target === '') {
-                $errors['href_target'] = 'Une URL complète est requise pour un lien externe.';
+                $errors['href_target'] = lang('Admin.error_sitemenu_external_url_required');
             } elseif (! preg_match('#^https?://#i', $target)) {
-                $errors['href_target'] = 'L’URL doit commencer par http:// ou https://';
+                $errors['href_target'] = lang('Admin.error_sitemenu_external_url_scheme');
             } elseif (mb_strlen($target) > 512) {
-                $errors['href_target'] = 'URL trop longue.';
+                $errors['href_target'] = lang('Admin.error_sitemenu_url_too_long');
             }
         } elseif ($target === '') {
-            $errors['href_target'] = 'Une cible est requise pour ce type de lien.';
+            $errors['href_target'] = lang('Admin.error_sitemenu_target_required');
         } else {
             $targetNorm = strtolower(trim($target, '/'));
             if ($kind === 'segment') {
                 if (! preg_match('/^[a-z0-9-]+$/', $targetNorm)) {
-                    $errors['href_target'] = 'Segment d’URL : minuscules, chiffres et tirets uniquement.';
+                    $errors['href_target'] = lang('Admin.error_sitemenu_segment_format');
                 }
             } elseif ($kind === 'path') {
                 if (! preg_match('#^[a-z0-9]+(?:/[a-z0-9-]+)*$#', $targetNorm)) {
-                    $errors['href_target'] = 'Chemin interne invalide (ex. admin/login).';
+                    $errors['href_target'] = lang('Admin.error_sitemenu_path_format');
                 }
             }
         }
 
         $css = trim((string) $this->request->getPost('css_class'));
         if ($css !== '' && ! preg_match('/^[a-zA-Z0-9_-]+(?:\s+[a-zA-Z0-9_-]+)*$/', $css)) {
-            $errors['css_class'] = 'Classes CSS : lettres, chiffres, tirets, underscores et espaces uniquement.';
+            $errors['css_class'] = lang('Admin.error_sitemenu_css_class_format');
         }
 
         $sortRaw = $this->request->getPost('sort_order');
         if ($sortRaw !== null && $sortRaw !== '' && ! is_numeric($sortRaw)) {
-            $errors['sort_order'] = 'Ordre : nombre entier.';
+            $errors['sort_order'] = lang('Admin.error_sitemenu_sort_order');
         }
 
         return $errors;
