@@ -8,6 +8,7 @@ use App\Controllers\BaseController;
 use App\Controllers\Front\Traits\ProgramListFrontTrait;
 use App\Libraries\CmsProgramListHero;
 use App\Libraries\FrontPageAssets;
+use App\Libraries\FrontProgramListFilter;
 use App\Libraries\ProgramListFilter;
 use App\Libraries\ProgramListProjectStats;
 use App\Libraries\ProjectContributionSubmitter;
@@ -98,67 +99,13 @@ class Home extends BaseController
      */
     public function filterPost(): ResponseInterface
     {
-        helper(['locale', 'cms', 'language', 'project']);
-
         if ($reject = $this->rejectProgramListJsonFilter($this->request, $this->response)) {
             return $reject;
         }
 
-        $locale = SiteContext::locale();
+        $payload = FrontProgramListFilter::projectsPayload($this->request);
 
-        $projectModel = model(ProjectProjectModel::class);
-        $sectorModel  = model(SectorModel::class);
-
-        $sectorOptionsNorm = SectorSelectOptions::normalizedForSelect($sectorModel);
-        $sectorFilterPills = $sectorModel->optionsForProjectFilterPills($locale);
-        $allowedSector     = array_keys($sectorFilterPills);
-
-        $statusLabels = [
-            ProjectProjectModel::STATUS_ACTIF      => lang('Projects.status_actif'),
-            ProjectProjectModel::STATUS_CANDIDAT   => lang('Projects.status_candidat'),
-            ProjectProjectModel::STATUS_VALIDATION => lang('Projects.status_validation'),
-            ProjectProjectModel::STATUS_COMPLETE   => lang('Projects.status_complete'),
-        ];
-        $allowedStatus = array_keys($statusLabels);
-
-        $payload = $this->request->getJSON(true);
-        if (! is_array($payload)) {
-            $payload = [];
-        }
-
-        $filterStatuses = ProgramListFilter::sanitizeList($payload['status'] ?? null, $allowedStatus);
-        $filterSectors  = ProgramListFilter::sanitizeList($payload['sector'] ?? null, $allowedSector);
-
-        $allPublished = $projectModel->listPublishedRecent(100, $locale);
-        $projects     = $this->filterPublishedProjects($allPublished, $filterStatuses, $filterSectors);
-        $shownCount   = count($projects);
-        $filtersActive = $filterStatuses !== [] || $filterSectors !== [];
-
-        $projectsListUrl = SiteContext::projectsPathPrefixEnabled()
-            ? localized_site_url('projects')
-            : localized_site_url('');
-
-        $gridMetaHtml = view('front/projects/partials/grid_meta', [
-            'shownCount'      => $shownCount,
-            'filtersActive'   => $filtersActive,
-            'projectsListUrl' => $projectsListUrl,
-        ]);
-
-        $gridInnerHtml = view('front/projects/partials/cards_grid', [
-            'projects'           => $projects,
-            'sectorOptions'      => $sectorOptionsNorm,
-            'sectorFilterPills'  => $sectorFilterPills,
-            'statusLabels'       => $statusLabels,
-        ]);
-
-        return $this->response->setJSON([
-            'ok'             => true,
-            'csrfHash'       => csrf_hash(),
-            'gridMetaHtml'   => $gridMetaHtml,
-            'gridInnerHtml'  => $gridInnerHtml,
-            'pillStatus'     => $filterStatuses,
-            'pillSectors'    => $filterSectors,
-        ]);
+        return $this->response->setJSON(FrontProgramListFilter::jsonResponse($payload));
     }
 
     /**

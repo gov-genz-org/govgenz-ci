@@ -73,13 +73,13 @@ class ProjectContributions extends BaseController
 
         $model->update($id, ['status' => $status]);
 
-        return redirect()->back()->with('message', 'Proposition mise à jour.');
+        return redirect()->back()->with('message', lang('Admin.flash_contribution_updated'));
     }
 
     public function clearTable(): ResponseInterface
     {
         model(ProjectContributionModel::class)->db->table('project_contributions')->truncate();
 
-        return redirect()->to(site_url('admin/project-contributions'))->with('message', 'Toutes les propositions ont été supprimées.');
+        return redirect()->to(site_url('admin/project-contributions'))->with('message', lang('Admin.flash_contributions_cleared'));
     }
 }

@@ -91,12 +91,12 @@ class PositionItems extends BaseController
         $locale = LocaleSlug::normalizeLocale((string) $this->request->getPost('locale'));
         $model  = model(PositionItemModel::class);
         if ($model->where('slug', $slug)->where('locale', $locale)->first() !== null) {
-            return redirect()->back()->withInput()->with('error', 'Ce slug est déjà utilisé pour cette langue.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_slug_locale_taken'));
         }
 
         $bodyPayload = $this->resolveBodyPayload(null);
         if ($bodyPayload === null) {
-            return redirect()->back()->withInput()->with('error', 'Mode blocs : ajoutez au moins un bloc valide.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_blocks_mode_empty'));
         }
 
         $pubState    = (string) $this->request->getPost('publication_state');
@@ -166,12 +166,12 @@ class PositionItems extends BaseController
 
         $locale = LocaleSlug::normalizeLocale((string) ($item['locale'] ?? 'fr'));
         if ($model->where('slug', $slug)->where('locale', $locale)->where('id !=', $id)->first() !== null) {
-            return redirect()->back()->withInput()->with('error', 'Ce slug est déjà utilisé pour cette langue.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_slug_locale_taken'));
         }
 
         $bodyPayload = $this->resolveBodyPayload($item);
         if ($bodyPayload === null) {
-            return redirect()->back()->withInput()->with('error', 'Mode blocs : ajoutez au moins un bloc valide.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_blocks_mode_empty'));
         }
 
         $pubState    = (string) $this->request->getPost('publication_state');
@@ -220,7 +220,7 @@ class PositionItems extends BaseController
         }
         $model->delete($id);
 
-        return redirect()->to(site_url('admin/position-items'))->with('message', 'Position supprimée.');
+        return redirect()->to(site_url('admin/position-items'))->with('message', lang('Admin.flash_position_deleted'));
     }
 
     public function duplicate(int $id): ResponseInterface
@@ -288,7 +288,7 @@ class PositionItems extends BaseController
         ]);
 
         return redirect()->to(site_url('admin/position-items/edit/' . (int) $newId))
-            ->with('message', 'Brouillon créé pour la langue cible. Complétez la traduction puis publiez.');
+            ->with('message', lang('Admin.flash_position_translation'));
     }
 
     /**

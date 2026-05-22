@@ -120,7 +120,7 @@ class LoginEvents extends BaseController
     {
         model(StaffLoginEventModel::class)->db->table('staff_login_events')->truncate();
 
-        return redirect()->to(site_url('admin/login-events'))->with('message', 'Le journal de connexion a été vidé.');
+        return redirect()->to(site_url('admin/login-events'))->with('message', lang('Admin.flash_login_events_cleared'));
     }
 
     /**

@@ -174,7 +174,7 @@ class Media extends BaseController
 
         $model->delete($id);
 
-        return redirect()->to(site_url('admin/media'))->with('message', 'Média supprimé.');
+        return redirect()->to(site_url('admin/media'))->with('message', lang('Admin.flash_media_deleted'));
     }
 
     private function mimeAllowed(?string $mime, string $ext): bool

@@ -203,7 +203,7 @@ class StaffUsers extends BaseController
 
         $model->delete($id, true);
 
-        return redirect()->back()->with('message', 'Compte supprimé.');
+        return redirect()->back()->with('message', lang('Admin.flash_staff_deleted'));
     }
 
     public function toggleFormNotify(int $id): ResponseInterface

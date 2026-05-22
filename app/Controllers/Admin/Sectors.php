@@ -128,7 +128,7 @@ class Sectors extends BaseController
 
         $model->delete($id);
 
-        return redirect()->to(site_url('admin/sectors'))->with('message', 'Secteur supprimé.');
+        return redirect()->to(site_url('admin/sectors'))->with('message', lang('Admin.flash_sector_deleted'));
     }
 
     /**

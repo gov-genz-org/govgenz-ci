@@ -206,7 +206,7 @@ class Pages extends BaseController
     {
         model(CmsPageModel::class)->delete($id);
 
-        return redirect()->to(site_url('admin/pages'))->with('message', 'Page supprimée.');
+        return redirect()->to(site_url('admin/pages'))->with('message', lang('Admin.flash_page_deleted'));
     }
 
     public function duplicate(int $id): ResponseInterface
@@ -270,7 +270,7 @@ class Pages extends BaseController
 
         return redirect()
             ->to(site_url('admin/pages/edit/' . $newId))
-            ->with('message', 'Copie créée en ' . strtoupper($targetLocale) . ' (brouillon).');
+            ->with('message', lang('Admin.flash_page_copy', [strtoupper($targetLocale)]));
     }
 
     /**

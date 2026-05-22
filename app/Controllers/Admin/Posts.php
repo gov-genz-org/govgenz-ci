@@ -223,14 +223,14 @@ class Posts extends BaseController
 
         return redirect()
             ->to(site_url('admin/posts/edit/' . $newId))
-            ->with('message', 'Copie créée en ' . strtoupper($targetLocale) . ' (brouillon).');
+            ->with('message', lang('Admin.flash_post_copy', [strtoupper($targetLocale)]));
     }
 
     public function delete(int $id): ResponseInterface
     {
         model(CmsPostModel::class)->delete($id);
 
-        return redirect()->to(site_url('admin/posts'))->with('message', 'Article supprimé.');
+        return redirect()->to(site_url('admin/posts'))->with('message', lang('Admin.flash_post_deleted'));
     }
 
     /**

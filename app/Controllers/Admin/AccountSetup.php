@@ -85,6 +85,6 @@ class AccountSetup extends BaseController
         ]);
 
         return redirect()->to(site_url('admin'))
-            ->with('message', 'Votre mot de passe est enregistré. Bienvenue sur le back-office.');
+            ->with('message', lang('Admin.flash_account_welcome'));
     }
 }

@@ -71,7 +71,7 @@ $extraHead = FrontPageAssets::projectsProgramList();
 |---------|-------------------------|
 | `Admin/ProjectProjects.php` | Extraire validation / budget / blocs vers une Library dédiée |
 | `Front/Projects/Home.php` | Extraire `fundSubmit` vers un service contribution |
-| `Helpers/admin_helper.php` | Scinder URL admin vs staff policy |
+| `Helpers/admin_helper.php` | Point d’entrée ; logique dans `admin_*_helper.php` |
 | `Libraries/MdgGeographyImporter.php` | OK en import one-shot ; pas de logique métier quotidienne dedans |
 
 ## Bonnes références dans le dépôt
@@ -94,13 +94,13 @@ $extraHead = FrontPageAssets::projectsProgramList();
 | Trait listes programme | `Controllers/Front/Traits/ProgramListFrontTrait.php` |
 | Formulaire contribution | `Libraries/ProjectContributionSubmitter.php` |
 | Formulaire admin projet | `Libraries/ProjectAdminForm.php` |
-| Lang admin (début) | `Language/fr/Admin.php`, `Language/en/Admin.php` |
+| Lang admin | `Language/fr/Admin.php`, `Language/en/Admin.php` (flash, erreurs, traduction) |
+| Filtre JSON listes programme | `Libraries/FrontProgramListFilter.php` |
+| Helpers admin découpés | `admin_url_helper.php`, `admin_translation_helper.php`, `admin_list_helper.php`, `admin_datetime_helper.php`, `admin_form_helper.php`, `admin_staff_helper.php` |
 
 ## Prochaines étapes (backlog)
 
-1. Factoriser entièrement `filterPost` projets/positions dans une Library de config (réponses JSON).
-2. Découper `admin_helper.php` en `admin_url_helper.php`, `admin_datetime_helper.php`, `admin_list_helper.php`.
-3. Étendre `lang('Admin.*')` aux flash messages et libellés des contrôleurs admin.
-4. Partial `head_assets/join.php` pour `Front/Join.php`.
+1. Étendre `lang('Admin.*')` aux libellés des vues admin et messages « enregistré » restants.
+2. Partial `head_assets/join.php` pour `Front/Join.php`.
 
 Voir aussi [CI-CD.md](CI-CD.md) pour le pipeline de déploiement.

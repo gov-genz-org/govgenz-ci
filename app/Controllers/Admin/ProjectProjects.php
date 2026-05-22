@@ -110,12 +110,12 @@ class ProjectProjects extends BaseController
 
         $model = model(ProjectProjectModel::class);
         if ($model->where('slug', $slug)->where('locale', $locale)->first() !== null) {
-            return redirect()->back()->withInput()->with('error', 'Ce slug est déjà utilisé pour cette langue.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_slug_locale_taken'));
         }
 
         $bodyPayload = ProjectAdminForm::resolveBodyPayload($this->request,null);
         if ($bodyPayload === null) {
-            return redirect()->back()->withInput()->with('error', 'Mode blocs : ajoutez au moins un bloc valide.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_blocks_mode_empty'));
         }
 
         $merged        = ProjectBudgetTableSync::applyToPayloads($bodyPayload, $budgetPayload, $locale);
@@ -209,12 +209,12 @@ class ProjectProjects extends BaseController
 
         $other = $model->where('slug', $slug)->where('locale', $locale)->where('id !=', $id)->first();
         if ($other !== null) {
-            return redirect()->back()->withInput()->with('error', 'Ce slug est déjà utilisé pour cette langue.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_slug_locale_taken'));
         }
 
         $bodyPayload = ProjectAdminForm::resolveBodyPayload($this->request,$project);
         if ($bodyPayload === null) {
-            return redirect()->back()->withInput()->with('error', 'Mode blocs : ajoutez au moins un bloc valide.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_blocks_mode_empty'));
         }
 
         $merged        = ProjectBudgetTableSync::applyToPayloads($bodyPayload, $budgetPayload, $locale);
@@ -275,7 +275,7 @@ class ProjectProjects extends BaseController
         }
         $model->delete($id);
 
-        return redirect()->to(site_url('admin/project-projects'))->with('message', 'Projet supprimé.');
+        return redirect()->to(site_url('admin/project-projects'))->with('message', lang('Admin.flash_project_deleted'));
     }
 
     public function duplicate(int $id): ResponseInterface
@@ -314,7 +314,7 @@ class ProjectProjects extends BaseController
         $partner = $model->where('translation_group', $group)->where('locale', $targetLocale)->first();
         if ($partner !== null) {
             return redirect()->to(site_url('admin/project-projects'))
-                ->with('error', 'Une variante existe déjà pour cette langue dans ce groupe de traduction.');
+                ->with('error', lang('Admin.error_translation_exists'));
         }
 
         $titleBase = trim((string) ($src['title'] ?? 'Sans titre'));
@@ -354,6 +354,6 @@ class ProjectProjects extends BaseController
 
         return redirect()
             ->to(site_url('admin/project-projects/edit/' . $newId))
-            ->with('message', 'Traduction créée en ' . strtoupper($targetLocale) . ' (brouillon).');
+            ->with('message', lang('Admin.flash_project_translation', [strtoupper($targetLocale)]));
     }
 }

@@ -9,6 +9,7 @@ use App\Controllers\Front\Traits\ProgramListFrontTrait;
 use App\Libraries\ProgramListPositionStats;
 use App\Libraries\CmsProgramListHero;
 use App\Libraries\FrontPageAssets;
+use App\Libraries\FrontProgramListFilter;
 use App\Libraries\ProgramListFilter;
 use App\Libraries\ProjectShareQrGenerator;
 use App\Libraries\SectorSelectOptions;
@@ -83,61 +84,13 @@ class Home extends BaseController
 
     public function filterPost(): ResponseInterface
     {
-        helper(['locale', 'language', 'position']);
-
         if ($reject = $this->rejectProgramListJsonFilter($this->request, $this->response)) {
             return $reject;
         }
 
-        $locale = SiteContext::locale();
+        $payload = FrontProgramListFilter::positionsPayload($this->request);
 
-        $itemModel   = model(PositionItemModel::class);
-        $sectorModel = model(SectorModel::class);
-
-        $sectorOptionsNorm = SectorSelectOptions::normalizedForSelect($sectorModel);
-        $sectorFilterPills = $sectorModel->optionsForProjectFilterPills($locale);
-        $allowedSector     = array_keys($sectorFilterPills);
-        $typeLabels        = position_type_labels();
-        $allowedTypes      = array_keys($typeLabels);
-
-        $payload = $this->request->getJSON(true);
-        if (! is_array($payload)) {
-            $payload = [];
-        }
-
-        $filterTypes   = ProgramListFilter::sanitizeList($payload['type'] ?? null, $allowedTypes);
-        $filterSectors = ProgramListFilter::sanitizeList($payload['sector'] ?? null, $allowedSector);
-
-        $allPublished = $itemModel->listPublishedRecent(100, $locale);
-        $positions    = $this->filterPublished($allPublished, $filterTypes, $filterSectors);
-        $shownCount   = count($positions);
-        $filtersActive = $filterTypes !== [] || $filterSectors !== [];
-
-        $positionsListUrl = SiteContext::positionsPathPrefixEnabled()
-            ? localized_site_url('positions')
-            : localized_site_url('');
-
-        $gridMetaHtml = view('front/positions/partials/grid_meta', [
-            'shownCount'        => $shownCount,
-            'filtersActive'     => $filtersActive,
-            'positionsListUrl'  => $positionsListUrl,
-        ]);
-
-        $gridInnerHtml = view('front/positions/partials/cards_timeline', [
-            'positions'          => $positions,
-            'sectorOptions'      => $sectorOptionsNorm,
-            'sectorFilterPills'  => $sectorFilterPills,
-            'typeLabels'         => $typeLabels,
-        ]);
-
-        return $this->response->setJSON([
-            'ok'            => true,
-            'csrfHash'      => csrf_hash(),
-            'gridMetaHtml'  => $gridMetaHtml,
-            'gridInnerHtml' => $gridInnerHtml,
-            'pillTypes'     => $filterTypes,
-            'pillSectors'   => $filterSectors,
-        ]);
+        return $this->response->setJSON(FrontProgramListFilter::jsonResponse($payload));
     }
 
     public function tail(string $path)

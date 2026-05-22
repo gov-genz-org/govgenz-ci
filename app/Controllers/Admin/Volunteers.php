@@ -65,13 +65,13 @@ class Volunteers extends BaseController
 
         $model->update($id, ['status' => $status]);
 
-        return redirect()->back()->with('message', 'Candidature mise à jour.');
+        return redirect()->back()->with('message', lang('Admin.flash_volunteer_updated'));
     }
 
     public function clearTable(): ResponseInterface
     {
         model(VolunteerApplicationModel::class)->db->table('volunteer_applications')->truncate();
 
-        return redirect()->to(site_url('admin/volunteers'))->with('message', 'Toutes les candidatures volontaires ont été supprimées.');
+        return redirect()->to(site_url('admin/volunteers'))->with('message', lang('Admin.flash_volunteers_cleared'));
     }
 }

@@ -101,7 +101,7 @@ class SiteMenu extends BaseController
 
         $model->delete($id);
 
-        return redirect()->to(site_url('admin/site-menu'))->with('message', 'Entrée supprimée.');
+        return redirect()->to(site_url('admin/site-menu'))->with('message', lang('Admin.flash_menu_entry_deleted'));
     }
 
     /**
