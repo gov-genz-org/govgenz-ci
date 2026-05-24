@@ -20,6 +20,11 @@ require DATABASE_USERNAME
 require DATABASE_PASSWORD
 require ENCRYPTION_KEY
 
+if [[ "${ENCRYPTION_KEY}" == *REMPLACER* ]] || [[ "${ENCRYPTION_KEY}" == *CHANGER* ]] || [[ "${ENCRYPTION_KEY}" == 'hex2bin:' ]]; then
+  echo "generate-dotenv: ENCRYPTION_KEY est un placeholder — définir le secret GitHub ENCRYPTION_KEY (ex. sortie de « php spark key:generate --show »)." >&2
+  exit 1
+fi
+
 CI_ENVIRONMENT="${CI_ENVIRONMENT:-production}"
 DATABASE_HOSTNAME="${DATABASE_HOSTNAME:-localhost}"
 DATABASE_PORT="${DATABASE_PORT:-3306}"
