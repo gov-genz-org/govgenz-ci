@@ -1,0 +1,145 @@
+/**
+ * Pont layout CodeIgniter ↔ template (nav, shell, hero CMS, prose page).
+ * Typo rubriques CMS : govgenz-cms-shell.css
+ */
+
+body.ggz-public-theme {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#main-content.ggz-main-shell {
+    position: relative;
+    z-index: 10;
+    flex: 1;
+}
+
+#main-content.ggz-main-shell.ggz-layout-full article.wysiwyg.ggz-home-wysiwyg {
+    margin-top: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+#main-content .ggz-page-hero {
+    border-color: var(--border-strong);
+    background: var(--ggz-gradient-hero);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+#main-content .wysiwyg.ggz-page-prose:not(.ggz-legal-prose):not(.ggz-editorial-prose) {
+    margin-top: 1.35rem;
+    padding: clamp(1.35rem, 2.8vw, 2rem) clamp(1.25rem, 3vw, 2.15rem);
+    border-radius: var(--ggz-radius-lg);
+    border: 1px solid var(--border);
+    background: var(--ggz-bg-card-overlay);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: var(--ggz-shadow-card);
+}
+
+#main-content.ggz-main-shell .wysiwyg.ggz-page-prose h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-transform: none;
+    font-size: clamp(1.28rem, 2.6vw, 1.72rem);
+    line-height: 1.2;
+    color: var(--text-bright);
+}
+
+#main-content .wysiwyg.ggz-home-wysiwyg {
+    margin-top: 0;
+    padding: clamp(1.35rem, 2.8vw, 2rem) clamp(1.25rem, 3vw, 2.15rem);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(21, 21, 31, 0.58);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 16px 56px rgba(0, 0, 0, 0.26);
+}
+
+#main-content p.ggz-home-missing-lead {
+    margin-top: 1.35rem;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem) clamp(1.25rem, 3vw, 2rem);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(21, 21, 31, 0.52);
+    line-height: 1.65;
+}
+
+#main-content > .ggz-alert {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+    border-radius: 10px;
+    border-color: var(--border-strong);
+}
+
+.ggz-skip-link {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    z-index: 12000;
+    padding: 0.5rem 1rem;
+    background: var(--red-soft);
+    color: var(--bg-deepest);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    border-radius: 10px;
+    text-decoration: none;
+}
+
+.ggz-skip-link:focus {
+    position: fixed;
+    left: 1rem;
+    top: 1rem;
+    width: auto;
+    height: auto;
+    overflow: visible;
+}
+
+::selection {
+    background: rgba(220, 38, 38, 0.35);
+    color: var(--text-bright);
+}
+
+.nav a.is-active {
+    color: var(--text-bright);
+}
+
+.nav a.is-active::after {
+    width: 100%;
+}
+
+.nav a.ggz-nav-admin {
+    font-size: 0.72rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+}
+
+.nav a.ggz-nav-admin:hover {
+    border-color: var(--red-primary);
+}
+
+@media (max-width: 768px) {
+    .nav.is-open a.ggz-nav-admin {
+        border-radius: 0;
+        border: none;
+        border-bottom: 1px solid var(--border);
+        padding: 0.5rem 0;
+        width: 100%;
+        text-align: left;
+    }
+}

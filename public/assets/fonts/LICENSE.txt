@@ -1,0 +1,5 @@
+Bebas Neue — Copyright (c) 2010 by Dharma Type (https://fonts.google.com/specimen/Bebas+Neue), SIL Open Font License 1.1.
+
+JetBrains Mono — Copyright 2020 The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono), SIL Open Font License 1.1.
+
+Fichiers woff2 auto-hébergés pour le site GovGenZ (sous-ensemble latin).

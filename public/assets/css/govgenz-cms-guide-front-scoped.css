@@ -1,0 +1,1217 @@
+/**
+ * Aperçu admin/cms-guide uniquement — généré par scripts/scope-cms-guide-css.py
+ * (govgenz-front-pages.css + govgenz-bridge.css, scope .cms-guide-preview-host)
+ */
+
+/* --- govgenz-front-pages.css --- */
+
+/* --- Contenu principal (site public uniquement — pas l’admin) --- */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell.ggz-layout-narrow {
+max-width: var(--ggz-max-narrow);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell.ggz-layout-full {
+max-width: var(--ggz-max-wide);
+}
+
+/* Hero compact legacy (h1 sans .section__title) */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero h1:not(.section__title):not(.ggz-section-title) {
+font-family: var(--ggz-font-display);
+    font-size: clamp(2rem, 4.5vw, 2.85rem);
+    line-height: var(--ggz-line-heading);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    margin: 0 0 0.85rem;
+}
+
+/* Hero structuré : même titre que les pages CMS (presse fiche, mentions, projets…) */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero.ggz-page-hero--structured :is(h1, h2).section__title,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero.ggz-page-hero--structured :is(h1, h2).ggz-section-title {
+font-family: var(--font-display);
+    font-size: var(--ggz-type-section-title);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    font-weight: 400;
+    text-transform: none;
+    color: var(--text-bright);
+    margin: 0 0 1.25rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .card {
+background: var(--ggz-bg-card-overlay);
+    border-radius: var(--ggz-radius-card);
+    padding: 1.5rem 1.35rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--ggz-border-panel);
+    box-shadow: var(--ggz-shadow-card);
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .card:hover {
+border-color: rgba(255, 165, 134, 0.22);
+    box-shadow: var(--ggz-shadow-card-hover);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .card > h3:first-child {
+margin: 0 0 0.65rem;
+    font-family: var(--ggz-font-sans);
+    font-size: 1.08rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ggz-text-on-dark);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-cta-band .ggz-cta-band__title {
+margin: 0 0 0.5rem;
+    font-family: var(--ggz-font-display);
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: var(--ggz-line-heading);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-cta-band__text {
+margin: 0 0 0.25rem;
+    max-width: 40rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .muted {
+color: var(--ggz-text-meta);
+    font-size: 0.9rem;
+}
+
+/* --- Hero / sections (structure proche govgenz-bull, palette charte sombre) --- */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero {
+padding: 2rem 1.35rem;
+    margin-bottom: 1.25rem;
+    border-radius: var(--ggz-radius-card);
+    background: var(--ggz-gradient-hero);
+    border: 1px solid rgba(56, 67, 88, 0.45);
+    box-shadow: var(--ggz-shadow-card);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero--compact {
+padding: 1.5rem 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero h1 + .ggz-lead {
+margin-top: 0;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero h1 + .ggz-intro {
+margin-top: 0.45rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero--structured {
+padding: 1rem 0;
+    margin-bottom: 0.5rem;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: none;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero.ggz-page-hero--structured {
+border-color: transparent;
+    background: none;
+    box-shadow: none;
+    backdrop-filter: none;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero__inner {
+display: grid;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+@media (min-width: 768px) {.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero--has-media .ggz-page-hero__inner {
+grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+}
+
+}
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero__figure {
+margin: 0;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero__img {
+width: 100%;
+    height: auto;
+    border-radius: var(--ggz-radius-card);
+    display: block;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero__copy {
+min-width: 0;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero--structured .section__header {
+text-align: center;
+    margin: 0;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero--structured .section__overline {
+font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    text-transform: none;
+    color: var(--red-soft);
+    margin: 0 0 1rem;
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    border-radius: 100px;
+    background: rgba(220, 38, 38, 0.05);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero--structured .section__lead {
+font-family: var(--font-body);
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-eyebrow {
+display: inline-block;
+    margin: 0 0 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ggz-peach);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-actions {
+display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem;
+    margin-top: 1.25rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-actions .btn,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-actions button {
+margin-top: 0;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-trust-list {
+margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-trust-list li {
+padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid rgba(56, 67, 88, 0.65);
+    background: rgba(22, 30, 47, 0.55);
+    font-size: 0.84rem;
+    color: var(--ggz-text-meta);
+}
+
+/* Icônes/carte "Qui sommes-nous" alignées sur site_govgenz */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .cercle__icon {
+color: #fca5a5;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .cercle__icon img {
+width: 100%;
+    height: 100%;
+    display: block;
+    filter: invert(83%) sepia(20%) saturate(726%) hue-rotate(302deg) brightness(102%) contrast(98%);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .cercle__title {
+font-family: var(--font-display);
+    font-size: 1.4rem;
+    text-transform: uppercase;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) h3.cercle__title {
+font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: 1.4rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-section {
+margin-bottom: 1.5rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-cards-row {
+display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+/* --- Page d’accueil type govgenz.org (charte sombre) --- */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-home-section {
+scroll-margin-top: 5.5rem;
+}
+
+/* Intro rubrique : rendu site_govgenz (.ggz-section-*) défini dans govgenz-bridge.css */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-home-editorial-title {
+font-family: var(--ggz-font-display);
+    margin-top: 0;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .hero__inner {
+text-align: center;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .hero__tagline {
+text-align: center;
+    margin: 0 auto 3rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-source-note {
+margin: 1rem 0 0;
+    font-size: 0.82rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-inline-mail {
+color: var(--ggz-peach);
+    font-weight: 600;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-inline-mail:hover {
+text-decoration: underline;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-pillar-grid {
+display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-pillar-card__step {
+margin: 0 0 0.65rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ggz-peach);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-pillar-card h3 {
+margin: 0 0 0.65rem;
+    font-size: 1.05rem;
+    font-weight: 800;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-checklist {
+margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--ggz-text-meta);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-checklist li {
+margin-bottom: 0.35rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-sector-grid {
+list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.85rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-sector-card {
+display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1rem 1.1rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-sector-card__code {
+font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    color: var(--ggz-peach);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-sector-card__label {
+font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.45;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-sector-card__mail {
+margin-top: auto;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--ggz-peach);
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-sector-card__mail:hover {
+text-decoration: underline;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-metric-strip {
+display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    margin-bottom: 1rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-metric {
+text-align: center;
+    padding: 1.1rem 1rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-metric__value {
+margin: 0 0 0.35rem;
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: var(--ggz-peach);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-metric__label {
+margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--ggz-text-meta);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-contact-grid {
+display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    margin-top: 1rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-contact-tile h3 {
+margin: 0 0 0.45rem;
+    font-size: 0.95rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-contact-tile a {
+color: var(--ggz-peach);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-contact-tile a:hover {
+text-decoration: underline;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-contact-tile .muted {
+margin: 0.45rem 0 0;
+    font-size: 0.86rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-cta-band__kicker {
+margin-bottom: 0.35rem;
+}
+
+/* --- Contenu éditorial (CMS) --- */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg {
+line-height: var(--ggz-line-body);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg > *:first-child {
+margin-top: 0;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg h2:not(.section__title):not(.ggz-section-title):where(:not(.ggz-legal-prose *), :not(.ggz-editorial-prose *)),
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg h3:where(:not(.ggz-legal-prose *), :not(.ggz-editorial-prose *)) {
+line-height: var(--ggz-line-heading);
+    margin-top: 1.5rem;
+    margin-bottom: 0.65rem;
+    font-weight: 800;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg h2:not(.section__title):not(.ggz-section-title):where(:not(.ggz-legal-prose *), :not(.ggz-editorial-prose *)) {
+font-size: 1.35rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg h3 {
+font-size: 1.12rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg p {
+margin: 0 0 1rem;
+}
+
+/* Pages CMS « liste programme projets » : note sur le corps (non affichée sur /projects). */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg.ggz-cms-page--projects-program-note > p {
+text-align: center;
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg a:not(.btn) {
+color: var(--ggz-peach);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg a:not(.btn):hover {
+color: var(--ggz-text-on-dark);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg ul,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg ol {
+padding-left: 1.35rem;
+    margin: 0 0 1rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg blockquote {
+margin: 1.25rem 0;
+    padding: 0.85rem 1rem 0.85rem 1rem;
+    border-left: 4px solid var(--ggz-peach);
+    background: rgba(255, 165, 134, 0.08);
+    color: var(--ggz-text-on-dark);
+    font-style: normal;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg.ggz-home-wysiwyg > .muted {
+margin-top: 1rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg.ggz-home-wysiwyg section.ggz-home-section + section.ggz-home-section,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg.ggz-home-wysiwyg section.cms-section + section.cms-section {
+margin-top: 2.25rem;
+}
+
+/*
+ * Blocs « simplifiés » pour les éditeurs : peu de classes cms-* + insertion TinyMCE « Blocs ».
+ * Les anciennes classes ggz-* du seed historique restent prises en charge.
+ */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg section.cms-section {
+scroll-margin-top: 5.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg section.cms-section > header {
+margin-bottom: 1.25rem;
+    max-width: 46rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg .cms-kicker {
+margin: 0 0 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ggz-peach);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg section.cms-section > header > h2 {
+margin: 0 0 0.65rem;
+    font-family: var(--ggz-font-display);
+    font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.12;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg .cms-lead {
+margin: 0;
+    font-size: 1.02rem;
+    line-height: 1.6;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg dl.cms-metrics {
+margin: 0 0 1rem;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg dl.cms-metrics > div {
+margin: 0;
+    padding: 1.1rem 1rem;
+    text-align: center;
+    background: var(--ggz-night-blue);
+    border-radius: var(--ggz-radius-card);
+    border: 1px solid rgba(56, 67, 88, 0.45);
+    box-shadow: var(--ggz-shadow-card);
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg dl.cms-metrics > div:hover {
+border-color: rgba(255, 165, 134, 0.22);
+    box-shadow: var(--ggz-shadow-card-hover);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg dl.cms-metrics dt {
+margin: 0 0 0.35rem;
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: var(--ggz-peach);
+    font-variant-numeric: tabular-nums;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg dl.cms-metrics dd {
+margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--ggz-text-meta);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg .cms-actions {
+display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg .cms-actions .cms-btn {
+display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0;
+    padding: 0.65rem 1.35rem;
+    min-height: 46px;
+    border-radius: var(--ggz-radius-btn);
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg .cms-actions .cms-btn:hover {
+filter: brightness(1.05);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg .cms-actions .cms-btn--primary {
+background: linear-gradient(150deg, var(--ggz-peach) 0%, #ff9270 42%, #c94a3d 120%);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 6px 20px rgba(84, 26, 62, 0.38);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg .cms-actions .cms-btn--primary:hover {
+background: linear-gradient(150deg, #ffc4ae 0%, var(--ggz-peach) 45%, var(--ggz-bordeaux) 125%);
+    box-shadow: 0 10px 28px rgba(84, 26, 62, 0.42);
+    transform: translateY(-2px);
+    filter: none;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg .cms-actions .cms-btn--secondary {
+background: rgba(35, 47, 73, 0.65);
+    border: 2px solid rgba(255, 165, 134, 0.55);
+    color: var(--ggz-text-on-dark);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg .cms-actions .cms-btn--secondary:hover {
+background: rgba(35, 47, 73, 0.92);
+    border-color: var(--ggz-peach);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+    transform: translateY(-2px);
+    filter: none;
+}
+
+/* Alertes (flash, erreurs, bandeau prévisualisation) */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-alert {
+padding: 0.85rem 1rem 0.85rem 1.1rem;
+    border-radius: var(--ggz-radius-btn);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    line-height: 1.45;
+    border: 1px solid transparent;
+    border-left-width: 4px;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-alert__line + .ggz-alert__line {
+margin-top: 0.35rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-alert--success {
+background: rgba(255, 165, 134, 0.14);
+    border-color: rgba(255, 165, 134, 0.35);
+    border-left-color: var(--ggz-peach);
+    color: var(--ggz-text-on-dark);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-alert--danger {
+background: rgba(213, 26, 43, 0.16);
+    border-color: rgba(213, 26, 43, 0.35);
+    border-left-color: var(--ggz-red-action);
+    color: var(--ggz-text-on-dark);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-alert--info {
+background: rgba(36, 47, 73, 0.85);
+    border-color: rgba(56, 67, 88, 0.65);
+    border-left-color: var(--ggz-peach);
+    color: var(--ggz-text-on-dark);
+}
+
+/* Compat : bandeaux hors layout (ex. anciennes vues) */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .flash {
+padding: 0.85rem 1rem 0.85rem 1.1rem;
+    border-radius: var(--ggz-radius-btn);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    line-height: 1.45;
+    border: 1px solid rgba(255, 165, 134, 0.35);
+    border-left: 4px solid var(--ggz-peach);
+    background: rgba(255, 165, 134, 0.14);
+    color: var(--ggz-text-on-dark);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .errors {
+padding: 0.85rem 1rem 0.85rem 1.1rem;
+    border-radius: var(--ggz-radius-btn);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    line-height: 1.45;
+    border: 1px solid rgba(213, 26, 43, 0.35);
+    border-left: 4px solid var(--ggz-red-action);
+    background: rgba(213, 26, 43, 0.16);
+    color: var(--ggz-text-on-dark);
+}
+
+/* --- Formulaires --- */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell label {
+display: block;
+    margin-top: 0.85rem;
+    font-weight: 700;
+    font-size: 0.88rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: rgba(250, 250, 250, 0.92);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell input,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell textarea,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell select {
+width: 100%;
+    max-width: 35rem;
+    padding: 0.55rem 0.7rem;
+    margin-top: 0.35rem;
+    border-radius: 10px;
+    border: 1px solid var(--ggz-blue-gray);
+    background: var(--ggz-night-deep);
+    color: var(--ggz-text-on-dark);
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell select[multiple] {
+min-height: 12rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell textarea {
+min-height: 8rem;
+    resize: vertical;
+}
+
+/* Hors vocabulaire template (.btn--primary / .btn--ghost) — évite d’écraser FR/EN et les CTA site_govgenz */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill):not(.project-fund-dialog__close):not(.project-fund-form__item-remove):not(.projects-program-show__btn):not(.projects-program-show__share-icon-btn):not(.ggz-project-cta-btn),
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn:not(.btn--primary):not(.btn--ghost) {
+display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 0.65rem 1.35rem;
+    min-height: 46px;
+    border-radius: var(--ggz-radius-btn);
+    border: none;
+    background: var(--ggz-peach);
+    color: var(--ggz-night-deep);
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: inherit;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill):not(.project-fund-dialog__close):not(.project-fund-form__item-remove):not(.projects-program-show__btn):not(.projects-program-show__share-icon-btn):not(.ggz-project-cta-btn):hover,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn:not(.btn--primary):not(.btn--ghost):hover {
+filter: brightness(1.05);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn.btn-primary,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button.btn-primary {
+background: linear-gradient(150deg, var(--ggz-peach) 0%, #ff9270 42%, #c94a3d 120%);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 6px 20px rgba(84, 26, 62, 0.38);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn.btn-primary:hover,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button.btn-primary:hover {
+background: linear-gradient(150deg, #ffc4ae 0%, var(--ggz-peach) 45%, var(--ggz-bordeaux) 125%);
+    box-shadow: 0 10px 28px rgba(84, 26, 62, 0.42);
+    transform: translateY(-2px);
+    filter: none;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn.btn-secondary,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button.secondary,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn.secondary,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button.btn-secondary {
+background: rgba(35, 47, 73, 0.65);
+    border: 2px solid rgba(255, 165, 134, 0.55);
+    color: var(--ggz-text-on-dark);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn.btn-secondary:hover,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button.secondary:hover,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn.secondary:hover,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button.btn-secondary:hover {
+background: rgba(35, 47, 73, 0.92);
+    border-color: var(--ggz-peach);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+    transform: translateY(-2px);
+    filter: none;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button.secondary,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn.secondary {
+text-transform: uppercase;
+}
+
+/* CTA fort : styles dans govgenz-components.css (.ggz-btn-urgent, .btn--primary) */
+/* --- Listes simples dans une carte --- */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .card ul {
+list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .card ul li {
+padding: 0.65rem 0;
+    border-bottom: 1px solid rgba(56, 67, 88, 0.45);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .card ul li:last-child {
+border-bottom: none;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .card ul a {
+color: var(--ggz-peach);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .card ul a:hover {
+text-decoration: underline;
+}
+
+/* --- Textes d’introduction & états vides --- */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-intro {
+margin: 0 0 1.25rem;
+    line-height: var(--ggz-line-body);
+    max-width: 42rem;
+}
+
+/* --- Fil d’Ariane --- */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-breadcrumb {
+font-size: 0.88rem;
+    margin: 0 0 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.5rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-breadcrumb a {
+color: var(--ggz-peach);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-breadcrumb a:hover {
+text-decoration: underline;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-breadcrumb__sep {
+color: var(--ggz-text-meta);
+    user-select: none;
+}
+
+/* --- Article presse (fiche) --- */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-press-header {
+margin-bottom: 1.25rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-press-meta {
+margin: 0.35rem 0 0;
+    font-size: 0.9rem;
+    color: var(--ggz-text-meta);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-lead {
+margin: 1rem 0 0;
+    font-family: var(--ggz-font-sans);
+    font-size: clamp(1.03rem, 1.5vw, 1.18rem);
+    line-height: 1.62;
+    color: rgba(250, 250, 250, 0.94);
+    font-weight: 500;
+    max-width: 62ch;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-back-row {
+margin: 2rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(56, 67, 88, 0.45);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-btn-back {
+margin-top: 0;
+}
+
+/* --- Formulaire structuré (Rejoindre, etc.) --- */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-form .ggz-field:first-child label {
+margin-top: 0;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-field-hint {
+margin: 0.25rem 0 0.45rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--ggz-text-meta);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-fieldset {
+border: 1px solid rgba(56, 67, 88, 0.55);
+    border-radius: 14px;
+    padding: 1rem 1.15rem 1.2rem;
+    margin: 1.35rem 0 0;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-fieldset--optional {
+border-style: dashed;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-fieldset-legend {
+padding: 0 0.4rem;
+    font-weight: 800;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(250, 250, 250, 0.92);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-optional-tag {
+font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--ggz-text-meta);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-form-actions {
+margin-top: 1.5rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-form-actions .btn,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-form-actions button {
+margin-top: 0;
+}
+
+/* Page Rejoindre — panneau formulaire (sans carte générique au survol) */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join {
+max-width: 38rem;
+    margin: 0 auto;
+    padding: clamp(1.35rem, 3vw, 2rem) clamp(1.35rem, 3vw, 2rem);
+    border-radius: 16px;
+    border: 1px solid rgba(56, 67, 88, 0.55);
+    background: rgba(22, 30, 47, 0.72);
+    box-shadow: 0 12px 44px rgba(0, 0, 0, 0.32);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form {
+margin: 0;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-field {
+margin-top: 0;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-field + .ggz-field {
+margin-top: 1rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form label {
+font-family: var(--ggz-font-sans);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    color: var(--ggz-text-on-dark);
+    margin-top: 0;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-field-hint {
+font-family: var(--ggz-font-sans);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form input:not(.multi-select-search):not(.iti__search-input),
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form textarea,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form select {
+font-family: var(--ggz-font-sans);
+    max-width: none;
+    width: 100%;
+    margin-top: 0.4rem;
+    padding: 0.68rem 0.9rem;
+    border-radius: 12px;
+    border: 1px solid rgba(56, 67, 88, 0.85);
+    background: rgba(10, 14, 24, 0.78);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-phone-row {
+display: grid;
+    grid-template-columns: minmax(9rem, 11rem) minmax(0, 1fr);
+    gap: 0.65rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form input:not(.multi-select-search):not(.iti__search-input):hover,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form textarea:hover,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form select:hover {
+border-color: rgba(90, 102, 122, 0.95);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form input:not(.multi-select-search):not(.iti__search-input):focus,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form textarea:focus,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form select:focus {
+outline: none;
+    /* Pêche / corail : pas le rouge « erreur » (220,38,38) */
+    border-color: rgba(255, 164, 138, 0.72);
+    box-shadow:
+        0 0 0 3px rgba(255, 146, 112, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Secteurs : multi-select-dropdown-js (voir join-enhancements.css) */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join #phone_country {
+min-width: 11rem;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-fieldset {
+margin: 1.5rem 0 0;
+    padding: 1.35rem 0 0;
+    border: none;
+    border-radius: 0;
+    border-top: 1px solid rgba(56, 67, 88, 0.5);
+    background: transparent;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-fieldset--optional {
+border-top-style: dashed;
+    border-top-color: rgba(56, 67, 88, 0.42);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-fieldset-legend {
+font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.69rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ggz-peach);
+    padding: 0;
+    margin: 0 0 0.85rem;
+    float: none;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-fieldset .ggz-field:first-of-type label {
+margin-top: 0;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-optional-tag {
+display: inline-block;
+    margin-left: 0.35rem;
+    padding: 0.12rem 0.45rem;
+    border-radius: 999px;
+    font-family: var(--ggz-font-sans);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ggz-text-meta);
+    border: 1px solid rgba(56, 67, 88, 0.75);
+    background: rgba(0, 0, 0, 0.22);
+    vertical-align: middle;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form-actions {
+margin-top: 1.75rem;
+    padding-top: 1.35rem;
+    border-top: 1px solid rgba(56, 67, 88, 0.45);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form-actions .ggz-project-cta-btn--red {
+width: 100%;
+}
+
+@media (min-width: 480px) {.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form-actions .ggz-project-cta-btn--red {
+width: auto;
+        min-width: min(100%, 16rem);
+}
+
+}
+@media (prefers-reduced-motion: reduce) {.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form input:not(.multi-select-search):not(.iti__search-input):focus,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form textarea:focus,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form select:focus {
+transition: none;
+}
+
+}
+/* Presse : voir ggz-press-page.css */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .cercle__title a {
+color: var(--ggz-text-on-dark);
+    text-decoration: none;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .cercle__title a:hover {
+color: var(--ggz-peach);
+}
+
+@media (prefers-reduced-motion: reduce) {.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn.btn-primary:hover,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button.btn-primary:hover,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn.btn-secondary:hover,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button.secondary:hover,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn.secondary:hover,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button.btn-secondary:hover {
+transform: none;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill):not(.ggz-project-cta-btn),
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn:not(.btn--primary):not(.btn--ghost),
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .card {
+transition-duration: 0.01ms !important;
+}
+
+}
+/* --- govgenz-bridge.css --- */
+
+/**
+ * Pont layout CodeIgniter ↔ template (nav, shell, hero CMS, prose page).
+ * Typo rubriques CMS : govgenz-cms-shell.css
+ */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell {
+position: relative;
+    z-index: 10;
+    flex: 1;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell.ggz-layout-full article.wysiwyg.ggz-home-wysiwyg {
+margin-top: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero {
+border-color: var(--border-strong);
+    background: var(--ggz-gradient-hero);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .wysiwyg.ggz-page-prose:not(.ggz-legal-prose):not(.ggz-editorial-prose) {
+margin-top: 1.35rem;
+    padding: clamp(1.35rem, 2.8vw, 2rem) clamp(1.25rem, 3vw, 2.15rem);
+    border-radius: var(--ggz-radius-lg);
+    border: 1px solid var(--border);
+    background: var(--ggz-bg-card-overlay);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: var(--ggz-shadow-card);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .wysiwyg.ggz-page-prose h2 {
+font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-transform: none;
+    font-size: clamp(1.28rem, 2.6vw, 1.72rem);
+    line-height: 1.2;
+    color: var(--text-bright);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .wysiwyg.ggz-home-wysiwyg {
+margin-top: 0;
+    padding: clamp(1.35rem, 2.8vw, 2rem) clamp(1.25rem, 3vw, 2.15rem);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(21, 21, 31, 0.58);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 16px 56px rgba(0, 0, 0, 0.26);
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell p.ggz-home-missing-lead {
+margin-top: 1.35rem;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem) clamp(1.25rem, 3vw, 2rem);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(21, 21, 31, 0.52);
+    line-height: 1.65;
+}
+
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell > .ggz-alert {
+font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+    border-radius: 10px;
+    border-color: var(--border-strong);
+}
+
+@media (max-width: 768px) {}
