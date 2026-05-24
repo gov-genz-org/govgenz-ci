@@ -353,6 +353,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Configure Git author
+        run: |
+          git config user.name "GovGenZ Release"
+          git config user.email "noreply@govgenz.org"
+
       - name: Compute next release tag
         id: tag
         run: |
@@ -377,8 +382,6 @@ jobs:
           TAG: ${{ steps.tag.outputs.name }}
           BUMP: ${{ steps.tag.outputs.bump }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           kind="Production release"
           if [[ "$BUMP" == "patch" ]]; then
             kind="Hotfix release"
@@ -392,3 +395,28 @@ jobs:
           )"
           git push origin "$TAG"
           echo "::notice::Tag ${TAG} créé sur origin (commit ${{ github.sha }})"
+
+      - name: Bump VERSION and CHANGELOG on develop
+        if: steps.tag.outputs.already_tagged != 'true'
+        env:
+          TAG: ${{ steps.tag.outputs.name }}
+          BUMP: ${{ steps.tag.outputs.bump }}
+        run: |
+          chmod +x deploy/next-develop-version.sh deploy/update-changelog.sh
+          git fetch origin develop main --tags
+          git checkout develop
+          git pull --ff-only origin develop
+          next=$(./deploy/next-develop-version.sh "$TAG")
+          current=$(tr -d '[:space:]' < VERSION 2>/dev/null || true)
+          if [[ "$current" != "$next" ]]; then
+            printf '%s\n' "$next" > VERSION
+          fi
+          ./deploy/update-changelog.sh "$TAG" "$BUMP" "${{ github.sha }}"
+          if git diff --quiet -- VERSION CHANGELOG.md; then
+            echo "VERSION et CHANGELOG déjà à jour"
+            exit 0
+          fi
+          git add VERSION CHANGELOG.md
+          git commit -m "release: increase next develop version"
+          git push origin develop
+          echo "::notice::develop VERSION ${current:-∅} → ${next} ; CHANGELOG ${TAG}"

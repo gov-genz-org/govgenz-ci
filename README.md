@@ -50,7 +50,7 @@ Voir aussi [`docs/CODE-STRUCTURE.md`](docs/CODE-STRUCTURE.md) et [`docs/CI-CD.md
 ## CI/CD
 
 Checks **`ci/test`** (PHPUnit + couverture) et **`ci/build`** : **[docs/CI-CD.md](docs/CI-CD.md)**.  
-Merge **`develop` → `main`** : déploiement prod FTP puis tag Git auto (`v1.1.0`, `v1.2.0`, … — incrément **mineur**).  
+Merge **`develop` → `main`** : déploiement prod FTP puis tag Git auto (`v1.1.0`, `v1.2.0`, … — incrément **mineur**). Le job CI met à jour `VERSION` et `CHANGELOG.md` sur `develop` (commit `release: increase next develop version`).  
 Merge **`fix/*` ou `hotfix/*` → `main`** : même pipeline, tag en **patch** (`v1.1.1`, `v1.1.2`, …).
 
 ## Documentation
