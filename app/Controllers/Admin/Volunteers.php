@@ -54,7 +54,7 @@ class Volunteers extends BaseController
     {
         $status = $this->request->getPost('status');
         if (! is_string($status) || ! in_array($status, ['new', 'reviewed'], true)) {
-            return redirect()->back()->with('error', 'Statut invalide.');
+            return redirect()->back()->with('error', lang('Admin.error_invalid_status'));
         }
 
         $model = model(VolunteerApplicationModel::class);
@@ -65,7 +65,14 @@ class Volunteers extends BaseController
 
         $model->update($id, ['status' => $status]);
 
-        return redirect()->back()->with('message', 'Candidature mise à jour.');
+        return redirect()->back()->with('message', lang('Admin.flash_volunteer_updated'));
+    }
+
+    public function clearTable(): ResponseInterface
+    {
+        model(VolunteerApplicationModel::class)->db->table('volunteer_applications')->truncate();
+
+        return redirect()->to(site_url('admin/volunteers'))->with('message', lang('Admin.flash_volunteers_cleared'));
     }
 
     public function clearTable(): ResponseInterface

@@ -36,7 +36,7 @@ Boutons template : scope `.ggz-public-theme .btn` (évite de casser Bootstrap en
 | 2 | `govgenz-tokens.css` | Accent rouge partagé |
 | 3 | `govgenz-admin.css` | Navbar, sidebar, tables, formulaires |
 
-**Exception** — `admin/cms-guide` charge fonts → components → template → cms-shell → legal → press → **`govgenz-guide-preview-parity.css`** → `admin-cms-guide-preview.css`. **Ne pas** y inclure `govgenz-front-pages.css` (le sélecteur `#main-content` casse la mise en page admin).
+**Exception** — `admin/cms-guide` charge fonts → components → template → cms-shell → **`govgenz-cms-guide-front-scoped.css`** (dérivé de front-pages + bridge, **uniquement** sous `.cms-guide-preview-host`) → legal → press → `govgenz-guide-preview-parity.css` → `admin-cms-guide-preview.css`. **Ne pas** y inclure `govgenz-front-pages.css` ni `govgenz-bridge.css` en global (sinon `.btn` / `#main-content` altèrent la navbar admin). Régénérer le scoped : `python3 scripts/scope-cms-guide-css.py`.
 
 ## Site statique `site_govgenz/`
 

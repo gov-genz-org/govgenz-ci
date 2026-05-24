@@ -14,72 +14,72 @@ if ($rest === '') {
 }
 
 $items = [
-    ['label' => 'Tableau de bord', 'url' => site_url('admin')],
+    ['label' => lang('Admin.nav_dashboard'), 'url' => site_url('admin')],
 ];
 
 if ($rest === 'pages') {
-    $items[] = ['label' => 'Pages', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_pages'), 'url' => null];
 } elseif ($rest === 'pages/create') {
-    $items[] = ['label' => 'Pages', 'url' => site_url('admin/pages')];
-    $items[] = ['label' => 'Nouvelle page', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_pages'), 'url' => site_url('admin/pages')];
+    $items[] = ['label' => lang('Admin.breadcrumb_page_new'), 'url' => null];
 } elseif (preg_match('#^pages/edit/\d+$#', $rest)) {
-    $items[] = ['label' => 'Pages', 'url' => site_url('admin/pages')];
-    $items[] = ['label' => 'Éditer une page', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_pages'), 'url' => site_url('admin/pages')];
+    $items[] = ['label' => lang('Admin.breadcrumb_page_edit'), 'url' => null];
 } elseif ($rest === 'site-menu') {
-    $items[] = ['label' => 'Menu du site', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_site_menu'), 'url' => null];
 } elseif ($rest === 'site-menu/create') {
-    $items[] = ['label' => 'Menu du site', 'url' => site_url('admin/site-menu')];
-    $items[] = ['label' => 'Nouvelle entrée', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_site_menu'), 'url' => site_url('admin/site-menu')];
+    $items[] = ['label' => lang('Admin.breadcrumb_menu_new'), 'url' => null];
 } elseif (preg_match('#^site-menu/edit/\d+$#', $rest)) {
-    $items[] = ['label' => 'Menu du site', 'url' => site_url('admin/site-menu')];
-    $items[] = ['label' => 'Éditer', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_site_menu'), 'url' => site_url('admin/site-menu')];
+    $items[] = ['label' => lang('Admin.breadcrumb_menu_edit'), 'url' => null];
 } elseif ($rest === 'cms-guide') {
-    $items[] = ['label' => 'Blocs HTML (aide)', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_cms_guide'), 'url' => null];
 } elseif ($rest === 'posts') {
-    $items[] = ['label' => 'Presse', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_posts'), 'url' => null];
 } elseif ($rest === 'posts/create') {
-    $items[] = ['label' => 'Presse', 'url' => site_url('admin/posts')];
-    $items[] = ['label' => 'Nouvel article', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_posts'), 'url' => site_url('admin/posts')];
+    $items[] = ['label' => lang('Admin.breadcrumb_post_new'), 'url' => null];
 } elseif (preg_match('#^posts/edit/\d+$#', $rest)) {
-    $items[] = ['label' => 'Presse', 'url' => site_url('admin/posts')];
-    $items[] = ['label' => 'Éditer un article', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_posts'), 'url' => site_url('admin/posts')];
+    $items[] = ['label' => lang('Admin.breadcrumb_post_edit'), 'url' => null];
 } elseif ($rest === 'media') {
-    $items[] = ['label' => 'Médias', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_media'), 'url' => null];
 } elseif ($rest === 'volunteers') {
-    $items[] = ['label' => 'Volontaires', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_volunteers'), 'url' => null];
 } elseif ($rest === 'project-contributions') {
-    $items[] = ['label' => 'Financements projets', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_project_contributions'), 'url' => null];
 } elseif ($rest === 'sectors') {
-    $items[] = ['label' => 'Secteurs', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_sectors'), 'url' => null];
 } elseif ($rest === 'sectors/create') {
-    $items[] = ['label' => 'Secteurs', 'url' => site_url('admin/sectors')];
-    $items[] = ['label' => 'Nouveau secteur', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_sectors'), 'url' => site_url('admin/sectors')];
+    $items[] = ['label' => lang('Admin.breadcrumb_sector_new'), 'url' => null];
 } elseif (preg_match('#^sectors/edit/\d+$#', $rest)) {
-    $items[] = ['label' => 'Secteurs', 'url' => site_url('admin/sectors')];
-    $items[] = ['label' => 'Modifier', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_sectors'), 'url' => site_url('admin/sectors')];
+    $items[] = ['label' => lang('Admin.breadcrumb_edit'), 'url' => null];
 } elseif ($rest === 'project-projects') {
-    $items[] = ['label' => 'Projets programme', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_project_projects'), 'url' => null];
 } elseif ($rest === 'project-projects/create') {
-    $items[] = ['label' => 'Projets programme', 'url' => site_url('admin/project-projects')];
-    $items[] = ['label' => 'Nouveau projet', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_project_projects'), 'url' => site_url('admin/project-projects')];
+    $items[] = ['label' => lang('Admin.breadcrumb_project_new'), 'url' => null];
 } elseif (preg_match('#^project-projects/edit/\d+$#', $rest)) {
-    $items[] = ['label' => 'Projets programme', 'url' => site_url('admin/project-projects')];
-    $items[] = ['label' => 'Modifier', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_project_projects'), 'url' => site_url('admin/project-projects')];
+    $items[] = ['label' => lang('Admin.breadcrumb_edit'), 'url' => null];
 } elseif ($rest === 'project-exchange-rates') {
-    $items[] = ['label' => 'Taux de change', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_exchange_rates'), 'url' => null];
 } elseif ($rest === 'position-items') {
-    $items[] = ['label' => 'Positions programme', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_position_items'), 'url' => null];
 } elseif ($rest === 'position-items/create') {
-    $items[] = ['label' => 'Positions programme', 'url' => site_url('admin/position-items')];
-    $items[] = ['label' => 'Nouvelle position', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_position_items'), 'url' => site_url('admin/position-items')];
+    $items[] = ['label' => lang('Admin.breadcrumb_position_new'), 'url' => null];
 } elseif (preg_match('#^position-items/edit/\d+$#', $rest)) {
-    $items[] = ['label' => 'Positions programme', 'url' => site_url('admin/position-items')];
-    $items[] = ['label' => 'Modifier', 'url' => null];
+    $items[] = ['label' => lang('Admin.nav_position_items'), 'url' => site_url('admin/position-items')];
+    $items[] = ['label' => lang('Admin.breadcrumb_edit'), 'url' => null];
 } else {
     return;
 }
 ?>
-<nav aria-label="Fil d’Ariane" class="mb-3">
+<nav aria-label="<?= esc(lang('Admin.breadcrumb_aria')) ?>" class="mb-3">
     <ol class="breadcrumb small mb-0 bg-white rounded border px-3 py-2 shadow-sm">
         <?php foreach ($items as $idx => $row) : ?>
             <?php $isLast = $idx === count($items) - 1; ?>

@@ -73,13 +73,22 @@ class Auth extends BaseController
         ) {
             StaffLoginAudit::record($this->request, 'failure', 'invalid_credentials', null, $emailRaw);
 
-            return redirect()->back()->withInput()->with('error', 'Identifiants invalides.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_auth_invalid'));
         }
 
         if ((int) ($user['is_active'] ?? 1) !== 1) {
             StaffLoginAudit::record($this->request, 'failure', 'account_disabled', null, $emailRaw);
 
-            return redirect()->back()->withInput()->with('error', 'Ce compte est désactivé.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_auth_disabled'));
+        }
+
+        if (StaffInvite::isPending($user)) {
+            StaffLoginAudit::record($this->request, 'failure', 'invite_pending', null, $emailRaw);
+
+            return redirect()->back()->withInput()->with(
+                'error',
+                'Ce compte n’est pas encore activé. Utilisez le lien reçu par e-mail pour choisir votre mot de passe.',
+            );
         }
 
         if (StaffInvite::isPending($user)) {

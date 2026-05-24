@@ -10,13 +10,13 @@ $html = (string) ($block['html'] ?? '');
 ?>
 <div class="cms-block-row card mb-3 border-secondary">
     <div class="card-header py-2 d-flex justify-content-between align-items-center flex-wrap gap-2">
-        <span class="fw-semibold small mb-0">Bloc · HTML libre</span>
-        <button type="button" class="btn btn-sm btn-outline-danger cms-block-remove">Retirer ce bloc</button>
+        <span class="fw-semibold small mb-0"><?= esc(lang('Admin.block_type_html')) ?></span>
+        <button type="button" class="btn btn-sm btn-outline-danger cms-block-remove"><?= esc(lang('Admin.cms_block_remove')) ?></button>
     </div>
     <div class="card-body">
         <input type="hidden" name="<?= esc($pfx, 'attr') ?>[type]" value="html">
-        <label class="form-label small">HTML (réservé aux usages avancés)</label>
+        <label class="form-label small"><?= esc(lang('Admin.cms_block_html_page')) ?></label>
         <textarea name="<?= esc($pfx, 'attr') ?>[html]" class="form-control font-monospace small" rows="8"><?= esc($html) ?></textarea>
-        <div class="form-text">Ce bloc affiche le HTML tel quel sur le site (comme l’éditeur classique). À utiliser avec précaution.</div>
+        <div class="form-text"><?= esc(lang('Admin.cms_block_html_help')) ?></div>
     </div>
 </div>

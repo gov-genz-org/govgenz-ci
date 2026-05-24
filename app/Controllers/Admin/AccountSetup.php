@@ -51,7 +51,7 @@ class AccountSetup extends BaseController
         $user = StaffInvite::findUserByPlainToken($token);
         if ($user === null) {
             return redirect()->to(site_url('admin/login'))
-                ->with('error', 'Ce lien d’invitation est invalide ou expiré. Demandez un nouvel envoi à un administrateur.');
+                ->with('error', lang('Admin.error_invite_invalid'));
         }
 
         $minLen = StaffAuthPolicy::loginPasswordMinLength();
@@ -66,7 +66,7 @@ class AccountSetup extends BaseController
         $password = (string) $this->request->getPost('password');
         $userId   = (int) ($user['id'] ?? 0);
         if (! StaffInvite::completeSetup($userId, $password)) {
-            return redirect()->back()->with('error', 'Impossible d’enregistrer le mot de passe. Le lien a peut-être expiré.');
+            return redirect()->back()->with('error', lang('Admin.error_password_save_failed'));
         }
 
         StaffLoginAudit::record(
@@ -85,6 +85,6 @@ class AccountSetup extends BaseController
         ]);
 
         return redirect()->to(site_url('admin'))
-            ->with('message', 'Votre mot de passe est enregistré. Bienvenue sur le back-office.');
+            ->with('message', lang('Admin.flash_account_welcome'));
     }
 }

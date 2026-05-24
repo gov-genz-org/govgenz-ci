@@ -54,26 +54,15 @@ if ($footerCmsHtml !== '' && preg_match('/^<div\s+class="footer__columns(?:\s[^"
             </span>
         </a>
 
-        <nav class="nav" id="nav" aria-label="<?= esc(lang('Site.nav_aria'), 'attr') ?>">
         <?php
-        $na           = $navActive ?? '';
-        $seg1         = SiteContext::publicSegment(1);
-        $seg2         = SiteContext::publicSegment(2);
-        $navLinks     = SiteContext::navMainLinks();
-        $switchHref   = locale_switch_url();
-        $switchLabel  = SiteContext::locale() === 'fr' ? 'EN' : 'FR';
-        $switchTitle  = SiteContext::locale() === 'fr' ? lang('Site.lang_switch_to_en') : lang('Site.lang_switch_to_fr');
-
-        foreach ($navLinks as $link) :
-            $active = PublicNav::isActive($link['match_key'], $na, $seg1, $seg2);
-            $parts  = array_values(array_filter([
-                $active ? 'is-active' : null,
-                ($link['css_class'] ?? '') !== '' ? trim((string) $link['css_class']) : null,
-            ], static fn ($x) => $x !== null && $x !== ''));
-            $linkClass = $parts !== [] ? implode(' ', $parts) : '';
-            ?>
-            <a href="<?= esc($link['href'], 'attr') ?>"<?= $linkClass !== '' ? ' class="' . esc($linkClass, 'attr') . '"' : '' ?>><?= esc($link['label']) ?></a>
-        <?php endforeach; ?>
+        $na          = $navActive ?? '';
+        $navLinks    = SiteContext::navMainLinks();
+        $switchHref  = locale_switch_url();
+        $switchLabel = SiteContext::locale() === 'fr' ? 'EN' : 'FR';
+        $switchTitle = SiteContext::locale() === 'fr' ? lang('Site.lang_switch_to_en') : lang('Site.lang_switch_to_fr');
+        ?>
+        <nav class="nav" id="nav" aria-label="<?= esc(lang('Site.nav_aria'), 'attr') ?>">
+            <?= view('front/partials/nav_links', ['navLinks' => $navLinks, 'navActive' => $na]) ?>
         </nav>
 
         <div class="header__actions">

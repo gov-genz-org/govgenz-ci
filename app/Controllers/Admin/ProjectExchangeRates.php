@@ -30,7 +30,7 @@ class ProjectExchangeRates extends BaseController
         model(ProjectExchangeRateModel::class)->saveConfig($this->payloadFromPost());
 
         return redirect()->to(site_url('admin/project-exchange-rates'))
-            ->with('message', 'Taux de change enregistrés.');
+            ->with('message', lang('Admin.flash_exchange_rates_saved'));
     }
 
     /**

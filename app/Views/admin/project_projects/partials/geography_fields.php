@@ -43,31 +43,26 @@ $geoLabelsJson = json_encode(
 <div class="col-12" id="pp-geo-picker"
      data-api-base="<?= esc(base_url('admin/geo'), 'attr') ?>"
      data-catalog-ready="<?= $geoCatalogReady ? '1' : '0' ?>">
-    <label class="form-label">Géographie</label>
+    <label class="form-label"><?= esc(lang('Admin.form_geo_label')) ?></label>
 
     <?php if (! $geoCatalogReady) : ?>
-        <p class="alert alert-warning small py-2 mb-2">
-            Référentiel géographique vide. Dans Docker :
-            <code>docker compose exec web php spark migrate</code>
-            puis
-            <code>docker compose exec web php spark mdg:import-geo</code>
-        </p>
+        <p class="alert alert-warning small py-2 mb-2"><?= lang('Admin.help_geo_catalog_empty') ?></p>
     <?php endif; ?>
 
     <?php if ($geoLegacy !== '') : ?>
-        <p class="small text-warning mb-2">Ancienne valeur texte : « <?= esc($geoLegacy) ?> » — resélectionnez ci-dessous.</p>
+        <p class="small text-warning mb-2"><?= esc(lang('Admin.help_geo_legacy', [$geoLegacy])) ?></p>
     <?php endif; ?>
 
     <div class="form-check mb-2">
         <input type="checkbox" class="form-check-input" name="geo_national" id="pp-geo-national" value="1"
             <?= $geoNational ? 'checked' : '' ?>>
-        <label class="form-check-label" for="pp-geo-national">National (tout Madagascar)</label>
+        <label class="form-check-label" for="pp-geo-national"><?= esc(lang('Admin.form_geo_national')) ?></label>
     </div>
 
     <div id="pp-geo-cascade" class="<?= $geoNational ? 'd-none' : '' ?>">
         <div class="row g-2">
             <div class="col-md-6 col-lg-3">
-                <label for="pp-geo-regions" class="form-label small mb-1">Région(s)</label>
+                <label for="pp-geo-regions" class="form-label small mb-1"><?= esc(lang('Admin.form_geo_regions')) ?></label>
                 <select name="geo_region_ids[]" id="pp-geo-regions" class="form-select" multiple size="7"
                         aria-describedby="pp-geo-regions-hint" <?= $geoCatalogReady ? '' : 'disabled' ?>>
                     <?php foreach ($mdgRegions as $row) :
@@ -80,25 +75,25 @@ $geoLabelsJson = json_encode(
                     <option value="<?= $rid ?>"<?= $sel ?>><?= esc((string) ($row['name'] ?? '')) ?></option>
                     <?php endforeach; ?>
                 </select>
-                <p id="pp-geo-regions-hint" class="form-text mb-0">Ctrl/Cmd + clic pour plusieurs.</p>
+                <p id="pp-geo-regions-hint" class="form-text mb-0"><?= esc(lang('Admin.help_geo_multi_select')) ?></p>
             </div>
             <div class="col-md-6 col-lg-3">
-                <label for="pp-geo-districts" class="form-label small mb-1">District(s)</label>
+                <label for="pp-geo-districts" class="form-label small mb-1"><?= esc(lang('Admin.form_geo_districts')) ?></label>
                 <select name="geo_district_ids[]" id="pp-geo-districts" class="form-select" multiple size="7" disabled></select>
             </div>
             <div class="col-md-6 col-lg-3">
-                <label for="pp-geo-communes" class="form-label small mb-1">Commune(s)</label>
+                <label for="pp-geo-communes" class="form-label small mb-1"><?= esc(lang('Admin.form_geo_communes')) ?></label>
                 <select name="geo_commune_ids[]" id="pp-geo-communes" class="form-select" multiple size="7" disabled></select>
             </div>
             <div class="col-md-6 col-lg-3">
-                <label for="pp-geo-fokontany" class="form-label small mb-1">Fokontany</label>
+                <label for="pp-geo-fokontany" class="form-label small mb-1"><?= esc(lang('Admin.form_geo_fokontany')) ?></label>
                 <select name="geo_fokontany_ids[]" id="pp-geo-fokontany" class="form-select" multiple size="7" disabled></select>
             </div>
         </div>
     </div>
 
     <p class="form-text mt-2 mb-0">
-        Aperçu carte / fiche :
+        <?= esc(lang('Admin.help_geo_preview')) ?>
         <strong id="pp-geo-preview"><?= $geoPreviewHtml ?></strong>
     </p>
     <p id="pp-geo-status" class="small text-muted mb-0" role="status"></p>

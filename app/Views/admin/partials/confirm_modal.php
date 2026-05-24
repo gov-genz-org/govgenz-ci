@@ -6,13 +6,13 @@ declare(strict_types=1);
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-0 pb-0">
-                <h2 class="modal-title fs-5" id="adminConfirmModalLabel">Confirmer</h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                <h2 class="modal-title fs-5" id="adminConfirmModalLabel"><?= esc(lang('Admin.ui_confirm_title')) ?></h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?= esc(lang('Admin.ui_close'), 'attr') ?>"></button>
             </div>
-            <div class="modal-body pt-2" data-confirm-body>Continuer ?</div>
+            <div class="modal-body pt-2" data-confirm-body><?= esc(lang('Admin.ui_confirm_body')) ?></div>
             <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-danger" data-confirm-yes>Oui, confirmer</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= esc(lang('Admin.ui_confirm_cancel')) ?></button>
+                <button type="button" class="btn btn-danger" data-confirm-yes><?= esc(lang('Admin.ui_confirm_yes')) ?></button>
             </div>
         </div>
     </div>

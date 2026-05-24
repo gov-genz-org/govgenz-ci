@@ -6,6 +6,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Libraries\CmsHeroPayload;
+use App\Libraries\LocaleSlug;
 use App\Libraries\CmsPageBodyNormalizer;
 use App\Models\CmsMediaModel;
 use App\Models\CmsPageModel;
@@ -79,11 +80,11 @@ class Pages extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $slug   = $this->normalizedSlug($this->request->getPost('slug'));
-        $locale = $this->normalizedLocale($this->request->getPost('locale'));
+        $slug   = LocaleSlug::normalizeSlug($this->request->getPost('slug'));
+        $locale = LocaleSlug::normalizeLocale($this->request->getPost('locale'));
         $model  = model(CmsPageModel::class);
         if ($model->where('slug', $slug)->where('locale', $locale)->first() !== null) {
-            return redirect()->back()->withInput()->with('error', 'Ce slug existe déjà pour cette langue.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_slug_locale_taken'));
         }
 
         helper('cms');
@@ -91,15 +92,15 @@ class Pages extends BaseController
         $mode       = CmsPageBodyNormalizer::contentMode($this->request);
         $blocksJson = CmsPageBodyNormalizer::bodyBlocksJson($this->request);
         if ($mode === 'blocks' && ($blocksJson === null || $blocksJson === '' || $blocksJson === '[]')) {
-            return redirect()->back()->withInput()->with('error', 'Mode blocs : ajoutez au moins une section valide (ex. avec un titre).');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_blocks_sections_empty'));
         }
 
         $hero = CmsHeroPayload::fromPost($this->request);
         if ($hero['hero_image_id'] !== null && model(CmsMediaModel::class)->find($hero['hero_image_id']) === null) {
-            return redirect()->back()->withInput()->with('error', 'Image hero : média introuvable (vérifiez l’identifiant dans la médiathèque).');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_hero_media_missing'));
         }
 
-        $tgrp = $this->normalizedTranslationGroup($this->request->getPost('translation_group'));
+        $tgrp = LocaleSlug::normalizeTranslationGroup($this->request->getPost('translation_group'));
 
         $model->insert([
             'slug'               => $slug,
@@ -125,7 +126,7 @@ class Pages extends BaseController
             $model->update($newId, ['translation_group' => (string) $newId]);
         }
 
-        return $this->adminRedirectToEdit('admin/pages', $newId, 'Page créée.');
+        return $this->adminRedirectToEdit('admin/pages', $newId, lang('Admin.flash_page_created'));
     }
 
     public function edit(int $id)
@@ -156,11 +157,11 @@ class Pages extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $slug   = $this->normalizedSlug($this->request->getPost('slug'));
-        $locale = $this->normalizedLocale($this->request->getPost('locale'));
+        $slug   = LocaleSlug::normalizeSlug($this->request->getPost('slug'));
+        $locale = LocaleSlug::normalizeLocale($this->request->getPost('locale'));
         $other  = $model->where('slug', $slug)->where('locale', $locale)->where('id !=', $id)->first();
         if ($other !== null) {
-            return redirect()->back()->withInput()->with('error', 'Ce slug existe déjà pour cette langue.');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_slug_locale_taken'));
         }
 
         helper('cms');
@@ -168,12 +169,12 @@ class Pages extends BaseController
         $mode       = CmsPageBodyNormalizer::contentMode($this->request);
         $blocksJson = CmsPageBodyNormalizer::bodyBlocksJson($this->request);
         if ($mode === 'blocks' && ($blocksJson === null || $blocksJson === '' || $blocksJson === '[]')) {
-            return redirect()->back()->withInput()->with('error', 'Mode blocs : ajoutez au moins une section valide (ex. avec un titre).');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_blocks_sections_empty'));
         }
 
         $hero = CmsHeroPayload::fromPost($this->request);
         if ($hero['hero_image_id'] !== null && model(CmsMediaModel::class)->find($hero['hero_image_id']) === null) {
-            return redirect()->back()->withInput()->with('error', 'Image hero : média introuvable (vérifiez l’identifiant dans la médiathèque).');
+            return redirect()->back()->withInput()->with('error', lang('Admin.error_hero_media_missing'));
         }
 
         $tgrpIn = trim((string) $this->request->getPost('translation_group'));
@@ -198,14 +199,14 @@ class Pages extends BaseController
             'hero_image_alt'     => $hero['hero_image_alt'],
         ]);
 
-        return $this->adminRedirectToEdit('admin/pages', $id, 'Page mise à jour.');
+        return $this->adminRedirectToEdit('admin/pages', $id, lang('Admin.flash_page_updated'));
     }
 
     public function delete(int $id): ResponseInterface
     {
         model(CmsPageModel::class)->delete($id);
 
-        return redirect()->to(site_url('admin/pages'))->with('message', 'Page supprimée.');
+        return redirect()->to(site_url('admin/pages'))->with('message', lang('Admin.flash_page_deleted'));
     }
 
     public function duplicate(int $id): ResponseInterface
@@ -216,9 +217,9 @@ class Pages extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        $srcLocale    = $this->normalizedLocale($src['locale'] ?? 'fr');
+        $srcLocale    = LocaleSlug::normalizeLocale($src['locale'] ?? 'fr');
         $targetLocale = $srcLocale === 'fr' ? 'en' : 'fr';
-        $srcSlug      = $this->normalizedSlug($src['slug'] ?? '');
+        $srcSlug      = LocaleSlug::normalizeSlug($src['slug'] ?? '');
 
         if ($srcSlug === 'home') {
             $baseTargetSlug = 'home';
@@ -241,7 +242,7 @@ class Pages extends BaseController
         $partner = $model->where('translation_group', $group)->where('locale', $targetLocale)->first();
         if ($partner !== null) {
             return redirect()->to(site_url('admin/pages'))
-                ->with('error', 'Une variante existe déjà pour cette langue dans ce groupe de traduction.');
+                ->with('error', lang('Admin.error_translation_exists'));
         }
 
         $newTitle = trim((string) ($src['title'] ?? '')) . ($targetLocale === 'en' ? ' (EN)' : ' (FR)');
@@ -269,7 +270,7 @@ class Pages extends BaseController
 
         return redirect()
             ->to(site_url('admin/pages/edit/' . $newId))
-            ->with('message', 'Copie créée en ' . strtoupper($targetLocale) . ' (brouillon).');
+            ->with('message', lang('Admin.flash_page_copy', [strtoupper($targetLocale)]));
     }
 
     /**
@@ -338,28 +339,9 @@ class Pages extends BaseController
             . '<script defer src="' . esc(base_url('js/admin/cms-blocks-form.js'), 'attr') . '"></script>';
     }
 
-    private function normalizedSlug(?string $slug): string
-    {
-        return strtolower(trim((string) $slug));
-    }
-
-    private function normalizedLocale(?string $locale): string
-    {
-        $locale = strtolower(trim((string) $locale));
-
-        return in_array($locale, ['fr', 'en'], true) ? $locale : 'fr';
-    }
-
-    private function normalizedTranslationGroup($raw): ?string
-    {
-        $g = trim((string) $raw);
-
-        return $g !== '' ? $g : null;
-    }
-
     private function buildUniqueSlugForLocale(string $baseSlug, string $locale): string
     {
-        $slug = $this->normalizedSlug($baseSlug);
+        $slug = LocaleSlug::normalizeSlug($baseSlug);
         if ($slug === '') {
             $slug = 'page-' . $locale;
         }

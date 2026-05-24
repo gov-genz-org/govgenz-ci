@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /** @var string $title Texte du tooltip et aria-label */
-$title = (string) ($title ?? 'Retirer la ligne');
+$title = (string) ($title ?? lang('Admin.block_remove_line'));
 /** @var string $extraClasses Classes Bootstrap additionnelles */
 $extraClasses = trim((string) ($extraClasses ?? ''));
 $classes = trim('btn btn-sm btn-outline-danger pp-repeat-remove pp-row-remove-btn px-2 py-1 flex-shrink-0 align-middle ' . $extraClasses);

@@ -65,13 +65,13 @@ foreach (PositionItemModel::typeCodes() as $typeCode) {
     $typeTipsAdmin[$typeCode] = position_type_tip($typeCode, $ppLocale);
 }
 ?>
-<h1 class="h3 mb-1"><?= $isEdit ? 'Modifier la position' : 'Nouvelle position' ?></h1>
-<p class="text-muted small mb-3">Carte liste (résumé visible) + sections détaillées (accordéon / fiche).</p>
+<h1 class="h3 mb-1"><?= esc($isEdit ? lang('Admin.form_position_edit') : lang('Admin.form_position_new')) ?></h1>
+<p class="text-muted small mb-3"><?= esc(lang('Admin.help_pi_form_intro')) ?></p>
 
 <?php if ($publicPreviewUrl !== null || $translationPartnerNav !== null) : ?>
     <p class="mb-3 d-flex flex-wrap gap-2">
         <?php if ($publicPreviewUrl !== null) : ?>
-            <a href="<?= esc($publicPreviewUrl, 'attr') ?>" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener">Voir la fiche publiée</a>
+            <a href="<?= esc($publicPreviewUrl, 'attr') ?>" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener"><?= esc(lang('Admin.action_view_published_record')) ?></a>
         <?php endif; ?>
         <?php if ($translationPartnerNav !== null) : ?>
             <a href="<?= esc($translationPartnerNav['editUrl'], 'attr') ?>" class="btn btn-sm btn-outline-secondary"><?= esc($translationPartnerNav['editLabel']) ?></a>
@@ -89,48 +89,48 @@ foreach (PositionItemModel::typeCodes() as $typeCode) {
         <input type="hidden" name="body_content_mode" value="<?= esc($ppContentMode, 'attr') ?>">
     <?php endif; ?>
 
-    <h2 class="h6 text-uppercase text-muted border-bottom pb-2 mb-3">1. Carte &amp; métadonnées</h2>
+    <h2 class="h6 text-uppercase text-muted border-bottom pb-2 mb-3"><?= esc(lang('Admin.form_pi_section_meta')) ?></h2>
 
     <div class="row g-3">
         <div class="col-md-6">
-            <label for="pi-slug" class="form-label">Slug <span class="text-danger">*</span></label>
+            <label for="pi-slug" class="form-label"><?= esc(lang('Admin.form_pi_slug')) ?> <span class="text-danger">*</span></label>
             <input type="text" name="slug" id="pi-slug" class="form-control" required maxlength="160"
                    value="<?= esc(old('slug', $isEdit ? (string) ($item['slug'] ?? '') : '')) ?>">
         </div>
         <div class="col-md-6">
-            <label for="pi-title" class="form-label">Titre <span class="text-danger">*</span></label>
+            <label for="pi-title" class="form-label"><?= esc(lang('Admin.col_title')) ?> <span class="text-danger">*</span></label>
             <input type="text" name="title" id="pi-title" class="form-control" required maxlength="255"
                    value="<?= esc(old('title', $isEdit ? (string) ($item['title'] ?? '') : '')) ?>">
         </div>
         <div class="col-md-6">
-            <label for="pi-locale" class="form-label">Langue</label>
+            <label for="pi-locale" class="form-label"><?= esc(lang('Admin.form_label_locale')) ?></label>
             <?php if ($isEdit) : ?>
                 <input type="text" id="pi-locale" class="form-control bg-light" readonly
-                       value="<?= esc($ppLocale === 'en' ? 'English' : 'Français') ?>">
+                       value="<?= esc($ppLocale === 'en' ? lang('Admin.form_locale_en_short') : lang('Admin.form_locale_fr_short')) ?>">
             <?php else : ?>
                 <select name="locale" id="pi-locale" class="form-select" required>
-                    <option value="fr" <?= $ppLocale === 'fr' ? 'selected' : '' ?>>Français</option>
-                    <option value="en" <?= $ppLocale === 'en' ? 'selected' : '' ?>>English</option>
+                    <option value="fr" <?= $ppLocale === 'fr' ? 'selected' : '' ?>><?= esc(lang('Admin.form_locale_fr_short')) ?></option>
+                    <option value="en" <?= $ppLocale === 'en' ? 'selected' : '' ?>><?= esc(lang('Admin.form_locale_en_short')) ?></option>
                 </select>
             <?php endif; ?>
         </div>
         <?php if ($canUseAdvancedHtml) : ?>
         <div class="col-md-6">
-            <label for="pi-tg" class="form-label">Groupe de traduction</label>
+            <label for="pi-tg" class="form-label"><?= esc(lang('Admin.form_pp_translation_group')) ?></label>
             <input type="text" name="translation_group" id="pi-tg" class="form-control font-monospace" maxlength="64"
                    value="<?= esc($ppTg) ?>">
         </div>
         <?php endif; ?>
         <div class="col-12">
-            <label for="pi-excerpt" class="form-label">Accroche courte</label>
+            <label for="pi-excerpt" class="form-label"><?= esc(lang('Admin.form_pi_excerpt')) ?></label>
             <textarea name="excerpt" id="pi-excerpt" class="form-control" rows="2"><?= esc(old('excerpt', $isEdit ? (string) ($item['excerpt'] ?? '') : '')) ?></textarea>
         </div>
         <div class="col-12">
-            <label for="pi-summary" class="form-label">Résumé (visible sur la carte)</label>
+            <label for="pi-summary" class="form-label"><?= esc(lang('Admin.form_pi_summary')) ?></label>
             <textarea name="summary" id="pi-summary" class="form-control" rows="4"><?= esc(old('summary', $isEdit ? (string) ($item['summary'] ?? '') : '')) ?></textarea>
         </div>
         <div class="col-md-4">
-            <label for="pi-pub" class="form-label">Publication</label>
+            <label for="pi-pub" class="form-label"><?= esc(lang('Admin.col_publication')) ?></label>
             <select name="publication_state" id="pi-pub" class="form-select">
                 <?php foreach (PositionItemModel::publicationStateLabels() as $k => $lab) : ?>
                     <option value="<?= esc($k) ?>" <?= old('publication_state', $isEdit ? (string) ($item['publication_state'] ?? '') : PositionItemModel::PUBLICATION_DRAFT) === $k ? 'selected' : '' ?>><?= esc($lab) ?></option>
@@ -138,13 +138,13 @@ foreach (PositionItemModel::typeCodes() as $typeCode) {
             </select>
         </div>
         <div class="col-md-4">
-            <label for="pi-read" class="form-label">Durée lecture (min)</label>
+            <label for="pi-read" class="form-label"><?= esc(lang('Admin.form_pi_reading')) ?></label>
             <input type="number" name="reading_minutes" id="pi-read" class="form-control" min="0" step="1"
                    value="<?= esc((string) old('reading_minutes', $isEdit ? (string) ($item['reading_minutes'] ?? '') : '')) ?>">
         </div>
         <div class="col-12">
-            <label class="form-label">Types</label>
-            <p class="form-text mb-2">Plusieurs types possibles (ex. Félicitation + Analyse). Alerte, Félicitation, Analyse et Solution correspondent aux pastilles du site public.</p>
+            <label class="form-label"><?= esc(lang('Admin.form_pi_types')) ?></label>
+            <p class="form-text mb-2"><?= esc(lang('Admin.form_pi_types_help')) ?></p>
             <div class="row g-2">
                 <?php foreach ($typeLabels as $code => $lab) :
                     $tip = $typeTipsAdmin[$code] ?? '';
@@ -163,7 +163,7 @@ foreach (PositionItemModel::typeCodes() as $typeCode) {
             </div>
         </div>
         <div class="col-12">
-            <label for="pi-sectors" class="form-label">Secteurs</label>
+            <label for="pi-sectors" class="form-label"><?= esc(lang('Admin.form_pp_sectors')) ?></label>
             <select name="sectors[]" id="pi-sectors" class="form-select" multiple size="6">
                 <?php foreach ($sectors as $s) :
                     $code = strtolower(trim((string) ($s['code'] ?? '')));
@@ -177,31 +177,31 @@ foreach (PositionItemModel::typeCodes() as $typeCode) {
             </select>
         </div>
         <div class="col-md-6">
-            <label for="pi-meta-title" class="form-label">Méta titre</label>
+            <label for="pi-meta-title" class="form-label"><?= esc(lang('Admin.form_pi_meta_title')) ?></label>
             <input type="text" name="meta_title" id="pi-meta-title" class="form-control" maxlength="255"
                    value="<?= esc(old('meta_title', $isEdit ? (string) ($item['meta_title'] ?? '') : '')) ?>">
         </div>
         <div class="col-md-6">
-            <label for="pi-meta-desc" class="form-label">Méta description</label>
+            <label for="pi-meta-desc" class="form-label"><?= esc(lang('Admin.form_pi_meta_desc')) ?></label>
             <input type="text" name="meta_description" id="pi-meta-desc" class="form-control" maxlength="512"
                    value="<?= esc(old('meta_description', $isEdit ? (string) ($item['meta_description'] ?? '') : '')) ?>">
         </div>
     </div>
 
-    <h2 class="h6 text-uppercase text-muted border-bottom pb-2 mb-3 mt-4">2. Corps détaillé</h2>
+    <h2 class="h6 text-uppercase text-muted border-bottom pb-2 mb-3 mt-4"><?= esc(lang('Admin.form_pi_section_body')) ?></h2>
 
     <?php if ($canUseAdvancedHtml) : ?>
     <div class="mb-3">
-        <label class="form-label">Mode de contenu</label>
+        <label class="form-label"><?= esc(lang('Admin.form_pi_content_mode')) ?></label>
         <div class="btn-group" role="group">
             <input type="radio" class="btn-check" name="body_content_mode" id="pi-mode-blocks" value="blocks" <?= $ppContentMode === 'blocks' ? 'checked' : '' ?> autocomplete="off">
-            <label class="btn btn-outline-secondary btn-sm" for="pi-mode-blocks">Blocs</label>
+            <label class="btn btn-outline-secondary btn-sm" for="pi-mode-blocks"><?= esc(lang('Admin.form_pi_mode_blocks')) ?></label>
             <input type="radio" class="btn-check" name="body_content_mode" id="pi-mode-html" value="html" <?= $ppContentMode === 'html' ? 'checked' : '' ?> autocomplete="off">
-            <label class="btn btn-outline-secondary btn-sm" for="pi-mode-html">HTML</label>
+            <label class="btn btn-outline-secondary btn-sm" for="pi-mode-html"><?= esc(lang('Admin.form_pi_mode_html')) ?></label>
         </div>
     </div>
     <div id="pp-html-panel" class="<?= $ppContentMode === 'html' ? '' : 'd-none' ?> mb-3">
-        <label for="pp-body" class="form-label">Corps HTML</label>
+        <label for="pp-body" class="form-label"><?= esc(lang('Admin.form_pi_body_html')) ?></label>
         <textarea name="body" id="pp-body" class="form-control" rows="12"><?= esc(old('body', $bodyStoredHtml)) ?></textarea>
     </div>
     <?php endif; ?>
@@ -214,7 +214,7 @@ foreach (PositionItemModel::typeCodes() as $typeCode) {
     ]) ?>
 
     <div class="mt-4 d-flex flex-wrap gap-2">
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-        <a href="<?= site_url('admin/position-items') ?>" class="btn btn-outline-secondary">Annuler</a>
+        <button type="submit" class="btn btn-primary"><?= esc(lang('Admin.action_save')) ?></button>
+        <a href="<?= site_url('admin/position-items') ?>" class="btn btn-outline-secondary"><?= esc(lang('Admin.action_cancel')) ?></a>
     </div>
 </form>

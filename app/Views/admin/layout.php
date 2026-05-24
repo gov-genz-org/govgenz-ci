@@ -18,7 +18,7 @@
     <div class="container-fluid px-3">
         <div class="d-flex align-items-center gap-2 flex-wrap flex-grow-1 min-w-0 me-2">
             <a class="navbar-brand fw-semibold mb-0" href="<?= site_url('admin') ?>">GovGenZ Admin</a>
-            <a class="btn btn-outline-light btn-sm px-2 py-1 rounded-pill" href="<?= site_url('/') ?>" target="_blank" rel="noopener noreferrer" title="S’ouvre dans un nouvel onglet">Voir le site</a>
+            <a class="btn btn-outline-light btn-sm px-2 py-1 rounded-pill" href="<?= site_url('/') ?>" target="_blank" rel="noopener noreferrer" title="<?= esc(lang('Admin.ui_view_site_title'), 'attr') ?>"><?= esc(lang('Admin.ui_view_site')) ?></a>
         </div>
         <div class="navbar-nav ms-auto flex-row gap-2 gap-lg-3 align-items-center flex-shrink-0">
             <span class="navbar-text small text-white-50 d-none d-md-inline text-truncate" style="max-width:14rem"><?= esc(session()->get('staff_email') ?? '') ?></span>
@@ -28,7 +28,7 @@
             <?php endif; ?>
             <form action="<?= site_url('admin/logout') ?>" method="post" class="d-inline-flex align-items-center">
                 <?= csrf_field() ?>
-                <button type="submit" class="btn btn-link nav-link text-warning py-1 px-2 border-0 text-decoration-none">Déconnexion</button>
+                <button type="submit" class="btn btn-link nav-link text-warning py-1 px-2 border-0 text-decoration-none"><?= esc(lang('Admin.ui_logout')) ?></button>
             </form>
         </div>
     </div>

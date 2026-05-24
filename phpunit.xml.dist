@@ -10,21 +10,13 @@
     failOnRisky="true"
     failOnWarning="true"
     cacheDirectory="build/.phpunit.cache">
-    <coverage
-        includeUncoveredFiles="true"
-        pathCoverage="false"
-        ignoreDeprecatedCodeUnits="true"
-        disableCodeCoverageIgnore="true">
-        <report>
-            <clover outputFile="build/logs/clover.xml"/>
-            <html outputDirectory="build/logs/html"/>
-            <php outputFile="build/logs/coverage.serialized"/>
-            <text outputFile="php://stdout" showUncoveredFiles="false"/>
-        </report>
-    </coverage>
     <testsuites>
+        <testsuite name="Unit">
+            <directory>./tests/unit</directory>
+        </testsuite>
         <testsuite name="App">
             <directory>./tests</directory>
+            <exclude>./tests/unit</exclude>
         </testsuite>
     </testsuites>
     <logging>
@@ -32,6 +24,13 @@
         <testdoxText outputFile="build/logs/testdox.txt"/>
         <junit outputFile="build/logs/logfile.xml"/>
     </logging>
+    <coverage>
+        <report>
+            <html outputDirectory="build/coverage/html" lowUpperBound="50" highLowerBound="80"/>
+            <text outputFile="build/coverage/summary.txt" showOnlySummary="true"/>
+            <clover outputFile="build/coverage/clover.xml"/>
+        </report>
+    </coverage>
     <source>
         <include>
             <directory suffix=".php">./app</directory>

@@ -1,115 +1,32 @@
 /**
- * Aperçu admin/cms-guide uniquement — ne pas charger govgenz-front-pages.css
- * (sinon #main-content casse toute la page admin).
+ * Aperçu admin/cms-guide — typo publique + annulation styles admin/Bootstrap.
+ * Pile contenu : govgenz-cms-guide-front-scoped.css + cms-shell + template.
  */
 
-.cms-guide-preview-host.ggz-main-shell {
+/* Équivalent body.ggz-public-theme (sans modifier body admin) */
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell {
   position: relative;
   width: 100%;
   box-sizing: border-box;
   padding: 2rem 1.25rem 2.5rem;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.6;
   color: var(--text-primary);
-  font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* --- Hero CMS (extrait govgenz-front-pages / govgenz-bridge) --- */
-.cms-guide-preview-host.ggz-main-shell .ggz-page-hero {
-  padding: 2rem 1.35rem;
-  margin-bottom: 1.25rem;
-  border-radius: var(--ggz-radius-card);
-  background: var(--ggz-gradient-hero);
-  border: 1px solid rgba(56, 67, 88, 0.45);
-  box-shadow: var(--ggz-shadow-card);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.cms-guide-preview-host.ggz-main-shell .ggz-page-hero--structured {
-  padding: 1rem 0;
-  margin-bottom: 0.5rem;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-  background: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-.cms-guide-preview-host.ggz-main-shell .ggz-page-hero__inner {
-  display: grid;
-  gap: 0.75rem;
-  align-items: center;
-}
-
-.cms-guide-preview-host.ggz-main-shell .ggz-page-hero--structured .section__header {
-  text-align: center;
-  margin: 0 auto;
-  max-width: 800px;
-}
-
-.cms-guide-preview-host.ggz-main-shell .ggz-page-hero--structured .section__overline {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.35em;
-  text-transform: none;
-  color: var(--red-soft);
-  margin: 0 0 1rem;
-  display: inline-block;
-  padding: 0.4rem 1rem;
-  border: 1px solid rgba(220, 38, 38, 0.3);
-  border-radius: 100px;
-  background: rgba(220, 38, 38, 0.05);
-}
-
-.cms-guide-preview-host.ggz-main-shell .ggz-page-hero--structured :is(h1, h2).section__title,
-.cms-guide-preview-host.ggz-main-shell .ggz-page-hero--structured :is(h1, h2).ggz-section-title {
-  font-family: var(--font-display);
-  font-size: var(--ggz-type-section-title);
-  line-height: 1.05;
-  letter-spacing: -0.01em;
-  font-weight: 400;
-  text-transform: none;
+/* Annule govgenz-admin.css (#main-content h1–h3) et la graisse Bootstrap */
+#main-content .cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3) {
   color: var(--text-bright);
-  margin: 0 0 1.25rem;
+  font-weight: unset;
+  letter-spacing: unset;
 }
 
-.cms-guide-preview-host.ggz-main-shell .ggz-page-hero--structured .section__lead {
-  font-family: var(--font-body);
-  font-size: clamp(1rem, 1.5vw, 1.15rem);
-  font-style: italic;
-  font-weight: 400;
-  color: var(--text-secondary);
-  line-height: 1.7;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) h3.cercle__title {
-  font-family: var(--font-display);
-  text-transform: uppercase;
-  font-size: 1.4rem;
-}
-
-.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .hero__inner {
-  text-align: center;
-}
-
-.cms-guide-preview-host.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .hero__tagline {
-  text-align: center;
-  margin: 0 auto 3rem;
-}
-
-/* Annule la typo admin sur les titres dans l’aperçu */
-#main-content .card .card-body .cms-guide-preview-host.ggz-main-shell :is(h1, h2, h3, h4, h5, h6) {
-  color: var(--text-bright);
-  letter-spacing: inherit;
-}
-
-#main-content .card .card-body .cms-guide-preview-host.ggz-main-shell :is(h1, h2).section__title,
-#main-content .card .card-body .cms-guide-preview-host.ggz-main-shell :is(h1, h2).ggz-section-title {
+#main-content .cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(h1, h2).section__title,
+#main-content .cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(h1, h2).ggz-section-title {
   font-family: var(--font-display);
   font-size: var(--ggz-type-section-title);
   font-weight: 400;
@@ -119,13 +36,27 @@
   margin: 0 0 1.25rem;
 }
 
-#main-content .card .card-body .cms-guide-preview-host.ggz-main-shell .hero__title {
+#main-content .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .hero__title,
+#main-content .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .hero__title-1,
+#main-content .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .hero__title-2 {
   font-family: var(--font-display);
   font-weight: 400;
   letter-spacing: -0.02em;
 }
 
-#main-content .card .card-body .cms-guide-preview-host.ggz-main-shell .hero__title-1 {
+#main-content .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .hero__title-1 {
   color: var(--text-bright);
   -webkit-text-fill-color: var(--text-bright);
+}
+
+#main-content .cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(.section__overline, .ggz-section-kicker, .hero__overline) {
+  font-family: var(--font-mono);
+}
+
+#main-content .cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) :is(p, li, .section__lead, .ggz-section-lead) {
+  font-family: var(--font-body);
+}
+
+#main-content .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .muted {
+  color: var(--text-tertiary);
 }

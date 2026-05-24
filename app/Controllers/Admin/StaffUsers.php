@@ -75,12 +75,12 @@ class StaffUsers extends BaseController
         );
 
         if (! $result['ok']) {
-            return redirect()->back()->withInput()->with('error', $result['error'] ?? 'Impossible de créer le compte.');
+            return redirect()->back()->withInput()->with('error', $result['error'] ?? lang('Admin.error_staff_create_failed'));
         }
 
-        $msg = 'Invitation envoyée par e-mail.';
+        $msg = lang('Admin.flash_staff_invite_sent');
         if (! $result['email_sent']) {
-            $msg = 'Compte créé, mais l’e-mail d’invitation n’a pas pu être envoyé (vérifiez la configuration SMTP).';
+            $msg = lang('Admin.flash_staff_created_no_email');
         }
 
         return $this->adminRedirectToEdit('admin/staff-users', $result['user_id'], $msg);
@@ -90,12 +90,12 @@ class StaffUsers extends BaseController
     {
         $result = StaffInvite::resendForUserId($id);
         if (! $result['ok']) {
-            return redirect()->back()->with('error', $result['error'] ?? 'Envoi impossible.');
+            return redirect()->back()->with('error', $result['error'] ?? lang('Admin.error_staff_resend_failed'));
         }
 
         $msg = $result['email_sent']
-            ? 'Invitation renvoyée par e-mail.'
-            : 'Jeton régénéré, mais l’e-mail n’a pas pu être envoyé (vérifiez la configuration SMTP).';
+            ? lang('Admin.flash_staff_invite_resent')
+            : lang('Admin.flash_staff_token_no_email');
 
         return redirect()->back()->with('message', $msg);
     }
@@ -104,7 +104,7 @@ class StaffUsers extends BaseController
     {
         $user = model(StaffUserModel::class)->find($id);
         if ($user === null) {
-            return redirect()->to(site_url('admin/staff-users'))->with('error', 'Utilisateur introuvable.');
+            return redirect()->to(site_url('admin/staff-users'))->with('error', lang('Admin.error_user_not_found'));
         }
 
         $staffModel = model(StaffUserModel::class);
@@ -125,7 +125,7 @@ class StaffUsers extends BaseController
         $model = model(StaffUserModel::class);
         $user  = $model->find($id);
         if ($user === null) {
-            return redirect()->to(site_url('admin/staff-users'))->with('error', 'Utilisateur introuvable.');
+            return redirect()->to(site_url('admin/staff-users'))->with('error', lang('Admin.error_user_not_found'));
         }
 
         $rules = [
@@ -179,14 +179,14 @@ class StaffUsers extends BaseController
 
         $model->update($id, $data);
 
-        return $this->adminRedirectToEdit('admin/staff-users', $id, 'Compte mis à jour.');
+        return $this->adminRedirectToEdit('admin/staff-users', $id, lang('Admin.flash_staff_updated'));
     }
 
     public function delete(int $id): ResponseInterface
     {
         $currentId = (int) session()->get('staff_user_id');
         if ($id === $currentId) {
-            return redirect()->back()->with('error', 'Vous ne pouvez pas supprimer votre propre compte.');
+            return redirect()->back()->with('error', lang('Admin.error_cannot_delete_self'));
         }
 
         $model = model(StaffUserModel::class);
@@ -198,27 +198,24 @@ class StaffUsers extends BaseController
         $role     = (string) ($user['role'] ?? '');
         $isActive = (int) ($user['is_active'] ?? 1) === 1;
         if ($role === 'admin' && $isActive && $this->countOtherActiveAdmins($model, $id) < 1) {
-            return redirect()->back()->with('error', 'Impossible de supprimer le dernier administrateur actif.');
+            return redirect()->back()->with('error', lang('Admin.error_cannot_delete_last_admin'));
         }
 
         $model->delete($id, true);
 
-        return redirect()->back()->with('message', 'Compte supprimé.');
+        return redirect()->back()->with('message', lang('Admin.flash_staff_deleted'));
     }
 
     public function toggleFormNotify(int $id): ResponseInterface
     {
         $model = model(StaffUserModel::class);
         if (! $model->db->fieldExists('notify_form_submissions', 'staff_users')) {
-            return redirect()->back()->with(
-                'error',
-                'Option indisponible : exécutez les migrations (notify_form_submissions).',
-            );
+            return redirect()->back()->with('error', lang('Admin.error_notify_migration'));
         }
 
         $user = $model->find($id);
         if ($user === null) {
-            return redirect()->to(site_url('admin/staff-users'))->with('error', 'Utilisateur introuvable.');
+            return redirect()->to(site_url('admin/staff-users'))->with('error', lang('Admin.error_user_not_found'));
         }
 
         $current = (int) ($user['notify_form_submissions'] ?? 1);
@@ -227,8 +224,8 @@ class StaffUsers extends BaseController
 
         $email = (string) ($user['email'] ?? '');
         $msg   = $next === 1
-            ? 'Notifications formulaires activées pour ' . $email . '.'
-            : 'Notifications formulaires désactivées pour ' . $email . '.';
+            ? lang('Admin.flash_staff_notify_on', [$email])
+            : lang('Admin.flash_staff_notify_off', [$email]);
 
         return redirect()->back()->with('message', $msg);
     }
@@ -237,7 +234,7 @@ class StaffUsers extends BaseController
     {
         $currentId = (int) session()->get('staff_user_id');
         if ($currentId < 1) {
-            return redirect()->to(site_url('admin/staff-users'))->with('error', 'Session invalide.');
+            return redirect()->to(site_url('admin/staff-users'))->with('error', lang('Admin.error_session_invalid'));
         }
 
         model(StaffUserModel::class)->where('id !=', $currentId)->delete();

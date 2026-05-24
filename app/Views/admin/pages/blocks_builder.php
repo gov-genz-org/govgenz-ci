@@ -6,8 +6,8 @@ declare(strict_types=1);
 ?>
 
 <div id="cms-blocks-panel" class="<?= $contentMode === 'blocks' ? '' : 'd-none' ?>">
-    <label class="form-label">Blocs de page</label>
-    <p class="text-muted small">Ajoutez une ou plusieurs sections sans classes CSS : les champs parlants suffisent. Pour une section « chiffres » comme sur l’étude jeunesse, utilisez <strong>Section avec indicateurs</strong>.</p>
+    <label class="form-label"><?= esc(lang('Admin.cms_blocks_label')) ?></label>
+    <p class="text-muted small"><?= lang('Admin.cms_blocks_help') ?></p>
 
     <div id="cms-blocks-container" class="mb-2">
         <?php foreach ($blocksForForm as $idx => $block) : ?>
@@ -23,8 +23,8 @@ declare(strict_types=1);
     </div>
 
     <div class="d-flex flex-wrap gap-2 mb-3">
-        <button type="button" class="btn btn-sm btn-outline-primary" id="cms-add-metrics">+ Section avec indicateurs</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary" id="cms-add-html">+ HTML libre</button>
+        <button type="button" class="btn btn-sm btn-outline-primary" id="cms-add-metrics"><?= esc(lang('Admin.cms_add_metrics')) ?></button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" id="cms-add-html"><?= esc(lang('Admin.cms_add_html')) ?></button>
     </div>
 </div>
 

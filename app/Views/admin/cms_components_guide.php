@@ -7,11 +7,8 @@ declare(strict_types=1);
  */
 ?>
 <div class="mb-4 admin-cms-guide-lead">
-    <h1 class="h3 mb-2">Composants HTML du site public</h1>
-    <p class="text-muted mb-0">
-        Classes du template (<code>section__*</code>, <code>cercle__*</code>, <code>footer__*</code>, <code>ggz-legal-prose</code>, etc.) avec aperçu charte sombre sous chaque extrait.
-        CTA principal : <code>.btn--primary</code> (rouge). Slugs réservés : <code>site-footer</code>, <code>mentions-legales</code>.
-    </p>
+    <h1 class="h3 mb-2"><?= esc(lang('Admin.title_cms_components')) ?></h1>
+    <p class="text-muted mb-0"><?= lang('Admin.cms_guide_lead') ?></p>
 </div>
 
 <?php foreach ($sections as $sec) : ?>
@@ -44,12 +41,12 @@ declare(strict_types=1);
                 <h2 class="h5 card-title"><?= esc($sec['title']) ?></h2>
                 <p class="card-text small text-muted"><?= esc($sec['intro']) ?></p>
 
-                <label class="form-label small fw-semibold mb-1">HTML exemple (copier dans l’éditeur)</label>
+                <label class="form-label small fw-semibold mb-1"><?= esc(lang('Admin.cms_guide_sample_html')) ?></label>
                 <textarea class="form-control font-monospace small mb-3" rows="<?= $sec['id'] === 'legal-mentions' ? '22' : '12' ?>" readonly spellcheck="false"><?= esc($sec['html']) ?></textarea>
 
-                <label class="form-label small fw-semibold mb-1 text-muted">Aperçu charte</label>
+                <label class="form-label small fw-semibold mb-1 text-muted"><?= esc(lang('Admin.cms_guide_preview')) ?></label>
                 <div class="cms-guide-sample">
-                    <div class="cms-guide-sample__label">Rendu</div>
+                    <div class="cms-guide-sample__label"><?= esc(lang('Admin.cms_guide_render')) ?></div>
                     <?php if ($canvas === null) : ?>
                         <div class="cms-guide-sample__canvas cms-guide-sample__canvas--flush">
                             <div class="ggz-public-theme cms-guide-preview-host ggz-main-shell">

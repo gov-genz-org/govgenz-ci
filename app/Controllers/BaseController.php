@@ -86,7 +86,7 @@ abstract class BaseController extends Controller
     {
         $adminPath = trim($adminPath, '/');
         if ($id < 1) {
-            return redirect()->to(site_url($adminPath))->with('error', 'Enregistrement introuvable après sauvegarde.');
+            return redirect()->to(site_url($adminPath))->with('error', lang('Admin.error_record_not_found_after_save'));
         }
 
         return redirect()->to(site_url($adminPath . '/edit/' . $id))->with('message', $message);

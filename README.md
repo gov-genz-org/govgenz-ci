@@ -1,49 +1,70 @@
 # GovGenZ — application CodeIgniter 4
 
-Ce dossier contient **uniquement** le projet CodeIgniter 4 (code PHP, `public/`, `vendor/`, etc.).
+CodeIgniter 4 : `app/`, `public/`, `vendor/`, tests, déploiement.  
+Docker, MySQL et SQL MVP : **[`../govgenz-local/README.md`](../govgenz-local/README.md)**.
 
-## Développement local avec Docker
+## Développement local
 
-L’image Apache / PHP / MySQL et les scripts SQL MVP sont dans **`../govgenz-local/`** :
+### Avec Docker (recommandé)
 
 ```bash
 cd ../govgenz-local
 docker compose up -d --build
 ```
 
-Puis, dans **`govgenz-ci/`** : copier **`env.ci.example`** → **`.env`** et renseigner **`encryption.key`** (voir `govgenz-local/README.md` pour fusionner le fragment Docker si besoin).
+Dans ce dossier : `env.ci.example` → `.env`, fusionner `../govgenz-local/env.docker.fragment.example`, puis `docker compose exec web php spark key:generate` (voir README local).
 
-- Site : http://localhost:8082  
-- Routes : `cd ../govgenz-local && docker compose exec web php spark routes`
+- Site : http://localhost:8082
+- Routes : `docker compose exec web php spark routes` (depuis `govgenz-local`)
 
-## Sans Docker
+### Sans Docker
 
-Prérequis : **PHP 8.1+**, [**Composer**](https://getcomposer.org/).
+PHP **8.2+**, [Composer](https://getcomposer.org/) :
 
 ```bash
 composer install
+cp env.ci.example .env   # puis adapter
 php spark serve
 ```
 
-Configurer **`.env`** (base MySQL ou SQLite selon ton environnement).
+## Tests
+
+La CI exécute PHPUnit (Unit + App, PCOV). En local, **depuis `govgenz-local/`** :
+
+```bash
+cd ../govgenz-local
+docker compose exec web bash -lc 'cd /var/www/html && vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-text --coverage-clover build/coverage/clover.xml'
+```
+
+- Rapport HTML : `build/coverage/html/index.html`
+- Scripts Composer (dans le conteneur ou avec PHP local) : `composer test`, `composer test:coverage`, `composer test:all`
+
+Voir aussi [`docs/CODE-STRUCTURE.md`](docs/CODE-STRUCTURE.md) et [`docs/CI-CD.md`](docs/CI-CD.md).
 
 ## État MVP
 
-- Routes **front** : `/`, `/about`, `/contact`, `/press`, `/join`
-- Routes **admin** : `/admin`, CRUD pages & posts, liste volontaires
-- Charte : `govgenz-tokens.css` + `govgenz-components.css` (design system unique)
+- Routes **front** : pages CMS (`/qui-sommes-nous`, …), `/contact`, `/press`, `/join`, programmes **`/projects`** et **`/positions`** (préfixe chemin ou sous-domaine selon `.env`)
+- Routes **admin** : `/admin`, CMS, menu du site, projets programme, positions, presse, volontaires
+- **CSS front** : pile documentée dans **[docs/CSS-ARCHITECTURE.md](docs/CSS-ARCHITECTURE.md)** — jetons `govgenz-tokens.css`, composants `govgenz-components.css` (boutons `--red` / `--teal` / `--ghost`, tags, cartes), template + shell CMS + pages + bridge ; feuilles **optionnelles** par page via `extraHead` (`projects-program-*.css`, `positions-program-*.css`, `program-body-blocks.css`, etc.)
+
+## CI/CD
+
+Checks **`ci/test`** (PHPUnit + couverture) et **`ci/build`** : **[docs/CI-CD.md](docs/CI-CD.md)**.  
+Merge **`develop` → `main`** : déploiement prod FTP puis tag Git auto (`v1.0.0`, `v1.0.1`, …).
 
 ## Documentation
 
 | Document | Rôle |
 |----------|------|
-| [GOVGENZ.md](../docs/GOVGENZ.md) | Vision, MVP, architecture |
+| [CI-CD.md](docs/CI-CD.md) | Branches, rulesets, secrets FTP, workflow |
+| [CODE-STRUCTURE.md](docs/CODE-STRUCTURE.md) | Couches code, conventions, tests |
+| [CSS-ARCHITECTURE.md](docs/CSS-ARCHITECTURE.md) | CSS front / admin, programmes |
+| [GOVGENZ.md](../docs/GOVGENZ.md) | Vision, MVP |
 | [GOVGENZ-CONCEPTION.md](../docs/GOVGENZ-CONCEPTION.md) | Modèle de données, routes |
-| [GOVGENZ-DESIGN-TOKENS.css](../docs/GOVGENZ-DESIGN-TOKENS.css) | Source des jetons CSS |
 
-Schéma SQL & Docker : **`../govgenz-local/`**.
+---
 
-## Migration du module Projets vers un sous-domaine
+## Déploiement : sous-domaine Projets
 
 Le programme projets peut tourner de deux façons avec **la même base de code** (un seul dépôt `govgenz-ci/`, une seule BDD) :
 
@@ -169,3 +190,12 @@ app.projectsBaseURL = 'http://projects.localhost:8082/'
 Ajouter `127.0.0.1 projects.localhost` dans `/etc/hosts`, configurer le vhost Docker ou un second port si besoin — le code accepte `projects.localhost` avec le port `8082` du `.env` lorsque `HTTP_HOST` ne contient pas le port.
 
 Fichiers de référence : **`env.production.example`** (section sous-domaine), **`deploy/host-b/`**.
+
+## Déploiement : sous-domaine Positions
+
+| Mode | Exemple | Variable `.env` |
+|------|---------|-----------------|
+| Préfixe chemin | `https://genzgov.org/positions/…` | `app.positionsUsePathPrefix = true` |
+| Sous-domaine | `https://positions.genzgov.org/…` | `app.positionsUsePathPrefix = false` + `app.positionsHost` |
+
+Détection : `SiteContext` + `SiteContextFilter` (hôte `positions.*` ou segment `/positions/`). Styles dédiés : `positions-program-list.css`, `positions-program-show.css` (réutilisent les classes fiche `projects-program-show` + variantes `--pp-*` / boutons dans `govgenz-components.css`). Voir **[docs/CSS-ARCHITECTURE.md](docs/CSS-ARCHITECTURE.md)**.

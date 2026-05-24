@@ -38,6 +38,8 @@
         "sort-packages": true
     },
     "scripts": {
-        "test": "phpunit"
+        "test": "phpunit --configuration phpunit.xml.dist --testsuite Unit",
+        "test:all": "phpunit --configuration phpunit.xml.dist",
+        "test:coverage": "phpunit --configuration phpunit.xml.dist --coverage-text --coverage-html build/coverage/html"
     }
 }
