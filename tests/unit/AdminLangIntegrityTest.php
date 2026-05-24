@@ -17,7 +17,9 @@ final class AdminLangIntegrityTest extends CIUnitTestCase
         'Controllers/Admin',
         'Controllers/BaseController.php',
         'Libraries/ProjectAdminForm.php',
+        'Libraries/AdminRecordPreview.php',
         'Helpers/admin_translation_helper.php',
+        'Helpers/admin_url_helper.php',
     ];
 
     /** @var list<string> Clés critiques (auth + navigation) */
@@ -29,6 +31,12 @@ final class AdminLangIntegrityTest extends CIUnitTestCase
         'nav_dashboard',
         'pager_results',
         'ui_close',
+        'help_record_locale',
+        'translation_edit_en',
+        'translation_edit_fr',
+        'action_duplicate_trad',
+        'ribbon_record_preview_saved',
+        'ribbon_record_preview_draft',
     ];
 
     public function testFrenchAndEnglishAdminLangKeysMatch(): void

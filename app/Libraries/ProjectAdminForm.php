@@ -221,7 +221,8 @@ final class ProjectAdminForm
      *   bodyLockedLegacyHtml: bool,
      *   bodyStoredHtml: string,
      *   bodyOrphanHtml: bool,
-     *   publicPreviewUrl: ?string
+     *   publicPreviewUrl: ?string,
+     *   translationPartnerNav: array{editUrl: string, publicUrl: ?string, viewLabel: string, editLabel: string}|null
      * }
      */
     public static function formViewData(?array $project): array
@@ -294,6 +295,11 @@ final class ProjectAdminForm
             'bodyStoredHtml'       => $bodyStored,
             'bodyOrphanHtml'       => $bodyStored !== '' && $hasBlocks && $existingMode === 'blocks',
             'publicPreviewUrl'     => $previewUrl,
+            'translationPartnerNav' => admin_translation_partner_nav(
+                $project,
+                ProjectProjectModel::class,
+                'admin/project-projects',
+            ),
         ];
     }
 

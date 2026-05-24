@@ -8,42 +8,30 @@ $layoutState = cms_layout_select_state(old('layout_key', $page !== null ? ($page
 
 $contentMode = $contentMode ?? 'html';
 $blocksForForm = $blocksForForm ?? [];
+$publicPreviewUrl = $publicPreviewUrl ?? null;
+$translationPartnerNav = $translationPartnerNav ?? null;
 
 $action = $page
     ? site_url('admin/pages/update/' . $page['id'])
     : site_url('admin/pages/store');
-
-$previewUrl = null;
-if ($page !== null && ($page['status'] ?? '') === 'published') {
-    $previewUrl = admin_public_page_url((string) ($page['slug'] ?? ''), (string) ($page['locale'] ?? 'fr'));
-}
+$isEdit = $page !== null;
 ?>
-<h1 class="h3 mb-1"><?= esc($page ? lang('Admin.form_page_edit') : lang('Admin.form_page_new')) ?></h1>
+<h1 class="h3 mb-1"><?= esc($isEdit ? lang('Admin.form_page_edit') : lang('Admin.form_page_new')) ?></h1>
 <p class="text-muted small mb-3"><?= lang('Admin.help_pages_form_intro') ?></p>
 
-<?php if ($previewUrl !== null) : ?>
-    <div class="alert alert-light border py-2 small mb-3">
-        <strong><?= esc(lang('Admin.label_public_preview')) ?></strong>
-        <a href="<?= esc($previewUrl) ?>" target="_blank" rel="noopener" class="ms-1"><?= esc($previewUrl) ?></a>
-    </div>
-<?php endif; ?>
+<?= view('admin/partials/record_form_nav', [
+    'publicPreviewUrl'      => $publicPreviewUrl,
+    'translationPartnerNav' => $translationPartnerNav,
+]) ?>
 
-<form action="<?= $action ?>" method="post" accept-charset="UTF-8" class="admin-editor-form">
+<form action="<?= $action ?>" method="post" accept-charset="UTF-8" class="admin-editor-form border rounded bg-white shadow-sm p-3 p-md-4">
     <?= csrf_field() ?>
-    <?php if ($page !== null) : ?>
-        <div class="alert alert-secondary border py-2 small mb-3">
-            <p class="mb-2"><strong><?= esc(lang('Admin.label_preview')) ?></strong></p>
-            <ul class="mb-3 ps-3">
-                <li><?= lang('Admin.help_page_preview_draft') ?></li>
-                <li><?= lang('Admin.help_page_preview_saved') ?></li>
-            </ul>
-            <div class="d-flex flex-wrap gap-2 justify-content-end">
-                <button type="submit" class="btn btn-sm btn-primary" formaction="<?= site_url('admin/pages/preview-draft/' . (int) $page['id']) ?>" formmethod="post" formtarget="_blank">
-                    <?= esc(lang('Admin.action_preview_draft')) ?>
-                </button>
-                <a href="<?= site_url('admin/pages/preview/' . (int) $page['id']) ?>" target="_blank" rel="noopener" class="btn btn-sm btn-outline-dark"><?= esc(lang('Admin.action_preview_saved')) ?></a>
-            </div>
-        </div>
+    <?php if ($isEdit) : ?>
+        <?= view('admin/partials/record_form_preview', [
+            'recordId'         => (int) ($page['id'] ?? 0),
+            'draftPreviewPath' => 'admin/pages/preview-draft',
+            'savedPreviewPath' => 'admin/pages/preview',
+        ]) ?>
     <?php endif; ?>
     <?php
     $slugField = strtolower(trim((string) old('slug', $page !== null ? (string) ($page['slug'] ?? '') : '')));
@@ -58,8 +46,8 @@ if ($page !== null && ($page['status'] ?? '') === 'published') {
                 <strong><?= esc(lang('Admin.alert_page_projects_program_title')) ?></strong>
                 <?= lang('Admin.alert_page_projects_program_body') ?>
                 <?php
-                $lpFr = admin_public_projects_program_list_url('fr');
-                $lpEn = admin_public_projects_program_list_url('en');
+                $lpFr = admin_public_projects_list_url('fr');
+                $lpEn = admin_public_projects_list_url('en');
                 ?>
                 <span class="d-block mt-2">
                     <a href="<?= esc($lpFr, 'attr') ?>" target="_blank" rel="noopener" class="me-2"><?= esc(lang('Admin.action_view_public_list_fr')) ?></a>
@@ -71,8 +59,8 @@ if ($page !== null && ($page['status'] ?? '') === 'published') {
                 <strong><?= esc(lang('Admin.alert_page_positions_program_title')) ?></strong>
                 <?= lang('Admin.alert_page_positions_program_body') ?>
                 <?php
-                $lpFr = admin_public_positions_program_list_url('fr');
-                $lpEn = admin_public_positions_program_list_url('en');
+                $lpFr = admin_public_positions_list_url('fr');
+                $lpEn = admin_public_positions_list_url('en');
                 ?>
                 <span class="d-block mt-2">
                     <a href="<?= esc($lpFr, 'attr') ?>" target="_blank" rel="noopener" class="me-2"><?= esc(lang('Admin.action_view_public_list_fr')) ?></a>
@@ -82,15 +70,17 @@ if ($page !== null && ($page['status'] ?? '') === 'published') {
         <?php endif; ?>
     </div>
     <div class="mb-3">
-        <?php $pageLocale = old('locale', $page !== null ? (string) ($page['locale'] ?? 'fr') : 'fr'); ?>
-        <?php if (! in_array($pageLocale, ['fr', 'en'], true)) {
+        <?php
+        $pageLocale = old('locale', $page !== null ? (string) ($page['locale'] ?? 'fr') : 'fr');
+        if (! in_array($pageLocale, ['fr', 'en'], true)) {
             $pageLocale = 'fr';
-        } ?>
-        <label class="form-label" for="locale"><?= esc(lang('Admin.form_label_locale')) ?></label>
-        <select name="locale" id="locale" class="form-select" style="max-width:16rem">
-            <option value="fr" <?= $pageLocale === 'fr' ? 'selected' : '' ?>><?= esc(lang('Admin.form_locale_fr_url')) ?></option>
-            <option value="en" <?= $pageLocale === 'en' ? 'selected' : '' ?>><?= esc(lang('Admin.form_locale_en_url')) ?></option>
-        </select>
+        }
+        ?>
+        <?= view('admin/partials/record_form_locale', [
+            'locale'  => $pageLocale,
+            'isEdit'  => $isEdit,
+            'fieldId' => 'locale',
+        ]) ?>
     </div>
     <div class="mb-3">
         <label class="form-label" for="translation_group"><?= esc(lang('Admin.form_label_translation_group')) ?></label>
@@ -181,10 +171,8 @@ if ($page !== null && ($page['status'] ?? '') === 'published') {
         <textarea name="meta_description" id="meta_description" class="form-control" rows="2"><?= esc(old('meta_description', $page !== null ? ($page['meta_description'] ?? '') : '')) ?></textarea>
     </div>
 
-    <div class="admin-form-actions">
-        <div class="d-flex flex-wrap gap-2">
-            <button type="submit" class="btn btn-primary"><?= esc(lang('Admin.action_save')) ?></button>
-            <a href="<?= site_url('admin/pages') ?>" class="btn btn-outline-secondary"><?= esc(lang('Admin.action_cancel')) ?></a>
-        </div>
+    <div class="mt-4 d-flex flex-wrap gap-2">
+        <button type="submit" class="btn btn-primary"><?= esc(lang('Admin.action_save')) ?></button>
+        <a href="<?= site_url('admin/pages') ?>" class="btn btn-outline-secondary"><?= esc(lang('Admin.action_cancel')) ?></a>
     </div>
 </form>

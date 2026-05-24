@@ -20,7 +20,7 @@ if (! in_array($localeSel, ['fr', 'en'], true)) {
 <h1 class="h3 mb-1"><?= esc($item ? lang('Admin.form_menu_edit') : lang('Admin.form_menu_new')) ?></h1>
 <p class="text-muted small mb-3"><?= esc(lang('Admin.help_sitemenu_form')) ?></p>
 
-<form action="<?= esc($action, 'attr') ?>" method="post" accept-charset="UTF-8">
+<form action="<?= esc($action, 'attr') ?>" method="post" accept-charset="UTF-8" class="admin-editor-form border rounded bg-white shadow-sm p-3 p-md-4">
     <?= csrf_field() ?>
     <div class="mb-3">
         <label class="form-label" for="label"><?= esc(lang('Admin.form_sitemenu_label')) ?></label>
@@ -68,7 +68,7 @@ if (! in_array($localeSel, ['fr', 'en'], true)) {
             <option value="0" <?= $active === '0' ? 'selected' : '' ?>><?= esc(lang('Admin.form_sitemenu_no')) ?></option>
         </select>
     </div>
-    <div class="admin-form-actions d-flex flex-wrap gap-2">
+    <div class="mt-4 d-flex flex-wrap gap-2">
         <button type="submit" class="btn btn-primary"><?= esc($item ? lang('Admin.action_save') : lang('Admin.action_create')) ?></button>
         <a href="<?= site_url('admin/site-menu') ?>" class="btn btn-outline-secondary"><?= esc(lang('Admin.action_cancel')) ?></a>
     </div>

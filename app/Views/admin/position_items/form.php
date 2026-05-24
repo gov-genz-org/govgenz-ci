@@ -68,22 +68,21 @@ foreach (PositionItemModel::typeCodes() as $typeCode) {
 <h1 class="h3 mb-1"><?= esc($isEdit ? lang('Admin.form_position_edit') : lang('Admin.form_position_new')) ?></h1>
 <p class="text-muted small mb-3"><?= esc(lang('Admin.help_pi_form_intro')) ?></p>
 
-<?php if ($publicPreviewUrl !== null || $translationPartnerNav !== null) : ?>
-    <p class="mb-3 d-flex flex-wrap gap-2">
-        <?php if ($publicPreviewUrl !== null) : ?>
-            <a href="<?= esc($publicPreviewUrl, 'attr') ?>" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener"><?= esc(lang('Admin.action_view_published_record')) ?></a>
-        <?php endif; ?>
-        <?php if ($translationPartnerNav !== null) : ?>
-            <a href="<?= esc($translationPartnerNav['editUrl'], 'attr') ?>" class="btn btn-sm btn-outline-secondary"><?= esc($translationPartnerNav['editLabel']) ?></a>
-            <?php if ($translationPartnerNav['publicUrl'] !== null) : ?>
-                <a href="<?= esc($translationPartnerNav['publicUrl'], 'attr') ?>" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener"><?= esc($translationPartnerNav['viewLabel']) ?></a>
-            <?php endif; ?>
-        <?php endif; ?>
-    </p>
-<?php endif; ?>
+<?= view('admin/partials/record_form_nav', [
+    'publicPreviewUrl'      => $publicPreviewUrl,
+    'translationPartnerNav' => $translationPartnerNav,
+]) ?>
 
 <form method="post" action="<?= esc($action) ?>" class="admin-editor-form border rounded bg-white shadow-sm p-3 p-md-4">
     <?= csrf_field() ?>
+
+    <?php if ($isEdit) : ?>
+        <?= view('admin/partials/record_form_preview', [
+            'recordId'         => (int) ($item['id'] ?? 0),
+            'draftPreviewPath' => 'admin/position-items/preview-draft',
+            'savedPreviewPath' => 'admin/position-items/preview',
+        ]) ?>
+    <?php endif; ?>
 
     <?php if (! $canUseAdvancedHtml) : ?>
         <input type="hidden" name="body_content_mode" value="<?= esc($ppContentMode, 'attr') ?>">
@@ -103,16 +102,11 @@ foreach (PositionItemModel::typeCodes() as $typeCode) {
                    value="<?= esc(old('title', $isEdit ? (string) ($item['title'] ?? '') : '')) ?>">
         </div>
         <div class="col-md-6">
-            <label for="pi-locale" class="form-label"><?= esc(lang('Admin.form_label_locale')) ?></label>
-            <?php if ($isEdit) : ?>
-                <input type="text" id="pi-locale" class="form-control bg-light" readonly
-                       value="<?= esc($ppLocale === 'en' ? lang('Admin.form_locale_en_short') : lang('Admin.form_locale_fr_short')) ?>">
-            <?php else : ?>
-                <select name="locale" id="pi-locale" class="form-select" required>
-                    <option value="fr" <?= $ppLocale === 'fr' ? 'selected' : '' ?>><?= esc(lang('Admin.form_locale_fr_short')) ?></option>
-                    <option value="en" <?= $ppLocale === 'en' ? 'selected' : '' ?>><?= esc(lang('Admin.form_locale_en_short')) ?></option>
-                </select>
-            <?php endif; ?>
+            <?= view('admin/partials/record_form_locale', [
+                'locale'  => $ppLocale,
+                'isEdit'  => $isEdit,
+                'fieldId' => 'pi-locale',
+            ]) ?>
         </div>
         <?php if ($canUseAdvancedHtml) : ?>
         <div class="col-md-6">
