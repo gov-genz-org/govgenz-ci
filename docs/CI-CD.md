@@ -34,6 +34,10 @@ Après un **push sur `main`** réussi et un **`deploy/production` vert**, le job
 2. Calcule le tag avec [`deploy/next-release-tag.sh`](../deploy/next-release-tag.sh) (`minor` ou `patch`).
 3. Crée un **tag annoté** sur le commit déployé et le pousse sur `origin`.
 4. Ne recrée pas de tag si ce commit a déjà un tag `v*.*.*` (re-run du workflow).
+5. Met à jour [`VERSION`](../VERSION) et [`CHANGELOG.md`](../CHANGELOG.md) sur **`develop`** avec le commit `release: increase next develop version` :
+   - `VERSION` → prochain minor semver (ex. release `v1.2.0` → `1.3.0`) ;
+   - `CHANGELOG.md` → section `[1.2.0]` générée depuis les commits depuis le tag précédent ([`deploy/update-changelog.sh`](../deploy/update-changelog.sh)).
+   - No-op si les deux fichiers sont déjà à jour (ex. hotfix `v1.2.1` alors que `VERSION` vaut déjà `1.3.0` mais le CHANGELOG reçoit quand même la section hotfix).
 
 **Détection** (message du commit HEAD sur `main`) :
 
