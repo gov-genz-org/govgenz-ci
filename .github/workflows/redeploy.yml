@@ -109,6 +109,8 @@ jobs:
             mkdir -p "writable/${dir}"
             touch "writable/${dir}/index.html"
           done
+          mkdir -p uploads/cms
+          touch uploads/cms/index.html
 
       - name: Verify release tree (build)
         run: bash deploy/verify-release.sh .
@@ -206,11 +208,8 @@ jobs:
             **/env.local
             **/env.*.example
             **/phpunit*
-            **/writable/cache/**
-            **/writable/logs/**
-            **/writable/session/**
-            **/writable/debugbar/**
             **/writable/uploads/**
+            **/uploads/**
             **/public/uploads/**
 
       - name: Deploy to FTP (staging, .env serveur préservé)
@@ -233,11 +232,8 @@ jobs:
             **/env.local
             **/env.*.example
             **/phpunit*
-            **/writable/cache/**
-            **/writable/logs/**
-            **/writable/session/**
-            **/writable/debugbar/**
             **/writable/uploads/**
+            **/uploads/**
             **/public/uploads/**
 
   deploy-production:
@@ -313,11 +309,8 @@ jobs:
             **/env.local
             **/env.*.example
             **/phpunit*
-            **/writable/cache/**
-            **/writable/logs/**
-            **/writable/session/**
-            **/writable/debugbar/**
             **/writable/uploads/**
+            **/uploads/**
             **/public/uploads/**
 
       - name: Deploy to FTP (production, .env serveur préservé)
@@ -340,9 +333,6 @@ jobs:
             **/env.local
             **/env.*.example
             **/phpunit*
-            **/writable/cache/**
-            **/writable/logs/**
-            **/writable/session/**
-            **/writable/debugbar/**
             **/writable/uploads/**
+            **/uploads/**
             **/public/uploads/**

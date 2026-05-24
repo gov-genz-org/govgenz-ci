@@ -98,6 +98,8 @@ jobs:
             mkdir -p "writable/${dir}"
             touch "writable/${dir}/index.html"
           done
+          mkdir -p uploads/cms
+          touch uploads/cms/index.html
 
       - name: Verify release tree (build)
         run: bash deploy/verify-release.sh .
@@ -177,6 +179,7 @@ jobs:
           bash deploy/generate-dotenv.sh release/.env
           wc -l release/.env
           ! grep -q 'database.default.hostname.*database.default' release/.env
+          ! grep -qE 'REMPLACER|CHANGER_MOT_DE_PASSE|encryption\.key = hex2bin:REMPLACER' release/.env
 
       # Pas de cache d’état FTP : après effacement serveur, un état obsolète empêche de ré-uploader public/, vendor/, etc.
       - name: Reset FTP sync state (staging — upload complet)
@@ -202,11 +205,8 @@ jobs:
             **/env.local
             **/env.*.example
             **/phpunit*
-            **/writable/cache/**
-            **/writable/logs/**
-            **/writable/session/**
-            **/writable/debugbar/**
             **/writable/uploads/**
+            **/uploads/**
             **/public/uploads/**
 
       - name: Deploy to FTP (staging, .env serveur préservé)
@@ -229,11 +229,8 @@ jobs:
             **/env.local
             **/env.*.example
             **/phpunit*
-            **/writable/cache/**
-            **/writable/logs/**
-            **/writable/session/**
-            **/writable/debugbar/**
             **/writable/uploads/**
+            **/uploads/**
             **/public/uploads/**
 
   deploy-production:
@@ -290,6 +287,7 @@ jobs:
           bash deploy/generate-dotenv.sh release/.env
           wc -l release/.env
           ! grep -q 'database.default.hostname.*database.default' release/.env
+          ! grep -qE 'REMPLACER|CHANGER_MOT_DE_PASSE|encryption\.key = hex2bin:REMPLACER' release/.env
 
       - name: Reset FTP sync state (production — upload complet)
         run: rm -f release/.ftp-deploy-sync-production.json
@@ -313,11 +311,8 @@ jobs:
             **/env.local
             **/env.*.example
             **/phpunit*
-            **/writable/cache/**
-            **/writable/logs/**
-            **/writable/session/**
-            **/writable/debugbar/**
             **/writable/uploads/**
+            **/uploads/**
             **/public/uploads/**
 
       - name: Deploy to FTP (production, .env serveur préservé)
@@ -340,11 +335,8 @@ jobs:
             **/env.local
             **/env.*.example
             **/phpunit*
-            **/writable/cache/**
-            **/writable/logs/**
-            **/writable/session/**
-            **/writable/debugbar/**
             **/writable/uploads/**
+            **/uploads/**
             **/public/uploads/**
 
   # Tag Git après merge sur main (ex. develop → main) et déploiement prod réussi.

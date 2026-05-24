@@ -62,11 +62,38 @@ Workflow **Redeploy** : [`.github/workflows/redeploy.yml`](../.github/workflows/
 
 Le déploiement **exclut** notamment :
 
-- `.env` (config serveur)
-- `writable/uploads/**`, `public/uploads/**` (médiathèque)
-- caches / logs / sessions
+- `.env` (mode manuel uniquement — voir ci-dessous)
+- `writable/uploads/**`, `uploads/**`, `public/uploads/**` (médiathèque — contenu préservé sur le serveur)
+
+Les dossiers `writable/cache/`, `logs/`, `session/`, `debugbar/` sont **envoyés** avec leur `index.html` (structure vide). Le contenu runtime (fichiers de cache, logs) n’est pas dans l’artifact CI et reste créé **sur le serveur** par PHP.
+
+**Médiathèque CMS** : avec docroot = racine projet (`index.php` à la racine), les fichiers sont enregistrés dans **`uploads/cms/`** (hors `public/`), pas dans `public/uploads/`. L’URL reste `https://domaine/uploads/cms/fichier.svg` grâce au `.htaccess` racine. Option `.env` : `app.mediaStoragePath` (chemin absolu ou relatif). Si le dossier disque est ailleurs (ex. `/home2/…/upload/cms`), définir cette variable **ou** créer un lien symbolique `uploads/cms` → ce dossier.
 
 Après déploiement, exécuter les migrations sur le serveur si nécessaire (`php spark migrate --all`) via SSH ou outil hébergeur — le FTP ne lance pas Spark automatiquement.
+
+### Dépannage prod : cache non writable / encryption.key placeholder
+
+**Erreur** : `Cache unable to write to ".../writable/cache/"`
+
+1. Vérifier que le dossier existe sur le FTP : `writable/cache/index.html`.
+2. **Permissions cPanel** (Gestionnaire de fichiers) : dossier `writable/` → **775** (ou **755** selon hébergeur), cocher « Appliquer récursivement » sur `cache/`, `logs/`, `session/`, `debugbar/`, `uploads/`.
+3. Si le dossier manque : redéployer après merge (le workflow envoie désormais la structure `writable/*/index.html`).
+
+**Erreur / `.env`** : `encryption.key = hex2bin:REMPLACER_PAR_CLE_GENEREE`
+
+Le script [`deploy/generate-dotenv.sh`](../deploy/generate-dotenv.sh) **ne génère pas** la clé : il recopie le secret GitHub `ENCRYPTION_KEY`. Un placeholder signifie :
+
+- `DEPLOY_GENERATE_ENV` ≠ `true` → `.env` manuel copié depuis `env.example` ; **ou**
+- secret `ENCRYPTION_KEY` absent ou invalide dans **Settings → Environments → production**.
+
+**Créer la clé (une fois par environnement)** :
+
+```bash
+php spark key:generate --show
+# ex. hex2bin:0123456789abcdef...
+```
+
+Coller la valeur dans le secret GitHub **production** `ENCRYPTION_KEY`, activer `DEPLOY_GENERATE_ENV=true`, redéployer. **Ne pas changer** cette clé ensuite (sessions / données chiffrées).
 
 ### Déploiement incrémental (fichiers modifiés uniquement)
 
