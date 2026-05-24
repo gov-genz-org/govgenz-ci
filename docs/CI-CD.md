@@ -26,11 +26,19 @@ Les jobs de déploiement ne tournent **pas** sur les pull requests, uniquement a
 
 ### Tags de release (`main`)
 
-Après un **push sur `main`** réussi (typiquement merge de `develop`) et un **`deploy/production` vert**, le job **`release/tag`** :
+Après un **push sur `main`** réussi et un **`deploy/production` vert**, le job **`release/tag`** :
 
-1. Calcule le prochain tag semver avec [`deploy/next-release-tag.sh`](../deploy/next-release-tag.sh) (`v1.0.0`, puis `v1.0.1`, `v1.0.2`, … selon les tags existants).
-2. Crée un **tag annoté** sur le commit déployé et le pousse sur `origin`.
-3. Ne recrée pas de tag si ce commit a déjà un tag `v*.*.*` (re-run du workflow).
+1. Détecte le type de bump avec [`deploy/detect-release-bump.sh`](../deploy/detect-release-bump.sh) :
+   - **merge `develop` → `main`** → **incrément mineur**, patch remis à `0` (`v1.0.0` → `v1.1.0`) ;
+   - **merge `fix/*` ou `hotfix/*` → `main`** → **incrément patch** (`v1.1.0` → `v1.1.1`).
+2. Calcule le tag avec [`deploy/next-release-tag.sh`](../deploy/next-release-tag.sh) (`minor` ou `patch`).
+3. Crée un **tag annoté** sur le commit déployé et le pousse sur `origin`.
+4. Ne recrée pas de tag si ce commit a déjà un tag `v*.*.*` (re-run du workflow).
+
+**Détection** (message du commit HEAD sur `main`) :
+
+- **patch** — merge PR : `Merge pull request #N from …/fix/…` ou `…/hotfix/…` ; squash : sujet `fix:` / `hotfix:` ;
+- **minor** — merge PR : `Merge pull request #N from …/develop` ; sinon défaut (release normale).
 
 Exemples : `git fetch --tags && git tag -l 'v*' --sort=-v:refname | tail -5`
 
@@ -53,7 +61,7 @@ Jobs optionnels (non requis par ruleset) :
 |-----|---------|------|
 | `deploy/staging` | `develop` | FTP → environnement staging |
 | `deploy/production` | `main` | FTP → production |
-| `release/tag` | `main` (après deploy prod OK) | Tag Git annoté `vMAJOR.MINOR.PATCH` (semver auto) |
+| `release/tag` | `main` (après deploy prod OK) | Tag Git annoté `vMAJOR.MINOR.PATCH` (minor +1 ou patch +1 si hotfix) |
 | **`Redeploy`** (manuel) | tag ou SHA + choix staging/prod | Re-déploiement FTP **sans** modifier `main` / `develop` ni créer de tag |
 
 Workflow **Redeploy** : [`.github/workflows/redeploy.yml`](../.github/workflows/redeploy.yml) — déclenché via **Actions → Redeploy → Run workflow** (voir § Rollback).

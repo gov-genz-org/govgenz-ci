@@ -339,7 +339,7 @@ jobs:
             **/uploads/**
             **/public/uploads/**
 
-  # Tag Git après merge sur main (ex. develop → main) et déploiement prod réussi.
+  # Tag Git après merge sur main : develop → minor ; fix/* ou hotfix/* → patch.
   release-tag:
     name: release/tag
     runs-on: ubuntu-latest
@@ -355,7 +355,7 @@ jobs:
       - name: Compute next release tag
         id: tag
         run: |
-          chmod +x deploy/next-release-tag.sh
+          chmod +x deploy/next-release-tag.sh deploy/detect-release-bump.sh
           if git tag --points-at HEAD | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
             existing=$(git tag --points-at HEAD | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
             echo "already_tagged=true" >> "$GITHUB_OUTPUT"
@@ -363,20 +363,27 @@ jobs:
             echo "HEAD déjà tagué : ${existing}"
             exit 0
           fi
-          name=$(./deploy/next-release-tag.sh)
+          bump=$(./deploy/detect-release-bump.sh)
+          name=$(./deploy/next-release-tag.sh "$bump")
+          echo "bump=${bump}" >> "$GITHUB_OUTPUT"
           echo "already_tagged=false" >> "$GITHUB_OUTPUT"
           echo "name=${name}" >> "$GITHUB_OUTPUT"
-          echo "Prochain tag : ${name}"
+          echo "Prochain tag (${bump}) : ${name}"
 
       - name: Create and push annotated tag
         if: steps.tag.outputs.already_tagged != 'true'
         env:
           TAG: ${{ steps.tag.outputs.name }}
+          BUMP: ${{ steps.tag.outputs.bump }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          kind="Production release"
+          if [[ "$BUMP" == "patch" ]]; then
+            kind="Hotfix release"
+          fi
           git tag -a "$TAG" -m "$(cat <<EOF
-          Production release ${TAG}
+          ${kind} ${TAG}
 
           Commit: ${{ github.sha }}
           Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
