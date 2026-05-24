@@ -54,6 +54,9 @@ Jobs optionnels (non requis par ruleset) :
 | `deploy/staging` | `develop` | FTP → environnement staging |
 | `deploy/production` | `main` | FTP → production |
 | `release/tag` | `main` (après deploy prod OK) | Tag Git annoté `vMAJOR.MINOR.PATCH` (semver auto) |
+| **`Redeploy`** (manuel) | tag ou SHA + choix staging/prod | Re-déploiement FTP **sans** modifier `main` / `develop` ni créer de tag |
+
+Workflow **Redeploy** : [`.github/workflows/redeploy.yml`](../.github/workflows/redeploy.yml) — déclenché via **Actions → Redeploy → Run workflow** (voir § Rollback).
 
 ### Fichiers jamais écrasés par FTP
 
@@ -276,6 +279,50 @@ git checkout -b hotfix/description-courte
 # PR → main (2 reviews + ci/test + ci/build)
 # PR → develop (cherry-pick ou merge main après coup)
 ```
+
+## Rollback / re-déploiement
+
+Deux approches complémentaires :
+
+| Approche | Quand l’utiliser | Effet sur Git |
+|----------|------------------|---------------|
+| **`git revert` + merge sur `main`** | Correction durable, historique propre | `main` reflète la prod |
+| **Workflow `Redeploy`** | Urgence FTP, retour rapide à un tag connu | **`main` / `develop` inchangés** |
+
+### Re-déploiement manuel (`Redeploy`)
+
+1. GitHub → **Actions** → workflow **Redeploy** → **Run workflow**.
+2. **ref** : tag de la dernière prod saine (ex. `v1.0.2`) ou SHA complet.
+3. **target** : `production` ou `staging`.
+4. Attendre `ci/test` → `ci/build` → `deploy/*`.
+
+Le job repasse les tests PHPUnit sur le commit choisi, rebuild l’artefact release et envoie un upload FTP complet (comme le CI normal). **`release/tag` ne tourne pas** — aucun nouveau tag semver.
+
+**Limites :**
+
+- Ne rollback **pas** la base MySQL (migrations déjà appliquées).
+- Si `DEPLOY_GENERATE_ENV=true`, le `.env` actuel des secrets GitHub est régénéré (pas celui du passé).
+- Après un redeploy prod, aligner `main` avec un revert ou un hotfix pour éviter qu’un prochain merge ne redéploie la version cassée.
+
+**Retrouver un tag :**
+
+```bash
+git fetch --tags
+git tag -l 'v*' --sort=-v:refname | head -5
+git show v1.0.2 --no-patch
+```
+
+Sur le serveur, `writable/deploy_version.txt` contient le SHA et, en redeploy, les lignes `redeploy-ref=`, `redeploy-target=`, `redeploy-run=`.
+
+### Rollback Git (recommandé à terme)
+
+```bash
+git checkout main && git pull origin main
+git revert <sha-du-mauvais-commit>   # ou merge d’une PR hotfix/revert
+git push origin main
+```
+
+→ CI normal → deploy prod → nouveau tag `v*`.
 
 ## Dépannage
 
