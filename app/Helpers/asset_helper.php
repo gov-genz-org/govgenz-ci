@@ -76,14 +76,13 @@ if (! function_exists('public_asset_url')) {
     function public_asset_url(string $relativePath): string
     {
         $relativePath = ltrim(str_replace('\\', '/', $relativePath), '/');
-        $url          = base_url($relativePath);
+        // Chemin absolu sur l’hôte courant (évite www vs sans-www : CSP style-src 'self' + baseURL fixe).
+        $url = '/' . $relativePath;
 
         if (! preg_match('/\.(css|js|mjs)(\?.*)?$/i', $relativePath)) {
             return $url;
         }
 
-        $separator = str_contains($url, '?') ? '&' : '?';
-
-        return $url . $separator . 'v=' . rawurlencode(front_asset_version());
+        return $url . '?v=' . rawurlencode(front_asset_version());
     }
 }
