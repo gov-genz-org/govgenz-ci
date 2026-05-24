@@ -1,0 +1,103 @@
+/**
+ * Fiche position — shell partagé avec projects-program-show.css (classes project-*).
+ * Spécifique : bandeau type, badges type, bordure carte.
+ */
+
+#main-content .positions-program-show.projects-program-show {
+  border-left: 3px solid var(--pp-teal);
+}
+
+#main-content .positions-program-show.projects-program-show[data-types-accent="denial"] {
+  border-left-color: var(--pp-red);
+}
+
+#main-content .positions-program-show.projects-program-show[data-types-accent="praise"] {
+  border-left-color: #4aba78;
+}
+
+#main-content .positions-program-show.projects-program-show[data-types-accent="solution"] {
+  border-left-color: var(--pp-warm);
+}
+
+#main-content .positions-program-show.projects-program-show[data-types-accent="analysis"] {
+  border-left-color: #5a9fd4;
+}
+
+#main-content .positions-program-show .positions-program-show__band {
+  padding: 0.45rem clamp(1.25rem, 4vw, 2rem);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--pp-border-dim);
+}
+
+#main-content .positions-program-show .positions-program-show__band--denial {
+  background: rgba(220, 53, 69, 0.15);
+  color: #ff6b7a;
+}
+
+#main-content .positions-program-show .positions-program-show__band--praise {
+  background: rgba(42, 122, 75, 0.2);
+  color: #4aba78;
+}
+
+#main-content .positions-program-show .positions-program-show__band--solution {
+  background: rgba(232, 138, 106, 0.15);
+  color: var(--pp-warm);
+}
+
+#main-content .positions-program-show .positions-program-show__band--analysis {
+  background: rgba(26, 90, 138, 0.15);
+  color: #5a9fd4;
+}
+
+#main-content .positions-program-show .project-hero .positions-program-show__type-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid var(--pp-border-dim);
+  background: rgba(90, 100, 120, 0.2);
+  color: var(--pp-text-sec);
+}
+
+#main-content .positions-program-show .positions-program-show__type-badge--denial {
+  background: rgba(220, 53, 69, 0.15);
+  color: #ff6b7a;
+  border-color: rgba(220, 53, 69, 0.35);
+}
+
+#main-content .positions-program-show .positions-program-show__type-badge--praise {
+  background: rgba(42, 122, 75, 0.2);
+  color: #4aba78;
+  border-color: rgba(42, 122, 75, 0.35);
+}
+
+#main-content .positions-program-show .positions-program-show__type-badge--analysis {
+  background: rgba(26, 90, 138, 0.15);
+  color: #5a9fd4;
+  border-color: rgba(26, 90, 138, 0.35);
+}
+
+#main-content .positions-program-show .positions-program-show__type-badge--solution {
+  background: rgba(232, 138, 106, 0.15);
+  color: var(--pp-warm);
+  border-color: rgba(232, 138, 106, 0.35);
+}
+
+#main-content .positions-program-show .positions-program-show__sources-note {
+  margin-top: 0.65rem;
+  font-size: 0.78rem;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  #main-content .positions-program-show .project-layout {
+    padding-top: 1.5rem;
+  }
+}

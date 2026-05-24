@@ -1,0 +1,64 @@
+/**
+ * Pages éditoriales — layout section uniquement (prose : govgenz-components.css).
+ */
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg:is(.ggz-cms-page--legal, .ggz-cms-page--press) :is(.section--legal, .section--press) {
+  position: relative;
+  padding: clamp(0.25rem, 2vw, 1rem) 0 clamp(2.75rem, 5vw, 4.5rem);
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-page-hero--structured + article.wysiwyg:is(.ggz-cms-page--legal, .ggz-cms-page--press) :is(.section--legal, .section--press) {
+  padding-top: 0.35rem;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg:is(.ggz-cms-page--legal, .ggz-cms-page--press) :is(.section--legal, .section--press)::before {
+  content: "";
+  position: absolute;
+  inset: -2rem 50% auto;
+  transform: translateX(-50%);
+  width: min(720px, 92vw);
+  height: 220px;
+  background: radial-gradient(ellipse 70% 100% at 50% 0%, rgba(196, 30, 48, 0.1), transparent 72%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg:is(.ggz-cms-page--legal, .ggz-cms-page--press) :is(.section--legal, .section--press) .section__inner {
+  position: relative;
+  z-index: 1;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg:is(.ggz-cms-page--legal, .ggz-cms-page--press) :is(.section--legal, .section--press) .section__header {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 0.25rem;
+}
+
+@media (max-width: 640px) {
+  :is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg:is(.ggz-cms-page--legal, .ggz-cms-page--press) :is(.section--legal, .section--press) .section__header {
+    margin-bottom: 1.65rem;
+  }
+}
+
+/* Sous-titres de section dans le panneau (mentions légales, fiches presse) */
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell
+  article.wysiwyg:is(.ggz-cms-page--legal, .ggz-cms-page--press)
+  :is(.ggz-legal-prose, .ggz-editorial-prose)
+  h2 {
+  font-family: var(--ggz-font-sans);
+  font-size: var(--ggz-type-legal-h2);
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ggz-text);
+  margin: 0 0 0.65rem;
+  padding: 0 0 0.4rem 0.55rem;
+  border-bottom: 1px solid rgba(56, 67, 88, 0.55);
+  border-left: 3px solid rgba(255, 165, 134, 0.45);
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell
+  article.wysiwyg:is(.ggz-cms-page--legal, .ggz-cms-page--press)
+  :is(.ggz-legal-prose, .ggz-editorial-prose)
+  h2:not(:first-child) {
+  margin-top: 1.5rem;
+}

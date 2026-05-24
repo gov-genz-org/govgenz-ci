@@ -1,0 +1,56 @@
+/**
+ * Aperçu admin/cms-guide — cadre « Rendu » uniquement.
+ * Parité front : govgenz-guide-preview-parity.css + pile CSS identique au layout public.
+ */
+
+.cms-guide-sample {
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  overflow: hidden;
+  margin-top: 0.5rem;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.cms-guide-sample__label {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  padding: 0.45rem 0.85rem;
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  color: #6c757d;
+}
+
+.cms-guide-sample__canvas {
+  background: var(--bg-deep);
+  overflow-x: auto;
+}
+
+.cms-guide-sample__canvas--flush .section {
+  border-radius: 0;
+}
+
+.cms-guide-sample__canvas--footer {
+  padding: 0;
+}
+
+.cms-guide-preview-host--footer {
+  padding: 1.25rem 1rem 1.5rem;
+}
+
+
+/* Hero accueil : pas d’animation dans l’aperçu (évite opacity:0 du template) */
+.cms-guide-preview-host.ggz-main-shell .hero__title-1,
+.cms-guide-preview-host.ggz-main-shell .hero__title-2 {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
+.cms-guide-preview-host.ggz-main-shell .hero__overline,
+.cms-guide-preview-host.ggz-main-shell .hero__actions {
+  opacity: 1;
+  animation: none;
+}

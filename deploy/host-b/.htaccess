@@ -1,0 +1,38 @@
+# Apache — racine du vhost « projects.* » (souvent un dossier `projects/` sous la racine CI).
+# Même contenu si le docroot est ailleurs : tout ce qui n’est pas un fichier/dossier réel va dans index.php.
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    Options +FollowSymlinks
+    RewriteEngine On
+
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^([\s\S]*)$ index.php/$1 [L,NC,QSA]
+
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+    ErrorDocument 404 index.php
+</IfModule>
+
+# Cache navigateur — statiques (vhost projects.*)
+<IfModule mod_setenvif.c>
+    SetEnvIf Request_URI "\.(css|js|mjs|woff2?|ttf|eot|png|jpe?g|gif|webp|svg|ico)(\?.*)?$" static_long_cache=1
+</IfModule>
+<IfModule mod_headers.c>
+    Header set Cache-Control "public, max-age=604800, immutable" env=static_long_cache
+</IfModule>
+
+ServerSignature Off

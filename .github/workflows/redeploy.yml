@@ -1,0 +1,338 @@
+# Re-déploiement manuel d’un tag ou SHA (rollback / hotfix FTP) sans modifier main/develop.
+# Ne crée pas de tag release — voir docs/CI-CD.md § Rollback.
+
+name: Redeploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Tag (ex. v1.0.2) ou SHA complet du commit à déployer"
+        required: true
+        type: string
+      target:
+        description: "Environnement FTP cible"
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+concurrency:
+  group: redeploy-${{ inputs.target }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: ci/test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Afficher le commit déployé
+        run: |
+          echo "ref demandée : ${{ inputs.ref }}"
+          git log -1 --format='%H %s'
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: intl, mbstring, mysqli, sqlite3, pcov
+          coverage: pcov
+
+      - uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: PHPUnit (Unit + App, sans BDD MySQL projet)
+        run: vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-text --coverage-clover build/coverage/clover.xml
+
+  build:
+    name: ci/build
+    runs-on: ubuntu-latest
+    needs: test
+    outputs:
+      sha: ${{ steps.meta.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+
+      - name: Resolve deployed commit
+        id: meta
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: intl, mbstring, mysqli, sqlite3
+          coverage: none
+
+      - uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-prod-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-prod-
+
+      - name: Production install
+        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Verify spark
+        run: php spark list
+
+      - name: Validate env.example template
+        run: php spark env:check --template-only
+
+      - name: Stamp deploy version
+        run: |
+          SHA="${{ steps.meta.outputs.sha }}"
+          {
+            echo "${SHA}"
+            echo "redeploy-ref=${{ inputs.ref }}"
+            echo "redeploy-target=${{ inputs.target }}"
+            echo "redeploy-run=${{ github.run_id }}"
+          } > writable/deploy_version.txt
+
+      - name: Prepare writable for deploy
+        run: |
+          for dir in cache logs session debugbar uploads backups; do
+            find "writable/${dir}" -mindepth 1 ! -name 'index.html' -delete 2>/dev/null || true
+            mkdir -p "writable/${dir}"
+            touch "writable/${dir}/index.html"
+          done
+          mkdir -p uploads/cms
+          touch uploads/cms/index.html
+
+      - name: Verify release tree (build)
+        run: bash deploy/verify-release.sh .
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: govgenz-release
+          include-hidden-files: true
+          path: |
+            app/
+            public/
+            vendor/
+            writable/
+            deploy/
+            index.php
+            spark
+            preload.php
+            composer.json
+            composer.lock
+            .htaccess
+            env.example
+          retention-days: 7
+
+  deploy-staging:
+    name: deploy/staging
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 90
+    if: inputs.target == 'staging'
+    environment: staging
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: govgenz-release
+          path: release/
+
+      - name: Verify release artifact (staging)
+        run: bash deploy/verify-release.sh release
+
+      - name: Generate .env from GitHub secrets (staging)
+        if: vars.DEPLOY_GENERATE_ENV == 'true'
+        env:
+          APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
+          DATABASE_HOSTNAME: ${{ secrets.DATABASE_HOSTNAME }}
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+          CI_ENVIRONMENT: ${{ vars.CI_ENVIRONMENT }}
+          APP_FORCE_HTTPS: ${{ vars.APP_FORCE_HTTPS }}
+          SESSION_EXPIRATION: ${{ vars.SESSION_EXPIRATION }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_FROM_NAME: ${{ vars.EMAIL_FROM_NAME }}
+          JOIN_NOTIFICATION_TO: ${{ secrets.JOIN_NOTIFICATION_TO }}
+          EMAIL_PROTOCOL: ${{ vars.EMAIL_PROTOCOL }}
+          STAFF_INVITE_EXPIRY_HOURS: ${{ vars.STAFF_INVITE_EXPIRY_HOURS }}
+          ANALYTICS_ENABLED: ${{ vars.ANALYTICS_ENABLED }}
+          ANALYTICS_GA4_ID: ${{ secrets.ANALYTICS_GA4_ID }}
+          ANALYTICS_PRIVACY_SLUG: ${{ vars.ANALYTICS_PRIVACY_SLUG }}
+          PROJECTS_USE_PATH_PREFIX: ${{ vars.PROJECTS_USE_PATH_PREFIX }}
+          POSITIONS_USE_PATH_PREFIX: ${{ vars.POSITIONS_USE_PATH_PREFIX }}
+          PROJECTS_HOST: ${{ vars.PROJECTS_HOST }}
+          PROJECTS_BASE_URL: ${{ secrets.PROJECTS_BASE_URL }}
+          POSITIONS_HOST: ${{ vars.POSITIONS_HOST }}
+          POSITIONS_BASE_URL: ${{ secrets.POSITIONS_BASE_URL }}
+          APP_ASSET_VERSION: ${{ vars.APP_ASSET_VERSION }}
+          GITHUB_SHA: ${{ needs.build.outputs.sha }}
+        run: |
+          rm -f release/.env
+          bash deploy/generate-dotenv.sh release/.env
+          wc -l release/.env
+          ! grep -q 'database.default.hostname.*database.default' release/.env
+
+      - name: Reset FTP sync state (staging — upload complet)
+        run: rm -f release/.ftp-deploy-sync-staging.json
+
+      - name: Deploy to FTP (staging, .env généré inclus)
+        if: vars.DEPLOY_GENERATE_ENV == 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.FTP_STAGING_SERVER }}
+          username: ${{ secrets.FTP_STAGING_USERNAME }}
+          password: ${{ secrets.FTP_STAGING_PASSWORD }}
+          local-dir: release/
+          server-dir: ${{ secrets.FTP_STAGING_REMOTE_DIR }}
+          state-name: .ftp-deploy-sync-staging.json
+          log-level: standard
+          exclude: |
+            **/.git*
+            **/.github/**
+            **/tests/**
+            **/docs/**
+            **/env.local
+            **/env.*.example
+            **/phpunit*
+            **/writable/uploads/**
+            **/uploads/**
+            **/public/uploads/**
+
+      - name: Deploy to FTP (staging, .env serveur préservé)
+        if: vars.DEPLOY_GENERATE_ENV != 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.FTP_STAGING_SERVER }}
+          username: ${{ secrets.FTP_STAGING_USERNAME }}
+          password: ${{ secrets.FTP_STAGING_PASSWORD }}
+          local-dir: release/
+          server-dir: ${{ secrets.FTP_STAGING_REMOTE_DIR }}
+          state-name: .ftp-deploy-sync-staging.json
+          log-level: standard
+          exclude: |
+            **/.git*
+            **/.github/**
+            **/tests/**
+            **/docs/**
+            **/.env
+            **/env.local
+            **/env.*.example
+            **/phpunit*
+            **/writable/uploads/**
+            **/uploads/**
+            **/public/uploads/**
+
+  deploy-production:
+    name: deploy/production
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 90
+    if: inputs.target == 'production'
+    environment: production
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: govgenz-release
+          path: release/
+
+      - name: Verify release artifact (production)
+        run: bash deploy/verify-release.sh release
+
+      - name: Generate .env from GitHub secrets (production)
+        if: vars.DEPLOY_GENERATE_ENV == 'true'
+        env:
+          APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
+          DATABASE_HOSTNAME: ${{ secrets.DATABASE_HOSTNAME }}
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+          CI_ENVIRONMENT: ${{ vars.CI_ENVIRONMENT }}
+          APP_FORCE_HTTPS: ${{ vars.APP_FORCE_HTTPS }}
+          SESSION_EXPIRATION: ${{ vars.SESSION_EXPIRATION }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_FROM_NAME: ${{ vars.EMAIL_FROM_NAME }}
+          JOIN_NOTIFICATION_TO: ${{ secrets.JOIN_NOTIFICATION_TO }}
+          EMAIL_PROTOCOL: ${{ vars.EMAIL_PROTOCOL }}
+          STAFF_INVITE_EXPIRY_HOURS: ${{ vars.STAFF_INVITE_EXPIRY_HOURS }}
+          ANALYTICS_ENABLED: ${{ vars.ANALYTICS_ENABLED }}
+          ANALYTICS_GA4_ID: ${{ secrets.ANALYTICS_GA4_ID }}
+          ANALYTICS_PRIVACY_SLUG: ${{ vars.ANALYTICS_PRIVACY_SLUG }}
+          PROJECTS_USE_PATH_PREFIX: ${{ vars.PROJECTS_USE_PATH_PREFIX }}
+          POSITIONS_USE_PATH_PREFIX: ${{ vars.POSITIONS_USE_PATH_PREFIX }}
+          PROJECTS_HOST: ${{ vars.PROJECTS_HOST }}
+          PROJECTS_BASE_URL: ${{ secrets.PROJECTS_BASE_URL }}
+          POSITIONS_HOST: ${{ vars.POSITIONS_HOST }}
+          POSITIONS_BASE_URL: ${{ secrets.POSITIONS_BASE_URL }}
+          APP_ASSET_VERSION: ${{ vars.APP_ASSET_VERSION }}
+          GITHUB_SHA: ${{ needs.build.outputs.sha }}
+        run: |
+          rm -f release/.env
+          bash deploy/generate-dotenv.sh release/.env
+          wc -l release/.env
+          ! grep -q 'database.default.hostname.*database.default' release/.env
+
+      - name: Reset FTP sync state (production — upload complet)
+        run: rm -f release/.ftp-deploy-sync-production.json
+
+      - name: Deploy to FTP (production, .env généré inclus)
+        if: vars.DEPLOY_GENERATE_ENV == 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.FTP_PRODUCTION_SERVER }}
+          username: ${{ secrets.FTP_PRODUCTION_USERNAME }}
+          password: ${{ secrets.FTP_PRODUCTION_PASSWORD }}
+          local-dir: release/
+          server-dir: ${{ secrets.FTP_PRODUCTION_REMOTE_DIR }}
+          state-name: .ftp-deploy-sync-production.json
+          log-level: standard
+          exclude: |
+            **/.git*
+            **/.github/**
+            **/tests/**
+            **/docs/**
+            **/env.local
+            **/env.*.example
+            **/phpunit*
+            **/writable/uploads/**
+            **/uploads/**
+            **/public/uploads/**
+
+      - name: Deploy to FTP (production, .env serveur préservé)
+        if: vars.DEPLOY_GENERATE_ENV != 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.FTP_PRODUCTION_SERVER }}
+          username: ${{ secrets.FTP_PRODUCTION_USERNAME }}
+          password: ${{ secrets.FTP_PRODUCTION_PASSWORD }}
+          local-dir: release/
+          server-dir: ${{ secrets.FTP_PRODUCTION_REMOTE_DIR }}
+          state-name: .ftp-deploy-sync-production.json
+          log-level: standard
+          exclude: |
+            **/.git*
+            **/.github/**
+            **/tests/**
+            **/docs/**
+            **/.env
+            **/env.local
+            **/env.*.example
+            **/phpunit*
+            **/writable/uploads/**
+            **/uploads/**
+            **/public/uploads/**

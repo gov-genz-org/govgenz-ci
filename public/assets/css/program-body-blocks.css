@@ -1,0 +1,93 @@
+/**
+ * Blocs corps programme (projets + positions) — rendu ProjectBodyBlocksRenderer.
+ * Tokens : govgenz-tokens.css (--pp-* alias).
+ */
+#main-content :is(.projects-program-show, .positions-program-show, .positions-program-page)
+  :is(.project-main, .position-main, .positions-program-show__body, .positions-program-page__avis-body)
+  .content-section {
+  margin-bottom: 2rem;
+}
+
+#main-content :is(.projects-program-show, .positions-program-show, .positions-program-page)
+  :is(.project-main, .position-main, .positions-program-show__body, .positions-program-page__avis-body)
+  .content-section:last-child {
+  margin-bottom: 0;
+}
+
+#main-content :is(.projects-program-show, .positions-program-show, .positions-program-page)
+  :is(.project-main, .position-main, .positions-program-show__body, .positions-program-page__avis-body)
+  .content-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pp-red);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--pp-border-dim);
+}
+
+#main-content :is(.projects-program-show, .positions-program-show, .positions-program-page)
+  :is(.project-main, .position-main, .positions-program-show__body, .positions-program-page__avis-body)
+  .content-title.teal {
+  color: var(--pp-teal);
+  border-color: var(--pp-border-teal);
+}
+
+#main-content :is(.projects-program-show, .positions-program-show, .positions-program-page)
+  :is(.project-main, .position-main, .positions-program-show__body, .positions-program-page__avis-body)
+  .content-title.warm {
+  color: var(--pp-warm);
+  border-color: rgba(232, 138, 106, 0.25);
+}
+
+#main-content :is(.projects-program-show, .positions-program-show, .positions-program-page)
+  :is(.project-main, .position-main, .positions-program-show__body, .positions-program-page__avis-body)
+  .content-section p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--pp-text-sec);
+  line-height: 1.8;
+  margin-bottom: 0.75rem;
+}
+
+#main-content :is(.projects-program-show, .positions-program-show, .positions-program-page)
+  :is(.project-main, .position-main, .positions-program-show__body, .positions-program-page__avis-body)
+  .content-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.75rem;
+}
+
+#main-content :is(.projects-program-show, .positions-program-show, .positions-program-page)
+  :is(.project-main, .position-main, .positions-program-show__body, .positions-program-page__avis-body)
+  .content-section li {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--pp-text-sec);
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--pp-border-dim);
+}
+
+#main-content :is(.projects-program-show, .positions-program-show, .positions-program-page)
+  :is(.project-main, .position-main, .positions-program-show__body, .positions-program-page__avis-body)
+  .content-section li:last-child {
+  border-bottom: none;
+}
+
+#main-content :is(.projects-program-show, .positions-program-show, .positions-program-page)
+  :is(.project-main, .position-main, .positions-program-show__body, .positions-program-page__avis-body)
+  .content-section li strong {
+  color: var(--pp-text);
+}
+
+#main-content :is(.projects-program-show, .positions-program-show, .positions-program-page)
+  :is(.project-main, .position-main, .positions-program-show__body, .positions-program-page__avis-body)
+  .content-section li::before {
+  content: '— ';
+  color: var(--pp-red);
+}
