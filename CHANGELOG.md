@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-05-24
+
+### Release
+
+- ci(release): bump VERSION and CHANGELOG on develop after main release (4843802)
+- mavie (9a6545c)
+
+
 ## [1.1.0] - 2026-05-21
 
 ### Release
