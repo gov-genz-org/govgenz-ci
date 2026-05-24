@@ -1,0 +1,5 @@
+# Propriétaires par défaut — requis par le ruleset main (CODEOWNERS).
+# Remplacez @gov-genz-org/votre-equipe par une équipe GitHub existante de l’org,
+# ou listez des utilisateurs : * @user1 @user2
+
+* @gov-genz-org/core

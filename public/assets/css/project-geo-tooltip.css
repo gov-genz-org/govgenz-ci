@@ -1,0 +1,118 @@
+/**
+ * Infobulle géographie (liste + fiche projet).
+ * Évite title="" natif (aléatoire) ; pas de conflit avec le hover carte.
+ */
+#main-content .project-geo--has-tip {
+  position: relative;
+  z-index: 2;
+}
+
+#main-content .project-geo__info {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.72rem;
+  height: 0.72rem;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-size: 0.5rem;
+  font-weight: 700;
+  font-style: italic;
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1;
+  opacity: 0.85;
+  cursor: help;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+#main-content .project-geo__tip {
+  position: absolute;
+  z-index: 200;
+  bottom: calc(100% + 0.5rem);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  min-width: 11rem;
+  max-width: min(22rem, calc(100vw - 2rem));
+  padding: 0.5rem 0.65rem;
+  border-radius: 8px;
+  background: #121d30;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+  color: #c5cede;
+  font-size: 0.72rem;
+  font-weight: 400;
+  font-style: normal;
+  font-family: var(--font-body, system-ui, sans-serif);
+  line-height: 1.45;
+  text-align: left;
+  white-space: normal;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    visibility 0.15s ease;
+}
+
+#main-content .project-geo__tip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-top-color: #121d30;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #main-content .project-geo--has-tip:hover .project-geo__tip,
+  #main-content .project-geo--has-tip:focus-within .project-geo__tip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Touch : afficher au focus du bouton i */
+#main-content .project-geo__info:focus + .project-geo__tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Mobile : infobulle sous le i (évite coupure en haut de carte) */
+@media (max-width: 639.98px) {
+  #main-content .project-geo__tip {
+    bottom: auto;
+    top: calc(100% + 0.45rem);
+    left: 0;
+    transform: translateY(-4px);
+    max-width: min(18rem, calc(100vw - 2.5rem));
+    text-align: left;
+  }
+
+  #main-content .project-geo__tip::after {
+    top: auto;
+    bottom: 100%;
+    border-top-color: transparent;
+    border-bottom-color: #121d30;
+  }
+
+  @media (hover: hover) {
+    #main-content .project-geo--has-tip:hover .project-geo__tip,
+    #main-content .project-geo--has-tip:focus-within .project-geo__tip {
+      transform: translateY(0);
+    }
+  }
+
+  #main-content .project-geo__info:focus + .project-geo__tip {
+    transform: translateY(0);
+  }
+}
