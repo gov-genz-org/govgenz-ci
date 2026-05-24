@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Libraries\CmsMediaStorage;
 use App\Models\CmsMediaModel;
 use CodeIgniter\HTTP\ResponseInterface;
 use Config\Mimes;
@@ -38,7 +39,7 @@ class Media extends BaseController
             }
             $out[] = [
                 'id'   => (int) ($r['id'] ?? 0),
-                'url'  => base_url('uploads/cms/' . $fn),
+                'url'  => CmsMediaStorage::publicUrl($fn),
                 'name' => (string) ($r['original_name'] ?? ''),
                 'mime' => (string) ($r['mime_type'] ?? ''),
             ];
@@ -129,8 +130,8 @@ class Media extends BaseController
 
         $originalName = $file->getClientName();
 
-        $uploadDir = FCPATH . 'uploads/cms/';
-        if (! is_dir($uploadDir) && ! mkdir($uploadDir, 0755, true) && ! is_dir($uploadDir)) {
+        $uploadDir = CmsMediaStorage::storageDir();
+        if (! CmsMediaStorage::ensureStorageDir()) {
             return $fail('Impossible de créer le dossier d’upload.');
         }
 
@@ -150,7 +151,7 @@ class Media extends BaseController
             'created_at'      => date('Y-m-d H:i:s'),
         ]);
 
-        $publicUrl = base_url('uploads/cms/' . $newName);
+        $publicUrl = CmsMediaStorage::publicUrl($newName);
 
         return $this->response->setJSON([
             'location' => $publicUrl,
@@ -167,7 +168,7 @@ class Media extends BaseController
             return redirect()->to(site_url('admin/media'))->with('error', lang('Admin.error_media_not_found'));
         }
 
-        $path = FCPATH . 'uploads/cms/' . ($row['stored_filename'] ?? '');
+        $path = CmsMediaStorage::filePath((string) ($row['stored_filename'] ?? ''));
         if (is_file($path)) {
             @unlink($path);
         }

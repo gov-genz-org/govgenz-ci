@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Commands;
 
+use App\Libraries\CmsMediaStorage;
 use App\Models\CmsMediaModel;
 use App\Models\CmsPageModel;
 use App\Models\CmsPostModel;
@@ -59,7 +60,7 @@ class MediaOrphans extends BaseCommand
             foreach ($orphans as $o) {
                 $id  = (int) ($o['id'] ?? 0);
                 $fn  = (string) ($o['stored_filename'] ?? '');
-                $path = FCPATH . 'uploads/cms/' . $fn;
+                $path = CmsMediaStorage::filePath($fn);
                 if (is_file($path)) {
                     @unlink($path);
                 }
