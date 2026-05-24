@@ -74,11 +74,4 @@ class Volunteers extends BaseController
 
         return redirect()->to(site_url('admin/volunteers'))->with('message', lang('Admin.flash_volunteers_cleared'));
     }
-
-    public function clearTable(): ResponseInterface
-    {
-        model(VolunteerApplicationModel::class)->db->table('volunteer_applications')->truncate();
-
-        return redirect()->to(site_url('admin/volunteers'))->with('message', 'Toutes les candidatures volontaires ont été supprimées.');
-    }
 }
