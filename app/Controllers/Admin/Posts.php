@@ -63,14 +63,14 @@ class Posts extends BaseController
     {
         return view('admin/layout', [
             'title'         => 'Nouvel article',
-            'main'          => view('admin/posts/form', ['post' => null]),
+            'main'          => view('admin/posts/form', $this->postFormViewData(null)),
             'extraScripts' => $this->editorFormExtraScripts(),
         ]);
     }
 
     public function store(): ResponseInterface
     {
-        $rules = $this->rules();
+        $rules = $this->rules(false);
         if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
@@ -122,7 +122,7 @@ class Posts extends BaseController
 
         return view('admin/layout', [
             'title'         => 'Éditer l’article',
-            'main'          => view('admin/posts/form', ['post' => $post]),
+            'main'          => view('admin/posts/form', $this->postFormViewData($post)),
             'extraScripts' => $this->editorFormExtraScripts(),
         ]);
     }
@@ -135,13 +135,13 @@ class Posts extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        $rules = $this->rules();
+        $rules = $this->rules(true);
         if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
         $slug   = LocaleSlug::normalizeSlug($this->request->getPost('slug'));
-        $locale = LocaleSlug::normalizeLocale($this->request->getPost('locale'));
+        $locale = LocaleSlug::normalizeLocale((string) ($existing['locale'] ?? 'fr'));
         $other  = $model->where('slug', $slug)->where('locale', $locale)->where('id !=', $id)->first();
         if ($other !== null) {
             return redirect()->back()->withInput()->with('error', lang('Admin.error_slug_locale_taken'));
@@ -236,11 +236,10 @@ class Posts extends BaseController
     /**
      * @return array<string, string>
      */
-    private function rules(): array
+    private function rules(bool $isEdit = false): array
     {
-        return [
+        $rules = [
             'slug'               => 'required|regex_match[/^[a-z0-9\-]+$/]|max_length[190]',
-            'locale'             => 'required|in_list[fr,en]',
             'translation_group'  => 'permit_empty|max_length[64]',
             'title'              => 'required|max_length[255]',
             'excerpt'          => 'permit_empty|max_length[512]',
@@ -250,6 +249,11 @@ class Posts extends BaseController
             'meta_title'       => 'permit_empty|max_length[255]',
             'meta_description' => 'permit_empty|max_length[512]',
         ];
+        if (! $isEdit) {
+            $rules['locale'] = 'required|in_list[fr,en]';
+        }
+
+        return $rules;
     }
 
     private function normalizePublishedAt(?string $status, ?string $raw, ?string $fallback): ?string
@@ -295,5 +299,38 @@ class Posts extends BaseController
         }
 
         return $candidate;
+    }
+
+    /**
+     * @return array{
+     *   post: array<string, mixed>|null,
+     *   publicPreviewUrl: ?string,
+     *   translationPartnerNav: array{editUrl: string, publicUrl: ?string, viewLabel: string, editLabel: string}|null
+     * }
+     */
+    private function postFormViewData(?array $post): array
+    {
+        helper('admin');
+
+        $publicPreviewUrl = null;
+        if ($post !== null
+            && ($post['status'] ?? '') === 'published'
+            && (string) ($post['slug'] ?? '') !== ''
+        ) {
+            $publicPreviewUrl = admin_public_press_url(
+                (string) $post['slug'],
+                (string) ($post['locale'] ?? 'fr'),
+            );
+        }
+
+        return [
+            'post'                  => $post,
+            'publicPreviewUrl'      => $publicPreviewUrl,
+            'translationPartnerNav' => admin_translation_partner_nav(
+                $post,
+                CmsPostModel::class,
+                'admin/posts',
+            ),
+        ];
     }
 }

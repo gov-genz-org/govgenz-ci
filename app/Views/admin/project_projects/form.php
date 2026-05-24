@@ -15,6 +15,7 @@ use App\Models\ProjectProjectModel;
 /** @var string $bodyStoredHtml */
 /** @var bool $bodyOrphanHtml */
 /** @var string|null $publicPreviewUrl */
+/** @var array{editUrl: string, publicUrl: ?string, viewLabel: string, editLabel: string}|null $translationPartnerNav */
 $blocksForForm = $blocksForForm ?? [];
 $bodyContentMode = $bodyContentMode ?? 'blocks';
 $canUseAdvancedHtml = $canUseAdvancedHtml ?? false;
@@ -22,6 +23,7 @@ $bodyLockedLegacyHtml = $bodyLockedLegacyHtml ?? false;
 $bodyStoredHtml = $bodyStoredHtml ?? '';
 $bodyOrphanHtml = $bodyOrphanHtml ?? false;
 $publicPreviewUrl = $publicPreviewUrl ?? null;
+$translationPartnerNav = $translationPartnerNav ?? null;
 $isEdit = $project !== null;
 $action = $isEdit
     ? site_url('admin/project-projects/update/' . (int) ($project['id'] ?? 0))
@@ -98,14 +100,21 @@ $budgetSuffixesJson = json_encode([
 <h1 class="h3 mb-1"><?= esc($isEdit ? lang('Admin.form_project_edit') : lang('Admin.form_project_new')) ?></h1>
 <p class="text-muted small mb-3"><?= esc(lang('Admin.form_pp_intro')) ?></p>
 
-<?php if ($publicPreviewUrl !== null) : ?>
-    <p class="mb-3">
-        <a href="<?= esc($publicPreviewUrl, 'attr') ?>" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener"><?= esc(lang('Admin.action_view_published_record')) ?></a>
-    </p>
-<?php endif; ?>
+<?= view('admin/partials/record_form_nav', [
+    'publicPreviewUrl'      => $publicPreviewUrl,
+    'translationPartnerNav' => $translationPartnerNav,
+]) ?>
 
 <form method="post" action="<?= esc($action) ?>" class="admin-editor-form border rounded bg-white shadow-sm p-3 p-md-4">
     <?= csrf_field() ?>
+
+    <?php if ($isEdit) : ?>
+        <?= view('admin/partials/record_form_preview', [
+            'recordId'         => (int) ($project['id'] ?? 0),
+            'draftPreviewPath' => 'admin/project-projects/preview-draft',
+            'savedPreviewPath' => 'admin/project-projects/preview',
+        ]) ?>
+    <?php endif; ?>
 
     <?php if (! $canUseAdvancedHtml) : ?>
         <input type="hidden" name="body_content_mode" value="<?= esc($ppContentMode, 'attr') ?>">
@@ -126,17 +135,11 @@ $budgetSuffixesJson = json_encode([
                    value="<?= esc(old('title', $isEdit ? (string) ($project['title'] ?? '') : '')) ?>">
         </div>
         <div class="col-md-6">
-            <label for="pp-locale" class="form-label"><?= esc(lang('Admin.form_label_locale')) ?> <span class="text-danger">*</span></label>
-            <?php if ($isEdit) : ?>
-                <input type="text" id="pp-locale" class="form-control bg-light" readonly
-                       value="<?= esc($ppLocale === 'en' ? lang('Admin.form_locale_en') : lang('Admin.form_locale_fr')) ?>">
-            <?php else : ?>
-                <select name="locale" id="pp-locale" class="form-select" required>
-                    <option value="fr" <?= $ppLocale === 'fr' ? 'selected' : '' ?>><?= esc(lang('Admin.form_locale_fr')) ?></option>
-                    <option value="en" <?= $ppLocale === 'en' ? 'selected' : '' ?>><?= esc(lang('Admin.form_locale_en')) ?></option>
-                </select>
-            <?php endif; ?>
-            <div class="form-text"><?= esc(lang('Admin.help_project_locale')) ?></div>
+            <?= view('admin/partials/record_form_locale', [
+                'locale'  => $ppLocale,
+                'isEdit'  => $isEdit,
+                'fieldId' => 'pp-locale',
+            ]) ?>
         </div>
         <?php if ($canUseAdvancedHtml) : ?>
         <div class="col-md-6">

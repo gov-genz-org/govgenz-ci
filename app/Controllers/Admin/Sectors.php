@@ -14,8 +14,34 @@ class Sectors extends BaseController
 {
     public function index()
     {
+        $model = model(SectorModel::class);
+
+        $activeRaw = $this->request->getGet('active');
+        $filterActive = 'all';
+        if ($activeRaw === '1' || $activeRaw === 1) {
+            $filterActive = '1';
+            $model = $model->where('is_active', 1);
+        } elseif ($activeRaw === '0' || $activeRaw === 0) {
+            $filterActive = '0';
+            $model = $model->where('is_active', 0);
+        }
+
+        $searchQuery = trim((string) $this->request->getGet('q'));
+        if ($searchQuery !== '') {
+            if (mb_strlen($searchQuery) > 120) {
+                $searchQuery = mb_substr($searchQuery, 0, 120);
+            }
+            $model = $model->groupStart()
+                ->like('code', $searchQuery)
+                ->orLike('label_fr', $searchQuery)
+                ->orLike('label_en', $searchQuery)
+                ->orLike('code_fr', $searchQuery)
+                ->orLike('code_en', $searchQuery)
+                ->groupEnd();
+        }
+
         $list = $this->adminPaginatedList(
-            model(SectorModel::class),
+            $model,
             [
                 'code'          => 'code',
                 'label_fr'      => 'label_fr',
@@ -25,7 +51,7 @@ class Sectors extends BaseController
             ],
             'sort_order',
             'asc',
-            [],
+            ['active', 'q'],
             null,
             'code',
             'ASC',
@@ -34,10 +60,12 @@ class Sectors extends BaseController
         return view('admin/layout', [
             'title' => 'Secteurs',
             'main'  => view('admin/sectors/index', [
-                'rows'  => $list['rows'],
-                'pager' => $list['pager'],
-                'sort'  => $list['sort'],
-                'dir'   => $list['dir'],
+                'rows'         => $list['rows'],
+                'pager'        => $list['pager'],
+                'sort'         => $list['sort'],
+                'dir'          => $list['dir'],
+                'filterActive' => $filterActive,
+                'searchQuery'  => $searchQuery,
             ]),
         ]);
     }

@@ -87,6 +87,12 @@ class Filters extends BaseFilters
                 'except' => [
                     'admin/pages/preview-draft',
                     'admin/pages/preview-draft/*',
+                    'admin/position-items/preview-draft',
+                    'admin/position-items/preview-draft/*',
+                    'admin/project-projects/preview-draft',
+                    'admin/project-projects/preview-draft/*',
+                    'admin/posts/preview-draft',
+                    'admin/posts/preview-draft/*',
                     // Filtre AJAX liste projets (lecture seule) — évite 403 si jeton HTML périmé.
                     'projects/filter',
                     'filter',

@@ -62,6 +62,9 @@ helper('admin');
         }
         $otherLoc              = $loc === 'fr' ? 'en' : 'fr';
         $duplicateTradDisabled = $tgrp !== '' && ! empty($translationLocalesByGroup[$tgrp][$otherLoc]);
+        $previewUrl = (($post['status'] ?? '') === 'published' && ($post['slug'] ?? '') !== '')
+            ? admin_public_press_url((string) $post['slug'], $loc)
+            : null;
         ?>
         <tr>
             <td><code class="small"><?= esc(strtoupper((string) ($post['locale'] ?? 'fr'))) ?></code></td>
@@ -75,19 +78,15 @@ helper('admin');
                 <?php endif; ?>
             </td>
             <td class="small text-nowrap"><?= admin_format_datetime($post['published_at'] ?? null) ?></td>
-            <td class="text-end text-nowrap">
-                <?php if (($post['status'] ?? '') === 'published') : ?>
-                    <a href="<?= site_url('press/' . $post['slug']) ?>" class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener"><?= esc(lang('Admin.action_view')) ?></a>
-                <?php endif; ?>
-                <a href="<?= site_url('admin/posts/edit/' . $post['id']) ?>" class="btn btn-outline-secondary btn-sm"><?= esc(lang('Admin.action_edit')) ?></a>
-                <form action="<?= site_url('admin/posts/duplicate/' . $post['id']) ?>" method="post" class="d-inline">
-                    <?= csrf_field() ?>
-                    <button type="submit" class="btn btn-outline-primary btn-sm" <?= $duplicateTradDisabled ? 'disabled title="' . esc(lang('Admin.tooltip_duplicate_trad_disabled'), 'attr') . '"' : '' ?>><?= esc(lang('Admin.action_duplicate_trad')) ?></button>
-                </form>
-                <form action="<?= site_url('admin/posts/delete/' . $post['id']) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="<?= esc(lang('Admin.confirm_delete_post'), 'attr') ?>">
-                    <?= csrf_field() ?>
-                    <button type="submit" class="btn btn-outline-danger btn-sm"><?= esc(lang('Admin.action_delete')) ?></button>
-                </form>
+            <td>
+                <?= view('admin/partials/record_list_row_actions', [
+                    'previewUrl'            => $previewUrl,
+                    'editUrl'               => site_url('admin/posts/edit/' . $post['id']),
+                    'duplicateUrl'          => site_url('admin/posts/duplicate/' . $post['id']),
+                    'deleteUrl'             => site_url('admin/posts/delete/' . $post['id']),
+                    'deleteConfirmMessage'  => lang('Admin.confirm_delete_post'),
+                    'duplicateTradDisabled' => $duplicateTradDisabled,
+                ], ['saveData' => false]) ?>
             </td>
         </tr>
     <?php endforeach; ?>

@@ -22,7 +22,7 @@ $active = old('is_active', $isEdit ? (string) ((int) ($sector['is_active'] ?? 1)
 <h1 class="h3 mb-1"><?= esc($isEdit ? lang('Admin.form_sector_edit') : lang('Admin.form_sector_new')) ?></h1>
 <p class="text-muted small mb-3"><?= esc(lang('Admin.help_sectors_form')) ?></p>
 
-<form method="post" action="<?= esc($action, 'attr') ?>" class="border rounded bg-white shadow-sm p-3 p-md-4" accept-charset="UTF-8">
+<form method="post" action="<?= esc($action, 'attr') ?>" class="admin-editor-form border rounded bg-white shadow-sm p-3 p-md-4" accept-charset="UTF-8">
     <?= csrf_field() ?>
 
     <div class="row g-3">

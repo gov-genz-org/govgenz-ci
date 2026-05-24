@@ -75,7 +75,7 @@ class Pages extends BaseController
 
     public function store(): ResponseInterface
     {
-        $rules = $this->rules();
+        $rules = $this->rules(false);
         if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
@@ -152,13 +152,13 @@ class Pages extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        $rules = $this->rules();
+        $rules = $this->rules(true);
         if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
         $slug   = LocaleSlug::normalizeSlug($this->request->getPost('slug'));
-        $locale = LocaleSlug::normalizeLocale($this->request->getPost('locale'));
+        $locale = LocaleSlug::normalizeLocale((string) ($existing['locale'] ?? 'fr'));
         $other  = $model->where('slug', $slug)->where('locale', $locale)->where('id !=', $id)->first();
         if ($other !== null) {
             return redirect()->back()->withInput()->with('error', lang('Admin.error_slug_locale_taken'));
@@ -276,11 +276,10 @@ class Pages extends BaseController
     /**
      * @return array<string, string>
      */
-    private function rules(): array
+    private function rules(bool $isEdit = false): array
     {
-        return [
+        $rules = [
             'slug'               => 'required|regex_match[/^[a-z0-9\-]+$/]|max_length[190]',
-            'locale'             => 'required|in_list[fr,en]',
             'translation_group'  => 'permit_empty|max_length[64]',
             'title'              => 'required|max_length[255]',
             'content_mode'       => 'required|in_list[html,blocks]',
@@ -295,14 +294,24 @@ class Pages extends BaseController
             'hero_image_id'    => 'permit_empty|integer',
             'hero_image_alt'   => 'permit_empty|max_length[255]',
         ];
+        if (! $isEdit) {
+            $rules['locale'] = 'required|in_list[fr,en]';
+        }
+
+        return $rules;
     }
 
     /**
-     * @return array{contentMode: string, blocksForForm: list<array<string, mixed>>}
+     * @return array{
+     *   contentMode: string,
+     *   blocksForForm: list<array<string, mixed>>,
+     *   publicPreviewUrl: ?string,
+     *   translationPartnerNav: array{editUrl: string, publicUrl: ?string, viewLabel: string, editLabel: string}|null
+     * }
      */
     private function pageFormViewExtras(?array $page): array
     {
-        helper(['cms']);
+        helper(['cms', 'admin']);
 
         $contentMode = old('content_mode', $page !== null ? ($page['content_mode'] ?? 'html') : 'html');
         if (! in_array($contentMode, ['html', 'blocks'], true)) {
@@ -311,25 +320,34 @@ class Pages extends BaseController
 
         $blocksOld = old('blocks');
         if (is_array($blocksOld)) {
-            return [
-                'contentMode'     => $contentMode,
-                'blocksForForm'   => array_values($blocksOld),
-            ];
+            $blocksForForm = array_values($blocksOld);
+        } elseif ($page !== null && ($page['content_mode'] ?? '') === 'blocks' && ! empty($page['body_blocks'])) {
+            $decoded = json_decode((string) $page['body_blocks'], true);
+            $blocksForForm = is_array($decoded) && $decoded !== [] ? array_values($decoded) : [];
+        } else {
+            $blocksForForm = [];
         }
 
-        if ($page !== null && ($page['content_mode'] ?? '') === 'blocks' && ! empty($page['body_blocks'])) {
-            $decoded = json_decode((string) $page['body_blocks'], true);
-            if (is_array($decoded) && $decoded !== []) {
-                return [
-                    'contentMode'   => $contentMode,
-                    'blocksForForm' => array_values($decoded),
-                ];
-            }
+        $publicPreviewUrl = null;
+        if ($page !== null
+            && ($page['status'] ?? '') === 'published'
+            && (string) ($page['slug'] ?? '') !== ''
+        ) {
+            $publicPreviewUrl = admin_public_page_url(
+                (string) $page['slug'],
+                (string) ($page['locale'] ?? 'fr'),
+            );
         }
 
         return [
-            'contentMode'   => $contentMode,
-            'blocksForForm' => [],
+            'contentMode'           => $contentMode,
+            'blocksForForm'         => $blocksForForm,
+            'publicPreviewUrl'      => $publicPreviewUrl,
+            'translationPartnerNav' => admin_translation_partner_nav(
+                $page,
+                CmsPageModel::class,
+                'admin/pages',
+            ),
         ];
     }
 

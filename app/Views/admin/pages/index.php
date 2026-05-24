@@ -51,7 +51,6 @@ helper('admin');
         <th><?= admin_list_sort_th('slug', lang('Admin.col_slug'), $sort, $dir) ?></th>
         <th><?= admin_list_sort_th('title', lang('Admin.col_title'), $sort, $dir) ?></th>
         <th><?= admin_list_sort_th('status', lang('Admin.col_status'), $sort, $dir) ?></th>
-        <th><?= esc(lang('Admin.col_site')) ?></th>
         <th class="text-end"><?= esc(lang('Admin.col_actions')) ?></th>
     </tr></thead>
     <tbody>
@@ -77,22 +76,14 @@ helper('admin');
                 <?php endif; ?>
             </td>
             <td>
-                <?php if ($pubUrl !== null) : ?>
-                    <a href="<?= esc($pubUrl) ?>" class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener"><?= esc(lang('Admin.action_view')) ?></a>
-                <?php else : ?>
-                    <span class="text-muted small">—</span>
-                <?php endif; ?>
-            </td>
-            <td class="text-end text-nowrap">
-                <a href="<?= site_url('admin/pages/edit/' . $p['id']) ?>" class="btn btn-outline-secondary btn-sm"><?= esc(lang('Admin.action_edit')) ?></a>
-                <form action="<?= site_url('admin/pages/duplicate/' . $p['id']) ?>" method="post" class="d-inline">
-                    <?= csrf_field() ?>
-                    <button type="submit" class="btn btn-outline-primary btn-sm" <?= $duplicateTradDisabled ? 'disabled title="' . esc(lang('Admin.tooltip_duplicate_trad_disabled'), 'attr') . '"' : '' ?>><?= esc(lang('Admin.action_duplicate_trad')) ?></button>
-                </form>
-                <form action="<?= site_url('admin/pages/delete/' . $p['id']) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="<?= esc(lang('Admin.confirm_delete_page'), 'attr') ?>">
-                    <?= csrf_field() ?>
-                    <button type="submit" class="btn btn-outline-danger btn-sm"><?= esc(lang('Admin.action_delete')) ?></button>
-                </form>
+                <?= view('admin/partials/record_list_row_actions', [
+                    'previewUrl'            => $pubUrl,
+                    'editUrl'               => site_url('admin/pages/edit/' . $p['id']),
+                    'duplicateUrl'          => site_url('admin/pages/duplicate/' . $p['id']),
+                    'deleteUrl'             => site_url('admin/pages/delete/' . $p['id']),
+                    'deleteConfirmMessage'  => lang('Admin.confirm_delete_page'),
+                    'duplicateTradDisabled' => $duplicateTradDisabled,
+                ], ['saveData' => false]) ?>
             </td>
         </tr>
     <?php endforeach; ?>

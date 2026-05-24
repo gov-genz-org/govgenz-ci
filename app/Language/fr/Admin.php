@@ -55,10 +55,10 @@ return [
     'nav_sectors'                => 'Secteurs',
     'nav_section_projects'       => 'Projets',
     'nav_project_contributions'  => 'Financements projets',
-    'nav_project_projects'       => 'Projets programme',
+    'nav_project_projects'       => 'Projets',
     'nav_exchange_rates'         => 'Taux de change',
     'nav_section_positions'      => 'Positions',
-    'nav_position_items'         => 'Positions programme',
+    'nav_position_items'         => 'Positions',
     'nav_section_admin'          => 'Administration',
     'nav_login_events'           => 'Journal connexion',
     'nav_staff_users'            => 'Équipe',
@@ -134,8 +134,8 @@ return [
     'title_media'                   => 'Médiathèque',
     'title_volunteers'              => 'Candidatures volontaires',
     'title_sectors'                 => 'Secteurs',
-    'title_projects_program'        => 'Projets (programme)',
-    'title_positions_program'       => 'Positions (programme)',
+    'title_projects'                  => 'Projets',
+    'title_positions'                 => 'Positions',
     'title_contributions'           => 'Propositions de financement',
     'title_exchange_rates'          => 'Taux de change (fiches projet)',
     'title_login_events'            => 'Journal de connexion',
@@ -165,7 +165,7 @@ return [
     'auth_invite_setup_title'       => 'Activer votre compte',
 
     // Aide formulaires (extraits)
-    'help_project_locale'           => 'Une fiche par langue. Pour la version anglaise, utilisez « Dupliquer trad » dans la liste des projets.',
+    'help_record_locale' => 'Une fiche par langue. En édition, basculez avec les boutons au-dessus ; pour créer l’autre langue, utilisez « Dupliquer trad » dans la liste.',
     'help_page_translation_group'   => 'Même identifiant pour lier les versions FR/EN d’une même page. Optionnel : un groupe est auto-attribué à la création, et le bouton « Dupliquer trad » le reprend automatiquement.',
     'help_pages_intro'              => 'Pages fixes du site (accueil, à propos, contact…). Seules les URL connues du routage ont un lien « Site ».',
     'help_sectors_form'             => 'FR = texte affiché quand la langue du site est le français ; EN = texte when the site locale is English (including /en/…). Le code sert aux formulaires et à la base (volontaires, projets) : il est figé après création. Les codes filtre FR / EN (courts) s’affichent sur les pastilles « Secteur » de la liste projets selon la langue du site ; les libellés longs restent pour les tuiles et cartes.',
@@ -211,8 +211,6 @@ return [
     'action_view'              => 'Voir',
     'action_view_public_list_fr' => 'Liste publique (FR)',
     'action_view_public_list_en' => 'Liste publique (EN)',
-    'action_view_list_fr'      => 'Liste FR',
-    'action_view_list_en'      => 'Liste EN',
     'action_cms_pages'         => 'Pages CMS',
     'action_save'              => 'Enregistrer',
     'action_create'            => 'Créer',
@@ -224,6 +222,7 @@ return [
 
     // Filtres listes
     'filter_search'     => 'Recherche',
+    'filter_active'     => 'Actif',
     'filter_status'     => 'Statut',
     'filter_locale'     => 'Langue',
     'filter_all'        => 'Toutes',
@@ -233,6 +232,8 @@ return [
     'filter_pub_state'  => 'Publication',
     'filter_business_status' => 'Statut métier',
     'placeholder_title_slug' => 'Titre ou slug…',
+    'placeholder_sector_search' => 'Code ou libellé…',
+    'placeholder_menu_search' => 'Libellé, cible ou surlignage…',
     'placeholder_search'     => 'Rechercher…',
     'placeholder_media_grid' => 'Tapez pour réduire la grille…',
 
@@ -242,8 +243,9 @@ return [
     'empty_open_media'  => 'Ouvrir la médiathèque',
 
     // Titres layout (contrôleurs)
-    'title_site_menu_create' => 'Menu — nouvelle entrée',
-    'title_site_menu_edit'   => 'Menu — éditer',
+    'title_site_menu'            => 'Menu du site',
+    'title_site_menu_create'     => 'Menu — nouvelle entrée',
+    'title_site_menu_edit'       => 'Menu — éditer',
 
     // Validation menu du site
     'error_sitemenu_label_required'   => 'Le libellé est obligatoire.',
@@ -269,8 +271,8 @@ return [
     // Notes contextuelles (HTML contrôlé — affichage sans esc dans les partials notes)
     'note_pages_footer_title' => 'Pied de page (colonnes)',
     'note_pages_footer_body'  => ' : pour les modifier depuis l’admin, créez une page <strong>publiée</strong> avec le slug exact <code>site-footer</code> (une variante FR et une EN). Son corps remplace les trois colonnes du footer&nbsp;; la route publique <code>/site-footer</code> est désactivée. La marque (logo, devise, ligne légale) reste dans le gabarit tant que vous ne demandez pas de les sortir aussi en CMS.',
-    'note_projects_program_body' => '<p class="mb-2"><strong>Fiches projet</strong> (ci‑dessous) : contenu dynamique aligné sur <code>site_govgenz/projects-govgenz</code>, tables <code>project_*</code>.</p><p class="mb-2"><strong>Bandeau de la liste publique</strong> <code>/projects</code> (titre, chapô, méta) : ce n’est pas ce tableau — il est alimenté par des <strong>pages CMS</strong> dont les slugs sont fixés dans le code :</p><ul class="mb-2 ps-3"><li>FR : <code>projets-programme</code></li><li>EN : <code>projects-program</code></li></ul><p class="mb-2 text-muted">Même <strong>groupe de traduction</strong> sur les deux lignes CMS. Le corps HTML de ces pages n’apparaît pas sur la liste ; seuls les champs « hero » sont utilisés.</p>',
-    'note_positions_program_intro' => 'Fiches dynamiques sur /positions. Bandeau liste : pages CMS positions-programme (FR) et positions-program (EN).',
+    'note_record_list_cms_slugs_projects'  => 'Bandeau de la liste publique&nbsp;: créer deux <strong>pages CMS publiées</strong> avec les slugs <code>projets-programme</code> (FR) et <code>projects-program</code> (EN), liées par le même groupe de traduction (champs «&nbsp;hero&nbsp;» uniquement).',
+    'note_record_list_cms_slugs_positions' => 'Bandeau de la liste publique&nbsp;: créer deux <strong>pages CMS publiées</strong> avec les slugs <code>positions-programme</code> (FR) et <code>positions-program</code> (EN), liées par le même groupe de traduction (champs «&nbsp;hero&nbsp;» uniquement).',
 
     // Formulaire projet (fiche)
     'form_pp_intro' => 'Remplissez la carte (liste + en-tête), puis les sections du détail avec les boutons « + Section », « + Budget », etc. Aucune compétence technique requise.',
@@ -514,6 +516,9 @@ return [
     'help_page_preview_saved' => '<strong>Aperçu version enregistrée</strong> — ce qui est déjà en base (utile après un enregistrement).',
     'action_preview_draft' => 'Aperçu sans enregistrer',
     'action_preview_saved' => 'Aperçu version enregistrée',
+    'preview_title_prefix' => '(Prévisualisation) ',
+    'ribbon_record_preview_saved' => 'Aperçu interne — dernière version enregistrée (pas les modifications non sauvegardées dans ce formulaire).',
+    'ribbon_record_preview_draft' => 'Formulaire non enregistré — cet onglet reflète le contenu actuel de l’éditeur. Cliquez sur « Enregistrer » pour garder ces changements.',
     'alert_page_projects_program_title' => 'Page « programme projets » :',
     'alert_page_projects_program_body' => 'ce slug est celui attendu par le site pour le bandeau de la <strong>liste</strong> des projets (<code>/projects</code> ou <code>/en/projects</code> selon la config), pas l’URL de cette page CMS.',
     'alert_page_positions_program_title' => 'Page « programme positions » :',
@@ -569,6 +574,8 @@ return [
     'dash_shortcut_contributions' => 'Propositions à valider',
 
     'help_posts_intro' => 'Communiqués et articles affichés sous <strong>/press</strong>.',
+    'help_positions_intro' => 'Fiches affichées sur le site positions (volontariat, stages, emploi…).',
+    'help_projects_intro' => 'Fiches affichées sur le microsite projets (grille, filtres, financement).',
     'empty_no_posts' => 'Aucun article pour ce filtre.',
     'action_write_post' => 'Rédiger un article',
     'empty_media_for_posts' => 'Médiathèque (illustrations)',
@@ -658,7 +665,7 @@ return [
     'answer_yes' => 'Oui',
     'answer_no' => 'Non',
 
-    'help_sitemenu_index' => 'Liens affichés dans l’en-tête du site public. Cliquez sur un en-tête de colonne pour trier.',
+    'help_sitemenu_intro' => 'Liens affichés dans l’en-tête du site public (FR et EN).',
     'empty_no_menu' => 'Aucune entrée. Exécutez les migrations ou ajoutez un lien.',
     'col_target' => 'Cible',
     'col_highlight' => 'Surlignage',
@@ -666,7 +673,7 @@ return [
     'ui_yes' => 'Oui',
     'ui_no' => 'Non',
 
-    'help_sectors_index' => 'Libellés <strong>français</strong> et <strong>anglais</strong> (site public + formulaire Rejoindre + projets). Dans le CMS, grille dynamique : <code>data-gg-cms="sectors-tile-grid"</code> (EN) ou <code>data-gg-cms="secteurs-tile-grid"</code> (FR) — même rendu.',
+    'help_sectors_intro' => 'Libellés <strong>français</strong> et <strong>anglais</strong> (site public + formulaire Rejoindre + projets). Dans le CMS, grille dynamique : <code>data-gg-cms="sectors-tile-grid"</code> (EN) ou <code>data-gg-cms="secteurs-tile-grid"</code> (FR) — même rendu.',
     'empty_no_sectors' => 'Aucun secteur — exécutez les migrations ou créez une entrée.',
     'col_filter_code_fr' => 'Code filtre FR',
     'col_filter_code_en' => 'Code filtre EN',

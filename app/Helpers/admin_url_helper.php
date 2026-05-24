@@ -65,12 +65,12 @@ if (! function_exists('admin_public_press_url')) {
     }
 }
 
-if (! function_exists('admin_public_projects_program_list_url')) {
+if (! function_exists('admin_public_projects_list_url')) {
     /**
      * URL publique de la liste des projets (grille / filtres), pas la page CMS « hero ».
      * Préfixe /projects sur le site principal ; vhost projets (sans préfixe) si .env configuré.
      */
-    function admin_public_projects_program_list_url(?string $locale = null): string
+    function admin_public_projects_list_url(?string $locale = null): string
     {
         helper('url');
         $locale = $locale === 'en' ? 'en' : 'fr';
@@ -99,8 +99,8 @@ if (! function_exists('admin_public_projects_program_list_url')) {
     }
 }
 
-if (! function_exists('admin_public_positions_program_list_url')) {
-    function admin_public_positions_program_list_url(?string $locale = null): string
+if (! function_exists('admin_public_positions_list_url')) {
+    function admin_public_positions_list_url(?string $locale = null): string
     {
         helper('url');
         $locale = $locale === 'en' ? 'en' : 'fr';
@@ -142,7 +142,7 @@ if (! function_exists('admin_public_project_url')) {
         $locale = $locale === 'en' ? 'en' : 'fr';
         $slug   = strtolower(trim($slug, '/'));
         if ($slug === '') {
-            return admin_public_projects_program_list_url($locale);
+            return admin_public_projects_list_url($locale);
         }
 
         if (\App\Libraries\SiteContext::projectsPathPrefixEnabled()) {
@@ -183,7 +183,7 @@ if (! function_exists('admin_public_position_url')) {
         $locale = $locale === 'en' ? 'en' : 'fr';
         $slug   = strtolower(trim($slug, '/'));
         if ($slug === '') {
-            return admin_public_positions_program_list_url($locale);
+            return admin_public_positions_list_url($locale);
         }
 
         if (\App\Libraries\SiteContext::positionsPathPrefixEnabled()) {

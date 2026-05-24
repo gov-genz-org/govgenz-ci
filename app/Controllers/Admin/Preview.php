@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Libraries\AdminRecordPreview;
 use App\Libraries\CmsHeroPayload;
+use App\Libraries\LocaleSlug;
 use App\Libraries\CmsPageBodyNormalizer;
 use App\Libraries\PublicNav;
 use App\Libraries\SiteContext;
 use App\Models\CmsPageModel;
 use App\Models\CmsPostModel;
+use App\Models\PositionItemModel;
+use App\Models\ProjectProjectModel;
 use App\Models\SiteNavItemModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
@@ -143,7 +147,7 @@ class Preview extends BaseController
         $this->warmPreviewSiteContext($post);
 
         $title      = '(Brouillon) ' . ($post['title'] ?? 'Article');
-        $ribbonText = 'Brouillon — aperçu interne (article non publié ou non visible en /press).';
+        $ribbonText = lang('Admin.ribbon_record_preview_saved');
 
         return view('front/layout', [
             'title'         => $title,
@@ -151,5 +155,110 @@ class Preview extends BaseController
             'navActive'     => 'press',
             'previewRibbon' => $ribbonText,
         ]);
+    }
+
+    public function postDraft(int $id)
+    {
+        helper('admin');
+
+        $post = model(CmsPostModel::class)->find($id);
+        if ($post === null) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $mergedLocale = strtolower(trim((string) $this->request->getPost('locale')));
+        if (! in_array($mergedLocale, ['fr', 'en'], true)) {
+            $mergedLocale = (string) ($post['locale'] ?? 'fr');
+        }
+
+        $slugPost = LocaleSlug::normalizeSlug((string) $this->request->getPost('slug'));
+        if ($slugPost === '') {
+            $slugPost = (string) ($post['slug'] ?? '');
+        }
+
+        $status = (string) $this->request->getPost('status');
+        if (! in_array($status, ['draft', 'published'], true)) {
+            $status = (string) ($post['status'] ?? 'draft');
+        }
+
+        $merged = array_merge($post, [
+            'slug'             => $slugPost,
+            'locale'           => $mergedLocale,
+            'title'            => trim((string) $this->request->getPost('title')),
+            'excerpt'          => $this->request->getPost('excerpt') ?: null,
+            'body_html'        => (string) $this->request->getPost('body_html'),
+            'status'           => $status,
+            'meta_title'       => $this->request->getPost('meta_title') ?: null,
+            'meta_description' => $this->request->getPost('meta_description') ?: null,
+        ]);
+
+        $this->warmPreviewSiteContext($merged);
+
+        $title = lang('Admin.preview_title_prefix') . ($merged['title'] ?? 'Article');
+
+        return view('front/layout', [
+            'title'         => $title,
+            'main'          => view('front/press/show', ['post' => $merged]),
+            'navActive'     => 'press',
+            'previewRibbon' => lang('Admin.ribbon_record_preview_draft'),
+        ]);
+    }
+
+    public function position(int $id)
+    {
+        $item = model(PositionItemModel::class)->find($id);
+        if ($item === null) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $this->warmPreviewSiteContext($item);
+
+        return AdminRecordPreview::renderPosition($item, lang('Admin.ribbon_record_preview_saved'));
+    }
+
+    public function positionDraft(int $id)
+    {
+        $item = model(PositionItemModel::class)->find($id);
+        if ($item === null) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $merged = AdminRecordPreview::mergePositionFromPost($item, $this->request);
+        if ($merged === null) {
+            return redirect()->back()->with('error', lang('Admin.error_blocks_mode_empty'));
+        }
+
+        $this->warmPreviewSiteContext($merged);
+
+        return AdminRecordPreview::renderPosition($merged, lang('Admin.ribbon_record_preview_draft'));
+    }
+
+    public function project(int $id)
+    {
+        $project = model(ProjectProjectModel::class)->find($id);
+        if ($project === null) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $this->warmPreviewSiteContext($project);
+
+        return AdminRecordPreview::renderProject($project, lang('Admin.ribbon_record_preview_saved'));
+    }
+
+    public function projectDraft(int $id)
+    {
+        $project = model(ProjectProjectModel::class)->find($id);
+        if ($project === null) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $merged = AdminRecordPreview::mergeProjectFromPost($project, $this->request);
+        if ($merged === null) {
+            return redirect()->back()->with('error', lang('Admin.error_blocks_mode_empty'));
+        }
+
+        $this->warmPreviewSiteContext($merged);
+
+        return AdminRecordPreview::renderProject($merged, lang('Admin.ribbon_record_preview_draft'));
     }
 }
