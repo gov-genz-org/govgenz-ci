@@ -13,6 +13,7 @@ class App extends BaseConfig
         $this->applyProjectsSubdomainBaseUrl();
         $this->applyPositionsSubdomainBaseUrl();
         $this->applyTimezoneFromEnv();
+        $this->applyAllowedHostnamesFromBaseUrl();
     }
 
     private function applyTimezoneFromEnv(): void
@@ -21,6 +22,36 @@ class App extends BaseConfig
         if ($tz !== '') {
             $this->appTimezone = $tz;
         }
+    }
+
+    /**
+     * Autorise www et sans-www pour la même baseURL (évite « Disallowed URL » en prod).
+     */
+    private function applyAllowedHostnamesFromBaseUrl(): void
+    {
+        $host = strtolower((string) parse_url($this->baseURL, PHP_URL_HOST));
+        if ($host === '') {
+            return;
+        }
+
+        $extra = [];
+        if (str_starts_with($host, 'www.')) {
+            $extra[] = substr($host, 4);
+        } else {
+            $extra[] = 'www.' . $host;
+        }
+
+        $fromEnv = env('app.allowedHostnames');
+        if (is_string($fromEnv) && trim($fromEnv) !== '') {
+            foreach (preg_split('/\s*,\s*/', trim($fromEnv)) ?: [] as $h) {
+                $h = strtolower(trim($h));
+                if ($h !== '') {
+                    $extra[] = $h;
+                }
+            }
+        }
+
+        $this->allowedHostnames = array_values(array_unique(array_merge($this->allowedHostnames, $extra)));
     }
 
     /**
