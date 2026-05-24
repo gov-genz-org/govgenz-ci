@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
-# Prochain tag semver vMAJOR.MINOR.PATCH (patch +1, ou v1.0.0 si aucun tag).
-# Usage : TAG=$(./deploy/next-release-tag.sh) && echo "$TAG"
+# Prochain tag semver vMAJOR.MINOR.PATCH.
+#   minor (défaut) : minor +1, patch → 0  (ex. v1.0.0 → v1.1.0)
+#   patch          : patch +1             (ex. v1.1.0 → v1.1.1)
+# Usage : TAG=$(./deploy/next-release-tag.sh [minor|patch]) && echo "$TAG"
 set -euo pipefail
+
+mode="${1:-minor}"
+if [[ "$mode" != "minor" && "$mode" != "patch" ]]; then
+  echo "Usage: $0 [minor|patch]" >&2
+  exit 1
+fi
 
 latest=$(
   git tag -l 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname 2>/dev/null | head -n1 || true
@@ -18,4 +26,8 @@ major=${major:-0}
 minor=${minor:-0}
 patch=${patch:-0}
 
-echo "v${major}.${minor}.$((patch + 1))"
+if [[ "$mode" == "patch" ]]; then
+  echo "v${major}.${minor}.$((patch + 1))"
+else
+  echo "v${major}.$((minor + 1)).0"
+fi
