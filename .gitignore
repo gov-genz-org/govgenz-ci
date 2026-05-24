@@ -133,6 +133,9 @@ _modules/*
 #-------------------------
 /public/uploads/cms/*
 !/public/uploads/cms/.htaccess
+/uploads/cms/*
+!/uploads/cms/.htaccess
+!/uploads/cms/index.html
 env.production.example
 env.local
 .ftp-deploy-sync*.json

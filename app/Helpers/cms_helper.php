@@ -111,7 +111,7 @@ if (! function_exists('cms_media_public_url')) {
             return null;
         }
 
-        return base_url('uploads/cms/' . $fn);
+        return \App\Libraries\CmsMediaStorage::publicUrl($fn);
     }
 }
 

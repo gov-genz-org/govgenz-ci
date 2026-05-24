@@ -41,7 +41,7 @@ helper('admin');
     <div id="media-library-grid" class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
         <?php foreach ($items as $row) :
             $mime = (string) ($row['mime_type'] ?? '');
-            $url  = base_url('uploads/cms/' . ($row['stored_filename'] ?? ''));
+            $url  = \App\Libraries\CmsMediaStorage::publicUrl((string) ($row['stored_filename'] ?? ''));
             $name = (string) ($row['original_name'] ?? '');
             $needle = mb_strtolower($name . ' ' . $mime);
             $isImg = str_starts_with($mime, 'image/');

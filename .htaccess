@@ -13,6 +13,10 @@ Options -Indexes
 	# Statiques toujours sous public/
 	RewriteRule ^assets/(.*)$ public/assets/$1 [L]
 	RewriteRule ^js/(.*)$ public/js/$1 [L]
+	# Médias CMS : d’abord {racine}/uploads/ (hors public/), sinon public/uploads/ (docroot = public/)
+	RewriteCond %{DOCUMENT_ROOT}/uploads/$1 -f [OR]
+	RewriteCond %{DOCUMENT_ROOT}/uploads/$1 -d
+	RewriteRule ^uploads/(.*)$ - [L]
 	RewriteRule ^uploads/(.*)$ public/uploads/$1 [L]
 	RewriteRule ^robots\.txt$ public/robots.txt [L]
 
