@@ -105,6 +105,11 @@ $routes->group('admin', ['filter' => 'authadmin'], static function ($routes) {
     $routes->get('pages/preview/(:num)', 'Admin\\Preview::page/$1');
     $routes->post('pages/preview-draft/(:num)', 'Admin\\Preview::pageDraft/$1');
     $routes->get('posts/preview/(:num)', 'Admin\\Preview::post/$1');
+    $routes->post('posts/preview-draft/(:num)', 'Admin\\Preview::postDraft/$1');
+    $routes->get('position-items/preview/(:num)', 'Admin\\Preview::position/$1');
+    $routes->post('position-items/preview-draft/(:num)', 'Admin\\Preview::positionDraft/$1');
+    $routes->get('project-projects/preview/(:num)', 'Admin\\Preview::project/$1');
+    $routes->post('project-projects/preview-draft/(:num)', 'Admin\\Preview::projectDraft/$1');
 
     $routes->get('cms-guide', 'Admin\\CmsComponentsGuide::index');
 

@@ -12,8 +12,39 @@ class SiteMenu extends BaseController
 {
     public function index()
     {
+        $model = model(SiteNavItemModel::class);
+
+        $localeRaw = $this->request->getGet('loc');
+        $filterLocale = 'all';
+        if ($localeRaw === 'fr' || $localeRaw === 'en') {
+            $filterLocale = $localeRaw;
+            $model = $model->where('locale', $localeRaw);
+        }
+
+        $activeRaw = $this->request->getGet('active');
+        $filterActive = 'all';
+        if ($activeRaw === '1' || $activeRaw === 1) {
+            $filterActive = '1';
+            $model = $model->where('is_active', 1);
+        } elseif ($activeRaw === '0' || $activeRaw === 0) {
+            $filterActive = '0';
+            $model = $model->where('is_active', 0);
+        }
+
+        $searchQuery = trim((string) $this->request->getGet('q'));
+        if ($searchQuery !== '') {
+            if (mb_strlen($searchQuery) > 120) {
+                $searchQuery = mb_substr($searchQuery, 0, 120);
+            }
+            $model = $model->groupStart()
+                ->like('label', $searchQuery)
+                ->orLike('match_key', $searchQuery)
+                ->orLike('href_target', $searchQuery)
+                ->groupEnd();
+        }
+
         $list = $this->adminPaginatedList(
-            model(SiteNavItemModel::class),
+            $model,
             [
                 'locale'     => 'locale',
                 'sort_order' => 'sort_order',
@@ -23,7 +54,7 @@ class SiteMenu extends BaseController
             ],
             'locale',
             'asc',
-            [],
+            ['loc', 'active', 'q'],
             null,
             'sort_order',
             'ASC',
@@ -32,10 +63,13 @@ class SiteMenu extends BaseController
         return view('admin/layout', [
             'title' => lang('Admin.nav_site_menu'),
             'main'  => view('admin/site_menu/index', [
-                'items' => $list['rows'],
-                'pager' => $list['pager'],
-                'sort'  => $list['sort'],
-                'dir'   => $list['dir'],
+                'items'        => $list['rows'],
+                'pager'        => $list['pager'],
+                'sort'         => $list['sort'],
+                'dir'          => $list['dir'],
+                'filterLocale' => $filterLocale,
+                'filterActive' => $filterActive,
+                'searchQuery'  => $searchQuery,
             ]),
         ]);
     }

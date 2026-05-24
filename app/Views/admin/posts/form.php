@@ -4,52 +4,57 @@ declare(strict_types=1);
 
 helper(['admin']);
 
-$action = $post
-    ? site_url('admin/posts/update/' . $post['id'])
+/** @var array<string, mixed>|null $post */
+/** @var string|null $publicPreviewUrl */
+/** @var array{editUrl: string, publicUrl: ?string, viewLabel: string, editLabel: string}|null $translationPartnerNav */
+
+$publicPreviewUrl = $publicPreviewUrl ?? null;
+$translationPartnerNav = $translationPartnerNav ?? null;
+$isEdit = $post !== null;
+
+$action = $isEdit
+    ? site_url('admin/posts/update/' . (int) ($post['id'] ?? 0))
     : site_url('admin/posts/store');
 $paRaw = old('published_at', $post !== null ? ($post['published_at'] ?? '') : null);
 $paFromForm = is_string($paRaw) && str_contains($paRaw, 'T');
 $paValue = $paFromForm ? $paRaw : '';
 $paUtcAttr = $paFromForm ? '' : admin_datetime_input_utc_attr($paRaw);
-
-$previewUrl = null;
-if ($post !== null && ($post['status'] ?? '') === 'published' && ($post['slug'] ?? '') !== '') {
-    $previewUrl = admin_public_press_url((string) ($post['slug'] ?? ''), (string) ($post['locale'] ?? 'fr'));
-}
 ?>
-<h1 class="h3 mb-1"><?= esc($post ? lang('Admin.form_post_edit') : lang('Admin.form_post_new')) ?></h1>
+<h1 class="h3 mb-1"><?= esc($isEdit ? lang('Admin.form_post_edit') : lang('Admin.form_post_new')) ?></h1>
 <p class="text-muted small mb-3"><?= lang('Admin.help_post_published_only') ?></p>
 
-<?php if ($previewUrl !== null) : ?>
-    <div class="alert alert-light border py-2 small mb-3">
-        <strong><?= esc(lang('Admin.label_public_preview')) ?></strong>
-        <a href="<?= esc($previewUrl) ?>" target="_blank" rel="noopener" class="ms-1"><?= esc($previewUrl) ?></a>
-    </div>
-<?php endif; ?>
+<?= view('admin/partials/record_form_nav', [
+    'publicPreviewUrl'      => $publicPreviewUrl,
+    'translationPartnerNav' => $translationPartnerNav,
+]) ?>
 
-<?php if ($post !== null) : ?>
-    <div class="alert alert-secondary border py-2 small mb-3 d-flex flex-wrap align-items-center gap-2 justify-content-between">
-        <span class="mb-0"><strong><?= esc(lang('Admin.label_draft_preview')) ?></strong> <?= esc(lang('Admin.label_draft_preview_help')) ?></span>
-        <a href="<?= site_url('admin/posts/preview/' . (int) $post['id']) ?>" target="_blank" rel="noopener" class="btn btn-sm btn-outline-dark flex-shrink-0"><?= esc(lang('Admin.action_open_preview')) ?></a>
-    </div>
-<?php endif; ?>
-
-<form action="<?= $action ?>" method="post" accept-charset="UTF-8" class="admin-editor-form">
+<form action="<?= $action ?>" method="post" accept-charset="UTF-8" class="admin-editor-form border rounded bg-white shadow-sm p-3 p-md-4">
     <?= csrf_field() ?>
+
+    <?php if ($isEdit) : ?>
+        <?= view('admin/partials/record_form_preview', [
+            'recordId'         => (int) ($post['id'] ?? 0),
+            'draftPreviewPath' => 'admin/posts/preview-draft',
+            'savedPreviewPath' => 'admin/posts/preview',
+        ]) ?>
+    <?php endif; ?>
+
     <div class="mb-3">
         <label class="form-label" for="slug"><?= esc(lang('Admin.form_label_slug')) ?></label>
         <input type="text" name="slug" id="slug" class="form-control" value="<?= esc(old('slug', $post !== null ? $post['slug'] : '')) ?>" required>
     </div>
     <div class="mb-3">
-        <?php $postLocale = old('locale', $post !== null ? (string) ($post['locale'] ?? 'fr') : 'fr'); ?>
-        <?php if (! in_array($postLocale, ['fr', 'en'], true)) {
+        <?php
+        $postLocale = old('locale', $post !== null ? (string) ($post['locale'] ?? 'fr') : 'fr');
+        if (! in_array($postLocale, ['fr', 'en'], true)) {
             $postLocale = 'fr';
-        } ?>
-        <label class="form-label" for="locale"><?= esc(lang('Admin.form_label_locale')) ?></label>
-        <select name="locale" id="locale" class="form-select" style="max-width:16rem">
-            <option value="fr" <?= $postLocale === 'fr' ? 'selected' : '' ?>><?= esc(lang('Admin.form_locale_fr_short')) ?></option>
-            <option value="en" <?= $postLocale === 'en' ? 'selected' : '' ?>><?= esc(lang('Admin.form_locale_en')) ?></option>
-        </select>
+        }
+        ?>
+        <?= view('admin/partials/record_form_locale', [
+            'locale'  => $postLocale,
+            'isEdit'  => $isEdit,
+            'fieldId' => 'locale',
+        ]) ?>
     </div>
     <div class="mb-3">
         <label class="form-label" for="translation_group"><?= esc(lang('Admin.form_label_translation_group')) ?></label>
@@ -90,10 +95,8 @@ if ($post !== null && ($post['status'] ?? '') === 'published' && ($post['slug'] 
         <textarea name="meta_description" id="meta_description" class="form-control" rows="2"><?= esc(old('meta_description', $post !== null ? ($post['meta_description'] ?? '') : '')) ?></textarea>
     </div>
 
-    <div class="admin-form-actions">
-        <div class="d-flex flex-wrap gap-2">
-            <button type="submit" class="btn btn-primary"><?= esc(lang('Admin.action_save')) ?></button>
-            <a href="<?= site_url('admin/posts') ?>" class="btn btn-outline-secondary"><?= esc(lang('Admin.action_cancel')) ?></a>
-        </div>
+    <div class="mt-4 d-flex flex-wrap gap-2">
+        <button type="submit" class="btn btn-primary"><?= esc(lang('Admin.action_save')) ?></button>
+        <a href="<?= site_url('admin/posts') ?>" class="btn btn-outline-secondary"><?= esc(lang('Admin.action_cancel')) ?></a>
     </div>
 </form>

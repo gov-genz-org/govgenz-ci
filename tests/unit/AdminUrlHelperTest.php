@@ -42,4 +42,18 @@ final class AdminUrlHelperTest extends CIUnitTestCase
     {
         $this->assertNull(admin_public_project_url(''));
     }
+
+    public function testAdminPublicProjectsListUrl(): void
+    {
+        $fr = admin_public_projects_list_url('fr');
+        $this->assertIsString($fr);
+        $this->assertStringContainsString('projects', $fr);
+    }
+
+    public function testAdminPublicPositionsListUrl(): void
+    {
+        $en = admin_public_positions_list_url('en');
+        $this->assertIsString($en);
+        $this->assertStringContainsString('en', $en);
+    }
 }
