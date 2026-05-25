@@ -351,6 +351,7 @@ return [
 
     // Blocs projet (builder + champs communs)
     'block_remove' => 'Retirer',
+    'block_drag_reorder' => 'Déplacer ce bloc',
     'block_remove_line' => 'Retirer cette ligne',
     'block_remove_kpi' => 'Retirer ce KPI',
     'block_remove_phase' => 'Retirer la phase',

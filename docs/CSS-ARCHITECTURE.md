@@ -42,6 +42,3 @@ Boutons template : scope `.ggz-public-theme .btn` (évite de casser Bootstrap en
 
 `site_govgenz/css/style.css` reste une **copie autonome** (HTML sans `#main-content`). Pour aligner une règle (ex. `.section__title`), modifier d’abord `govgenz-tokens.css` / `govgenz-template.css`, puis reporter si besoin dans `site_govgenz/css/style.css`.
 
-## Fichiers dépréciés
-
-- `ggz-project-cta-buttons.css` → `govgenz-components.css`

@@ -6,49 +6,13 @@ declare(strict_types=1);
 /** @var list<array<string, mixed>> $blocksForForm */
 /** @var bool $canUseAdvancedHtml */
 /** @var string $ppLocale */
-$canUseAdvancedHtml = $canUseAdvancedHtml ?? false;
-$ppLocale = in_array($ppLocale ?? 'fr', ['fr', 'en'], true) ? $ppLocale : 'fr';
-
-/**
- * @param array<string, mixed> $block
- */
-$mapBlockView = static function (array $block): string {
-    $t = (string) ($block['type'] ?? 'section_rich');
-
-    return match ($t) {
-        'note_panel' => 'admin/project_projects/blocks/note_panel',
-        'sources'    => 'admin/project_projects/blocks/sources',
-        'html'       => 'admin/project_projects/blocks/html_free',
-        default      => 'admin/project_projects/blocks/section_rich',
-    };
-};
+$recordBlocksConfig = config('AdminRecordBlocks');
 ?>
-<div id="pp-blocks-panel" class="<?= $contentMode === 'blocks' ? '' : 'd-none' ?>">
-    <p class="text-muted small mb-2"><?= esc(lang('Admin.help_pi_blocks')) ?></p>
-
-    <div id="pp-blocks-container" class="mb-2">
-        <?php foreach ($blocksForForm as $idx => $block) : ?>
-            <?= view($mapBlockView(is_array($block) ? $block : []), [
-                'i'        => $idx,
-                'block'    => is_array($block) ? $block : [],
-                'ppLocale' => $ppLocale ?? 'fr',
-            ]) ?>
-        <?php endforeach; ?>
-    </div>
-
-    <div class="d-flex flex-wrap gap-2 mb-3">
-        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="section_rich"><?= esc(lang('Admin.block_add_section')) ?></button>
-        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="note_panel"><?= esc(lang('Admin.block_add_note')) ?></button>
-        <button type="button" class="btn btn-sm btn-outline-primary" data-pp-add="sources"><?= esc(lang('Admin.block_add_sources')) ?></button>
-        <?php if ($canUseAdvancedHtml) : ?>
-        <button type="button" class="btn btn-sm btn-outline-secondary" data-pp-add="html"><?= esc(lang('Admin.block_add_html')) ?></button>
-        <?php endif; ?>
-    </div>
-</div>
-
-<div id="pp-proto-store" class="d-none" aria-hidden="true">
-    <div data-pp-proto="section_rich"><?= view('admin/project_projects/blocks/section_rich', ['i' => '__I__', 'block' => ['type' => 'section_rich']]) ?></div>
-    <div data-pp-proto="note_panel"><?= view('admin/project_projects/blocks/note_panel', ['i' => '__I__', 'block' => ['type' => 'note_panel']]) ?></div>
-    <div data-pp-proto="sources"><?= view('admin/project_projects/blocks/sources', ['i' => '__I__', 'block' => ['type' => 'sources']]) ?></div>
-    <div data-pp-proto="html"><?= view('admin/project_projects/blocks/html_free', ['i' => '__I__', 'block' => ['type' => 'html']]) ?></div>
-</div>
+<?= view('admin/record_blocks/builder', [
+    'contentMode'        => $contentMode,
+    'blocksForForm'      => $blocksForForm,
+    'canUseAdvancedHtml' => $canUseAdvancedHtml ?? false,
+    'ppLocale'           => $ppLocale ?? 'fr',
+    'helpText'           => lang('Admin.help_pi_blocks'),
+    'allowedBlockTypes'  => $recordBlocksConfig->position,
+]) ?>
