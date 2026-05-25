@@ -12,7 +12,7 @@
     var closeTriggers = document.querySelectorAll('[data-fund-modal-close]');
     var errorsBox = form.querySelector('[data-fund-errors]');
     var phoneInstances = {};
-    var ITI_UTILS_URL = 'https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/js/utils.js';
+    var ITI_UTILS_URL = '/assets/vendor/intl-tel-input/25/build/js/utils.js';
 
     var phoneMsgs = {};
     var fieldMsgs = {};

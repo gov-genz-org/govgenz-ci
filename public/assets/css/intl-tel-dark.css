@@ -1,0 +1,67 @@
+/* Thème sombre partagé pour intl-tel-input (inline + popup mobile fullscreen). */
+.iti,
+.iti--fullscreen-popup.iti--container {
+  --ggz-iti-bg: var(--pp-bg-section, #131b2a);
+  --ggz-iti-input-bg: var(--pp-bg, rgba(10, 14, 24, 0.95));
+  --ggz-iti-text: var(--pp-text, var(--ggz-text-on-dark, #e6ecf6));
+  --ggz-iti-muted: var(--pp-text-muted, rgba(132, 146, 166, 0.88));
+  --ggz-iti-border: var(--pp-border-dim, rgba(56, 67, 88, 0.95));
+  --ggz-iti-focus: var(--pp-teal, rgba(255, 164, 138, 0.72));
+  --ggz-iti-font: var(--font-body, var(--ggz-font-sans, inherit));
+  --iti-hover-color: rgba(255, 255, 255, 0.06);
+  --iti-border-color: var(--ggz-iti-border);
+  --iti-dialcode-color: var(--ggz-iti-text);
+  --iti-dropdown-bg: var(--ggz-iti-bg);
+  --iti-arrow-color: var(--ggz-iti-muted);
+  --iti-search-icon-color: var(--ggz-iti-muted);
+  font-family: var(--ggz-iti-font);
+}
+
+.iti__dropdown-content,
+.iti__country-list {
+  background: var(--ggz-iti-bg);
+  color: var(--ggz-iti-text);
+}
+
+.iti__dropdown-content {
+  border-color: var(--ggz-iti-border);
+}
+
+.iti__search-input {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--ggz-iti-input-bg);
+  color: var(--ggz-iti-text);
+  font-family: var(--ggz-iti-font);
+}
+
+.iti__search-input::placeholder {
+  color: var(--ggz-iti-muted);
+}
+
+.iti__search-input:focus {
+  outline: none;
+  box-shadow: inset 0 -1px 0 var(--ggz-iti-focus);
+}
+
+.iti__country-name,
+.iti__no-results {
+  color: var(--ggz-iti-text);
+}
+
+.iti--fullscreen-popup.iti--container {
+  background-color: rgba(0, 0, 0, 0.72);
+}
+
+.iti--fullscreen-popup .iti__dropdown-content {
+  border: 1px solid var(--ggz-iti-border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.iti--fullscreen-popup .iti__search-input {
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  font-size: 1rem;
+}
