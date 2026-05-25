@@ -2,7 +2,7 @@
 (function () {
   'use strict';
 
-  const ITI_UTILS_URL = 'https://cdn.jsdelivr.net/npm/intl-tel-input@25/build/js/utils.js';
+  var ITI_UTILS_URL = '/assets/vendor/intl-tel-input/25/build/js/utils.js';
 
   function onReady(fn) {
     if (document.readyState === 'loading') {
