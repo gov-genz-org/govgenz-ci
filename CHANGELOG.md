@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-05-26
+
+### Release
+
+- fix(ci): tag FTP not working and manual deploy (53f8a04)
+- feat(ci): add workflow_dispatch for manual launch (d546408)
+- feat(admin): share record block builder and add drag reorder (9a760a5)
+- release: increase next develop version (6a859b8)
+
+
 ## [1.3.0] - 2026-05-25
 
 ### Release
