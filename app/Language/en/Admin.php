@@ -327,6 +327,7 @@ return [
     'form_exchange_rates_heading' => '1 unit of currency = … ariary (Ar)',
 
     'block_remove' => 'Remove',
+    'block_drag_reorder' => 'Move this block',
     'block_remove_line' => 'Remove this row',
     'block_remove_kpi' => 'Remove this KPI',
     'block_remove_phase' => 'Remove this phase',

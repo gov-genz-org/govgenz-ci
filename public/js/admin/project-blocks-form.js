@@ -65,6 +65,54 @@
     }
 
     /**
+     * @param {HTMLElement} pointer
+     * @returns {HTMLElement|null}
+     */
+    function getDragAfterElement(pointer) {
+        var rows = Array.from(container.querySelectorAll(':scope > .project-block-row:not(.is-dragging)'));
+        var closest = { offset: Number.NEGATIVE_INFINITY, element: null };
+
+        rows.forEach((row) => {
+            var box = row.getBoundingClientRect();
+            var offset = pointer.clientY - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) {
+                closest = { offset: offset, element: row };
+            }
+        });
+
+        return closest.element;
+    }
+
+    /**
+     * @param {HTMLElement} row
+     */
+    function bindDrag(row) {
+        if (row.dataset.ppDragBound === '1') {
+            return;
+        }
+        row.dataset.ppDragBound = '1';
+        row.setAttribute('draggable', 'true');
+
+        row.addEventListener('dragstart', (ev) => {
+            if (ev.target && ev.target.closest && !ev.target.closest('.project-block-drag-handle')) {
+                ev.preventDefault();
+                return;
+            }
+            row.classList.add('is-dragging');
+            if (ev.dataTransfer) {
+                ev.dataTransfer.effectAllowed = 'move';
+                ev.dataTransfer.setData('text/plain', '');
+            }
+        });
+
+        row.addEventListener('dragend', () => {
+            row.classList.remove('is-dragging');
+            container.classList.remove('is-drag-over');
+            reindexBlocks(container);
+        });
+    }
+
+    /**
      * @param {HTMLElement} row
      */
     function bindRemove(row) {
@@ -96,6 +144,7 @@
         container.appendChild(node);
         reindexBlocks(container);
         bindRemove(node);
+        bindDrag(node);
     }
 
     if (htmlRadio) {
@@ -112,6 +161,28 @@
 
     container.querySelectorAll(':scope > .project-block-row').forEach((row) => {
         bindRemove(row);
+        bindDrag(row);
+    });
+
+    container.addEventListener('dragover', (ev) => {
+        ev.preventDefault();
+        var dragging = container.querySelector(':scope > .project-block-row.is-dragging');
+        if (!dragging) {
+            return;
+        }
+        container.classList.add('is-drag-over');
+        var afterElement = getDragAfterElement(ev);
+        if (afterElement === null) {
+            container.appendChild(dragging);
+        } else {
+            container.insertBefore(dragging, afterElement);
+        }
+    });
+
+    container.addEventListener('drop', (ev) => {
+        ev.preventDefault();
+        container.classList.remove('is-drag-over');
+        reindexBlocks(container);
     });
 
     document.querySelectorAll('[data-pp-add]').forEach((btn) => {

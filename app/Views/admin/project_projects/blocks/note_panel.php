@@ -14,7 +14,9 @@ if (! in_array($style, ['default', 'warm', 'teal'], true)) {
 ?>
 <div class="project-block-row card mb-3 border-secondary">
     <div class="card-header py-2 d-flex justify-content-between align-items-center flex-wrap gap-2">
-        <span class="fw-semibold small mb-0"><?= esc(lang('Admin.block_type_note')) ?></span>
+        <span class="d-inline-flex align-items-center gap-2 fw-semibold small mb-0">
+            <button type="button" class="btn btn-sm btn-outline-secondary project-block-drag-handle py-0 px-1" draggable="true" title="<?= esc(lang('Admin.block_drag_reorder'), 'attr') ?>" aria-label="<?= esc(lang('Admin.block_drag_reorder'), 'attr') ?>">↕</button>
+            <?= esc(lang('Admin.block_type_note')) ?></span>
         <button type="button" class="btn btn-sm btn-outline-danger project-block-remove"><?= esc(lang('Admin.block_remove')) ?></button>
     </div>
     <div class="card-body">
