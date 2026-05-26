@@ -22,7 +22,7 @@ develop    ──PR──► main     ──(CI)──► merge  ──► deplo
 hotfix/*   ──PR──► main + develop (rebase des deux si besoin)
 ```
 
-Les jobs de déploiement ne tournent **pas** sur les pull requests, uniquement après merge (push sur `develop` ou `main`).
+Les branches `feature/*`, `fix/*` et `hotfix/*` lancent le build sur push, mais ne déploient pas automatiquement. Les jobs de déploiement automatiques ne tournent **pas** sur les pull requests : staging après `push` sur `develop`, production après `push` sur `main`. Pour tester une feature branch en staging sans la merger dans `develop`, lancer manuellement le workflow **CI** sur cette branche.
 
 ### Tags de release (`main`)
 
@@ -63,12 +63,11 @@ Jobs optionnels (non requis par ruleset) :
 
 | Job | Branche | Rôle |
 |-----|---------|------|
-| `deploy/staging` | `develop` | FTP → environnement staging |
+| `deploy/staging` | `develop`, ou lancement manuel du workflow `CI` | FTP → environnement staging |
 | `deploy/production` | `main` | FTP → production |
 | `release/tag` | `main` (après deploy prod OK) | Tag Git annoté `vMAJOR.MINOR.PATCH` (minor +1 ou patch +1 si hotfix) |
-| **`Redeploy`** (manuel) | tag ou SHA + choix staging/prod | Re-déploiement FTP **sans** modifier `main` / `develop` ni créer de tag |
 
-Workflow **Redeploy** : [`.github/workflows/redeploy.yml`](../.github/workflows/redeploy.yml) — déclenché via **Actions → Redeploy → Run workflow** (voir § Rollback).
+Déploiement manuel d’une feature branch en staging : **Actions → CI → Run workflow**, choisir la branche dans le sélecteur GitHub, puis lancer. Le workflow exécute `ci/test`, `ci/build`, puis `deploy/staging`.
 
 ### Fichiers jamais écrasés par FTP
 
@@ -319,29 +318,28 @@ git checkout -b hotfix/description-courte
 # PR → develop (cherry-pick ou merge main après coup)
 ```
 
-## Rollback / re-déploiement
+## Déploiement manuel staging / rollback
 
-Deux approches complémentaires :
+Deux besoins différents :
 
 | Approche | Quand l’utiliser | Effet sur Git |
 |----------|------------------|---------------|
+| **Run workflow sur `CI`** | Tester une feature branch directement en staging | **`main` / `develop` inchangés** |
 | **`git revert` + merge sur `main`** | Correction durable, historique propre | `main` reflète la prod |
-| **Workflow `Redeploy`** | Urgence FTP, retour rapide à un tag connu | **`main` / `develop` inchangés** |
 
-### Re-déploiement manuel (`Redeploy`)
+### Déploiement manuel en staging (`CI`)
 
-1. GitHub → **Actions** → workflow **Redeploy** → **Run workflow**.
-2. **ref** : tag de la dernière prod saine (ex. `v1.0.2`) ou SHA complet.
-3. **target** : `production` ou `staging`.
-4. Attendre `ci/test` → `ci/build` → `deploy/*`.
+1. GitHub → **Actions** → workflow **CI** → **Run workflow**.
+2. Choisir la branche à déployer dans le sélecteur GitHub (ex. `feature/x`, `fix/y`).
+3. Attendre `ci/test` → `ci/build` → `deploy/staging`.
 
-Le job repasse les tests PHPUnit sur le commit choisi, rebuild l’artefact release et envoie un upload FTP complet (comme le CI normal). **`release/tag` ne tourne pas** — aucun nouveau tag semver.
+Le job repasse les tests PHPUnit sur la branche choisie, rebuild l’artefact release et envoie un upload FTP complet vers staging. **`deploy/production` et `release/tag` ne tournent pas** sur lancement manuel.
 
 **Limites :**
 
-- Ne rollback **pas** la base MySQL (migrations déjà appliquées).
-- Si `DEPLOY_GENERATE_ENV=true`, le `.env` actuel des secrets GitHub est régénéré (pas celui du passé).
-- Après un redeploy prod, aligner `main` avec un revert ou un hotfix pour éviter qu’un prochain merge ne redéploie la version cassée.
+- Ne déploie pas en production.
+- Ne rollback **pas** la base MySQL.
+- Si `DEPLOY_GENERATE_ENV=true`, le `.env` staging actuel des secrets GitHub est régénéré.
 
 **Retrouver un tag :**
 
@@ -351,7 +349,7 @@ git tag -l 'v*' --sort=-v:refname | head -5
 git show v1.0.2 --no-patch
 ```
 
-Sur le serveur, `writable/deploy_version.txt` contient le SHA et, en redeploy, les lignes `redeploy-ref=`, `redeploy-target=`, `redeploy-run=`.
+Sur le serveur, `writable/deploy_version.txt` contient le SHA, l’événement GitHub, la branche et l’identifiant de run.
 
 ### Rollback Git (recommandé à terme)
 
