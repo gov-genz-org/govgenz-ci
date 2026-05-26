@@ -22,7 +22,7 @@ develop    ──PR──► main     ──(CI)──► merge  ──► deplo
 hotfix/*   ──PR──► main + develop (rebase des deux si besoin)
 ```
 
-Les jobs de déploiement ne tournent **pas** sur les pull requests, uniquement après merge (push sur `develop` ou `main`).
+Les jobs de déploiement ne tournent **pas** sur les pull requests. Ils tournent après merge (`push` sur `develop` ou `main`) ; le workflow peut aussi être relancé manuellement avec **Run workflow** sur `develop` ou `main`.
 
 ### Tags de release (`main`)
 

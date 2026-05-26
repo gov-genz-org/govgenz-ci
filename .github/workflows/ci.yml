@@ -1,9 +1,10 @@
 # CI obligatoire pour les rulesets GitHub (checks : ci/test, ci/build).
-# Déploiement FTP : jobs deploy/* uniquement sur push vers develop ou main (après CI verte).
+# Déploiement FTP : jobs deploy/* sur push vers develop/main, ou relance manuelle.
 
 name: CI
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
@@ -131,7 +132,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     timeout-minutes: 90
-    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/develop') ||
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/develop')
     environment: staging
     steps:
       - uses: actions/checkout@v4
@@ -239,7 +242,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     timeout-minutes: 90
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
     environment: production
     steps:
       - uses: actions/checkout@v4
@@ -345,7 +350,9 @@ jobs:
     name: release/tag
     runs-on: ubuntu-latest
     needs: deploy-production
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
     permissions:
       contents: write
     steps:
