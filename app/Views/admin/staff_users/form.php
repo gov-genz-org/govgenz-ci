@@ -14,6 +14,8 @@ $hasNotifyColumn = $hasNotifyColumn ?? false;
 $pwMin = StaffAuthPolicy::loginPasswordMinLength();
 $id = $is_edit ? (int) ($user['id'] ?? 0) : 0;
 $invitePending = $is_edit && $user !== null && StaffInvite::isPending($user);
+$inviteExpired = $is_edit && $user !== null && StaffInvite::isExpired($user);
+$canResendInvite = $is_edit && $user !== null && StaffInvite::canResendInvite($user);
 $inviteExpiryHours = StaffInvite::expiryHours();
 $inviteExpiryLabel = $inviteExpiryHours <= 24
     ? lang('Admin.staff_invite_expiry_24h')
@@ -25,6 +27,9 @@ $inviteExpiryLabel = $inviteExpiryHours <= 24
         <?php if ($invitePending) : ?>
             <span class="badge text-bg-warning text-dark"><?= esc(lang('Admin.badge_invite_pending')) ?></span>
             <?= esc(lang('Admin.help_staff_invite_pending')) ?>
+        <?php elseif ($inviteExpired) : ?>
+            <span class="badge text-bg-danger"><?= esc(lang('Admin.badge_link_expired')) ?></span>
+            <?= esc(lang('Admin.help_staff_invite_expired')) ?>
         <?php else : ?>
             <?= esc(lang('Admin.help_staff_password_optional', [(string) (int) $pwMin])) ?>
         <?php endif; ?>
@@ -33,7 +38,7 @@ $inviteExpiryLabel = $inviteExpiryHours <= 24
     <?php endif; ?>
 </p>
 
-<?php if ($is_edit && $invitePending) : ?>
+<?php if ($canResendInvite) : ?>
     <form method="post" action="<?= site_url('admin/staff-users/resend-invite/' . $id) ?>" class="mb-3">
         <?= csrf_field() ?>
         <button type="submit" class="btn btn-outline-primary btn-sm"><?= esc(lang('Admin.action_resend_invite')) ?></button>

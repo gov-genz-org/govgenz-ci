@@ -64,6 +64,26 @@ final class StaffInviteTest extends CIUnitTestCase
         $this->assertFalse(StaffInvite::isExpired($noInvite));
     }
 
+    public function testCanResendInvite(): void
+    {
+        $future = date('Y-m-d H:i:s', time() + 3600);
+        $past   = date('Y-m-d H:i:s', time() - 3600);
+
+        $pending = [
+            'invite_token_hash'       => 'abc',
+            'invite_token_expires_at' => $future,
+        ];
+        $expired = [
+            'invite_token_hash'       => 'abc',
+            'invite_token_expires_at' => $past,
+        ];
+        $noInvite = ['invite_token_hash' => ''];
+
+        $this->assertTrue(StaffInvite::canResendInvite($pending));
+        $this->assertTrue(StaffInvite::canResendInvite($expired));
+        $this->assertFalse(StaffInvite::canResendInvite($noInvite));
+    }
+
     public function testFindUserByPlainTokenRejectsShortTokenWithoutDb(): void
     {
         $this->assertNull(StaffInvite::findUserByPlainToken('short'));
