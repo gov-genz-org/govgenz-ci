@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-05-28
+
+### Release
+
+- fix(admin): allow resending staff invites when the link has expired (a84968b)
+- release: increase next develop version (5e71fb6)
+
+
 ## [1.4.0] - 2026-05-26
 
 ### Release
