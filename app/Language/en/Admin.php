@@ -25,7 +25,8 @@ return [
     'error_cannot_delete_last_admin' => 'Cannot delete the last active administrator.',
     'error_session_invalid'       => 'Invalid session.',
     'error_staff_create_failed'   => 'Could not create the account.',
-    'error_staff_resend_failed'   => 'Could not send.',
+    'error_staff_resend_failed'       => 'Could not send.',
+    'error_staff_resend_not_allowed'  => 'This account is already activated; a new invitation cannot be sent.',
     'error_notify_migration'      => 'Option unavailable: run migrations (notify_form_submissions).',
     'error_record_not_found_after_save' => 'Record not found after save.',
 
@@ -568,6 +569,7 @@ return [
 
     'badge_invite_pending' => 'Invitation pending',
     'help_staff_invite_pending' => '— the team member must open the link from the email to set their password.',
+    'help_staff_invite_expired' => '— the link has expired: resend the invitation email or set a password below.',
     'help_staff_password_optional' => 'Leave password empty to keep it unchanged. Minimum {0} characters if set.',
     'help_staff_invite_create' => 'Enter email and role: an activation email is sent (link valid for {0}).',
     'staff_invite_expiry_24h' => '24 hours',

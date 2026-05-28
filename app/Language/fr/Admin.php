@@ -28,7 +28,8 @@ return [
     'error_cannot_delete_last_admin' => 'Impossible de supprimer le dernier administrateur actif.',
     'error_session_invalid'       => 'Session invalide.',
     'error_staff_create_failed'   => 'Impossible de créer le compte.',
-    'error_staff_resend_failed'   => 'Envoi impossible.',
+    'error_staff_resend_failed'       => 'Envoi impossible.',
+    'error_staff_resend_not_allowed'  => 'Ce compte est déjà activé : un nouvel envoi d’invitation n’est pas possible.',
     'error_notify_migration'      => 'Option indisponible : exécutez les migrations (notify_form_submissions).',
     'error_record_not_found_after_save' => 'Enregistrement introuvable après sauvegarde.',
 
@@ -592,6 +593,7 @@ return [
 
     'badge_invite_pending' => 'Invitation en attente',
     'help_staff_invite_pending' => '— le collaborateur doit ouvrir le lien reçu par e-mail pour choisir son mot de passe.',
+    'help_staff_invite_expired' => '— le lien a expiré : renvoyez l’e-mail d’invitation ou définissez un mot de passe ci-dessous.',
     'help_staff_password_optional' => 'Laisser le mot de passe vide pour ne pas le changer. Minimum {0} caractères si renseigné.',
     'help_staff_invite_create' => 'Saisissez l’e-mail et le rôle : un e-mail d’activation est envoyé (lien valable {0}).',
     'staff_invite_expiry_24h' => '24 heures',
