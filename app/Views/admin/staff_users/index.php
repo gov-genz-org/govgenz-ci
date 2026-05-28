@@ -56,6 +56,7 @@ $hasNotifyColumn = $hasNotifyColumn ?? false;
         $isSelf = $uid === (int) session()->get('staff_user_id');
         $pending = StaffInvite::isPending($u);
         $expired = StaffInvite::isExpired($u);
+        $canResendInvite = StaffInvite::canResendInvite($u);
         $notifyOn = (int) ($u['notify_form_submissions'] ?? 1) === 1;
         ?>
         <tr>
@@ -93,6 +94,12 @@ $hasNotifyColumn = $hasNotifyColumn ?? false;
             </td>
             <?php endif; ?>
             <td class="text-end text-nowrap">
+                <?php if ($canResendInvite) : ?>
+                    <form method="post" action="<?= site_url('admin/staff-users/resend-invite/' . $uid) ?>" class="d-inline">
+                        <?= csrf_field() ?>
+                        <button type="submit" class="btn btn-outline-primary btn-sm"><?= esc(lang('Admin.action_resend_invite')) ?></button>
+                    </form>
+                <?php endif; ?>
                 <a href="<?= site_url('admin/staff-users/edit/' . $uid) ?>" class="btn btn-outline-primary btn-sm"><?= esc(lang('Admin.action_modify')) ?></a>
                 <?php if (! $isSelf) : ?>
                     <form method="post" action="<?= site_url('admin/staff-users/delete/' . $uid) ?>" class="d-inline ms-1"

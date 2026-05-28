@@ -88,6 +88,15 @@ class StaffUsers extends BaseController
 
     public function resendInvite(int $id): ResponseInterface
     {
+        $user = model(StaffUserModel::class)->find($id);
+        if ($user === null) {
+            return redirect()->back()->with('error', lang('Admin.error_user_not_found'));
+        }
+
+        if (! StaffInvite::canResendInvite($user)) {
+            return redirect()->back()->with('error', lang('Admin.error_staff_resend_not_allowed'));
+        }
+
         $result = StaffInvite::resendForUserId($id);
         if (! $result['ok']) {
             return redirect()->back()->with('error', $result['error'] ?? lang('Admin.error_staff_resend_failed'));

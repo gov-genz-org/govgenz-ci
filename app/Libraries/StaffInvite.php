@@ -83,6 +83,16 @@ final class StaffInvite
     }
 
     /**
+     * Invitation encore ouverte (en attente ou lien expiré) : renvoi possible.
+     *
+     * @param array<string, mixed> $user
+     */
+    public static function canResendInvite(array $user): bool
+    {
+        return self::isPending($user) || self::isExpired($user);
+    }
+
+    /**
      * Crée un compte inactif côté mot de passe (hash aléatoire) et envoie l’e-mail d’invitation.
      *
      * @return array{ok: bool, user_id: int, email_sent: bool, error?: string}
