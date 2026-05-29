@@ -567,7 +567,7 @@ jobs:
             exit 0
           fi
           export GH_TOKEN="$RELEASE_PR_TOKEN"
-          state=$(gh pr view "$PR_NUMBER" --json state --jq -r '.state')
+          state=$(gh pr view "$PR_NUMBER" --json state --jq '.state')
           if [[ "$state" == "MERGED" ]]; then
             echo "PR #${PR_NUMBER} déjà mergée"
             exit 0
