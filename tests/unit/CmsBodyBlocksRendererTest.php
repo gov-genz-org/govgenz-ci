@@ -169,7 +169,8 @@ final class CmsBodyBlocksRendererTest extends CIUnitTestCase
 
         $this->assertStringContainsString('footer__col', $html);
         $this->assertStringContainsString('<h4>Contacts</h4>', $html);
-        $this->assertStringContainsString('mailto:contact@govgenz.org', $html);
+        $this->assertStringContainsString('href="' . esc('mailto:contact@govgenz.org', 'attr') . '"', $html);
+        $this->assertStringContainsString('contact@govgenz.org</a>', $html);
         $this->assertStringContainsString('footer__soon', $html);
         $this->assertStringContainsString('declaration.govgenz.org', $html);
     }

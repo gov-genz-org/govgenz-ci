@@ -6,9 +6,12 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class SeedCmsPositionsListPages extends Migration
+/**
+ * Pages CMS pour le bandeau de /press (sur-titre, titre, chapô) — textes par défaut en base.
+ */
+class SeedCmsPressListPages extends Migration
 {
-    private const TRANSLATION_GROUP = 'positions-program-list';
+    private const TRANSLATION_GROUP = 'press-program-list';
 
     public function up(): void
     {
@@ -18,14 +21,14 @@ class SeedCmsPositionsListPages extends Migration
 
         $now = date('Y-m-d H:i:s');
 
-        $this->insertIfMissing('positions', 'fr', [
+        $this->insertIfMissing('press', 'fr', [
             'translation_group' => self::TRANSLATION_GROUP,
-            'title'             => 'Liste programme positions',
-            'hero_overline'     => 'Avis · Analyses · Alertes · Solutions',
-            'hero_title'        => 'La voix de la jeunesse documentée et argumentée.',
-            'hero_lead'         => 'GoV Gen Z Madagascar analyse l\'actualité malgache, alerte sur les manquements et propose des alternatives concrètes avec budgets et indicateurs mesurables.',
-            'meta_title'        => 'Nos positions — GoV Gen Z Madagascar',
-            'meta_description'  => 'Positions, analyses et alertes de GoV Gen Z Madagascar — avis documentés sur l\'actualité.',
+            'title'             => 'Liste presse',
+            'hero_overline'     => 'MÉDIAS',
+            'hero_title'        => 'Presse',
+            'hero_lead'         => 'Communiqués et actualités publiés par GovGenZ Madagascar.',
+            'meta_title'        => 'Presse — GovGenZ',
+            'meta_description'  => 'Communiqués et actualités de presse publiés par GovGenZ Madagascar.',
             'body_html'         => '',
             'status'            => 'published',
             'layout_key'        => 'full',
@@ -37,14 +40,14 @@ class SeedCmsPositionsListPages extends Migration
             'updated_at'        => $now,
         ]);
 
-        $this->insertIfMissing('positions', 'en', [
+        $this->insertIfMissing('press', 'en', [
             'translation_group' => self::TRANSLATION_GROUP,
-            'title'             => 'Positions programme listing',
-            'hero_overline'     => 'Opinions · Analysis · Alerts · Solutions',
-            'hero_title'        => 'Youth voice — documented and argued.',
-            'hero_lead'         => 'GoV Gen Z Madagascar analyses Malagasy current affairs, flags gaps and proposes concrete alternatives with budgets and measurable indicators.',
-            'meta_title'        => 'Our positions — GoV Gen Z Madagascar',
-            'meta_description'  => 'GoV Gen Z Madagascar positions, analysis and alerts on current affairs.',
+            'title'             => 'Press listing',
+            'hero_overline'     => 'MEDIA',
+            'hero_title'        => 'Press',
+            'hero_lead'         => 'Statements and news published by GovGenZ Madagascar.',
+            'meta_title'        => 'Press — GovGenZ',
+            'meta_description'  => 'Press releases and news published by GovGenZ Madagascar.',
             'body_html'         => '',
             'status'            => 'published',
             'layout_key'        => 'full',

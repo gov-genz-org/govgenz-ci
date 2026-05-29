@@ -276,8 +276,20 @@ return [
     // Notes contextuelles (HTML contrôlé — affichage sans esc dans les partials notes)
     'note_pages_footer_title' => 'Pied de page (colonnes)',
     'note_pages_footer_body'  => ' : pour les modifier depuis l’admin, créez une page <strong>publiée</strong> avec le slug exact <code>site-footer</code> (une variante FR et une EN), mode <strong>blocs</strong>, avec un bloc <strong>Colonnes pied de page</strong> (ou du HTML libre avec <code>.footer__col</code>). Son corps remplace les trois colonnes du footer&nbsp;; la route publique <code>/site-footer</code> est désactivée. La marque (logo, devise, ligne légale) reste dans le gabarit.',
-    'note_record_list_cms_slugs_projects'  => 'Bandeau de la liste publique&nbsp;: créer deux <strong>pages CMS publiées</strong> avec les slugs <code>projets-programme</code> (FR) et <code>projects-program</code> (EN), liées par le même groupe de traduction (champs «&nbsp;hero&nbsp;» uniquement).',
-    'note_record_list_cms_slugs_positions' => 'Bandeau de la liste publique&nbsp;: créer deux <strong>pages CMS publiées</strong> avec les slugs <code>positions-programme</code> (FR) et <code>positions-program</code> (EN), liées par le même groupe de traduction (champs «&nbsp;hero&nbsp;» uniquement).',
+    'note_record_list_cms_slugs_projects'  => 'Bandeau de <code>/projects</code>&nbsp;: utilisez les boutons ci-dessous (FR + EN). Seuls sur-titre, titre, chapô et méta — pas de contenu ni d’image.',
+    'note_record_list_cms_slugs_positions' => 'Bandeau de <code>/positions</code>&nbsp;: utilisez les boutons ci-dessous (FR + EN). Seuls sur-titre, titre, chapô et méta — pas de contenu ni d’image.',
+    'note_record_list_cms_slugs_press'     => 'Bandeau de <code>/press</code>&nbsp;: utilisez les boutons ci-dessous (FR + EN). Les communiqués restent dans <strong>Presse</strong>. Pas de contenu ni d’image sur ces fiches.',
+    'label_list_hero_slug_fixed'           => 'lié à la liste publique, non modifiable',
+    'help_list_hero_form_intro'            => 'Cette fiche ne sert qu’au <strong>bandeau titre</strong> de la liste publique (sur-titre, titre, chapô, méta). Pas de contenu de page ni d’image.',
+    'help_list_hero_fields_intro'          => 'Textes affichés en haut de la liste publique uniquement.',
+    'help_list_hero_admin_title'           => 'Libellé interne dans l’admin (ex. « Bandeau presse FR ») — non affiché sur le site.',
+    'title_page_list_hero_create'          => 'Bandeau de liste — nouvelle version',
+    'title_page_list_hero_edit'            => 'Bandeau de liste',
+    'action_create_list_hero_fr'           => 'Créer bandeau FR',
+    'action_create_list_hero_en'           => 'Créer bandeau EN',
+    'action_edit_list_hero_fr'             => 'Modifier bandeau FR',
+    'action_edit_list_hero_en'             => 'Modifier bandeau EN',
+    'error_list_hero_page_exists'          => 'Une page bandeau existe déjà pour ce slug et cette langue. Utilisez « Modifier bandeau ».',
 
     // Formulaire projet (fiche)
     'form_pp_intro' => 'Remplissez la carte (liste + en-tête), puis les sections du détail avec les boutons « + Section », « + Budget », etc. Aucune compétence technique requise.',
@@ -603,6 +615,8 @@ return [
     'alert_page_projects_program_body' => 'ce slug est celui attendu par le site pour le bandeau de la <strong>liste</strong> des projets (<code>/projects</code> ou <code>/en/projects</code> selon la config), pas l’URL de cette page CMS.',
     'alert_page_positions_program_title' => 'Page « programme positions » :',
     'alert_page_positions_program_body' => 'bandeau de la liste <code>/positions</code> (ou <code>/en/positions</code>), pas l’URL de cette page CMS.',
+    'alert_page_press_program_title'    => 'Page « programme presse » :',
+    'alert_page_press_program_body'     => 'bandeau de la liste <code>/press</code> (ou <code>/en/press</code>), pas l’URL de cette page CMS.',
 
     'form_page_hero_section' => 'Hero éditorial (optionnel)',
     'help_page_hero_intro' => 'Bandeau au-dessus du corps : textes et image ne sont pas dans le HTML ci‑dessous. Si tout est vide, le comportement du site reste inchangé (bandeau compact ou gabarit dans le corps selon la page).',
@@ -653,7 +667,7 @@ return [
     'dash_shortcut_volunteers' => 'Candidatures reçues',
     'dash_shortcut_contributions' => 'Propositions à valider',
 
-    'help_posts_intro' => 'Communiqués et articles affichés sous <strong>/press</strong>.',
+    'help_posts_intro' => 'Communiqués et articles affichés sous <strong>/press</strong>. Le bandeau titre de la liste se modifie dans <strong>Pages</strong> (slug <code>press</code>, champs hero).',
     'help_positions_intro' => 'Fiches affichées sur le site positions (volontariat, stages, emploi…).',
     'help_projects_intro' => 'Fiches affichées sur le microsite projets (grille, filtres, financement).',
     'empty_no_posts' => 'Aucun article pour ce filtre.',

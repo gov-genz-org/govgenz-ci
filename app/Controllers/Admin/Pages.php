@@ -6,6 +6,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Libraries\CmsHeroPayload;
+use App\Libraries\CmsListHeroPageAdmin;
 use App\Libraries\LocaleSlug;
 use App\Libraries\CmsPageBodyNormalizer;
 use App\Models\CmsMediaModel;
@@ -66,10 +67,23 @@ class Pages extends BaseController
 
     public function create()
     {
+        $listHeroCreateKind = CmsListHeroPageAdmin::normalizeCreateKind($this->request->getGet('list_hero'));
+        $localePref         = $this->request->getGet('locale');
+        $defaultLocale      = is_string($localePref) && in_array($localePref, ['fr', 'en'], true) ? $localePref : 'fr';
+
         return view('admin/layout', [
-            'title'          => 'Nouvelle page',
-            'main'           => view('admin/pages/form', array_merge(['page' => null], $this->pageFormViewExtras(null))),
-            'extraScripts'   => $this->pagesEditorScripts(),
+            'title'          => $listHeroCreateKind !== null
+                ? lang('Admin.title_page_list_hero_create')
+                : 'Nouvelle page',
+            'main'           => view('admin/pages/form', array_merge([
+                'page'                          => null,
+                'listHeroCreateKind'            => $listHeroCreateKind,
+                'listHeroDefaultLocale'         => $defaultLocale,
+                'listHeroDefaultTranslationGroup' => $listHeroCreateKind !== null
+                    ? CmsListHeroPageAdmin::existingTranslationGroup($listHeroCreateKind)
+                    : null,
+            ], $this->pageFormViewExtras(null, $listHeroCreateKind))),
+            'extraScripts'   => $this->pagesEditorScripts($listHeroCreateKind !== null),
         ]);
     }
 
@@ -80,50 +94,70 @@ class Pages extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $slug   = LocaleSlug::normalizeSlug($this->request->getPost('slug'));
+        helper('cms');
+
+        $listHeroKind = CmsListHeroPageAdmin::normalizeCreateKind($this->request->getPost('list_hero_kind'));
+        $slug         = $listHeroKind !== null
+            ? cms_list_hero_canonical_slug($listHeroKind)
+            : LocaleSlug::normalizeSlug($this->request->getPost('slug'));
         $locale = LocaleSlug::normalizeLocale($this->request->getPost('locale'));
         $model  = model(CmsPageModel::class);
         if ($model->where('slug', $slug)->where('locale', $locale)->first() !== null) {
-            return redirect()->back()->withInput()->with('error', lang('Admin.error_slug_locale_taken'));
+            return redirect()->back()->withInput()->with(
+                'error',
+                $listHeroKind !== null ? lang('Admin.error_list_hero_page_exists') : lang('Admin.error_slug_locale_taken'),
+            );
         }
-
-        helper('cms');
-
-        $mode       = CmsPageBodyNormalizer::contentMode($this->request);
-        $blocksJson = CmsPageBodyNormalizer::bodyBlocksJson($this->request);
-        if ($mode === 'blocks' && ($blocksJson === null || $blocksJson === '' || $blocksJson === '[]')) {
-            return redirect()->back()->withInput()->with('error', lang('Admin.error_blocks_sections_empty'));
-        }
-
         $hero = CmsHeroPayload::fromPost($this->request);
-        if ($hero['hero_image_id'] !== null && model(CmsMediaModel::class)->find($hero['hero_image_id']) === null) {
-            return redirect()->back()->withInput()->with('error', lang('Admin.error_hero_media_missing'));
+
+        if ($listHeroKind !== null) {
+            $listHeroPayload = CmsListHeroPageAdmin::payloadForSave($listHeroKind, $this->request, $hero);
+            $model->insert(array_merge([
+                'locale'            => $locale,
+                'title'             => $this->request->getPost('title'),
+                'status'            => $this->request->getPost('status'),
+                'meta_title'        => $this->request->getPost('meta_title') ?: null,
+                'meta_description'  => $this->request->getPost('meta_description') ?: null,
+            ], $listHeroPayload));
+        } else {
+            $mode       = CmsPageBodyNormalizer::contentMode($this->request);
+            $blocksJson = CmsPageBodyNormalizer::bodyBlocksJson($this->request);
+            if ($mode === 'blocks' && ($blocksJson === null || $blocksJson === '' || $blocksJson === '[]')) {
+                return redirect()->back()->withInput()->with('error', lang('Admin.error_blocks_sections_empty'));
+            }
+
+            if ($hero['hero_image_id'] !== null && model(CmsMediaModel::class)->find($hero['hero_image_id']) === null) {
+                return redirect()->back()->withInput()->with('error', lang('Admin.error_hero_media_missing'));
+            }
+
+            $tgrp = LocaleSlug::normalizeTranslationGroup($this->request->getPost('translation_group'));
+
+            $model->insert([
+                'slug'               => $slug,
+                'locale'             => $locale,
+                'translation_group'  => $tgrp,
+                'title'              => $this->request->getPost('title'),
+                'body_html'          => $mode === 'blocks' ? '' : (string) $this->request->getPost('body_html'),
+                'content_mode'       => $mode,
+                'body_blocks'        => $mode === 'blocks' ? $blocksJson : null,
+                'status'             => $this->request->getPost('status'),
+                'meta_title'         => $this->request->getPost('meta_title') ?: null,
+                'meta_description'   => $this->request->getPost('meta_description') ?: null,
+                'layout_key'         => cms_layout_normalized($this->request->getPost('layout_key')),
+                'hero_overline'      => $hero['hero_overline'],
+                'hero_title'         => $hero['hero_title'],
+                'hero_lead'          => $hero['hero_lead'],
+                'hero_image_id'      => $hero['hero_image_id'],
+                'hero_image_alt'     => $hero['hero_image_alt'],
+            ]);
         }
-
-        $tgrp = LocaleSlug::normalizeTranslationGroup($this->request->getPost('translation_group'));
-
-        $model->insert([
-            'slug'               => $slug,
-            'locale'             => $locale,
-            'translation_group'  => $tgrp,
-            'title'              => $this->request->getPost('title'),
-            'body_html'          => $mode === 'blocks' ? '' : (string) $this->request->getPost('body_html'),
-            'content_mode'       => $mode,
-            'body_blocks'        => $mode === 'blocks' ? $blocksJson : null,
-            'status'             => $this->request->getPost('status'),
-            'meta_title'         => $this->request->getPost('meta_title') ?: null,
-            'meta_description'   => $this->request->getPost('meta_description') ?: null,
-            'layout_key'         => cms_layout_normalized($this->request->getPost('layout_key')),
-            'hero_overline'      => $hero['hero_overline'],
-            'hero_title'         => $hero['hero_title'],
-            'hero_lead'          => $hero['hero_lead'],
-            'hero_image_id'      => $hero['hero_image_id'],
-            'hero_image_alt'     => $hero['hero_image_alt'],
-        ]);
 
         $newId = (int) $model->getInsertID();
-        if ($newId > 0 && $tgrp === null) {
-            $model->update($newId, ['translation_group' => (string) $newId]);
+        if ($newId > 0) {
+            $inserted = $model->find($newId);
+            if (is_array($inserted) && trim((string) ($inserted['translation_group'] ?? '')) === '') {
+                $model->update($newId, ['translation_group' => (string) $newId]);
+            }
         }
 
         return $this->adminRedirectToEdit('admin/pages', $newId, lang('Admin.flash_page_created'));
@@ -137,10 +171,21 @@ class Pages extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
+        helper('cms');
+
+        $listHeroKind = cms_list_hero_page_kind((string) ($page['slug'] ?? ''));
+
         return view('admin/layout', [
-            'title'          => 'Éditer la page',
-            'main'           => view('admin/pages/form', array_merge(['page' => $page], $this->pageFormViewExtras($page))),
-            'extraScripts'   => $this->pagesEditorScripts(),
+            'title'          => $listHeroKind !== null
+                ? lang('Admin.title_page_list_hero_edit')
+                : 'Éditer la page',
+            'main'           => view('admin/pages/form', array_merge([
+                'page'                 => $page,
+                'listHeroCreateKind'   => null,
+                'listHeroDefaultLocale' => null,
+                'listHeroDefaultTranslationGroup' => null,
+            ], $this->pageFormViewExtras($page, null))),
+            'extraScripts'   => $this->pagesEditorScripts($listHeroKind !== null),
         ]);
     }
 
@@ -157,47 +202,67 @@ class Pages extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        helper('cms');
+
         $slug   = LocaleSlug::normalizeSlug($this->request->getPost('slug'));
         $locale = LocaleSlug::normalizeLocale((string) ($existing['locale'] ?? 'fr'));
+        $heroKind = cms_list_hero_page_kind((string) ($existing['slug'] ?? ''));
+        if ($heroKind !== null) {
+            $slug = cms_list_hero_canonical_slug($heroKind);
+        }
         $other  = $model->where('slug', $slug)->where('locale', $locale)->where('id !=', $id)->first();
         if ($other !== null) {
             return redirect()->back()->withInput()->with('error', lang('Admin.error_slug_locale_taken'));
         }
 
-        helper('cms');
-
-        $mode       = CmsPageBodyNormalizer::contentMode($this->request);
-        $blocksJson = CmsPageBodyNormalizer::bodyBlocksJson($this->request);
-        if ($mode === 'blocks' && ($blocksJson === null || $blocksJson === '' || $blocksJson === '[]')) {
-            return redirect()->back()->withInput()->with('error', lang('Admin.error_blocks_sections_empty'));
-        }
-
         $hero = CmsHeroPayload::fromPost($this->request);
-        if ($hero['hero_image_id'] !== null && model(CmsMediaModel::class)->find($hero['hero_image_id']) === null) {
-            return redirect()->back()->withInput()->with('error', lang('Admin.error_hero_media_missing'));
+
+        if ($heroKind !== null) {
+            $listHeroPayload = CmsListHeroPageAdmin::payloadForSave($heroKind, $this->request, $hero);
+            $tgrpIn          = trim((string) $this->request->getPost('translation_group'));
+            $tgrp            = $tgrpIn !== '' ? $tgrpIn : (string) ($existing['translation_group'] ?? $id);
+            $model->update($id, array_merge([
+                'slug'              => $slug,
+                'locale'            => $locale,
+                'translation_group' => $tgrp,
+                'title'             => $this->request->getPost('title'),
+                'status'            => $this->request->getPost('status'),
+                'meta_title'        => $this->request->getPost('meta_title') ?: null,
+                'meta_description'  => $this->request->getPost('meta_description') ?: null,
+            ], $listHeroPayload));
+        } else {
+            $mode       = CmsPageBodyNormalizer::contentMode($this->request);
+            $blocksJson = CmsPageBodyNormalizer::bodyBlocksJson($this->request);
+            if ($mode === 'blocks' && ($blocksJson === null || $blocksJson === '' || $blocksJson === '[]')) {
+                return redirect()->back()->withInput()->with('error', lang('Admin.error_blocks_sections_empty'));
+            }
+
+            if ($hero['hero_image_id'] !== null && model(CmsMediaModel::class)->find($hero['hero_image_id']) === null) {
+                return redirect()->back()->withInput()->with('error', lang('Admin.error_hero_media_missing'));
+            }
+
+            $tgrpIn = trim((string) $this->request->getPost('translation_group'));
+            $tgrp   = $tgrpIn !== '' ? $tgrpIn : (string) ($existing['translation_group'] ?? $id);
+
+            $model->update($id, [
+                'slug'               => $slug,
+                'locale'             => $locale,
+                'translation_group'  => $tgrp,
+                'title'              => $this->request->getPost('title'),
+                'body_html'          => $mode === 'blocks' ? '' : (string) $this->request->getPost('body_html'),
+                'content_mode'       => $mode,
+                'body_blocks'        => $mode === 'blocks' ? $blocksJson : null,
+                'status'             => $this->request->getPost('status'),
+                'meta_title'         => $this->request->getPost('meta_title') ?: null,
+                'meta_description'   => $this->request->getPost('meta_description') ?: null,
+                'layout_key'         => cms_layout_normalized($this->request->getPost('layout_key')),
+                'hero_overline'      => $hero['hero_overline'],
+                'hero_title'         => $hero['hero_title'],
+                'hero_lead'          => $hero['hero_lead'],
+                'hero_image_id'      => $hero['hero_image_id'],
+                'hero_image_alt'     => $hero['hero_image_alt'],
+            ]);
         }
-
-        $tgrpIn = trim((string) $this->request->getPost('translation_group'));
-        $tgrp   = $tgrpIn !== '' ? $tgrpIn : (string) ($existing['translation_group'] ?? $id);
-
-        $model->update($id, [
-            'slug'               => $slug,
-            'locale'             => $locale,
-            'translation_group'  => $tgrp,
-            'title'              => $this->request->getPost('title'),
-            'body_html'          => $mode === 'blocks' ? '' : (string) $this->request->getPost('body_html'),
-            'content_mode'       => $mode,
-            'body_blocks'        => $mode === 'blocks' ? $blocksJson : null,
-            'status'             => $this->request->getPost('status'),
-            'meta_title'         => $this->request->getPost('meta_title') ?: null,
-            'meta_description'   => $this->request->getPost('meta_description') ?: null,
-            'layout_key'         => cms_layout_normalized($this->request->getPost('layout_key')),
-            'hero_overline'      => $hero['hero_overline'],
-            'hero_title'         => $hero['hero_title'],
-            'hero_lead'          => $hero['hero_lead'],
-            'hero_image_id'      => $hero['hero_image_id'],
-            'hero_image_alt'     => $hero['hero_image_alt'],
-        ]);
 
         return $this->adminRedirectToEdit('admin/pages', $id, lang('Admin.flash_page_updated'));
     }
@@ -309,11 +374,16 @@ class Pages extends BaseController
      *   translationPartnerNav: array{editUrl: string, publicUrl: ?string, viewLabel: string, editLabel: string}|null
      * }
      */
-    private function pageFormViewExtras(?array $page): array
+    private function pageFormViewExtras(?array $page, ?string $listHeroCreateKind = null): array
     {
         helper(['cms', 'admin']);
 
+        $listHeroKind = CmsListHeroPageAdmin::formKind($page, $listHeroCreateKind);
+
         $contentMode = old('content_mode', $page !== null ? ($page['content_mode'] ?? 'html') : 'blocks');
+        if ($listHeroKind !== null) {
+            $contentMode = 'html';
+        }
         if (! in_array($contentMode, ['html', 'blocks'], true)) {
             $contentMode = 'html';
         }
@@ -343,6 +413,7 @@ class Pages extends BaseController
             'contentMode'           => $contentMode,
             'blocksForForm'         => $blocksForForm,
             'publicPreviewUrl'      => $publicPreviewUrl,
+            'listHeroKind'          => $listHeroKind,
             'translationPartnerNav' => admin_translation_partner_nav(
                 $page,
                 CmsPageModel::class,
@@ -351,8 +422,12 @@ class Pages extends BaseController
         ];
     }
 
-    private function pagesEditorScripts(): string
+    private function pagesEditorScripts(bool $isListHeroForm = false): string
     {
+        if ($isListHeroForm) {
+            return '';
+        }
+
         return $this->editorFormExtraScripts()
             . '<script defer src="' . esc(base_url('js/admin/cms-blocks-form.js'), 'attr') . '"></script>';
     }

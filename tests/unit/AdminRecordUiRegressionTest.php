@@ -32,7 +32,7 @@ final class AdminRecordUiRegressionTest extends CIUnitTestCase
     /** @var array<string, list<string>> */
     private const INDEX_VIEWS_REQUIRED = [
         'pages/index.php'            => ['record_list_row_actions', 'admin-table-wrap', 'table-striped', 'pager_results'],
-        'posts/index.php'            => ['record_list_row_actions', 'admin-table-wrap', 'table-striped', 'pager_results'],
+        'posts/index.php'            => ['record_list_row_actions', 'record_list_header', 'admin-table-wrap', 'table-striped', 'pager_results'],
         'position_items/index.php'   => ['record_list_row_actions', 'record_list_header', 'admin-table-wrap', 'table-striped', 'pager_results'],
         'project_projects/index.php' => ['record_list_row_actions', 'record_list_header', 'admin-table-wrap', 'table-striped', 'pager_results'],
         'sectors/index.php'          => ['record_list_row_actions', 'admin-table-wrap', 'table-striped', 'pager_results', 'filter_active'],

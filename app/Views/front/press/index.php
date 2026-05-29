@@ -1,10 +1,20 @@
+<?php
+
+/** @var string $heroOverline */
+/** @var string $heroTitle */
+/** @var string $heroLead */
+?>
 <div class="wysiwyg ggz-shell-wysiwyg ggz-cms-fullwidth ggz-press-page ggz-press-page--index">
     <section class="section section--press" aria-labelledby="press-heading">
         <div class="section__inner ggz-press-layout">
             <header class="ggz-press-page__hero section__header">
-                <div class="section__overline"><?= esc(lang('Site.press_overline')) ?></div>
-                <h1 class="section__title" id="press-heading"><?= esc(lang('Site.breadcrumb_press')) ?></h1>
-                <p class="section__lead"><?= esc(lang('Site.press_index_intro')) ?></p>
+                <?php if (trim($heroOverline) !== '') : ?>
+                    <div class="section__overline"><?= esc($heroOverline) ?></div>
+                <?php endif; ?>
+                <h1 class="section__title" id="press-heading"><?= esc($heroTitle) ?></h1>
+                <?php if (trim($heroLead) !== '') : ?>
+                    <p class="section__lead"><?= esc($heroLead) ?></p>
+                <?php endif; ?>
             </header>
             <?php if ($posts === []) : ?>
                 <div class="ggz-press-empty cercle">
