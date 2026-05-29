@@ -14,6 +14,7 @@ $blockViews = [
     'legal_prose'     => 'admin/pages/block_legal_prose',
     'sources'         => 'admin/pages/block_sources',
     'sectors_grid'    => 'admin/pages/block_sectors_grid',
+    'footer_columns'  => 'admin/pages/block_footer_columns',
     'html'            => 'admin/pages/block_html',
 ];
 
@@ -27,6 +28,7 @@ $blockLabels = [
     'legal_prose'      => lang('Admin.cms_add_legal_prose'),
     'sources'          => lang('Admin.cms_add_sources'),
     'sectors_grid'     => lang('Admin.cms_add_sectors_grid'),
+    'footer_columns'   => lang('Admin.cms_add_footer_columns'),
     'html'             => lang('Admin.cms_add_html'),
 ];
 
@@ -40,6 +42,7 @@ $allowedBlockTypes = [
     'legal_prose',
     'sources',
     'sectors_grid',
+    'footer_columns',
     'html',
 ];
 
@@ -55,7 +58,10 @@ $mapBlockView = static function (array $block) use ($blockViews): string {
 
 <div id="cms-blocks-panel" class="<?= $contentMode === 'blocks' ? '' : 'd-none' ?>">
     <label class="form-label"><?= esc(lang('Admin.cms_blocks_label')) ?></label>
-    <p class="text-muted small"><?= lang('Admin.cms_blocks_help') ?></p>
+    <p class="text-muted small"><?= lang('Admin.cms_blocks_help', [
+        site_url('admin/cms-guide-blocks'),
+        site_url('admin/cms-guide-blocks#admin-block-footer_columns'),
+    ]) ?></p>
 
     <div id="cms-blocks-container" class="mb-2">
         <?php foreach ($blocksForForm as $idx => $block) : ?>

@@ -74,7 +74,13 @@ Le rendu dépend de la **variante** :
 - **Usage** : afficher automatiquement les secteurs depuis la base.
 - **Rendu** : grille dynamique des secteurs.
 
-### 10) HTML libre (`html`)
+### 10) Colonnes pied de page (`footer_columns`)
+
+- **Usage** : page réservée `site-footer` (colonnes sous le logo).
+- **Champs clés** : colonnes (titre), liens (libellé, URL), case « À venir » pour les entrées sans lien.
+- **Rendu** : même présentation que le pied de page du site (grille de colonnes). Ne pas envelopper dans un conteneur colonnes : le gabarit le fait déjà.
+
+### 11) HTML libre (`html`)
 
 - **Usage** : cas avancé uniquement.
 - **Rendu** : HTML injecté tel quel.
@@ -88,7 +94,7 @@ Le rendu dépend de la **variante** :
 
 ## Guide visuel dans le back-office
 
-Dans l’admin : **Aide → Guide des blocs Pages** (`/admin/cms-guide-blocks`).
+Dans l’admin : **Aide → Blocs Pages (aide)** (`/admin/cms-guide-blocks`).
 
 Chaque type de bloc y est illustré avec un exemple JSON et un aperçu du rendu public (même charte que le site).
 

@@ -4,43 +4,12 @@ declare(strict_types=1);
 
 /**
  * @var list<array{id:string,title:string,intro:string,html:string}> $sections
- * @var list<array{id:string,label:string,render:string}> $pageBlocks
  */
 ?>
 <div class="mb-4 admin-cms-guide-lead">
     <h1 class="h3 mb-2"><?= esc(lang('Admin.title_cms_components')) ?></h1>
     <p class="text-muted mb-0"><?= lang('Admin.cms_guide_lead') ?></p>
 </div>
-
-<?php if (! empty($pageBlocks ?? [])) : ?>
-    <div class="card mb-4 border-info-subtle">
-        <div class="card-body">
-            <h2 class="h5 card-title mb-2">Blocs Pages (Page Builder)</h2>
-            <p class="small text-muted mb-3">
-                Référence rapide dans l’admin : quel bloc choisir et quel rendu public attendre.
-                Pour la version détaillée, voir <code>docs/AIDE-BLOCS-PAGES.md</code>.
-            </p>
-            <div class="table-responsive">
-                <table class="table table-sm align-middle mb-0">
-                    <thead>
-                    <tr>
-                        <th style="width: 32%">Bloc</th>
-                        <th>Rendu attendu</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($pageBlocks as $blk) : ?>
-                        <tr>
-                            <td><code><?= esc($blk['label']) ?></code></td>
-                            <td><?= esc($blk['render']) ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-<?php endif; ?>
 
 <?php foreach ($sections as $sec) : ?>
     <?php if ($sec['id'] === 'intro') : ?>
@@ -97,17 +66,7 @@ declare(strict_types=1);
                             </div>
                         </div>
                     <?php elseif ($canvas === '__footer__') : ?>
-                        <div class="cms-guide-sample__canvas cms-guide-sample__canvas--footer">
-                            <div class="ggz-public-theme cms-guide-preview-host ggz-main-shell cms-guide-preview-host--footer">
-                                <footer class="footer">
-                                    <div class="footer__inner">
-                                        <div class="footer__columns">
-                                            <?= $sec['html'] ?>
-                                        </div>
-                                    </div>
-                                </footer>
-                            </div>
-                        </div>
+                        <?= view('admin/partials/cms_guide_footer_canvas', ['html' => $sec['html']]) ?>
                     <?php else : ?>
                         <div class="cms-guide-sample__canvas">
                             <div class="ggz-public-theme cms-guide-preview-host ggz-main-shell">

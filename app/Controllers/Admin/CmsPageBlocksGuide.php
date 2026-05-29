@@ -25,10 +25,11 @@ class CmsPageBlocksGuide extends BaseController
 <link rel="stylesheet" href="{$cssBase}ggz-press-page.css">
 <link rel="stylesheet" href="{$cssBase}govgenz-guide-preview-parity.css">
 <link rel="stylesheet" href="{$cssBase}admin-cms-guide-preview.css">
+<link rel="stylesheet" href="{$cssBase}admin-cms-blocks-guide.css">
 HTML;
 
         return view('admin/layout', [
-            'title'     => 'Aide — blocs Pages',
+            'title'     => lang('Admin.title_cms_blocks_guide'),
             'extraHead' => $extra,
             'main'      => view('admin/cms_page_blocks_guide', [
                 'examples' => $this->examples(),
@@ -164,6 +165,35 @@ HTML;
                 'blocks' => [[
                     'type' => 'sources',
                     'lines' => ['Source 1', 'Source 2'],
+                ]],
+            ],
+            [
+                'id'    => 'footer_columns',
+                'title' => 'Colonnes pied de page',
+                'usage' => 'Uniquement sur la page publiée slug site-footer (FR + EN). Remplace les trois colonnes sous le logo ; type technique footer_columns. Bouton éditeur : « + Colonnes pied de page ».',
+                'blocks' => [[
+                    'type' => 'footer_columns',
+                    'columns' => [
+                        [
+                            'title' => 'Le mouvement',
+                            'links' => [
+                                ['label' => 'Qui sommes-nous', 'href' => '/qui-sommes-nous', 'soon' => 0],
+                                ['label' => 'Contact', 'href' => '/contact', 'soon' => 0],
+                            ],
+                        ],
+                        [
+                            'title' => 'A venir',
+                            'links' => [
+                                ['label' => 'declaration.govgenz.org', 'href' => '', 'soon' => 1],
+                            ],
+                        ],
+                        [
+                            'title' => 'Contacts',
+                            'links' => [
+                                ['label' => 'contact@govgenz.org', 'href' => 'mailto:contact@govgenz.org', 'soon' => 0],
+                            ],
+                        ],
+                    ],
                 ]],
             ],
             [

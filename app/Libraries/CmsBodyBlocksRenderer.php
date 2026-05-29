@@ -30,6 +30,7 @@ final class CmsBodyBlocksRenderer
                 'legal_prose' => self::legalProse($b),
                 'sources' => self::sources($b),
                 'sectors_grid' => self::sectorsGrid($b),
+                'footer_columns' => self::footerColumns($b),
                 'html' => (string) ($b['html'] ?? ''),
                 default => '',
             };
@@ -608,5 +609,58 @@ final class CmsBodyBlocksRenderer
         return '<section class="section section--secteurs"><div class="section__inner">'
             . $grid
             . '</div></section>';
+    }
+
+    /**
+     * @param array<string, mixed> $b
+     */
+    private static function footerColumns(array $b): string
+    {
+        $html = '';
+        $columns = $b['columns'] ?? [];
+        if (! is_array($columns)) {
+            return '';
+        }
+        foreach ($columns as $column) {
+            if (! is_array($column)) {
+                continue;
+            }
+            $title = trim((string) ($column['title'] ?? ''));
+            $linksHtml = '';
+            $links = $column['links'] ?? [];
+            if (is_array($links)) {
+                foreach ($links as $link) {
+                    if (! is_array($link)) {
+                        continue;
+                    }
+                    $label = trim((string) ($link['label'] ?? ''));
+                    if ($label === '') {
+                        continue;
+                    }
+                    $soon = (int) ($link['soon'] ?? 0) === 1;
+                    $href = trim((string) ($link['href'] ?? ''));
+                    if ($soon) {
+                        $linksHtml .= '<li><span class="footer__soon">' . esc($label) . '</span></li>';
+                    } elseif ($href !== '') {
+                        $linksHtml .= '<li><a href="' . esc($href, 'attr') . '">' . esc($label) . '</a></li>';
+                    } else {
+                        $linksHtml .= '<li>' . esc($label) . '</li>';
+                    }
+                }
+            }
+            if ($title === '' && $linksHtml === '') {
+                continue;
+            }
+            $html .= '<div class="footer__col">';
+            if ($title !== '') {
+                $html .= '<h4>' . esc($title) . '</h4>';
+            }
+            if ($linksHtml !== '') {
+                $html .= '<ul>' . $linksHtml . '</ul>';
+            }
+            $html .= '</div>';
+        }
+
+        return $html;
     }
 }

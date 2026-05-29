@@ -141,6 +141,7 @@
                 body.appendChild(row);
                 bindRepeatable(wrap);
                 bindMediaPickers(row);
+                initFooterLinkSoon(row);
                 reindexRepeatable(wrap);
                 const blockRow = wrap.closest('.cms-block-row');
                 if (blockRow) {
@@ -475,6 +476,7 @@
         bindDrag(node);
         bindRepeatables(node);
         bindMediaPickers(node);
+        initFooterLinkSoon(node);
         const variantInput = node.querySelector('select[name^="blocks["][name$="[variant]"]');
         if (variantInput) {
             variantInput.addEventListener('change', () => {
@@ -482,6 +484,40 @@
             });
             refreshCardsVariantFields(node);
         }
+    }
+
+    /**
+     * @param {HTMLInputElement} checkbox
+     */
+    function syncFooterLinkSoon(checkbox) {
+        const row = checkbox.closest('.cms-repeat-row');
+        if (!row) {
+            return;
+        }
+        const hrefInput = row.querySelector('input[name*="[href]"]');
+        if (!(hrefInput instanceof HTMLInputElement)) {
+            return;
+        }
+        const soon = checkbox.checked;
+        hrefInput.disabled = soon;
+        if (soon) {
+            hrefInput.value = '';
+        }
+    }
+
+    container.addEventListener('change', (ev) => {
+        const target = ev.target;
+        if (target instanceof HTMLInputElement && target.classList.contains('js-footer-link-soon')) {
+            syncFooterLinkSoon(target);
+        }
+    });
+
+    function initFooterLinkSoon(scope) {
+        scope.querySelectorAll('.js-footer-link-soon').forEach((el) => {
+            if (el instanceof HTMLInputElement) {
+                syncFooterLinkSoon(el);
+            }
+        });
     }
 
     htmlRadio.addEventListener('change', syncPanels);
@@ -492,6 +528,7 @@
         bindDrag(row);
         bindRepeatables(row);
         bindMediaPickers(row);
+        initFooterLinkSoon(row);
         const variantInput = row.querySelector('select[name^="blocks["][name$="[variant]"]');
         if (variantInput) {
             variantInput.addEventListener('change', () => {

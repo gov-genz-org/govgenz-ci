@@ -40,6 +40,36 @@
   padding: 1.25rem 1rem 1.5rem;
 }
 
+/* Parité footer site : pas de styles « prose » wysiwyg sur les colonnes */
+.cms-guide-preview-host--footer .footer__columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  margin-bottom: 0;
+}
+
+.cms-guide-preview-host--footer .footer a,
+.cms-guide-preview-host--footer .footer__col a {
+  color: var(--text-tertiary);
+  font-weight: 400;
+  text-decoration: none;
+  text-decoration-color: transparent;
+  background: transparent;
+}
+
+.cms-guide-preview-host--footer .footer__col a:hover {
+  color: var(--red-soft);
+  text-decoration: none;
+}
+
+/* Annule tout style « prose » hérité dans l’admin (#main-content, wysiwyg, etc.) */
+#main-content .cms-guide-preview-host--footer .footer__col a {
+  color: var(--text-tertiary) !important;
+  font-weight: 400 !important;
+  text-decoration: none !important;
+  text-underline-offset: unset !important;
+}
+
 
 /* Hero accueil : pas d’animation dans l’aperçu (évite opacity:0 du template) */
 .cms-guide-preview-host.ggz-main-shell .hero__title-1,

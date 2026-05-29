@@ -88,6 +88,11 @@ final class CmsPageBodyNormalizer
                 $norm = self::normalizeSectionHeader($blk);
                 $norm['type'] = 'sectors_grid';
                 $out[] = $norm;
+            } elseif ($type === 'footer_columns') {
+                $norm = self::normalizeFooterColumnsBlock($blk);
+                if ($norm !== null) {
+                    $out[] = $norm;
+                }
             } elseif ($type === 'html') {
                 $html = trim((string) ($blk['html'] ?? ''));
                 if ($html !== '') {
@@ -362,6 +367,56 @@ final class CmsPageBodyNormalizer
         }
 
         return $data + ['type' => 'contact_grid', 'items' => $items];
+    }
+
+    /**
+     * @param array<string, mixed> $blk
+     *
+     * @return array<string, mixed>|null
+     */
+    private static function normalizeFooterColumnsBlock(array $blk): ?array
+    {
+        $columns = [];
+        $raw = $blk['columns'] ?? [];
+        if (is_array($raw)) {
+            foreach ($raw as $column) {
+                if (! is_array($column)) {
+                    continue;
+                }
+                $title = trim((string) ($column['title'] ?? ''));
+                $links = [];
+                $rawLinks = $column['links'] ?? [];
+                if (is_array($rawLinks)) {
+                    foreach ($rawLinks as $row) {
+                        if (! is_array($row)) {
+                            continue;
+                        }
+                        $label = trim((string) ($row['label'] ?? ''));
+                        if ($label === '') {
+                            continue;
+                        }
+                        $soon = (int) ($row['soon'] ?? 0) === 1;
+                        $links[] = [
+                            'label' => $label,
+                            'href'  => $soon ? '' : trim((string) ($row['href'] ?? '')),
+                            'soon'  => $soon ? 1 : 0,
+                        ];
+                    }
+                }
+                if ($title === '' && $links === []) {
+                    continue;
+                }
+                $columns[] = [
+                    'title' => $title,
+                    'links' => $links,
+                ];
+            }
+        }
+        if ($columns === []) {
+            return null;
+        }
+
+        return ['type' => 'footer_columns', 'columns' => $columns];
     }
 
     /**

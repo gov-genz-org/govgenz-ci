@@ -149,4 +149,28 @@ final class CmsBodyBlocksRendererTest extends CIUnitTestCase
 
         $this->assertSame('', $html);
     }
+
+    public function testFooterColumnsRendersFooterColMarkup(): void
+    {
+        $html = CmsBodyBlocksRenderer::render([
+            [
+                'type'    => 'footer_columns',
+                'columns' => [
+                    [
+                        'title' => 'Contacts',
+                        'links' => [
+                            ['label' => 'contact@govgenz.org', 'href' => 'mailto:contact@govgenz.org', 'soon' => 0],
+                            ['label' => 'declaration.govgenz.org', 'href' => '', 'soon' => 1],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->assertStringContainsString('footer__col', $html);
+        $this->assertStringContainsString('<h4>Contacts</h4>', $html);
+        $this->assertStringContainsString('mailto:contact@govgenz.org', $html);
+        $this->assertStringContainsString('footer__soon', $html);
+        $this->assertStringContainsString('declaration.govgenz.org', $html);
+    }
 }

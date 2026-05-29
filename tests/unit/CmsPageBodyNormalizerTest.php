@@ -114,4 +114,39 @@ final class CmsPageBodyNormalizerTest extends CIUnitTestCase
         $this->assertSame('legal_prose', $decoded[2]['type']);
         $this->assertSame(['Contact', 'Hébergement'], $decoded[2]['sections'][0]['bullets']);
     }
+
+    public function testFooterColumnsBlockNormalizesColumnsAndSoonLinks(): void
+    {
+        $request = IncomingRequestFactory::withPost([
+            'content_mode' => 'blocks',
+            'blocks'       => [
+                [
+                    'type'    => 'footer_columns',
+                    'columns' => [
+                        [
+                            'title' => 'Le mouvement',
+                            'links' => [
+                                ['label' => 'Contact', 'href' => '/contact', 'soon' => '0'],
+                                ['label' => 'declaration.govgenz.org', 'href' => '/x', 'soon' => '1'],
+                                ['label' => '  ', 'href' => '/skip'],
+                            ],
+                        ],
+                        ['title' => '', 'links' => []],
+                    ],
+                ],
+            ],
+        ]);
+
+        $decoded = json_decode((string) CmsPageBodyNormalizer::bodyBlocksJson($request), true);
+        $this->assertIsArray($decoded);
+        $this->assertCount(1, $decoded);
+        $this->assertSame('footer_columns', $decoded[0]['type']);
+        $this->assertCount(1, $decoded[0]['columns']);
+        $this->assertSame('Le mouvement', $decoded[0]['columns'][0]['title']);
+        $this->assertCount(2, $decoded[0]['columns'][0]['links']);
+        $this->assertSame('/contact', $decoded[0]['columns'][0]['links'][0]['href']);
+        $this->assertSame(0, $decoded[0]['columns'][0]['links'][0]['soon']);
+        $this->assertSame('', $decoded[0]['columns'][0]['links'][1]['href']);
+        $this->assertSame(1, $decoded[0]['columns'][0]['links'][1]['soon']);
+    }
 }
