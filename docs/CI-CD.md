@@ -49,13 +49,18 @@ Exemples : `git fetch --tags && git tag -l 'v*' --sort=-v:refname | tail -5`
 
 Le workflow a besoin des permissions **`contents: write`** et **`pull-requests: write`** (job `release/tag`).
 
-**Création de PR par Actions** (sinon `GraphQL: GitHub Actions is not permitted to create or approve pull requests`) :
+**Création de PR après release** — si le job affiche *GitHub Actions is not permitted to create … pull requests*, le réglage **dépôt** ne suffit pas : l’**organisation** `gov-genz-org` bloque souvent la création de PR par `GITHUB_TOKEN`.
 
-1. **Dépôt** : Settings → Actions → General → **Workflow permissions** → cocher **Allow GitHub Actions to create and approve pull requests**.
-2. Si le dépôt est sous **organisation** : Organization Settings → Actions → General → même option (elle prime souvent sur le dépôt).
-3. **Secours** : secret `RELEASE_PR_TOKEN` (PAT fine-grained ou classique avec `contents` + `pull_requests` sur ce dépôt) — utilisé par `gh pr create` si défini.
+**Option 1 — Organisation** (owner org requis)  
+[github.com/organizations/gov-genz-org/settings/actions](https://github.com/organizations/gov-genz-org/settings/actions) → **Workflow permissions** → **Allow GitHub Actions to create and approve pull requests** → Save. Puis re-lancer le job `release/tag` (ou ouvrir la PR à la main une fois).
 
-Si seule la branche `release/post-vX.Y.Z-version` est créée, ouvrir la PR à la main : `compare/develop...release/post-vX.Y.Z-version` (le job affiche l’URL en erreur).
+**Option 2 — Secret `RELEASE_PR_TOKEN`** (sans changer la policy org)  
+1. Compte machine ou PAT d’un membre avec droit d’ouvrir des PR sur le dépôt.  
+2. PAT **fine-grained** : repository `govgenz-ci`, permissions **Contents** (read/write) + **Pull requests** (read/write).  
+3. Dépôt → Settings → Secrets and variables → Actions → **New repository secret** : `RELEASE_PR_TOKEN` = le PAT.  
+4. Re-lancer `release/tag` : `gh pr create` utilise ce token (la branche existe déjà, seule la PR sera créée).
+
+Si la branche `release/post-vX.Y.Z-version` existe sans PR : le job `release/tag` reste **vert** ; ouvrir `compare/develop...release/post-vX.Y.Z-version` (URL dans les logs `::notice::`).
 
 ## CI (GitHub Actions)
 
@@ -387,7 +392,7 @@ git push origin main
 ## Dépannage
 
 - **Checks introuvables dans le ruleset** : au moins une exécution réussie du workflow `CI` sur la branche concernée.
-- **`release/tag` : branche OK, PR refusée** (`GitHub Actions is not permitted to create … pull requests`) : activer la création de PR par Actions (voir [Tags de release](#tags-de-release-main)) ou secret `RELEASE_PR_TOKEN` ; en attendant, PR manuelle depuis `release/post-vX.Y.Z-version`.
+- **`release/tag` : branche OK, PR non créée** : policy org ou `RELEASE_PR_TOKEN` — voir [Tags de release](#tags-de-release-main) ; PR manuelle via l’URL `compare/develop...` dans les logs (job vert si la branche est poussée).
 - **CODEOWNERS ignoré** : fichier sur `main` ; équipe/org avec droits sur le dépôt.
 - **FTP échoue** : vérifier `REMOTE_DIR`, mode passif FTP, pare-feu ; consulter les logs du job `deploy/*`.
 - **Site cassé après deploy** : `.env` non déployé — vérifier la config sur le serveur ; lancer migrations manuellement.
