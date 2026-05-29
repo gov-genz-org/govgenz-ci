@@ -371,6 +371,17 @@ jobs:
           git config user.name "GovGenZ Release"
           git config user.email "noreply@govgenz.org"
 
+      - name: Configure Git credentials for release pushes
+        env:
+          RELEASE_PR_TOKEN: ${{ secrets.RELEASE_PR_TOKEN }}
+        run: |
+          if [[ -n "$RELEASE_PR_TOKEN" ]]; then
+            git remote set-url origin "https://x-access-token:${RELEASE_PR_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            echo "Git push : RELEASE_PR_TOKEN"
+          else
+            echo "Git push : GITHUB_TOKEN (checkout)"
+          fi
+
       - name: Compute next release tag
         id: tag
         run: |
