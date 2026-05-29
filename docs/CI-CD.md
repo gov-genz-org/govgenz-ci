@@ -34,10 +34,11 @@ Après un **push sur `main`** réussi et un **`deploy/production` vert**, le job
 2. Calcule le tag avec [`deploy/next-release-tag.sh`](../deploy/next-release-tag.sh) (`minor` ou `patch`).
 3. Crée un **tag annoté** sur le commit déployé et le pousse sur `origin`.
 4. Ne recrée pas de tag si ce commit a déjà un tag `v*.*.*` (re-run du workflow).
-5. Met à jour [`VERSION`](../VERSION) et [`CHANGELOG.md`](../CHANGELOG.md) sur **`develop`** avec le commit `release: increase next develop version` :
+5. Ouvre une **PR vers `develop`** (`release/post-vX.Y.Z-version`, commit `release: increase next develop version`) — le `GITHUB_TOKEN` ne peut **pas** contourner un ruleset (pas d’entrée « GitHub Actions » dans les bypass) :
    - `VERSION` → prochain minor semver (ex. release `v1.2.0` → `1.3.0`) ;
    - `CHANGELOG.md` → section `[1.2.0]` générée depuis les commits depuis le tag précédent ([`deploy/update-changelog.sh`](../deploy/update-changelog.sh)).
-   - No-op si les deux fichiers sont déjà à jour (ex. hotfix `v1.2.1` alors que `VERSION` vaut déjà `1.3.0` mais le CHANGELOG reçoit quand même la section hotfix).
+   - No-op si les deux fichiers sont déjà à jour.
+   - **Merger la PR** une fois `ci/test` vert (ruleset `develop` inchangé).
 
 **Détection** (message du commit HEAD sur `main`) :
 
@@ -46,7 +47,7 @@ Après un **push sur `main`** réussi et un **`deploy/production` vert**, le job
 
 Exemples : `git fetch --tags && git tag -l 'v*' --sort=-v:refname | tail -5`
 
-Le workflow a besoin de la permission **`contents: write`** (déjà accordée au job `release/tag`).
+Le workflow a besoin des permissions **`contents: write`** et **`pull-requests: write`** (job `release/tag`).
 
 ## CI (GitHub Actions)
 
@@ -283,18 +284,32 @@ Cible : branche `main`
 | Block force pushes | oui |
 | Require linear history | oui |
 
-### Ruleset `develop` (staging)
+### Ruleset `develop` (staging) {#ruleset-develop-staging}
 
 Cible : branche `develop`
 
+**Politique** : push direct interdit, merge via **PR** + **ci/test** + 1 approbation. Le job **`release/tag`** suit la même règle (PR automatique `release/post-vX.Y.Z-version`).
+
 | Règle | Valeur |
 |-------|--------|
-| Restrict updates | oui |
+| Restrict updates | oui (push direct interdit) |
 | Require pull request | oui |
 | Required approvals | **1** |
 | Require status checks | **ci/test** |
 | Block force pushes | recommandé |
 | Require linear history | optionnel |
+
+#### Pourquoi pas « GitHub Actions » dans Bypass ?
+
+L’UI ne propose pas **GitHub Actions** : seulement rôles (admin, write…), équipes, apps (Copilot, Merge Queue…). Le **`GITHUB_TOKEN`** du workflow **ne contourne pas** les rulesets — cocher *Repository admin* ne s’applique pas aux pushes faits par Actions.
+
+#### Option avancée : push direct (compte machine)
+
+1. Compte machine collaborateur **Write**, PAT fine-grained (contents sur ce dépôt).
+2. Équipe dédiée (ex. `@gov-genz-org/release-sync`) avec **uniquement** ce compte → **Bypass list** `develop` (PR + status checks).
+3. Secret `RELEASE_SYNC_GITHUB_TOKEN` et push avec ce token dans le job (pas `GITHUB_TOKEN`).
+
+Par défaut le dépôt utilise la **PR automatique** (aucun bypass à configurer).
 
 ### CODEOWNERS
 
