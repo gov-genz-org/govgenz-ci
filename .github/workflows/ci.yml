@@ -423,8 +423,10 @@ jobs:
 
           if [[ -n "$RELEASE_PR_TOKEN" ]]; then
             export GH_TOKEN="$RELEASE_PR_TOKEN"
+            echo "Création PR avec RELEASE_PR_TOKEN"
           else
             export GH_TOKEN="${{ github.token }}"
+            echo "::notice::RELEASE_PR_TOKEN absent — gh utilise GITHUB_TOKEN (policy org « create pull requests » requise)."
           fi
 
           git fetch origin develop main --tags
@@ -478,7 +480,8 @@ jobs:
             exit 0
           fi
           rm -f "$pr_body_file"
-          echo "::warning::Branche ${branch} poussée mais création PR refusée (policy Actions)."
-          echo "::warning::Activer : Settings → Actions → Workflow permissions → Allow GitHub Actions to create and approve pull requests (org ou dépôt)."
-          echo "::error::Ouvrir la PR manuellement : ${manual_pr_url}"
-          exit 1
+          echo "::warning::Branche ${branch} OK ; création PR refusée (policy org ou RELEASE_PR_TOKEN manquant)."
+          echo "::warning::Automatiser : org Settings → Actions → Allow GitHub Actions to create pull requests — ou secret RELEASE_PR_TOKEN (voir docs/CI-CD.md)."
+          echo "::notice::PR manuelle : ${manual_pr_url}"
+          # Branche + commit livrés : ne pas faire échouer release/tag sur main (merge PR à la main).
+          exit 0
