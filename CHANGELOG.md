@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.0] - 2026-05-29
+
+### Release
+
+- fix(ci): detect changelog merges via git log not head_commit (94e3169)
+- release: increase next develop version (decef96)
+- docs(changelog): v1.11.0 (adfb71c)
+
+
 ## [1.11.0] - 2026-05-29
 
 ### Release
