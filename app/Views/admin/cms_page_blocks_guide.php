@@ -65,6 +65,13 @@ $componentsFooterUrl = site_url('admin/cms-guide') . '#admin-site-footer';
                         'html' => CmsBodyBlocksRenderer::render($example['blocks']),
                     ]) ?>
                 </div>
+            <?php elseif ($example['id'] === 'sectors_grid') : ?>
+                <div class="cms-guide-sample">
+                    <div class="cms-guide-sample__label">Apercu grille secteurs (comme sur le site)</div>
+                    <?= view('admin/partials/cms_guide_sectors_canvas', [
+                        'html' => CmsBodyBlocksRenderer::render($example['blocks']),
+                    ]) ?>
+                </div>
             <?php else : ?>
                 <div class="cms-guide-sample">
                     <div class="cms-guide-sample__label">Apercu bloc</div>

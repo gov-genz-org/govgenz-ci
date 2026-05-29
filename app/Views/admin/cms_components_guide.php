@@ -29,7 +29,8 @@ declare(strict_types=1);
             'cercles' => 'section section--qui',
             'adn' => 'section section--adn',
             'structure' => 'section section--structure',
-            'secteurs' => 'section section--secteurs',
+            'secteurs' => '__sectors__',
+            'secteurs-dynamic' => '__sectors__',
             'etude' => 'section section--etude',
             'contact' => 'section section--contact',
             'press-page' => 'section section--press',
@@ -67,6 +68,8 @@ declare(strict_types=1);
                         </div>
                     <?php elseif ($canvas === '__footer__') : ?>
                         <?= view('admin/partials/cms_guide_footer_canvas', ['html' => $sec['html']]) ?>
+                    <?php elseif ($canvas === '__sectors__') : ?>
+                        <?= view('admin/partials/cms_guide_sectors_canvas', ['html' => $sec['html']]) ?>
                     <?php else : ?>
                         <div class="cms-guide-sample__canvas">
                             <div class="ggz-public-theme cms-guide-preview-host ggz-main-shell">

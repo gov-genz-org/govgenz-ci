@@ -311,15 +311,80 @@ if (! function_exists('cms_page_partner_slug_for_locale_switch')) {
     }
 }
 
+if (! function_exists('cms_sectors_static_sample_tile_grid_html')) {
+    /**
+     * Exemple statique pour l’aide admin quand la table sectors est absente ou vide.
+     */
+    function cms_sectors_static_sample_tile_grid_html(): string
+    {
+        return <<<'HTML'
+<div class="tile-grid">
+    <a href="mailto:education@govgenz.org" class="tile reveal" data-delay="0">
+        <div class="tile__name">EDUCATION</div>
+        <div class="tile__sub">Formation · Recherche</div>
+        <div class="tile__mail">education@govgenz.org</div>
+    </a>
+    <a href="mailto:legal@govgenz.org" class="tile reveal" data-delay="40">
+        <div class="tile__name">LEGAL</div>
+        <div class="tile__sub">Droit · Institutions</div>
+        <div class="tile__mail">legal@govgenz.org</div>
+    </a>
+</div>
+HTML;
+    }
+}
+
 if (! function_exists('cms_sectors_render_tile_grid_html')) {
     /**
      * Grille des secteurs depuis la table `sectors` (même source que Join et les projets).
      */
     function cms_sectors_render_tile_grid_html(): string
     {
+        $db = \Config\Database::connect();
+        if (! $db->tableExists('sectors')) {
+            return '';
+        }
+
         $sectors = model(\App\Models\SectorModel::class)->listOrdered();
 
         return view('front/sectors/tile_grid', ['sectors' => $sectors]);
+    }
+}
+
+if (! function_exists('cms_sectors_guide_preview_html')) {
+    /**
+     * Aperçu admin (aide HTML / blocs) : grille BDD ou exemple statique si vide.
+     */
+    function cms_sectors_guide_preview_html(): string
+    {
+        $grid = cms_sectors_render_tile_grid_html();
+        if ($grid !== '' && str_contains($grid, 'tile-grid')) {
+            return $grid;
+        }
+
+        return cms_sectors_static_sample_tile_grid_html();
+    }
+}
+
+if (! function_exists('cms_sectors_guide_preview_body')) {
+    /**
+     * Corps d’aperçu admin : remplace les marqueurs sans requête BDD si la table sectors manque.
+     */
+    function cms_sectors_guide_preview_body(string $html): string
+    {
+        $db = \Config\Database::connect();
+        if ($db->tableExists('sectors')) {
+            $body = cms_apply_html_embeds($html);
+            if (str_contains($body, 'tile-grid')) {
+                return $body;
+            }
+        }
+
+        if (str_contains($html, 'tile-grid')) {
+            return $html;
+        }
+
+        return cms_sectors_guide_preview_html();
     }
 }
 
@@ -365,6 +430,10 @@ if (! function_exists('cms_apply_html_embeds')) {
         }
 
         $gridHtml = cms_sectors_render_tile_grid_html();
+        if ($gridHtml === '') {
+            return $html;
+        }
+
         $patterns = [];
 
         foreach (['sectors-tile-grid', 'secteurs-tile-grid'] as $key) {

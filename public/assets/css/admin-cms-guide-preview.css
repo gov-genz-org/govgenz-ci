@@ -84,3 +84,16 @@
   opacity: 1;
   animation: none;
 }
+
+/* Tuiles secteurs : visibles dans l’aperçu admin (pas de scroll reveal) */
+.cms-guide-preview-host.ggz-main-shell .tile.reveal,
+.cms-guide-preview-host.ggz-main-shell .tile-grid .tile {
+  opacity: 1;
+  transform: none;
+}
+
+.cms-guide-preview-host.ggz-main-shell .tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: 1rem;
+}

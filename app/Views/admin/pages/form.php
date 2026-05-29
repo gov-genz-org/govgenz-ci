@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 helper(['admin', 'cms']);
 
-$layoutState = cms_layout_select_state(old('layout_key', $page !== null ? ($page['layout_key'] ?? '') : ''));
-
 $contentMode = $contentMode ?? 'html';
 $blocksForForm = $blocksForForm ?? [];
 $publicPreviewUrl = $publicPreviewUrl ?? null;
@@ -15,6 +13,9 @@ $listHeroCreateKind = $listHeroCreateKind ?? null;
 $listHeroDefaultLocale = $listHeroDefaultLocale ?? 'fr';
 $listHeroDefaultTranslationGroup = $listHeroDefaultTranslationGroup ?? null;
 $isListHeroForm = $listHeroKind !== null;
+
+$layoutDefault = ($page === null && ! $isListHeroForm) ? 'full' : (string) ($page['layout_key'] ?? '');
+$layoutState   = cms_layout_select_state(old('layout_key', $page !== null ? (string) ($page['layout_key'] ?? '') : $layoutDefault));
 
 $action = $page
     ? site_url('admin/pages/update/' . $page['id'])
