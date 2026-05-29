@@ -251,7 +251,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     timeout-minutes: 90
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: |
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      !contains(github.event.head_commit.message, 'release/changelog-')
     environment: production
     steps:
       - uses: actions/checkout@v4
@@ -357,7 +360,10 @@ jobs:
     name: release/tag
     runs-on: ubuntu-latest
     needs: deploy-production
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: |
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      !contains(github.event.head_commit.message, 'release/changelog-')
     permissions:
       contents: write
       pull-requests: write
@@ -582,3 +588,42 @@ jobs:
           echo "Merge standard refusé (approbation ruleset ?) — tentative admin…"
           gh pr merge "$PR_NUMBER" --admin --merge --delete-branch
           echo "::notice::PR #${PR_NUMBER} mergée (admin) dans develop"
+
+  # PR release/changelog-* → main : approbation + merge après ci/test + ci/build.
+  release-sync-merge-main:
+    name: release/sync-merge-main
+    runs-on: ubuntu-latest
+    needs: [test, build]
+    if: |
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.base.ref == 'main' &&
+      startsWith(github.event.pull_request.head.ref, 'release/changelog-')
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Approve and merge changelog PR on main
+        env:
+          RELEASE_PR_TOKEN: ${{ secrets.RELEASE_PR_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if [[ -z "$RELEASE_PR_TOKEN" ]]; then
+            echo "::warning::RELEASE_PR_TOKEN absent — merger la PR changelog #${PR_NUMBER} sur main à la main."
+            exit 0
+          fi
+          export GH_TOKEN="$RELEASE_PR_TOKEN"
+          state=$(gh pr view "$PR_NUMBER" --json state --jq '.state')
+          if [[ "$state" == "MERGED" ]]; then
+            echo "PR #${PR_NUMBER} déjà mergée"
+            exit 0
+          fi
+          gh pr review "$PR_NUMBER" --approve --body "CHANGELOG release (automatique)." || true
+          if gh pr merge "$PR_NUMBER" --merge --delete-branch; then
+            echo "::notice::PR #${PR_NUMBER} mergée dans main"
+            exit 0
+          fi
+          echo "Merge standard refusé (ruleset main ?) — tentative admin…"
+          gh pr merge "$PR_NUMBER" --admin --merge --delete-branch
+          echo "::notice::PR #${PR_NUMBER} mergée (admin) dans main"
