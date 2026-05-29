@@ -557,6 +557,8 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - uses: actions/checkout@v4
+
       - name: Approve and merge release sync PR
         env:
           RELEASE_PR_TOKEN: ${{ secrets.RELEASE_PR_TOKEN }}
