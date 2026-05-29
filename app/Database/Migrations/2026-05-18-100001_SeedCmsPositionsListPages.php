@@ -18,7 +18,7 @@ class SeedCmsPositionsListPages extends Migration
 
         $now = date('Y-m-d H:i:s');
 
-        $this->insertIfMissing('positions-programme', 'fr', [
+        $this->insertIfMissing('positions', 'fr', [
             'translation_group' => self::TRANSLATION_GROUP,
             'title'             => 'Liste programme positions',
             'hero_overline'     => 'Avis · Analyses · Alertes · Solutions',
@@ -26,7 +26,7 @@ class SeedCmsPositionsListPages extends Migration
             'hero_lead'         => 'GoV Gen Z Madagascar analyse l\'actualité malgache, alerte sur les manquements et propose des alternatives concrètes avec budgets et indicateurs mesurables.',
             'meta_title'        => 'Nos positions — GoV Gen Z Madagascar',
             'meta_description'  => 'Positions, analyses et alertes de GoV Gen Z Madagascar — avis documentés sur l\'actualité.',
-            'body_html'         => '<p>Bandeau de la liste publique <code>/positions</code>. Le corps n\'est pas affiché sur la liste.</p>',
+            'body_html'         => '',
             'status'            => 'published',
             'layout_key'        => 'full',
             'content_mode'      => 'html',
@@ -37,7 +37,7 @@ class SeedCmsPositionsListPages extends Migration
             'updated_at'        => $now,
         ]);
 
-        $this->insertIfMissing('positions-program', 'en', [
+        $this->insertIfMissing('positions', 'en', [
             'translation_group' => self::TRANSLATION_GROUP,
             'title'             => 'Positions programme listing',
             'hero_overline'     => 'Opinions · Analysis · Alerts · Solutions',
@@ -45,7 +45,7 @@ class SeedCmsPositionsListPages extends Migration
             'hero_lead'         => 'GoV Gen Z Madagascar analyses Malagasy current affairs, flags gaps and proposes concrete alternatives with budgets and measurable indicators.',
             'meta_title'        => 'Our positions — GoV Gen Z Madagascar',
             'meta_description'  => 'GoV Gen Z Madagascar positions, analysis and alerts on current affairs.',
-            'body_html'         => '<p>Hero for the public list at <code>/positions</code>. Body is not shown on the list.</p>',
+            'body_html'         => '',
             'status'            => 'published',
             'layout_key'        => 'full',
             'content_mode'      => 'html',

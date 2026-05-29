@@ -60,6 +60,8 @@ Merge **`fix/*` ou `hotfix/*` → `main`** : même pipeline, tag en **patch** (`
 | [CI-CD.md](docs/CI-CD.md) | Branches, rulesets, secrets FTP, workflow |
 | [CODE-STRUCTURE.md](docs/CODE-STRUCTURE.md) | Couches code, conventions, tests |
 | [CSS-ARCHITECTURE.md](docs/CSS-ARCHITECTURE.md) | CSS front / admin, programmes |
+| [GUIDE-FONCTIONNEL-MODERATEURS.md](docs/GUIDE-FONCTIONNEL-MODERATEURS.md) | Modération des pages, positions et projets |
+| [AIDE-BLOCS-PAGES.md](docs/AIDE-BLOCS-PAGES.md) | Choix des blocs Pages et rendu public attendu |
 | [GOVGENZ.md](../docs/GOVGENZ.md) | Vision, MVP |
 | [GOVGENZ-CONCEPTION.md](../docs/GOVGENZ-CONCEPTION.md) | Modèle de données, routes |
 

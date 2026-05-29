@@ -50,13 +50,12 @@ final class PublicNav
 
         return match ($mk) {
             'home' => $navActive === 'home',
-            'press' => $navActive === 'press',
+            'press', 'presse-programme', 'press-program' => $navActive === 'press',
             'join' => $navActive === 'join',
             'contact' => $navActive === 'contact',
             'admin_login' => $seg1 === 'admin' && $seg2 === 'login',
             // Liste programme (URL /projects ou vhost racine) : Front\Projects\Home impose navActive = "projects"
             'projects', 'projets-programme', 'projects-program' => self::isProjectsListMenuActive($navActive, $seg1),
-            // Liste programme positions : Front\Positions\Home impose navActive = "positions"
             'positions', 'positions-programme', 'positions-program' => self::isPositionsListMenuActive($navActive, $seg1),
             default => ($navActive === '' && $seg1 === $mk)
                 || self::isProjectsDetailMenuActive($navActive, $seg1, $mk)

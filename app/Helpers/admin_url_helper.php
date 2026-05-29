@@ -28,6 +28,7 @@ if (! function_exists('admin_site_url_for_locale')) {
 if (! function_exists('admin_public_page_url')) {
     /**
      * URL publique connue pour une page CMS (slug + locale), sinon null.
+     * Bandeaux de listes (press, projects, positions) → URL de la liste, pas une page CMS isolée.
      */
     function admin_public_page_url(?string $slug, ?string $locale = null): ?string
     {
@@ -35,9 +36,20 @@ if (! function_exists('admin_public_page_url')) {
             return null;
         }
 
-        helper('url');
+        helper(['url', 'cms']);
 
         $locale ??= 'fr';
+        $locale = $locale === 'en' ? 'en' : 'fr';
+
+        $listKind = cms_list_hero_page_kind($slug);
+        if ($listKind !== null) {
+            return match ($listKind) {
+                'press'     => admin_public_press_list_url($locale),
+                'projects'  => admin_public_projects_list_url($locale),
+                'positions' => admin_public_positions_list_url($locale),
+                default     => null,
+            };
+        }
 
         if ($slug === 'home') {
             return $locale === 'en' ? site_url('en') : site_url('/');
@@ -96,6 +108,16 @@ if (! function_exists('admin_public_projects_list_url')) {
         $path   = $locale === 'en' ? '/en/' : '/';
 
         return $scheme . '://' . $host . $path;
+    }
+}
+
+if (! function_exists('admin_public_press_list_url')) {
+    function admin_public_press_list_url(?string $locale = null): string
+    {
+        helper('url');
+        $locale = $locale === 'en' ? 'en' : 'fr';
+
+        return $locale === 'en' ? site_url('en/press') : site_url('press');
     }
 }
 

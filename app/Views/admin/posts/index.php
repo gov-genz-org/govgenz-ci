@@ -14,6 +14,7 @@ helper('admin');
 ?>
 <h1 class="h3 mb-1"><?= esc(lang('Admin.title_posts')) ?></h1>
 <p class="text-muted small mb-3"><?= lang('Admin.help_posts_intro') ?></p>
+<?= view('admin/partials/notes/record_list_header', ['listKind' => 'press']) ?>
 <div class="d-flex flex-wrap align-items-end gap-2 gap-md-3 mb-3">
     <a href="<?= site_url('admin/posts/create') ?>" class="btn btn-primary btn-sm"><?= esc(lang('Admin.breadcrumb_post_new')) ?></a>
     <form method="get" action="<?= site_url('admin/posts') ?>" class="d-flex flex-wrap align-items-end gap-2 ms-md-auto">

@@ -41,17 +41,24 @@ helper('admin');
     <div id="media-library-grid" class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
         <?php foreach ($items as $row) :
             $mime = (string) ($row['mime_type'] ?? '');
-            $url  = \App\Libraries\CmsMediaStorage::publicUrl((string) ($row['stored_filename'] ?? ''));
-            $name = (string) ($row['original_name'] ?? '');
+            $storedFilename = (string) ($row['stored_filename'] ?? '');
+            $url  = \App\Libraries\CmsMediaStorage::publicUrl($storedFilename);
+            $name = basename($storedFilename);
+            $copyUrl = '/uploads/cms/' . rawurlencode($storedFilename);
             $needle = mb_strtolower($name . ' ' . $mime);
             $isImg = str_starts_with($mime, 'image/');
+            $fileExists = \App\Libraries\CmsMediaStorage::fileExists($storedFilename);
             ?>
             <div class="col js-media-item" data-filter="<?= esc($needle) ?>">
                 <div class="card h-100 shadow-sm">
-                    <?php if ($isImg) : ?>
+                    <?php if ($isImg && $fileExists) : ?>
                         <a href="<?= esc($url) ?>" target="_blank" rel="noopener" class="ratio ratio-4x3 bg-light">
                             <img src="<?= esc($url) ?>" alt="" class="card-img-top object-fit-contain p-2" loading="lazy">
                         </a>
+                    <?php elseif (! $fileExists) : ?>
+                        <div class="card-body d-flex align-items-center justify-content-center bg-light ratio ratio-4x3">
+                            <span class="badge text-bg-warning"><?= esc(lang('Admin.label_media_missing')) ?></span>
+                        </div>
                     <?php else : ?>
                         <div class="card-body d-flex align-items-center justify-content-center bg-light ratio ratio-4x3">
                             <span class="text-muted small text-center px-2">PDF<br><?= esc($name) ?></span>
@@ -61,8 +68,10 @@ helper('admin');
                         <div class="small text-truncate" title="<?= esc($name) ?>"><?= esc($name) ?></div>
                         <div class="small text-muted"><?= esc(number_format((int) ($row['size_bytes'] ?? 0))) ?> o</div>
                         <div class="d-flex flex-wrap gap-1 mt-2">
-                            <button type="button" class="btn btn-outline-secondary btn-sm js-copy-media-url" data-url="<?= esc($url, 'attr') ?>"><?= esc(lang('Admin.action_copy_url')) ?></button>
-                            <a href="<?= esc($url) ?>" class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener"><?= esc(lang('Admin.action_open')) ?></a>
+                            <button type="button" class="btn btn-outline-secondary btn-sm js-copy-media-url" data-url="<?= esc($copyUrl, 'attr') ?>"><?= esc(lang('Admin.action_copy_url')) ?></button>
+                            <?php if ($fileExists) : ?>
+                                <a href="<?= esc($url) ?>" class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener"><?= esc(lang('Admin.action_open')) ?></a>
+                            <?php endif; ?>
                             <form action="<?= site_url('admin/media/delete/' . (int) ($row['id'] ?? 0)) ?>" method="post" class="d-inline js-confirm-submit" data-confirm-message="<?= esc(lang('Admin.confirm_delete_media'), 'attr') ?>">
                                 <?= csrf_field() ?>
                                 <button type="submit" class="btn btn-outline-danger btn-sm"><?= esc(lang('Admin.action_delete')) ?></button>

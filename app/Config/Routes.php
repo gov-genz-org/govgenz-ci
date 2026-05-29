@@ -112,6 +112,7 @@ $routes->group('admin', ['filter' => 'authadmin'], static function ($routes) {
     $routes->post('project-projects/preview-draft/(:num)', 'Admin\\Preview::projectDraft/$1');
 
     $routes->get('cms-guide', 'Admin\\CmsComponentsGuide::index');
+    $routes->get('cms-guide-blocks', 'Admin\\CmsPageBlocksGuide::index');
 
     $routes->get('pages', 'Admin\\Pages::index');
     $routes->get('pages/create', 'Admin\\Pages::create');

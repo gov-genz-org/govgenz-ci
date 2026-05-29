@@ -68,26 +68,93 @@ if (! function_exists('cms_page_suppress_outer_hero')) {
     }
 }
 
+if (! function_exists('cms_list_hero_page_slugs')) {
+    /**
+     * Slugs CMS des bandeaux de listes publiques (identiques FR/EN, même URL que la liste).
+     *
+     * @return list<string>
+     */
+    function cms_list_hero_page_slugs(): array
+    {
+        return ['press', 'projects', 'positions'];
+    }
+}
+
+if (! function_exists('cms_list_hero_page_kind')) {
+    /**
+     * Type de liste si le slug est un bandeau programme (y compris anciens slugs avant migration).
+     */
+    function cms_list_hero_page_kind(?string $slug): ?string
+    {
+        $slug = strtolower(trim((string) ($slug ?? '')));
+
+        return match (true) {
+            in_array($slug, ['press', 'presse-programme', 'press-program'], true) => 'press',
+            in_array($slug, ['projects', 'projets-programme', 'projects-program'], true) => 'projects',
+            in_array($slug, ['positions', 'positions-programme', 'positions-program'], true) => 'positions',
+            default => null,
+        };
+    }
+}
+
+if (! function_exists('cms_is_list_hero_page_slug')) {
+    function cms_is_list_hero_page_slug(?string $slug): bool
+    {
+        return cms_list_hero_page_kind($slug) !== null;
+    }
+}
+
+if (! function_exists('cms_list_hero_canonical_slug')) {
+    function cms_list_hero_canonical_slug(string $kind): string
+    {
+        return \App\Libraries\CmsListHeroPageAdmin::canonicalSlug($kind);
+    }
+}
+
 if (! function_exists('cms_positions_list_page_slug')) {
     function cms_positions_list_page_slug(): string
     {
-        return \App\Libraries\SiteContext::locale() === 'en'
-            ? 'positions-program'
-            : 'positions-programme';
+        return 'positions';
     }
 }
 
 if (! function_exists('cms_projects_list_page_slug')) {
     /**
-     * Slug de page CMS pour le bandeau titre / chapô de la liste publique des projets.
-     * Données initiales : migration `SeedCmsProjectsProgramListPages` (FR `projets-programme`, EN `projects-program`).
-     * Sinon, créer une page publiée avec les champs sur-titre, titre affiché, chapô, méta.
+     * Slug CMS du bandeau de la liste publique /projects (champs hero uniquement).
      */
     function cms_projects_list_page_slug(): string
     {
-        return \App\Libraries\SiteContext::locale() === 'en'
-            ? 'projects-program'
-            : 'projets-programme';
+        return 'projects';
+    }
+}
+
+if (! function_exists('cms_press_list_page_slug')) {
+    /**
+     * Slug CMS du bandeau de la liste publique /press (champs hero uniquement).
+     */
+    function cms_press_list_page_slug(): string
+    {
+        return 'press';
+    }
+}
+
+if (! function_exists('cms_list_hero_page_row')) {
+    /**
+     * @return array<string, mixed>|null
+     */
+    function cms_list_hero_page_row(string $kind, string $locale): ?array
+    {
+        $canonical = cms_list_hero_canonical_slug($kind);
+        if ($canonical === '') {
+            return null;
+        }
+
+        $locale = $locale === 'en' ? 'en' : 'fr';
+
+        return model(\App\Models\CmsPageModel::class)
+            ->where('slug', $canonical)
+            ->where('locale', $locale)
+            ->first();
     }
 }
 
@@ -244,15 +311,80 @@ if (! function_exists('cms_page_partner_slug_for_locale_switch')) {
     }
 }
 
+if (! function_exists('cms_sectors_static_sample_tile_grid_html')) {
+    /**
+     * Exemple statique pour l’aide admin quand la table sectors est absente ou vide.
+     */
+    function cms_sectors_static_sample_tile_grid_html(): string
+    {
+        return <<<'HTML'
+<div class="tile-grid">
+    <a href="mailto:education@govgenz.org" class="tile reveal" data-delay="0">
+        <div class="tile__name">EDUCATION</div>
+        <div class="tile__sub">Formation · Recherche</div>
+        <div class="tile__mail">education@govgenz.org</div>
+    </a>
+    <a href="mailto:legal@govgenz.org" class="tile reveal" data-delay="40">
+        <div class="tile__name">LEGAL</div>
+        <div class="tile__sub">Droit · Institutions</div>
+        <div class="tile__mail">legal@govgenz.org</div>
+    </a>
+</div>
+HTML;
+    }
+}
+
 if (! function_exists('cms_sectors_render_tile_grid_html')) {
     /**
      * Grille des secteurs depuis la table `sectors` (même source que Join et les projets).
      */
     function cms_sectors_render_tile_grid_html(): string
     {
+        $db = \Config\Database::connect();
+        if (! $db->tableExists('sectors')) {
+            return '';
+        }
+
         $sectors = model(\App\Models\SectorModel::class)->listOrdered();
 
         return view('front/sectors/tile_grid', ['sectors' => $sectors]);
+    }
+}
+
+if (! function_exists('cms_sectors_guide_preview_html')) {
+    /**
+     * Aperçu admin (aide HTML / blocs) : grille BDD ou exemple statique si vide.
+     */
+    function cms_sectors_guide_preview_html(): string
+    {
+        $grid = cms_sectors_render_tile_grid_html();
+        if ($grid !== '' && str_contains($grid, 'tile-grid')) {
+            return $grid;
+        }
+
+        return cms_sectors_static_sample_tile_grid_html();
+    }
+}
+
+if (! function_exists('cms_sectors_guide_preview_body')) {
+    /**
+     * Corps d’aperçu admin : remplace les marqueurs sans requête BDD si la table sectors manque.
+     */
+    function cms_sectors_guide_preview_body(string $html): string
+    {
+        $db = \Config\Database::connect();
+        if ($db->tableExists('sectors')) {
+            $body = cms_apply_html_embeds($html);
+            if (str_contains($body, 'tile-grid')) {
+                return $body;
+            }
+        }
+
+        if (str_contains($html, 'tile-grid')) {
+            return $html;
+        }
+
+        return cms_sectors_guide_preview_html();
     }
 }
 
@@ -298,6 +430,10 @@ if (! function_exists('cms_apply_html_embeds')) {
         }
 
         $gridHtml = cms_sectors_render_tile_grid_html();
+        if ($gridHtml === '') {
+            return $html;
+        }
+
         $patterns = [];
 
         foreach (['sectors-tile-grid', 'secteurs-tile-grid'] as $key) {

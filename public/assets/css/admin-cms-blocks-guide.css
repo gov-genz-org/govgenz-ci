@@ -1,0 +1,121 @@
+/**
+ * Aide blocs Pages — chrome admin neutre + aperçus sans dominante pêche/rosé.
+ */
+
+/* Cartes Bootstrap de la doc (pas le style « carte CMS » sombre du site public) */
+.admin-cms-blocks-guide > .card {
+  background: #fff;
+  border-color: #e9ecef;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  padding: 0;
+}
+
+.admin-cms-blocks-guide > .card:hover {
+  border-color: #e9ecef;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.admin-cms-blocks-guide > .card .card-body {
+  color: var(--ggz-admin-body, #212529);
+}
+
+.admin-cms-blocks-guide > .card .card-title {
+  color: inherit;
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.admin-cms-blocks-guide > .card a:not(.btn) {
+  color: #495057;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.admin-cms-blocks-guide > .card a:not(.btn):hover {
+  color: #212529;
+  text-decoration: underline;
+  text-decoration-color: rgba(33, 37, 41, 0.35);
+}
+
+.admin-cms-blocks-guide .card.border-blocks-guide-accent {
+  border-color: #dee2e6;
+}
+
+/* Aperçu pied de page : liens comme sur le site (pas de style prose pêche) */
+.admin-cms-blocks-guide .cms-guide-preview-host--footer .footer a,
+.admin-cms-blocks-guide .cms-guide-preview-host--footer .footer__col a {
+  color: var(--text-tertiary) !important;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 400 !important;
+  text-decoration: none !important;
+  text-underline-offset: unset !important;
+  text-decoration-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.admin-cms-blocks-guide .cms-guide-preview-host--footer .footer__col a:hover {
+  color: var(--red-soft) !important;
+  text-decoration: none !important;
+}
+
+.admin-cms-blocks-guide .cms-guide-preview-host--footer .footer__soon {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.admin-cms-blocks-guide .cms-guide-preview-host.ggz-public-theme {
+  --ggz-peach: var(--ggz-red);
+}
+
+.admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.contact-block) {
+  color: var(--text-tertiary);
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.contact-block):hover {
+  color: var(--text-bright);
+}
+
+.admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg blockquote {
+  border-left-color: var(--red-soft);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg .cms-actions .cms-btn--primary {
+  background: var(--red-primary);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 6px 20px rgba(196, 30, 48, 0.35);
+}
+
+.admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg .cms-actions .cms-btn--primary:hover {
+  background: var(--red-glow);
+  box-shadow: 0 10px 28px rgba(196, 30, 48, 0.45);
+}
+
+.admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg .cms-actions .cms-btn--secondary {
+  border-color: var(--border-strong);
+}
+
+.admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg .cms-actions .cms-btn--secondary:hover {
+  border-color: var(--red-soft);
+  background: rgba(196, 30, 48, 0.08);
+}
+
+.admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg dl.cms-metrics > div:hover {
+  border-color: var(--ggz-border-red);
+}
+
+.admin-cms-blocks-guide .cms-guide-preview-host .btn--primary {
+  background: var(--red-primary);
+  color: var(--text-bright);
+  box-shadow: 0 4px 20px rgba(196, 30, 48, 0.35);
+}
+
+.admin-cms-blocks-guide .cms-guide-preview-host .btn--primary:hover {
+  background: var(--red-glow);
+}

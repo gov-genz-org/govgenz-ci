@@ -21,7 +21,7 @@ class SeedCmsProjectsProgramListPages extends Migration
 
         $now = date('Y-m-d H:i:s');
 
-        $this->insertIfMissing('projets-programme', 'fr', [
+        $this->insertIfMissing('projects', 'fr', [
             'translation_group' => self::TRANSLATION_GROUP,
             'title'             => 'Liste programme projets',
             'hero_overline'     => 'Programme Paikady Taninjanaka',
@@ -29,7 +29,7 @@ class SeedCmsProjectsProgramListPages extends Migration
             'hero_lead'         => 'Initiatives publiées par l’équipe GoV Gen Z Madagascar : statut, secteurs d’intervention, bénévolat et territoires. Les fiches détaillées reprennent le même gabarit que la version statique de référence.',
             'meta_title'        => 'Projets — GoV Gen Z Madagascar',
             'meta_description'  => 'Programme projets GoV Gen Z Madagascar — cartographie des initiatives publiées.',
-            'body_html'         => '<p>Cette page alimente le bandeau titre et chapô de la <strong>liste publique des projets</strong> (<code>/projects</code>). Le corps n’est pas affiché sur cette liste.</p>',
+            'body_html'         => '',
             'status'            => 'published',
             'layout_key'        => 'full',
             'content_mode'      => 'html',
@@ -40,7 +40,7 @@ class SeedCmsProjectsProgramListPages extends Migration
             'updated_at'        => $now,
         ]);
 
-        $this->insertIfMissing('projects-program', 'en', [
+        $this->insertIfMissing('projects', 'en', [
             'translation_group' => self::TRANSLATION_GROUP,
             'title'             => 'Project programme listing',
             'hero_overline'     => 'Paikady Taninjanaka programme',
@@ -48,7 +48,7 @@ class SeedCmsProjectsProgramListPages extends Migration
             'hero_lead'         => 'Initiatives published by the GoV Gen Z Madagascar team: status, sectors of intervention, volunteering and territories. Detailed project pages follow the same layout as the static reference.',
             'meta_title'        => 'Projects — GoV Gen Z Madagascar',
             'meta_description'  => 'GoV Gen Z Madagascar project programme — mapping of published initiatives.',
-            'body_html'         => '<p>This page feeds the title and lead of the <strong>public project list</strong> (<code>/projects</code>). The body is not shown on that list.</p>',
+            'body_html'         => '',
             'status'            => 'published',
             'layout_key'        => 'full',
             'content_mode'      => 'html',

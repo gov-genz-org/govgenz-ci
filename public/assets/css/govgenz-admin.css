@@ -233,23 +233,39 @@ aside.admin-sidebar .admin-sidebar-nav .nav-link.active {
   background: #fff !important;
 }
 
-.project-block-drag-handle {
+.project-block-drag-handle,
+.cms-block-drag-handle {
   cursor: grab;
   line-height: 1;
 }
 
-.project-block-drag-handle:active {
+.project-block-drag-handle:active,
+.cms-block-drag-handle:active {
   cursor: grabbing;
 }
 
-.project-block-row.is-dragging {
+.project-block-row.is-dragging,
+.cms-block-row.is-dragging {
   opacity: 0.55;
 }
 
-#pp-blocks-container.is-drag-over {
+#pp-blocks-container.is-drag-over,
+#cms-blocks-container.is-drag-over {
   outline: 2px dashed rgba(196, 30, 48, 0.25);
   outline-offset: 4px;
   border-radius: 0.5rem;
+}
+
+.cms-media-preview {
+  width: 4.5rem;
+  min-height: 4.5rem;
+}
+
+.cms-media-preview img {
+  display: block;
+  width: 4rem;
+  height: 4rem;
+  object-fit: contain;
 }
 
 .admin-empty {
