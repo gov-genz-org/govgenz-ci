@@ -260,9 +260,13 @@ jobs:
       - id: kind
         run: |
           msg=$(git log -1 --pretty=%B)
+          first=$(printf '%s\n' "$msg" | head -n1)
           if echo "$msg" | grep -qiE 'release/changelog-'; then
             echo "changelog_only=true" >> "$GITHUB_OUTPUT"
-            echo "Merge changelog uniquement — pas de deploy ni release/tag"
+            echo "Merge changelog — pas de deploy ni release/tag"
+          elif echo "$first" | grep -qiE '^(docs\(changelog\)|chore\(release\)|fix\(ci\)):'; then
+            echo "changelog_only=true" >> "$GITHUB_OUTPUT"
+            echo "Commit release/CI automatique — pas de deploy ni release/tag"
           else
             echo "changelog_only=false" >> "$GITHUB_OUTPUT"
           fi
