@@ -414,32 +414,51 @@ jobs:
         env:
           TAG: ${{ steps.tag.outputs.name }}
           BUMP: ${{ steps.tag.outputs.bump }}
-          GH_TOKEN: ${{ github.token }}
+          RELEASE_PR_TOKEN: ${{ secrets.RELEASE_PR_TOKEN }}
         run: |
           chmod +x deploy/next-develop-version.sh deploy/update-changelog.sh
-          git fetch origin develop main --tags
-          git checkout develop
-          git pull --ff-only origin develop
-          next=$(./deploy/next-develop-version.sh "$TAG")
-          current=$(tr -d '[:space:]' < VERSION 2>/dev/null || true)
-          if [[ "$current" != "$next" ]]; then
-            printf '%s\n' "$next" > VERSION
-          fi
-          ./deploy/update-changelog.sh "$TAG" "$BUMP" "${{ github.sha }}"
-          if git diff --quiet -- VERSION CHANGELOG.md; then
-            echo "VERSION et CHANGELOG déjà à jour"
-            exit 0
-          fi
           branch="release/post-${TAG}-version"
-          git checkout -b "$branch"
-          git add VERSION CHANGELOG.md
-          git commit -m "release: increase next develop version"
-          git push -u origin "$branch"
-          if gh pr list --head "$branch" --base develop --state open --json number --jq '.[0].number' | grep -q .; then
+          repo="${{ github.server_url }}/${{ github.repository }}"
+          manual_pr_url="${repo}/compare/develop...${branch}?expand=1"
+
+          if [[ -n "$RELEASE_PR_TOKEN" ]]; then
+            export GH_TOKEN="$RELEASE_PR_TOKEN"
+          else
+            export GH_TOKEN="${{ github.token }}"
+          fi
+
+          git fetch origin develop main --tags
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+            git fetch origin "$branch"
+            git checkout -B "$branch" "origin/$branch"
+          else
+            git checkout develop
+            git pull --ff-only origin develop
+            next=$(./deploy/next-develop-version.sh "$TAG")
+            current=$(tr -d '[:space:]' < VERSION 2>/dev/null || true)
+            if [[ "$current" != "$next" ]]; then
+              printf '%s\n' "$next" > VERSION
+            fi
+            ./deploy/update-changelog.sh "$TAG" "$BUMP" "${{ github.sha }}"
+            if git diff --quiet -- VERSION CHANGELOG.md; then
+              echo "VERSION et CHANGELOG déjà à jour sur develop"
+              exit 0
+            fi
+            git checkout -b "$branch"
+            git add VERSION CHANGELOG.md
+            git commit -m "release: increase next develop version"
+            git push -u origin "$branch"
+          fi
+
+          next=$(tr -d '[:space:]' < VERSION 2>/dev/null || true)
+          current=$(git show develop:VERSION 2>/dev/null | tr -d '[:space:]' || true)
+
+          if gh pr list --head "$branch" --base develop --state open --json url --jq '.[0].url' | grep -q .; then
             pr_url=$(gh pr list --head "$branch" --base develop --state open --json url --jq '.[0].url')
             echo "::notice::PR déjà ouverte : ${pr_url}"
             exit 0
           fi
+
           pr_body_file=$(mktemp)
           printf '%s\n' \
             "Mise à jour automatique après le tag **${TAG}** sur \`main\`." \
@@ -449,10 +468,17 @@ jobs:
             "" \
             "Merger après **ci/test** (ruleset \`develop\`)." \
             > "$pr_body_file"
-          gh pr create \
+          if gh pr create \
             --base develop \
             --head "$branch" \
-            --title "release: bump develop to ${next} after ${TAG}" \
-            --body-file "$pr_body_file"
+            --title "release: bump develop to ${next:-?} after ${TAG}" \
+            --body-file "$pr_body_file"; then
+            rm -f "$pr_body_file"
+            echo "::notice::develop VERSION ${current:-∅} → ${next} ; CHANGELOG ${TAG} — PR créée"
+            exit 0
+          fi
           rm -f "$pr_body_file"
-          echo "::notice::develop VERSION ${current:-∅} → ${next} ; CHANGELOG ${TAG} — PR créée"
+          echo "::warning::Branche ${branch} poussée mais création PR refusée (policy Actions)."
+          echo "::warning::Activer : Settings → Actions → Workflow permissions → Allow GitHub Actions to create and approve pull requests (org ou dépôt)."
+          echo "::error::Ouvrir la PR manuellement : ${manual_pr_url}"
+          exit 1

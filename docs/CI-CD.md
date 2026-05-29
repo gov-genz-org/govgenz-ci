@@ -49,6 +49,14 @@ Exemples : `git fetch --tags && git tag -l 'v*' --sort=-v:refname | tail -5`
 
 Le workflow a besoin des permissions **`contents: write`** et **`pull-requests: write`** (job `release/tag`).
 
+**Création de PR par Actions** (sinon `GraphQL: GitHub Actions is not permitted to create or approve pull requests`) :
+
+1. **Dépôt** : Settings → Actions → General → **Workflow permissions** → cocher **Allow GitHub Actions to create and approve pull requests**.
+2. Si le dépôt est sous **organisation** : Organization Settings → Actions → General → même option (elle prime souvent sur le dépôt).
+3. **Secours** : secret `RELEASE_PR_TOKEN` (PAT fine-grained ou classique avec `contents` + `pull_requests` sur ce dépôt) — utilisé par `gh pr create` si défini.
+
+Si seule la branche `release/post-vX.Y.Z-version` est créée, ouvrir la PR à la main : `compare/develop...release/post-vX.Y.Z-version` (le job affiche l’URL en erreur).
+
 ## CI (GitHub Actions)
 
 Fichier : [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
@@ -379,6 +387,7 @@ git push origin main
 ## Dépannage
 
 - **Checks introuvables dans le ruleset** : au moins une exécution réussie du workflow `CI` sur la branche concernée.
+- **`release/tag` : branche OK, PR refusée** (`GitHub Actions is not permitted to create … pull requests`) : activer la création de PR par Actions (voir [Tags de release](#tags-de-release-main)) ou secret `RELEASE_PR_TOKEN` ; en attendant, PR manuelle depuis `release/post-vX.Y.Z-version`.
 - **CODEOWNERS ignoré** : fichier sur `main` ; équipe/org avec droits sur le dépôt.
 - **FTP échoue** : vérifier `REMOTE_DIR`, mode passif FTP, pare-feu ; consulter les logs du job `deploy/*`.
 - **Site cassé après deploy** : `.env` non déployé — vérifier la config sur le serveur ; lancer migrations manuellement.
