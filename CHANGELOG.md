@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-05-29
+
+### Release
+
+- feat(ci): Add RELEASE_PR_TOKEN (f34f5f3)
+- fix(ci): update CHANGELOG on main and auto-merge release PR on develop (bc7c99a)
+- release: increase next develop version (8965c55)
+
+
 ## [1.9.0] - 2026-05-29
 
 ### Release
