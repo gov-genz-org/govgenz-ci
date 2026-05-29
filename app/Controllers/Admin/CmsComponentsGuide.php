@@ -31,7 +31,22 @@ HTML;
             'title'     => 'Aide — composants HTML',
             'extraHead' => $extra,
             'main'      => view('admin/cms_components_guide', [
-                'sections' => CmsPublicHtmlGuide::sections(),
+                'sections'    => CmsPublicHtmlGuide::sections(),
+                'pageBlocks'  => [
+                    ['id' => 'section_text', 'label' => 'Texte', 'render' => 'Section éditoriale (paragraphes + puces + source)'],
+                    ['id' => 'cards_simple', 'label' => 'Cartes · Simple', 'render' => 'Grille de cartes génériques'],
+                    ['id' => 'cards_circle', 'label' => 'Cartes · Cercle', 'render' => 'Bloc “Qui sommes-nous” avec valeurs/médias'],
+                    ['id' => 'cards_pillar', 'label' => 'Cartes · ADN', 'render' => 'Cartes ADN (numéro, sur-titre, puces)'],
+                    ['id' => 'cards_tile', 'label' => 'Cartes · Tuiles', 'render' => 'Tuiles cliquables (titre/sous-titre/lien)'],
+                    ['id' => 'stats_grid', 'label' => 'Chiffres', 'render' => 'Statistiques + actions'],
+                    ['id' => 'organization_hub', 'label' => 'Organisation', 'render' => 'Hub central + fonctions/équipes'],
+                    ['id' => 'contact_grid', 'label' => 'Contacts', 'render' => 'Grille de blocs contact'],
+                    ['id' => 'cta_panel', 'label' => 'Appel à action', 'render' => 'Bandeau CTA avec boutons'],
+                    ['id' => 'legal_prose', 'label' => 'Mentions / texte long', 'render' => 'Sections longues structurées'],
+                    ['id' => 'sources', 'label' => 'Sources', 'render' => 'Liste de références'],
+                    ['id' => 'sectors_grid', 'label' => 'Grille secteurs', 'render' => 'Grille dynamique depuis la base secteurs'],
+                    ['id' => 'html', 'label' => 'HTML libre', 'render' => 'Rendu brut (avancé, à éviter en modération courante)'],
+                ],
             ]),
         ]);
     }

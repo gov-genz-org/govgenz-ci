@@ -237,6 +237,24 @@ body.ggz-public-theme #main-content.ggz-layout-full {
     filter: invert(83%) sepia(20%) saturate(726%) hue-rotate(302deg) brightness(102%) contrast(98%);
 }
 
+.cercle__icon--media-pair {
+    width: 48px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+.cercle__icon--media-pair img {
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    max-width: 48px;
+    object-fit: contain;
+}
+
 .cercle__title {
     font-family: var(--font-display);
     font-size: 1.4rem;
@@ -257,6 +275,18 @@ body.ggz-public-theme #main-content.ggz-layout-full {
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+/* Carte entière cliquable : pas de style “lien” sur le texte */
+.ggz-cards-row a.card {
+    display: block;
+    color: inherit;
+    font-weight: inherit;
+    text-decoration: none;
+}
+
+.ggz-cards-row a.card:hover {
+    color: inherit;
 }
 
 /* --- Page d’accueil type govgenz.org (charte sombre) --- */
@@ -470,14 +500,14 @@ article.wysiwyg p {
     margin-right: auto;
 }
 
-article.wysiwyg a:not(.btn) {
+article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.contact-block) {
     color: var(--ggz-peach);
     font-weight: 600;
     text-decoration: underline;
     text-underline-offset: 2px;
 }
 
-article.wysiwyg a:not(.btn):hover {
+article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.contact-block):hover {
     color: var(--ggz-text-on-dark);
 }
 

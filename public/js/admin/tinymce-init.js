@@ -129,7 +129,7 @@
                 return;
             }
             editor.insertContent(
-                `<p><img src="${escapeHtmlAttr(url)}" alt="À compléter : courte description de l’image (accessibilité)" /></p>`,
+                `<p><img src="${escapeHtmlAttr(url)}" alt="" /></p>`,
             );
             mediaModal().hide();
         };
@@ -143,7 +143,7 @@
             return;
         }
 
-        const rawItems = Array.isArray(payload.items) ? payload.items : [];
+        const rawItems = Array.isArray(payload.items) ? payload.items.filter((item) => item.exists !== false) : [];
         const images = rawItems.filter((i) => i.mime && String(i.mime).indexOf('image/') === 0);
         const page = Math.max(1, Number(payload.page) || 1);
         const totalPages = Math.max(1, Number(payload.totalPages) || 1);

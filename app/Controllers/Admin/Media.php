@@ -7,6 +7,8 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Libraries\CmsMediaStorage;
 use App\Models\CmsMediaModel;
+use App\Models\CmsPageModel;
+use App\Models\CmsPostModel;
 use CodeIgniter\HTTP\ResponseInterface;
 use Config\Mimes;
 
@@ -37,11 +39,13 @@ class Media extends BaseController
             if ($fn === '') {
                 continue;
             }
+            $displayName = $this->mediaDisplayName($r);
             $out[] = [
-                'id'   => (int) ($r['id'] ?? 0),
-                'url'  => CmsMediaStorage::publicUrl($fn),
-                'name' => (string) ($r['original_name'] ?? ''),
-                'mime' => (string) ($r['mime_type'] ?? ''),
+                'id'     => (int) ($r['id'] ?? 0),
+                'url'    => CmsMediaStorage::publicUrl($fn),
+                'name'   => $displayName,
+                'mime'   => (string) ($r['mime_type'] ?? ''),
+                'exists' => CmsMediaStorage::fileExists($fn),
             ];
         }
 
@@ -168,7 +172,13 @@ class Media extends BaseController
             return redirect()->to(site_url('admin/media'))->with('error', lang('Admin.error_media_not_found'));
         }
 
-        $path = CmsMediaStorage::filePath((string) ($row['stored_filename'] ?? ''));
+        $storedFilename = (string) ($row['stored_filename'] ?? '');
+        $fileExists     = CmsMediaStorage::fileExists($storedFilename);
+        if ($fileExists && $this->mediaIsReferenced($row)) {
+            return redirect()->to(site_url('admin/media'))->with('error', lang('Admin.error_media_in_use'));
+        }
+
+        $path = CmsMediaStorage::resolveReadablePath($storedFilename);
         if (is_file($path)) {
             @unlink($path);
         }
@@ -205,5 +215,106 @@ class Media extends BaseController
         }
 
         return false;
+    }
+
+    /**
+     * @param array<string, mixed> $media
+     */
+    private function mediaIsReferenced(array $media): bool
+    {
+        $id = (int) ($media['id'] ?? 0);
+        $fn = basename((string) ($media['stored_filename'] ?? ''));
+        if ($id <= 0 && $fn === '') {
+            return false;
+        }
+
+        foreach (model(CmsPageModel::class)->findAll() as $page) {
+            if ($id > 0 && (int) ($page['hero_image_id'] ?? 0) === $id) {
+                return true;
+            }
+            if ($fn !== '' && (
+                $this->htmlReferencesMedia((string) ($page['body_html'] ?? ''), $fn)
+                || $this->htmlReferencesMedia((string) ($page['body_blocks'] ?? ''), $fn)
+            )) {
+                return true;
+            }
+            if ($id > 0 && $this->jsonReferencesMediaId((string) ($page['body_blocks'] ?? ''), $id)) {
+                return true;
+            }
+        }
+
+        if ($fn === '') {
+            return false;
+        }
+
+        foreach (model(CmsPostModel::class)->findAll() as $post) {
+            if (
+                $this->htmlReferencesMedia((string) ($post['body_html'] ?? ''), $fn)
+                || $this->htmlReferencesMedia((string) ($post['excerpt'] ?? ''), $fn)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function htmlReferencesMedia(string $html, string $storedFilename): bool
+    {
+        if ($html === '' || $storedFilename === '') {
+            return false;
+        }
+
+        return str_contains($html, 'uploads/cms/' . $storedFilename)
+            || str_contains($html, '/uploads/cms/' . $storedFilename);
+    }
+
+    private function jsonReferencesMediaId(string $json, int $mediaId): bool
+    {
+        $json = trim($json);
+        if ($json === '' || $json === '[]') {
+            return false;
+        }
+
+        $decoded = json_decode($json, true);
+        if (! is_array($decoded)) {
+            return false;
+        }
+
+        return $this->valueReferencesMediaId($decoded, $mediaId);
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function valueReferencesMediaId(mixed $value, int $mediaId): bool
+    {
+        if (! is_array($value)) {
+            return false;
+        }
+
+        foreach ($value as $key => $child) {
+            if (is_string($key) && preg_match('/(^|_)media_id(_\d+)?$/', $key) === 1 && (int) $child === $mediaId) {
+                return true;
+            }
+            if (is_array($child) && $this->valueReferencesMediaId($child, $mediaId)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function mediaDisplayName(array $row): string
+    {
+        $name = trim((string) ($row['original_name'] ?? ''));
+        if ($name !== '') {
+            return basename($name);
+        }
+
+        return basename((string) ($row['stored_filename'] ?? ''));
     }
 }

@@ -313,7 +313,7 @@ class Pages extends BaseController
     {
         helper(['cms', 'admin']);
 
-        $contentMode = old('content_mode', $page !== null ? ($page['content_mode'] ?? 'html') : 'html');
+        $contentMode = old('content_mode', $page !== null ? ($page['content_mode'] ?? 'html') : 'blocks');
         if (! in_array($contentMode, ['html', 'blocks'], true)) {
             $contentMode = 'html';
         }
