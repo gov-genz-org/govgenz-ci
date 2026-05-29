@@ -33,12 +33,15 @@ Après un **push sur `main`** réussi et un **`deploy/production` vert**, le job
    - **merge `fix/*` ou `hotfix/*` → `main`** → **incrément patch** (`v1.1.0` → `v1.1.1`).
 2. Calcule le tag avec [`deploy/next-release-tag.sh`](../deploy/next-release-tag.sh) (`minor` ou `patch`).
 3. Crée un **tag annoté** sur le commit déployé et le pousse sur `origin`.
-4. Ne recrée pas de tag si ce commit a déjà un tag `v*.*.*` (re-run du workflow).
-5. Ouvre une **PR vers `develop`** (`release/post-vX.Y.Z-version`, commit `release: increase next develop version`) — le `GITHUB_TOKEN` ne peut **pas** contourner un ruleset (pas d’entrée « GitHub Actions » dans les bypass) :
+4. Met à jour **`CHANGELOG.md` sur `main`** (section `[X.Y.Z]`, commit `docs(changelog): vX.Y.Z`) — idempotent si déjà présent ; repli PR `release/changelog-vX.Y.Z-main` si push direct refusé (ruleset `main`).
+5. Ne recrée pas de tag si ce commit a déjà un tag `v*.*.*` (re-run du workflow).
+6. Ouvre une **PR vers `develop`** (`release/post-vX.Y.Z-version`, commit `release: increase next develop version`) :
    - `VERSION` → prochain minor semver (ex. release `v1.2.0` → `1.3.0`) ;
-   - `CHANGELOG.md` → section `[1.2.0]` générée depuis les commits depuis le tag précédent ([`deploy/update-changelog.sh`](../deploy/update-changelog.sh)).
-   - No-op si les deux fichiers sont déjà à jour.
-   - **Merger la PR** une fois `ci/test` vert (ruleset `develop` inchangé).
+   - `CHANGELOG.md` → même section `[1.2.0]` que sur `main` ([`deploy/update-changelog.sh`](../deploy/update-changelog.sh)).
+   - No-op si les deux fichiers sont déjà à jour sur `develop`.
+   - **`release/sync-merge-develop`** approuve et merge la PR après **`ci/test`** si `RELEASE_PR_TOKEN` est défini ; sinon merger à la main.
+
+**Pourquoi `main` était en retard** : avant l’étape 4, seul `develop` recevait le CHANGELOG (PR post-tag) ; `main` ne le récupérait qu’au merge `develop` → `main` suivant. D’où un tag `v1.9.0` sur `main` sans section `[1.9.0]` dans le fichier sur `main`.
 
 **Détection** (message du commit HEAD sur `main`) :
 
@@ -54,13 +57,14 @@ Le workflow a besoin des permissions **`contents: write`** et **`pull-requests: 
 **Option 1 — Organisation** (owner org requis)  
 [github.com/organizations/gov-genz-org/settings/actions](https://github.com/organizations/gov-genz-org/settings/actions) → **Workflow permissions** → **Allow GitHub Actions to create and approve pull requests** → Save. Puis re-lancer le job `release/tag` (ou ouvrir la PR à la main une fois).
 
-**Option 2 — Secret `RELEASE_PR_TOKEN`** (sans changer la policy org)  
-1. Compte machine ou PAT d’un membre avec droit d’ouvrir des PR sur le dépôt.  
-2. PAT **fine-grained** : repository `govgenz-ci`, permissions **Contents** (read/write) + **Pull requests** (read/write).  
-3. Dépôt → Settings → Secrets and variables → Actions → **New repository secret** : `RELEASE_PR_TOKEN` = le PAT.  
-4. Re-lancer `release/tag` : `gh pr create` utilise ce token (la branche existe déjà, seule la PR sera créée).
+**Option 2 — Secret `RELEASE_PR_TOKEN`** (recommandé si la policy org bloque Actions)  
+1. Compte machine ou PAT d’un membre **admin du dépôt** (ou équipe en **bypass** ruleset `develop` pour éviter l’approbation manuelle).  
+2. PAT **fine-grained** : repository `govgenz-ci`, **Contents** + **Pull requests** (read/write).  
+3. Secret Actions : `RELEASE_PR_TOKEN` = le PAT.  
+4. **`release/tag`** : crée la PR avec ce token (re-run si la branche existe déjà).  
+5. **`release/sync-merge-develop`** : sur la PR `release/post-*` → `develop`, après **`ci/test` vert**, approuve et merge (repli `--admin` si l’approbation est refusée).
 
-Si la branche `release/post-vX.Y.Z-version` existe sans PR : le job `release/tag` reste **vert** ; ouvrir `compare/develop...release/post-vX.Y.Z-version` (URL dans les logs `::notice::`).
+Si la branche existe sans PR : ouvrir `compare/develop...release/post-vX.Y.Z-version` ; le merge auto se déclenchera au prochain run CI sur la PR si `RELEASE_PR_TOKEN` est défini.
 
 ## CI (GitHub Actions)
 
@@ -80,6 +84,7 @@ Jobs optionnels (non requis par ruleset) :
 | `deploy/staging` | `develop`, ou lancement manuel du workflow `CI` | FTP → environnement staging |
 | `deploy/production` | `main` | FTP → production |
 | `release/tag` | `main` (après deploy prod OK) | Tag Git annoté `vMAJOR.MINOR.PATCH` (minor +1 ou patch +1 si hotfix) |
+| `release/sync-merge-develop` | PR `release/post-*` → `develop` (après `ci/test`) | Approbation + merge auto (`RELEASE_PR_TOKEN`) |
 
 Déploiement manuel d’une feature branch en staging : **Actions → CI → Run workflow**, choisir la branche dans le sélecteur GitHub, puis lancer. Le workflow exécute `ci/test`, `ci/build`, puis `deploy/staging`.
 
@@ -392,7 +397,8 @@ git push origin main
 ## Dépannage
 
 - **Checks introuvables dans le ruleset** : au moins une exécution réussie du workflow `CI` sur la branche concernée.
-- **`release/tag` : branche OK, PR non créée** : policy org ou `RELEASE_PR_TOKEN` — voir [Tags de release](#tags-de-release-main) ; PR manuelle via l’URL `compare/develop...` dans les logs (job vert si la branche est poussée).
+- **`release/tag` : branche OK, PR non créée** : policy org ou `RELEASE_PR_TOKEN` — voir [Tags de release](#tags-de-release-main) ; PR manuelle via l’URL `compare/develop...` dans les logs.
+- **PR `release/post-*` ouverte mais pas mergée** : configurer `RELEASE_PR_TOKEN` (admin dépôt ou bypass ruleset) ; le job `release/sync-merge-develop` merge après `ci/test`, sinon approbation + merge à la main.
 - **CODEOWNERS ignoré** : fichier sur `main` ; équipe/org avec droits sur le dépôt.
 - **FTP échoue** : vérifier `REMOTE_DIR`, mode passif FTP, pare-feu ; consulter les logs du job `deploy/*`.
 - **Site cassé après deploy** : `.env` non déployé — vérifier la config sur le serveur ; lancer migrations manuellement.
