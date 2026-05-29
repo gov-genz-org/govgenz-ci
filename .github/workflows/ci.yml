@@ -360,6 +360,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
       contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -408,11 +409,12 @@ jobs:
           git push origin "$TAG"
           echo "::notice::Tag ${TAG} créé sur origin (commit ${{ github.sha }})"
 
-      - name: Bump VERSION and CHANGELOG on develop
+      - name: Open PR on develop (VERSION + CHANGELOG after release)
         if: steps.tag.outputs.already_tagged != 'true'
         env:
           TAG: ${{ steps.tag.outputs.name }}
           BUMP: ${{ steps.tag.outputs.bump }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           chmod +x deploy/next-develop-version.sh deploy/update-changelog.sh
           git fetch origin develop main --tags
@@ -428,7 +430,29 @@ jobs:
             echo "VERSION et CHANGELOG déjà à jour"
             exit 0
           fi
+          branch="release/post-${TAG}-version"
+          git checkout -b "$branch"
           git add VERSION CHANGELOG.md
           git commit -m "release: increase next develop version"
-          git push origin develop
-          echo "::notice::develop VERSION ${current:-∅} → ${next} ; CHANGELOG ${TAG}"
+          git push -u origin "$branch"
+          if gh pr list --head "$branch" --base develop --state open --json number --jq '.[0].number' | grep -q .; then
+            pr_url=$(gh pr list --head "$branch" --base develop --state open --json url --jq '.[0].url')
+            echo "::notice::PR déjà ouverte : ${pr_url}"
+            exit 0
+          fi
+          pr_body_file=$(mktemp)
+          printf '%s\n' \
+            "Mise à jour automatique après le tag **${TAG}** sur \`main\`." \
+            "" \
+            "- \`VERSION\` : ${current:-?} → **${next}**" \
+            "- \`CHANGELOG.md\` : section **${TAG}**" \
+            "" \
+            "Merger après **ci/test** (ruleset \`develop\`)." \
+            > "$pr_body_file"
+          gh pr create \
+            --base develop \
+            --head "$branch" \
+            --title "release: bump develop to ${next} after ${TAG}" \
+            --body-file "$pr_body_file"
+          rm -f "$pr_body_file"
+          echo "::notice::develop VERSION ${current:-∅} → ${next} ; CHANGELOG ${TAG} — PR créée"
