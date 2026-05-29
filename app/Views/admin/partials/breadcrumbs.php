@@ -35,6 +35,8 @@ if ($rest === 'pages') {
     $items[] = ['label' => lang('Admin.breadcrumb_menu_edit'), 'url' => null];
 } elseif ($rest === 'cms-guide') {
     $items[] = ['label' => lang('Admin.nav_cms_guide'), 'url' => null];
+} elseif ($rest === 'cms-guide-blocks') {
+    $items[] = ['label' => lang('Admin.nav_cms_blocks_guide'), 'url' => null];
 } elseif ($rest === 'posts') {
     $items[] = ['label' => lang('Admin.nav_posts'), 'url' => null];
 } elseif ($rest === 'posts/create') {

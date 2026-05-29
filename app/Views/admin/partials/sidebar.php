@@ -12,6 +12,7 @@ if (($parts[0] ?? '') === 'admin') {
 $dashboardActive   = $section === 'dashboard';
 $pagesActive       = $section === 'pages';
 $cmsGuideActive    = $section === 'cms-guide';
+$cmsBlocksGuideActive = $section === 'cms-guide-blocks';
 $siteMenuActive    = $section === 'site-menu';
 $postsActive       = $section === 'posts';
 $mediaActive      = $section === 'media';
@@ -36,6 +37,7 @@ $isStaffAdmin      = session()->get('staff_role') === 'admin';
             <a class="nav-link rounded px-3 py-2 <?= $siteMenuActive ? 'active' : 'text-dark' ?>" href="<?= site_url('admin/site-menu') ?>"><?= esc(lang('Admin.nav_site_menu')) ?></a>
             <a class="nav-link rounded px-3 py-2 <?= $pagesActive ? 'active' : 'text-dark' ?>" href="<?= site_url('admin/pages') ?>"><?= esc(lang('Admin.nav_pages')) ?></a>
             <a class="nav-link rounded px-3 py-2 <?= $cmsGuideActive ? 'active' : 'text-dark' ?>" href="<?= site_url('admin/cms-guide') ?>"><?= esc(lang('Admin.nav_cms_guide')) ?></a>
+            <a class="nav-link rounded px-3 py-2 <?= $cmsBlocksGuideActive ? 'active' : 'text-dark' ?>" href="<?= site_url('admin/cms-guide-blocks') ?>"><?= esc(lang('Admin.nav_cms_blocks_guide')) ?></a>
             <a class="nav-link rounded px-3 py-2 <?= $postsActive ? 'active' : 'text-dark' ?>" href="<?= site_url('admin/posts') ?>"><?= esc(lang('Admin.nav_posts')) ?></a>
             <a class="nav-link rounded px-3 py-2 <?= $mediaActive ? 'active' : 'text-dark' ?>" href="<?= site_url('admin/media') ?>"><?= esc(lang('Admin.nav_media')) ?></a>
         </div>

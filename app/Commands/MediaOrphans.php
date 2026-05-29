@@ -23,10 +23,22 @@ class MediaOrphans extends BaseCommand
     public function run(array $params): void
     {
         $mediaRows = model(CmsMediaModel::class)->findAll();
+        $mediaById  = [];
+        foreach ($mediaRows as $mediaRow) {
+            $id = (int) ($mediaRow['id'] ?? 0);
+            $fn = (string) ($mediaRow['stored_filename'] ?? '');
+            if ($id > 0 && $fn !== '') {
+                $mediaById[$id] = $fn;
+            }
+        }
+
         $referenced  = [];
 
         foreach (model(CmsPageModel::class)->findAll() as $row) {
             $this->collectRefs((string) ($row['body_html'] ?? ''), $referenced);
+            $this->collectRefs((string) ($row['body_blocks'] ?? ''), $referenced);
+            $this->collectMediaId($row['hero_image_id'] ?? null, $mediaById, $referenced);
+            $this->collectBlockMediaRefs((string) ($row['body_blocks'] ?? ''), $mediaById, $referenced);
         }
         foreach (model(CmsPostModel::class)->findAll() as $row) {
             $this->collectRefs((string) ($row['body_html'] ?? ''), $referenced);
@@ -60,7 +72,7 @@ class MediaOrphans extends BaseCommand
             foreach ($orphans as $o) {
                 $id  = (int) ($o['id'] ?? 0);
                 $fn  = (string) ($o['stored_filename'] ?? '');
-                $path = CmsMediaStorage::filePath($fn);
+                $path = CmsMediaStorage::resolveReadablePath($fn);
                 if (is_file($path)) {
                     @unlink($path);
                 }
@@ -90,6 +102,64 @@ class MediaOrphans extends BaseCommand
             $fn = basename($fn);
             if ($fn !== '') {
                 $referenced[$fn] = true;
+            }
+        }
+    }
+
+    /**
+     * @param array<int, string> $mediaById
+     * @param array<string, true> $referenced
+     */
+    private function collectMediaId(mixed $rawId, array $mediaById, array &$referenced): void
+    {
+        if ($rawId === null || $rawId === '') {
+            return;
+        }
+
+        $id = (int) $rawId;
+        if ($id <= 0 || ! isset($mediaById[$id])) {
+            return;
+        }
+
+        $referenced[$mediaById[$id]] = true;
+    }
+
+    /**
+     * @param array<int, string> $mediaById
+     * @param array<string, true> $referenced
+     */
+    private function collectBlockMediaRefs(string $json, array $mediaById, array &$referenced): void
+    {
+        $json = trim($json);
+        if ($json === '' || $json === '[]') {
+            return;
+        }
+
+        $decoded = json_decode($json, true);
+        if (! is_array($decoded)) {
+            return;
+        }
+
+        $this->collectMediaIdsFromValue($decoded, $mediaById, $referenced);
+    }
+
+    /**
+     * @param mixed $value
+     * @param array<int, string> $mediaById
+     * @param array<string, true> $referenced
+     */
+    private function collectMediaIdsFromValue(mixed $value, array $mediaById, array &$referenced): void
+    {
+        if (! is_array($value)) {
+            return;
+        }
+
+        foreach ($value as $key => $child) {
+            if (is_string($key) && preg_match('/(^|_)media_id(_\d+)?$/', $key) === 1) {
+                $this->collectMediaId($child, $mediaById, $referenced);
+            }
+            if (is_array($child)) {
+                $this->collectMediaIdsFromValue($child, $mediaById, $referenced);
             }
         }
     }

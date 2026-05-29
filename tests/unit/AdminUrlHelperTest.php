@@ -56,4 +56,28 @@ final class AdminUrlHelperTest extends CIUnitTestCase
         $this->assertIsString($en);
         $this->assertStringContainsString('en', $en);
     }
+
+    public function testAdminPublicPressListUrl(): void
+    {
+        $fr = admin_public_press_list_url('fr');
+        $this->assertIsString($fr);
+        $this->assertStringContainsString('press', $fr);
+
+        $en = admin_public_press_list_url('en');
+        $this->assertStringContainsString('en', $en);
+        $this->assertStringContainsString('press', $en);
+    }
+
+    public function testAdminPublicPageUrlListHeroSlugsPointToPublicLists(): void
+    {
+        helper('cms');
+
+        $pressFr = admin_public_page_url('press', 'fr');
+        $this->assertIsString($pressFr);
+        $this->assertStringNotContainsString('program', $pressFr);
+        $this->assertSame(admin_public_press_list_url('fr'), $pressFr);
+
+        $projectsEn = admin_public_page_url('projects-program', 'en');
+        $this->assertSame(admin_public_projects_list_url('en'), $projectsEn);
+    }
 }

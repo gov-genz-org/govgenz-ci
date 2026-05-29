@@ -273,8 +273,9 @@ button.ggz-btn-urgent:hover {
   color: var(--ggz-text-muted);
 }
 
-/* —— Carte CMS générique —— */
-#main-content .card,
+/* —— Carte CMS générique (pas les .card Bootstrap de l’admin) —— */
+#main-content :is(article.wysiwyg, .ggz-shell-wysiwyg, .ggz-sector-cms-body) .card,
+#main-content .ggz-cards-row .card,
 .ggz-card {
   background: var(--ggz-bg-card-overlay);
   border: 1px solid var(--ggz-border-dim);
@@ -282,7 +283,8 @@ button.ggz-btn-urgent:hover {
   box-shadow: var(--ggz-shadow-card);
 }
 
-#main-content .card:hover,
+#main-content :is(article.wysiwyg, .ggz-shell-wysiwyg, .ggz-sector-cms-body) .card:hover,
+#main-content .ggz-cards-row .card:hover,
 .ggz-card:hover {
   border-color: rgba(255, 165, 134, 0.22);
   box-shadow: var(--ggz-shadow-card-hover);

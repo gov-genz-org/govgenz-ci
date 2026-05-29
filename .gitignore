@@ -141,3 +141,4 @@ _modules/*
 env.production.example
 env.local
 .ftp-deploy-sync*.json
+bdd

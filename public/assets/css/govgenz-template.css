@@ -643,6 +643,24 @@ a.lang-toggle {
   height: 100%;
 }
 
+.cercle__icon--media-pair {
+  width: 48px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.cercle__icon--media-pair img {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  max-width: 48px;
+  object-fit: contain;
+}
+
 .cercle__number {
   font-family: var(--font-display);
   font-size: 3.5rem;
