@@ -246,15 +246,36 @@ jobs:
             **/uploads/**
             **/public/uploads/**
 
+  # Détecte les merges release/changelog-* → main (head_commit souvent vide / incomplet sur merge GitHub).
+  main-push-kind:
+    name: ci/main-push-kind
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    outputs:
+      changelog_only: ${{ steps.kind.outputs.changelog_only }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - id: kind
+        run: |
+          msg=$(git log -1 --pretty=%B)
+          if echo "$msg" | grep -qiE 'release/changelog-'; then
+            echo "changelog_only=true" >> "$GITHUB_OUTPUT"
+            echo "Merge changelog uniquement — pas de deploy ni release/tag"
+          else
+            echo "changelog_only=false" >> "$GITHUB_OUTPUT"
+          fi
+
   deploy-production:
     name: deploy/production
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, main-push-kind]
     timeout-minutes: 90
     if: |
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
-      !contains(github.event.head_commit.message, 'release/changelog-')
+      needs.main-push-kind.outputs.changelog_only != 'true'
     environment: production
     steps:
       - uses: actions/checkout@v4
@@ -359,11 +380,11 @@ jobs:
   release-tag:
     name: release/tag
     runs-on: ubuntu-latest
-    needs: deploy-production
+    needs: [deploy-production, main-push-kind]
     if: |
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
-      !contains(github.event.head_commit.message, 'release/changelog-')
+      needs.main-push-kind.outputs.changelog_only != 'true'
     permissions:
       contents: write
       pull-requests: write

@@ -43,7 +43,7 @@ Après un **push sur `main`** réussi et un **`deploy/production` vert**, le job
 
 **Pourquoi `main` était en retard** : avant l’étape 4, seul `develop` recevait le CHANGELOG (PR post-tag) ; `main` ne le récupérait qu’au merge `develop` → `main` suivant.
 
-**Ne pas re-tagger après la PR changelog** : un merge `release/changelog-*` → `main` ne doit **pas** relancer deploy/tag (sinon tag fantôme type `v1.11.0` pour un seul `CHANGELOG.md`). Le workflow ignore ces pushes (`release/changelog-` dans le message de merge). D’où un tag `v1.9.0` sur `main` sans section `[1.9.0]` dans le fichier sur `main`.
+**Ne pas re-tagger après la PR changelog** : un merge `release/changelog-*` → `main` ne doit **pas** relancer deploy/tag. Détection via le job **`ci/main-push-kind`** (`git log`, pas `head_commit` — souvent vide sur merge GitHub). D’où un tag `v1.9.0` sur `main` sans section `[1.9.0]` dans le fichier sur `main`.
 
 **Détection** (message du commit HEAD sur `main`) :
 
