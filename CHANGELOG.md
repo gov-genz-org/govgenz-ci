@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-05-29
+
+### Release
+
+- feat(ci): allow PR+approve pull request when release tag (a9b0bdc)
+- release: increase next develop version (58d1535)
+
+
 ## [1.7.0] - 2026-05-29
 
 ### Release
