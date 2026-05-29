@@ -33,7 +33,7 @@ Après un **push sur `main`** réussi et un **`deploy/production` vert**, le job
    - **merge `fix/*` ou `hotfix/*` → `main`** → **incrément patch** (`v1.1.0` → `v1.1.1`).
 2. Calcule le tag avec [`deploy/next-release-tag.sh`](../deploy/next-release-tag.sh) (`minor` ou `patch`).
 3. Crée un **tag annoté** sur le commit déployé et le pousse sur `origin`.
-4. Met à jour **`CHANGELOG.md` sur `main`** (section `[X.Y.Z]`, commit `docs(changelog): vX.Y.Z`) — idempotent si déjà présent ; repli PR `release/changelog-vX.Y.Z-main` si push direct refusé (ruleset `main`).
+4. Met à jour **`CHANGELOG.md` sur `main`** (section `[X.Y.Z]`, commit `docs(changelog): vX.Y.Z`) — idempotent si déjà présent ; si push direct refusé (ruleset `main`), PR `release/changelog-vX.Y.Z-main` puis **`release/sync-merge-main`** merge après **`ci/test`** + **`ci/build`**.
 5. Ne recrée pas de tag si ce commit a déjà un tag `v*.*.*` (re-run du workflow).
 6. Ouvre une **PR vers `develop`** (`release/post-vX.Y.Z-version`, commit `release: increase next develop version`) :
    - `VERSION` → prochain minor semver (ex. release `v1.2.0` → `1.3.0`) ;
@@ -41,7 +41,9 @@ Après un **push sur `main`** réussi et un **`deploy/production` vert**, le job
    - No-op si les deux fichiers sont déjà à jour sur `develop`.
    - **`release/sync-merge-develop`** approuve et merge la PR après **`ci/test`** si `RELEASE_PR_TOKEN` est défini ; sinon merger à la main.
 
-**Pourquoi `main` était en retard** : avant l’étape 4, seul `develop` recevait le CHANGELOG (PR post-tag) ; `main` ne le récupérait qu’au merge `develop` → `main` suivant. D’où un tag `v1.9.0` sur `main` sans section `[1.9.0]` dans le fichier sur `main`.
+**Pourquoi `main` était en retard** : avant l’étape 4, seul `develop` recevait le CHANGELOG (PR post-tag) ; `main` ne le récupérait qu’au merge `develop` → `main` suivant.
+
+**Ne pas re-tagger après la PR changelog** : un merge `release/changelog-*` → `main` ne doit **pas** relancer deploy/tag (sinon tag fantôme type `v1.11.0` pour un seul `CHANGELOG.md`). Le workflow ignore ces pushes (`release/changelog-` dans le message de merge). D’où un tag `v1.9.0` sur `main` sans section `[1.9.0]` dans le fichier sur `main`.
 
 **Détection** (message du commit HEAD sur `main`) :
 
@@ -63,6 +65,7 @@ Le workflow a besoin des permissions **`contents: write`** et **`pull-requests: 
 3. Secret Actions : `RELEASE_PR_TOKEN` = le PAT.  
 4. **`release/tag`** : crée la PR avec ce token (re-run si la branche existe déjà).  
 5. **`release/sync-merge-develop`** : sur la PR `release/post-*` → `develop`, après **`ci/test` vert**, approuve et merge (repli `--admin` si l’approbation est refusée).
+6. **`release/sync-merge-main`** : sur la PR `release/changelog-*` → `main`, après **`ci/test`** + **`ci/build`**, approuve et merge (repli `--admin` ; token **admin** recommandé, ruleset `main` exige 2 reviews humaines sinon).
 
 Si la branche existe sans PR : ouvrir `compare/develop...release/post-vX.Y.Z-version` ; le merge auto se déclenchera au prochain run CI sur la PR si `RELEASE_PR_TOKEN` est défini.
 
@@ -85,6 +88,7 @@ Jobs optionnels (non requis par ruleset) :
 | `deploy/production` | `main` | FTP → production |
 | `release/tag` | `main` (après deploy prod OK) | Tag Git annoté `vMAJOR.MINOR.PATCH` (minor +1 ou patch +1 si hotfix) |
 | `release/sync-merge-develop` | PR `release/post-*` → `develop` (après `ci/test`) | Approbation + merge auto (`RELEASE_PR_TOKEN`) |
+| `release/sync-merge-main` | PR `release/changelog-*` → `main` (après `ci/test` + `ci/build`) | Approbation + merge auto CHANGELOG (`RELEASE_PR_TOKEN`) |
 
 Déploiement manuel d’une feature branch en staging : **Actions → CI → Run workflow**, choisir la branche dans le sélecteur GitHub, puis lancer. Le workflow exécute `ci/test`, `ci/build`, puis `deploy/staging`.
 
@@ -398,7 +402,9 @@ git push origin main
 
 - **Checks introuvables dans le ruleset** : au moins une exécution réussie du workflow `CI` sur la branche concernée.
 - **`release/tag` : branche OK, PR non créée** : policy org ou `RELEASE_PR_TOKEN` — voir [Tags de release](#tags-de-release-main) ; PR manuelle via l’URL `compare/develop...` dans les logs.
-- **PR `release/post-*` ouverte mais pas mergée** : configurer `RELEASE_PR_TOKEN` (admin dépôt ou bypass ruleset) ; le job `release/sync-merge-develop` merge après `ci/test`, sinon approbation + merge à la main.
+- **PR `release/post-*` ouverte mais pas mergée** : configurer `RELEASE_PR_TOKEN` (admin dépôt ou bypass ruleset) ; `release/sync-merge-develop` merge après `ci/test`.
+- **PR `docs(changelog): vX.Y.Z on main` ouverte** : `release/sync-merge-main` merge après `ci/test` + `ci/build` (re-run CI sur la PR si le job n’existait pas encore).
+- **Tag fantôme après merge changelog** (ex. `v1.11.0` alors que la release était `v1.10.0`) : supprimer le tag `v1.11.0` sur GitHub ; garder `main` tel quel ; merger `develop` → `main` au prochain cycle. Les merges `release/changelog-*` ne déclenchent plus deploy/tag.
 - **CODEOWNERS ignoré** : fichier sur `main` ; équipe/org avec droits sur le dépôt.
 - **FTP échoue** : vérifier `REMOTE_DIR`, mode passif FTP, pare-feu ; consulter les logs du job `deploy/*`.
 - **Site cassé après deploy** : `.env` non déployé — vérifier la config sur le serveur ; lancer migrations manuellement.
