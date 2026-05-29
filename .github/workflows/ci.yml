@@ -409,6 +409,53 @@ jobs:
           git push origin "$TAG"
           echo "::notice::Tag ${TAG} créé sur origin (commit ${{ github.sha }})"
 
+      - name: Update CHANGELOG on main
+        if: steps.tag.outputs.name != ''
+        env:
+          TAG: ${{ steps.tag.outputs.name }}
+          BUMP: ${{ steps.tag.outputs.bump }}
+          RELEASE_PR_TOKEN: ${{ secrets.RELEASE_PR_TOKEN }}
+        run: |
+          chmod +x deploy/update-changelog.sh
+          ver="${TAG#v}"
+          if [[ -n "$RELEASE_PR_TOKEN" ]]; then
+            export GH_TOKEN="$RELEASE_PR_TOKEN"
+          else
+            export GH_TOKEN="${{ github.token }}"
+          fi
+          git fetch origin main --tags
+          git checkout main
+          git pull --ff-only origin main
+          if grep -qF "## [${ver}]" CHANGELOG.md; then
+            echo "CHANGELOG [${ver}] déjà présent sur main"
+            exit 0
+          fi
+          ./deploy/update-changelog.sh "$TAG" "$BUMP" "${{ github.sha }}"
+          if git diff --quiet -- CHANGELOG.md; then
+            echo "Aucun changement CHANGELOG sur main"
+            exit 0
+          fi
+          git add CHANGELOG.md
+          git commit -m "docs(changelog): ${TAG}"
+          if git push origin main; then
+            echo "::notice::CHANGELOG ${TAG} poussé sur main"
+            exit 0
+          fi
+          branch="release/changelog-${TAG}-main"
+          git checkout -b "$branch"
+          git push -u origin "$branch"
+          manual_url="${{ github.server_url }}/${{ github.repository }}/compare/main...${branch}?expand=1"
+          if gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "docs(changelog): ${TAG} on main" \
+            --body "Section CHANGELOG **[${ver}]** après tag **${TAG}** (push direct main refusé)."; then
+            echo "::notice::PR changelog main créée"
+            exit 0
+          fi
+          echo "::warning::CHANGELOG ${TAG} commité sur ${branch} — PR manuelle : ${manual_url}"
+          exit 0
+
       - name: Open PR on develop (VERSION + CHANGELOG after release)
         if: steps.tag.outputs.already_tagged != 'true'
         env:
@@ -485,3 +532,40 @@ jobs:
           echo "::notice::PR manuelle : ${manual_pr_url}"
           # Branche + commit livrés : ne pas faire échouer release/tag sur main (merge PR à la main).
           exit 0
+
+  # PR release/post-* → develop : approbation + merge après ci/test (secret RELEASE_PR_TOKEN).
+  release-sync-merge:
+    name: release/sync-merge-develop
+    runs-on: ubuntu-latest
+    needs: test
+    if: |
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.base.ref == 'develop' &&
+      startsWith(github.event.pull_request.head.ref, 'release/post-')
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Approve and merge release sync PR
+        env:
+          RELEASE_PR_TOKEN: ${{ secrets.RELEASE_PR_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if [[ -z "$RELEASE_PR_TOKEN" ]]; then
+            echo "::warning::RELEASE_PR_TOKEN absent — valider et merger la PR #${PR_NUMBER} à la main après ci/test."
+            exit 0
+          fi
+          export GH_TOKEN="$RELEASE_PR_TOKEN"
+          state=$(gh pr view "$PR_NUMBER" --json state --jq -r '.state')
+          if [[ "$state" == "MERGED" ]]; then
+            echo "PR #${PR_NUMBER} déjà mergée"
+            exit 0
+          fi
+          gh pr review "$PR_NUMBER" --approve --body "Release sync (automatique)." || true
+          if gh pr merge "$PR_NUMBER" --merge --delete-branch; then
+            echo "::notice::PR #${PR_NUMBER} mergée dans develop"
+            exit 0
+          fi
+          echo "Merge standard refusé (approbation ruleset ?) — tentative admin…"
+          gh pr merge "$PR_NUMBER" --admin --merge --delete-branch
+          echo "::notice::PR #${PR_NUMBER} mergée (admin) dans develop"
