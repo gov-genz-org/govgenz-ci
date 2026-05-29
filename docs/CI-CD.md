@@ -50,8 +50,12 @@ Seul merge de code prévu : **`develop` → `main`** (PR). Pas de merge `release
 
 **Détection** (message du commit HEAD sur `main`) :
 
-- **patch** — merge PR : `Merge pull request #N from …/fix/…` ou `…/hotfix/…` ; squash : sujet `fix:` / `hotfix:` ;
+- **patch** — merge PR : `Merge pull request #N from …/fix/…` ou `…/hotfix/…` ; squash sur `main` : sujet **`fix:`** ou **`hotfix:`** (pas `fix(ci):` — réservé au CI).
 - **minor** — merge PR : `Merge pull request #N from …/develop` ; sinon défaut (release normale).
+
+**Merges GitHub sur `main`** : préférer **Rebase and merge** ou **Squash** (ruleset : historique linéaire). Éviter **Create a merge commit** (graphe chargé). Feature → `develop` : **Squash**. `develop` → `main` : **Rebase** (ou squash sans titre `fix(ci):`).
+
+**Commits automatiques** (`docs(changelog):`, `chore(release):`, `fix(ci):`, merge `release/changelog-*`) : pas de deploy ni tag (`ci/main-push-kind`).
 
 Exemples : `git fetch --tags && git tag -l 'v*' --sort=-v:refname | tail -5`
 
@@ -400,7 +404,7 @@ git push origin main
 - **Checks introuvables dans le ruleset** : au moins une exécution réussie du workflow `CI` sur la branche concernée.
 - **`release/tag` : push develop refusé** : activer bypass **GitHub Actions** sur ruleset `develop` ou vérifier `RELEASE_PR_TOKEN` (voir [Tags de release](#tags-de-release-main)).
 - **PR `docs(changelog): vX.Y.Z on main` ouverte** : `release/sync-merge-main` merge après `ci/test` + `ci/build` (re-run CI sur la PR si le job n’existait pas encore).
-- **Tag fantôme après merge changelog** (ex. `v1.11.0` alors que la release était `v1.10.0`) : supprimer le tag `v1.11.0` sur GitHub ; garder `main` tel quel ; merger `develop` → `main` au prochain cycle. Les merges `release/changelog-*` ne déclenchent plus deploy/tag.
+- **Tag fantôme / patch à tort** (ex. `v1.12.1` après `fix(ci):` sur `main`) : supprimer le tag sur GitHub ; référence prod = dernier tag **minor** légitime (`v1.12.0`). Merger le correctif `detect-release-bump.sh` ; ne pas merger des PR CI directement sur `main` — passer par **`develop` → `main`** uniquement.
 - **CODEOWNERS ignoré** : fichier sur `main` ; équipe/org avec droits sur le dépôt.
 - **FTP échoue** : vérifier `REMOTE_DIR`, mode passif FTP, pare-feu ; consulter les logs du job `deploy/*`.
 - **Site cassé après deploy** : `.env` non déployé — vérifier la config sur le serveur ; lancer migrations manuellement.
