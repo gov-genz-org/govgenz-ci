@@ -7,15 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.12.1] - 2026-05-29
-
-### Hotfix
-
-- fix(ci): prepare develop after release without release/post PRs (#57) (a57839c)
-- release: increase next develop version (442307b)
-- docs(changelog): v1.12.0 (38fd883)
-
-
 ## [1.12.0] - 2026-05-29
 
 ### Release
