@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.0] - 2026-05-30
+
+### Release
+
+- Revert "docs(changelog): v1.12.1" (923d9d2)
+- fix(ci): MR-only develop sync, skip spurious tags and changelog deploys (#62) (9f38d3a)
+- docs(changelog): v1.12.1 (eb4cbd0)
+- Feature/fix ci (#60) (efbd699)
+- fix(ci): prepare develop after release without release/post PRs (#57) (a2681ef)
+- release: increase next develop version (c06fcc8)
+
+
 ## [1.12.0] - 2026-05-29
 
 ### Release
