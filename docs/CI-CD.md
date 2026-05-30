@@ -35,7 +35,7 @@ Après un **push sur `main`** réussi et un **`deploy/production` vert**, le job
 3. Crée un **tag annoté** sur le commit déployé et le pousse sur `origin`.
 4. Met à jour **`CHANGELOG.md` sur `main`** (section `[X.Y.Z]`, commit `docs(changelog): vX.Y.Z`) — idempotent ; si push refusé, PR `release/changelog-vX.Y.Z-main` + **`release/sync-merge-main`**.
 5. Ne recrée pas de tag si ce commit a déjà un tag `v*.*.*` (re-run du workflow).
-6. **Prépare `develop` sans PR `release/post-*`** : push direct `chore(release): prepare develop X.Y.Z after vA.B.C` — `VERSION` = prochaine cible (ex. `v1.12.0` → `1.13.0`), `CHANGELOG` repris de `main` si la section existe, sinon généré. **`develop` ≠ `main`** : `develop` garde le code d’intégration + version suivante ; `main` = prod + `VERSION` de la release déployée.
+6. Ouvre une **MR vers `develop`** (`sync/develop-after-vX.Y.Z`, `VERSION` + `CHANGELOG`) — **pas de push direct** (ruleset develop). **`release/sync-merge-develop`** merge en squash après **`ci/test`** si `RELEASE_PR_TOKEN` est défini.
 
 **Flux des branches**
 
@@ -44,7 +44,7 @@ Après un **push sur `main`** réussi et un **`deploy/production` vert**, le job
 | **`develop`** | Dernière intégration (staging), `VERSION` = **prochaine** release |
 | **`main`** | Prod taguée, `VERSION` = **release en cours** |
 
-Seul merge de code prévu : **`develop` → `main`** (PR). Pas de merge `release/post-*` → `develop` ni `main` → `develop` automatique.
+Seul merge de **code** prévu : **`develop` → `main`** (MR). Sur **`develop`**, les mises à jour post-release passent par **`sync/develop-after-v*`** (MR automatique, pas de push direct).
 
 **Ne pas re-tagger après la PR changelog** : merge `release/changelog-*` → `main` ignoré par **`ci/main-push-kind`** (`git log`, pas `head_commit`).
 
@@ -67,9 +67,9 @@ Le workflow a besoin des permissions **`contents: write`** et **`pull-requests: 
 [github.com/organizations/gov-genz-org/settings/actions](https://github.com/organizations/gov-genz-org/settings/actions) → **Workflow permissions** → **Allow GitHub Actions to create and approve pull requests** → Save. Puis re-lancer le job `release/tag` (ou ouvrir la PR à la main une fois).
 
 **Option 2 — Secret `RELEASE_PR_TOKEN`** (recommandé)  
-PAT fine-grained : **Contents** + **Pull requests** (read/write). Secret `RELEASE_PR_TOKEN` — utilisé pour `git push` / `gh` dans `release/tag` et **`release/sync-merge-main`** (PR changelog → `main` uniquement).
+PAT fine-grained : **Contents** + **Pull requests** (read/write). Secret `RELEASE_PR_TOKEN` — MR + merge auto (`sync/develop-after-*`, `release/changelog-*`).
 
-Push direct sur **`develop`** après release : nécessite bypass **GitHub Actions** sur le ruleset `develop` ou PAT avec droit push (via `Configure Git credentials` dans le job).
+Avant une **MR `develop` → `main`** : attendre la MR **`sync/develop-after-v*`** mergée (ou `git merge origin/main` sur `develop`) pour limiter les conflits `CHANGELOG.md`.
 
 ## CI (GitHub Actions)
 
@@ -88,7 +88,8 @@ Jobs optionnels (non requis par ruleset) :
 |-----|---------|------|
 | `deploy/staging` | `develop`, ou lancement manuel du workflow `CI` | FTP → environnement staging |
 | `deploy/production` | `main` | FTP → production |
-| `release/tag` | `main` (après deploy prod OK) | Tag, CHANGELOG `main`, préparation `develop` (push direct) |
+| `release/tag` | `main` (après deploy prod OK) | Tag, CHANGELOG `main`, MR `sync/develop-after-*` |
+| `release/sync-merge-develop` | MR `sync/develop-after-*` → `develop` (après `ci/test`) | Merge auto squash |
 | `release/sync-merge-main` | PR `release/changelog-*` → `main` (après `ci/test` + `ci/build`) | Merge auto CHANGELOG sur `main` |
 
 Déploiement manuel d’une feature branch en staging : **Actions → CI → Run workflow**, choisir la branche dans le sélecteur GitHub, puis lancer. Le workflow exécute `ci/test`, `ci/build`, puis `deploy/staging`.
@@ -311,7 +312,7 @@ Cible : branche `main`
 
 Cible : branche `develop`
 
-**Politique** : push direct interdit pour les humains, merge via **PR** + **ci/test** + 1 approbation. Exception : **`release/tag`** pousse un commit `chore(release): prepare develop …` sur `develop` (bypass **GitHub Actions** ou `RELEASE_PR_TOKEN` requis).
+**Politique** : tout passe par **MR** + **ci/test** + 1 approbation (humains et bot via `RELEASE_PR_TOKEN` pour `sync/develop-after-*` et changelog `main`).
 
 | Règle | Valeur |
 |-------|--------|
@@ -326,13 +327,7 @@ Cible : branche `develop`
 
 L’UI ne propose pas **GitHub Actions** : seulement rôles (admin, write…), équipes, apps (Copilot, Merge Queue…). Le **`GITHUB_TOKEN`** du workflow **ne contourne pas** les rulesets — cocher *Repository admin* ne s’applique pas aux pushes faits par Actions.
 
-#### Option avancée : push direct (compte machine)
-
-1. Compte machine collaborateur **Write**, PAT fine-grained (contents sur ce dépôt).
-2. Équipe dédiée (ex. `@gov-genz-org/release-sync`) avec **uniquement** ce compte → **Bypass list** `develop` (PR + status checks).
-3. Secret `RELEASE_SYNC_GITHUB_TOKEN` et push avec ce token dans le job (pas `GITHUB_TOKEN`).
-
-Par défaut le dépôt utilise la **PR automatique** pour changelog → `main` uniquement ; **push direct** sur `develop` après release (pas de PR `release/post-*`).
+Post-release sur **`develop`** : MR **`sync/develop-after-v*`** créée par `release/tag`, mergée par **`release/sync-merge-develop`** (squash, 1 commit propre sur `develop`).
 
 ### CODEOWNERS
 
@@ -402,7 +397,7 @@ git push origin main
 ## Dépannage
 
 - **Checks introuvables dans le ruleset** : au moins une exécution réussie du workflow `CI` sur la branche concernée.
-- **`release/tag` : push develop refusé** : activer bypass **GitHub Actions** sur ruleset `develop` ou vérifier `RELEASE_PR_TOKEN` (voir [Tags de release](#tags-de-release-main)).
+- **`release/tag` : MR develop non mergée** : ouvrir `sync/develop-after-v*` ou laisser `release/sync-merge-develop` faire le merge après `ci/test` (`RELEASE_PR_TOKEN` requis).
 - **PR `docs(changelog): vX.Y.Z on main` ouverte** : `release/sync-merge-main` merge après `ci/test` + `ci/build` (re-run CI sur la PR si le job n’existait pas encore).
 - **Tag fantôme / patch à tort** (ex. `v1.12.1` après `fix(ci):` sur `main`) : supprimer le tag sur GitHub ; référence prod = dernier tag **minor** légitime (`v1.12.0`). Merger le correctif `detect-release-bump.sh` ; ne pas merger des PR CI directement sur `main` — passer par **`develop` → `main`** uniquement.
 - **CODEOWNERS ignoré** : fichier sur `main` ; équipe/org avec droits sur le dépôt.
