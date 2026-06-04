@@ -34,6 +34,19 @@ $sections = array_values(array_filter($sections, static function ($section): boo
     </div>
     <div class="card-body">
         <input type="hidden" name="<?= esc($pfx, 'attr') ?>[type]" value="legal_prose">
+        <?php
+        $presentation = strtolower(trim((string) ($b['presentation'] ?? 'prose')));
+        if (! in_array($presentation, ['accordion', 'prose'], true)) {
+            $presentation = 'prose';
+        }
+        ?>
+        <div class="mb-2">
+            <label class="form-label small"><?= esc(lang('Admin.cms_legal_presentation')) ?></label>
+            <select name="<?= esc($pfx, 'attr') ?>[presentation]" class="form-select form-select-sm" style="max-width:20rem">
+                <option value="prose" <?= $presentation === 'prose' ? 'selected' : '' ?>><?= esc(lang('Admin.cms_legal_presentation_prose')) ?></option>
+                <option value="accordion" <?= $presentation === 'accordion' ? 'selected' : '' ?>><?= esc(lang('Admin.cms_legal_presentation_accordion')) ?></option>
+            </select>
+        </div>
         <p class="text-muted small"><?= esc(lang('Admin.cms_legal_help')) ?></p>
         <div class="cms-repeatable" data-cms-repeat-key="sections">
             <div class="cms-repeat-body d-flex flex-column gap-2">

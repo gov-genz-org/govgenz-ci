@@ -19,8 +19,10 @@ $mediaActive      = $section === 'media';
 $volunteersActive = $section === 'volunteers';
 $projectContributionsActive = $section === 'project-contributions';
 $sectorsActive    = $section === 'sectors';
+$structuresActive = $section === 'structures';
 $projectProjectsActive = $section === 'project-projects';
 $positionItemsActive = $section === 'position-items';
+$declarationItemsActive = $section === 'declaration-items';
 $projectExchangeRatesActive = $section === 'project-exchange-rates';
 $loginEventsActive = $section === 'login-events';
 $staffUsersActive  = $section === 'staff-users';
@@ -50,6 +52,7 @@ $isStaffAdmin      = session()->get('staff_role') === 'admin';
         <div class="admin-sidebar-items d-flex flex-column gap-1">
             <a class="nav-link rounded px-3 py-2 <?= $volunteersActive ? 'active' : 'text-dark' ?>" href="<?= site_url('admin/volunteers') ?>"><?= esc(lang('Admin.nav_volunteers')) ?></a>
             <a class="nav-link rounded px-3 py-2 <?= $sectorsActive ? 'active' : 'text-dark' ?>" href="<?= site_url('admin/sectors') ?>"><?= esc(lang('Admin.nav_sectors')) ?></a>
+            <a class="nav-link rounded px-3 py-2 <?= $structuresActive ? 'active' : 'text-dark' ?>" href="<?= site_url('admin/structures') ?>"><?= esc(lang('Admin.nav_structures')) ?></a>
         </div>
     </div>
 
@@ -70,6 +73,15 @@ $isStaffAdmin      = session()->get('staff_role') === 'admin';
         <p class="admin-sidebar-section-label" role="presentation"><?= esc(lang('Admin.nav_section_positions')) ?></p>
         <div class="admin-sidebar-items d-flex flex-column gap-1">
             <a class="nav-link rounded px-3 py-2 <?= $positionItemsActive ? 'active' : 'text-dark' ?>" href="<?= site_url('admin/position-items') ?>"><?= esc(lang('Admin.nav_position_items')) ?></a>
+        </div>
+    </div>
+
+    <hr class="admin-sidebar-rule">
+
+    <div class="admin-sidebar-section">
+        <p class="admin-sidebar-section-label" role="presentation"><?= esc(lang('Admin.nav_section_declaration')) ?></p>
+        <div class="admin-sidebar-items d-flex flex-column gap-1">
+            <a class="nav-link rounded px-3 py-2 <?= $declarationItemsActive ? 'active' : 'text-dark' ?>" href="<?= site_url('admin/declaration-items') ?>"><?= esc(lang('Admin.nav_declaration_items')) ?></a>
         </div>
     </div>
 

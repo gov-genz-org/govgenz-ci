@@ -53,21 +53,58 @@ class Sectors extends BaseController
             'asc',
             ['active', 'q'],
             null,
-            'code',
+            'id',
             'ASC',
         );
 
+        $sort = $list['sort'];
+        $dir  = $list['dir'];
+        $rows = $list['rows'];
+        $pager = $list['pager'];
+        $enableSortableList = $searchQuery === ''
+            && $sort === 'sort_order'
+            && strtolower($dir) === 'asc'
+            && $filterActive !== '0';
+
+        if ($enableSortableList) {
+            $rows = $model->orderBy('sort_order', 'ASC')->orderBy('id', 'ASC')->findAll();
+            $pager = null;
+        }
+
+        $extraHead = '';
+        if ($enableSortableList) {
+            $extraHead = '<script defer src="' . esc(base_url('js/admin/admin-sortable-list.js'), 'attr') . '"></script>';
+        }
+
         return view('admin/layout', [
-            'title' => 'Secteurs',
-            'main'  => view('admin/sectors/index', [
-                'rows'         => $list['rows'],
-                'pager'        => $list['pager'],
-                'sort'         => $list['sort'],
-                'dir'          => $list['dir'],
-                'filterActive' => $filterActive,
-                'searchQuery'  => $searchQuery,
+            'title'     => lang('Admin.title_sectors'),
+            'extraHead' => $extraHead,
+            'main'      => view('admin/sectors/index', [
+                'rows'               => $rows,
+                'pager'              => $pager,
+                'sort'               => $sort,
+                'dir'                => $dir,
+                'filterActive'       => $filterActive,
+                'searchQuery'        => $searchQuery,
+                'enableSortableList' => $enableSortableList,
+                'reorderUrl'         => site_url('admin/sectors/reorder'),
             ]),
         ]);
+    }
+
+    public function reorder(): ResponseInterface
+    {
+        $payload = $this->adminReorderSortOrderPayload();
+        if ($payload['ok'] !== true) {
+            return $this->response->setStatusCode(422)->setJSON([
+                'ok'      => false,
+                'message' => $payload['message'] ?? lang('Admin.error_reorder_empty'),
+            ]);
+        }
+
+        $this->adminApplySortOrderFromIds(model(SectorModel::class), $payload['ids']);
+
+        return $this->response->setJSON(['ok' => true]);
     }
 
     public function create()
@@ -79,8 +116,9 @@ class Sectors extends BaseController
         }
 
         return view('admin/layout', [
-            'title' => 'Secteurs — nouveau',
-            'main'  => view('admin/sectors/form', [
+            'title'        => 'Secteurs — nouveau',
+            'extraScripts' => $this->adminMediaSlotScripts(),
+            'main'         => view('admin/sectors/form', [
                 'sector'    => null,
                 'nextOrder' => $nextOrder,
             ]),
@@ -109,8 +147,9 @@ class Sectors extends BaseController
         }
 
         return view('admin/layout', [
-            'title' => 'Secteurs — modifier',
-            'main'  => view('admin/sectors/form', [
+            'title'        => 'Secteurs — modifier',
+            'extraScripts' => $this->adminMediaSlotScripts(),
+            'main'         => view('admin/sectors/form', [
                 'sector'    => $row,
                 'nextOrder' => null,
             ]),
@@ -254,6 +293,8 @@ class Sectors extends BaseController
             'label_fr'        => trim((string) $this->request->getPost('label_fr')),
             'label_en'        => trim((string) $this->request->getPost('label_en')),
             'contact_email'   => trim((string) $this->request->getPost('contact_email')),
+            'media_id'        => max(0, (int) $this->request->getPost('media_id')) ?: null,
+            'media_alt'       => trim((string) $this->request->getPost('media_alt')) ?: null,
             'sort_order'      => (int) $this->request->getPost('sort_order'),
             'is_active'       => $active,
         ];

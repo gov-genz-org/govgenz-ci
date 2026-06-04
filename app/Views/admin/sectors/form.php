@@ -78,6 +78,16 @@ $active = old('is_active', $isEdit ? (string) ((int) ($sector['is_active'] ?? 1)
             <label for="sec-mail" class="form-label"><?= esc(lang('Admin.form_sector_email')) ?> <span class="text-danger">*</span></label>
             <input type="email" name="contact_email" id="sec-mail" class="form-control" required maxlength="190" value="<?= esc($email) ?>">
         </div>
+        <div class="col-12 col-md-6">
+            <?= view('admin/partials/media_slot_single', [
+                'idInputName'  => 'media_id',
+                'altInputName' => 'media_alt',
+                'mediaId'      => (int) old('media_id', $isEdit ? (int) ($sector['media_id'] ?? 0) : 0),
+                'mediaAlt'     => (string) old('media_alt', $isEdit ? (string) ($sector['media_alt'] ?? '') : ''),
+                'labelKey'     => 'Admin.form_sector_icon',
+                'helpKey'      => 'Admin.help_sector_icon',
+            ]) ?>
+        </div>
     </div>
 
     <div class="alert alert-light border small mt-4 mb-0"><?= lang('Admin.help_sector_cms_snippet') ?></div>

@@ -219,25 +219,6 @@ HTML;
 
     public static function structure(): string
     {
-        $fns = [
-            ['coordination@govgenz.org', 0, 'fn.coord.name', 'COORDINATION', 'fn.coord.sub', 'Exécutifs · Sectorielle · Régions · Diaspora'],
-            ['safety@govgenz.org', 50, 'fn.safety.name', 'SÉCURITÉ', 'fn.safety.sub', 'Préventive &amp; curative · Legal · Tech · Field'],
-            ['communication@govgenz.org', 100, 'fn.com.name', 'COMMUNICATION', 'fn.com.sub', 'Stratégie · Contenus · Réseaux · Vulgarisation'],
-            ['partnerships@govgenz.org', 150, 'fn.part.name', 'PARTENARIATS', 'fn.part.sub', 'Stratégiques · National &amp; international'],
-            ['recruitment@govgenz.org', 200, 'fn.rh.name', 'RESSOURCES HUMAINES', 'fn.rh.sub', 'Recrutement · Onboarding · Formation'],
-            ['projects@govgenz.org', 250, 'fn.pmo.name', 'PROJECT MANAGEMENT', 'fn.pmo.sub', 'PMO · Suivi · Impact · KPI'],
-            ['finance@govgenz.org', 300, 'fn.fin.name', 'FINANCES', 'fn.fin.sub', 'Comptabilité · Levée · Trésorerie'],
-        ];
-
-        $fnHtml = '';
-        foreach ($fns as [$mail, $delay, $nk, $nf, $sk, $sf]) {
-            $fnHtml .= '<a href="mailto:' . esc($mail, 'attr') . '" class="fn-card reveal" data-delay="' . (int) $delay . '">';
-            $fnHtml .= '<div class="fn-card__name" data-i18n="' . esc($nk, 'attr') . '">' . esc($nf) . '</div>';
-            $fnHtml .= '<div class="fn-card__sub" data-i18n="' . esc($sk, 'attr') . '">' . $sf . '</div>';
-            $fnHtml .= '<div class="fn-card__mail">' . esc($mail) . '</div>';
-            $fnHtml .= '</a>';
-        }
-
         return <<<HTML
 <section class="section section--structure" id="structure-content" aria-labelledby="structure-heading">
     <div class="section__inner">
@@ -248,16 +229,7 @@ HTML;
                 Un noyau exécutif central, sept fonctions transversales, quatorze équipes sectorielles. Chaque fonction est contactable directement.
             </p>
         </div>
-        <div class="hub">
-            <div class="hub__core">
-                <div class="hub__label" data-i18n="structure.noyau.label">NOYAU EXÉCUTIF CENTRAL</div>
-                <div class="hub__sub" data-i18n="structure.noyau.sub">Coordination · Sécurité · Vision · Décision</div>
-                <a href="mailto:contact@govgenz.org" class="hub__mail">contact@govgenz.org</a>
-            </div>
-            <div class="hub__grid">
-                {$fnHtml}
-            </div>
-        </div>
+        <!-- GG_CMS_STRUCTURES_HUB -->
     </div>
 </section>
 HTML;

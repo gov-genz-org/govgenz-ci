@@ -383,15 +383,24 @@ class Pages extends BaseController
         $contentMode = old('content_mode', $page !== null ? ($page['content_mode'] ?? 'html') : 'blocks');
         if ($listHeroKind !== null) {
             $contentMode = 'html';
+        } elseif (
+            old('content_mode') === null
+            && $page !== null
+            && trim((string) ($page['body_blocks'] ?? '')) !== ''
+            && trim((string) ($page['body_blocks'] ?? '')) !== '[]'
+        ) {
+            $contentMode = 'blocks';
         }
         if (! in_array($contentMode, ['html', 'blocks'], true)) {
             $contentMode = 'html';
         }
 
         $blocksOld = old('blocks');
-        if (is_array($blocksOld)) {
+        if ($listHeroKind !== null) {
+            $blocksForForm = [];
+        } elseif (is_array($blocksOld)) {
             $blocksForForm = array_values($blocksOld);
-        } elseif ($page !== null && ($page['content_mode'] ?? '') === 'blocks' && ! empty($page['body_blocks'])) {
+        } elseif ($page !== null && ! empty($page['body_blocks'])) {
             $decoded = json_decode((string) $page['body_blocks'], true);
             $blocksForForm = is_array($decoded) && $decoded !== [] ? array_values($decoded) : [];
         } else {

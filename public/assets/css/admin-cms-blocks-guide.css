@@ -71,13 +71,13 @@
   --ggz-peach: var(--ggz-red);
 }
 
-.admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.contact-block) {
+.admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.dept-card):not(.contact-block) {
   color: var(--text-tertiary);
   font-weight: 400;
   text-decoration: none;
 }
 
-.admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.contact-block):hover {
+.admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.dept-card):not(.contact-block):hover {
   color: var(--text-bright);
 }
 

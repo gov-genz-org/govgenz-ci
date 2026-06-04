@@ -29,6 +29,7 @@ declare(strict_types=1);
             'cercles' => 'section section--qui',
             'adn' => 'section section--adn',
             'structure' => 'section section--structure',
+            'structures-dynamic' => '__structures__',
             'secteurs' => '__sectors__',
             'secteurs-dynamic' => '__sectors__',
             'etude' => 'section section--etude',
@@ -70,6 +71,20 @@ declare(strict_types=1);
                         <?= view('admin/partials/cms_guide_footer_canvas', ['html' => $sec['html']]) ?>
                     <?php elseif ($canvas === '__sectors__') : ?>
                         <?= view('admin/partials/cms_guide_sectors_canvas', ['html' => $sec['html']]) ?>
+                    <?php elseif ($canvas === '__structures__') : ?>
+                        <?php
+                        helper('cms');
+                        $structuresPreviewHtml = cms_apply_structures_html_embeds($sec['html']);
+                        if (! str_contains($structuresPreviewHtml, 'hub__grid') && ! str_contains($structuresPreviewHtml, 'dept-cards')) {
+                            $structuresPreviewHtml = \App\Libraries\CmsBodyBlocksRenderer::render([
+                                ['type' => 'structures_grid', 'layout' => 'hub'],
+                            ]);
+                        }
+                        ?>
+                        <div class="cms-guide-sample">
+                            <div class="cms-guide-sample__label"><?= esc(lang('Admin.cms_guide_render')) ?></div>
+                            <?= view('admin/partials/cms_guide_structures_canvas', ['html' => $structuresPreviewHtml]) ?>
+                        </div>
                     <?php else : ?>
                         <div class="cms-guide-sample__canvas">
                             <div class="ggz-public-theme cms-guide-preview-host ggz-main-shell">

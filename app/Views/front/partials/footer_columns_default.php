@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Libraries\SiteContext;
 
+helper('declaration');
+
 ?>
 <div class="footer__col">
     <h4><?= esc(lang('Site.footer_movement')) ?></h4>
@@ -15,13 +17,13 @@ use App\Libraries\SiteContext;
         <li><a href="<?= esc(localized_site_url(localized_slug_from_fr('etude')), 'attr') ?>"><?= SiteContext::locale() === 'en' ? 'Youth study' : 'Étude' ?></a></li>
         <li><a href="<?= esc(localized_site_url('contact'), 'attr') ?>"><?= SiteContext::locale() === 'en' ? 'Contact' : 'Contact' ?></a></li>
         <li><a href="<?= esc(localized_site_url('press'), 'attr') ?>"><?= SiteContext::locale() === 'en' ? 'Press' : 'Presse' ?></a></li>
+        <li><a href="<?= esc(declaration_list_url(), 'attr') ?>"><?= SiteContext::locale() === 'en' ? 'Declaration' : 'Déclaration' ?></a></li>
         <li><a href="<?= esc(localized_site_url('join'), 'attr') ?>"><?= SiteContext::locale() === 'en' ? 'Join us' : 'Rejoindre' ?></a></li>
     </ul>
 </div>
 <div class="footer__col">
     <h4><?= esc(lang('Site.footer_soon')) ?></h4>
     <ul>
-        <li><span class="footer__soon">declaration.govgenz.org</span></li>
         <li><span class="footer__soon">counterpoint.govgenz.org</span></li>
         <li><span class="footer__soon">projects.govgenz.org</span></li>
     </ul>

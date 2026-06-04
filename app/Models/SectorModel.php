@@ -22,6 +22,8 @@ class SectorModel extends Model
         'label_fr',
         'label_en',
         'contact_email',
+        'media_id',
+        'media_alt',
         'is_active',
         'sort_order',
         'created_at',
@@ -41,7 +43,7 @@ class SectorModel extends Model
     {
         return $this->where('is_active', 1)
             ->orderBy('sort_order', 'ASC')
-            ->orderBy('code', 'ASC')
+            ->orderBy('id', 'ASC')
             ->findAll();
     }
 
@@ -134,5 +136,43 @@ class SectorModel extends Model
         }
 
         return $out;
+    }
+
+    public function iconUrlForRow(array $row): ?string
+    {
+        $mediaId = (int) ($row['media_id'] ?? 0);
+        if ($mediaId > 0 && function_exists('cms_media_public_url')) {
+            $url = cms_media_public_url($mediaId);
+            if ($url !== null) {
+                return $url;
+            }
+        }
+
+        return self::defaultIconUrlForCode((string) ($row['code'] ?? ''));
+    }
+
+    public function iconAltForRow(array $row): string
+    {
+        $alt = trim((string) ($row['media_alt'] ?? ''));
+        if ($alt !== '') {
+            return $alt;
+        }
+
+        return $this->labelForRow($row);
+    }
+
+    public static function defaultIconUrlForCode(string $code): ?string
+    {
+        $code = strtolower(trim($code));
+        if ($code === '' || ! preg_match('/^[a-z][a-z0-9_-]{0,30}$/', $code)) {
+            return null;
+        }
+
+        $relative = 'assets/icons/sectors/' . $code . '.svg';
+        if (! is_file(FCPATH . $relative)) {
+            return null;
+        }
+
+        return base_url($relative);
     }
 }

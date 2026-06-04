@@ -26,12 +26,15 @@ class SiteContextFilter implements FilterInterface
         }
 
         $firstAfterLocale = $segments[0] ?? '';
-        $projectsPrefix   = SiteContext::projectsPathPrefixEnabled();
-        $positionsPrefix  = SiteContext::positionsPathPrefixEnabled();
-        $byProjectsHost   = SiteContext::httpHostMatchesProjectsHost($request);
-        $byProjectsPath   = $projectsPrefix && $firstAfterLocale === 'projects';
-        $byPositionsHost  = SiteContext::httpHostMatchesPositionsHost($request);
-        $byPositionsPath  = $positionsPrefix && $firstAfterLocale === 'positions';
+        $projectsPrefix     = SiteContext::projectsPathPrefixEnabled();
+        $positionsPrefix    = SiteContext::positionsPathPrefixEnabled();
+        $declarationPrefix  = SiteContext::declarationPathPrefixEnabled();
+        $byProjectsHost     = SiteContext::httpHostMatchesProjectsHost($request);
+        $byProjectsPath     = $projectsPrefix && $firstAfterLocale === 'projects';
+        $byPositionsHost    = SiteContext::httpHostMatchesPositionsHost($request);
+        $byPositionsPath    = $positionsPrefix && $firstAfterLocale === 'positions';
+        $byDeclarationHost  = SiteContext::httpHostMatchesDeclarationHost($request);
+        $byDeclarationPath  = $declarationPrefix && $firstAfterLocale === 'declaration';
 
         if ($byProjectsHost || $byProjectsPath) {
             SiteContext::setProjects();
@@ -43,6 +46,11 @@ class SiteContextFilter implements FilterInterface
             if ($byPositionsPath) {
                 array_shift($segments);
             }
+        } elseif ($byDeclarationHost || $byDeclarationPath) {
+            SiteContext::setDeclaration();
+            if ($byDeclarationPath) {
+                array_shift($segments);
+            }
         } else {
             SiteContext::setMain();
         }
@@ -52,7 +60,7 @@ class SiteContextFilter implements FilterInterface
 
         $request->setLocale($locale === 'en' ? 'en' : 'fr');
 
-        $reserved = ['declaration', 'counterpoint'];
+        $reserved = ['counterpoint'];
         if (
             SiteContext::id() === SiteContext::SITE_MAIN
             && $firstAfterLocale !== ''
@@ -73,6 +81,14 @@ class SiteContextFilter implements FilterInterface
             SiteContext::id() === SiteContext::SITE_MAIN
             && $firstAfterLocale === 'positions'
             && ! $positionsPrefix
+        ) {
+            throw PageNotFoundException::forPageNotFound('Mini-site réservé à une version ultérieure.');
+        }
+
+        if (
+            SiteContext::id() === SiteContext::SITE_MAIN
+            && $firstAfterLocale === 'declaration'
+            && ! $declarationPrefix
         ) {
             throw PageNotFoundException::forPageNotFound('Mini-site réservé à une version ultérieure.');
         }

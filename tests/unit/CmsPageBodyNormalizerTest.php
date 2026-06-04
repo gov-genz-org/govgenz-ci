@@ -149,4 +149,57 @@ final class CmsPageBodyNormalizerTest extends CIUnitTestCase
         $this->assertSame('', $decoded[0]['columns'][0]['links'][1]['href']);
         $this->assertSame(1, $decoded[0]['columns'][0]['links'][1]['soon']);
     }
+
+    public function testBodyBlocksJsonPreservesSectorsGridLayout(): void
+    {
+        $request = IncomingRequestFactory::withPost([
+            'content_mode' => 'blocks',
+            'blocks'       => [
+                [
+                    'type'            => 'sectors_grid',
+                    'layout'          => 'wide',
+                    'kicker'          => 'Équipes de terrain',
+                    'title'           => '14 Équipes sectorielles',
+                    'lead'            => 'Chapô test',
+                    'banner_title'    => 'Bandeau',
+                    'banner_subtitle' => '14 secteurs',
+                ],
+            ],
+        ]);
+
+        $decoded = json_decode((string) CmsPageBodyNormalizer::bodyBlocksJson($request), true);
+        $this->assertIsArray($decoded);
+        $this->assertSame('sectors_grid', $decoded[0]['type']);
+        $this->assertSame('wide', $decoded[0]['layout']);
+        $this->assertSame('Équipes de terrain', $decoded[0]['kicker']);
+        $this->assertSame('14 Équipes sectorielles', $decoded[0]['title']);
+        $this->assertSame('Bandeau', $decoded[0]['banner_title']);
+        $this->assertSame('14 secteurs', $decoded[0]['banner_subtitle']);
+    }
+
+    public function testBodyBlocksJsonPreservesStructuresGridIntro(): void
+    {
+        $request = IncomingRequestFactory::withPost([
+            'content_mode' => 'blocks',
+            'blocks'       => [
+                [
+                    'type'            => 'structures_grid',
+                    'layout'          => 'dept',
+                    'kicker'          => 'Organigramme',
+                    'title'           => 'Structure organisationnelle',
+                    'lead'            => 'Chapô test',
+                    'banner_title'    => 'Bandeau',
+                    'banner_subtitle' => '7 départements',
+                ],
+            ],
+        ]);
+
+        $decoded = json_decode((string) CmsPageBodyNormalizer::bodyBlocksJson($request), true);
+        $this->assertIsArray($decoded);
+        $this->assertSame('structures_grid', $decoded[0]['type']);
+        $this->assertSame('dept', $decoded[0]['layout']);
+        $this->assertSame('Organigramme', $decoded[0]['kicker']);
+        $this->assertSame('Structure organisationnelle', $decoded[0]['title']);
+        $this->assertSame('Bandeau', $decoded[0]['banner_title']);
+    }
 }

@@ -101,6 +101,38 @@ $isEdit = $page !== null;
                     <a href="<?= esc($lpEn, 'attr') ?>" target="_blank" rel="noopener"><?= esc(lang('Admin.action_view_public_list_en')) ?></a>
                 </span>
             </div>
+        <?php elseif (! $isListHeroForm && $slugField === 'declaration') : ?>
+            <div class="alert alert-info border py-2 small mt-2 mb-0" role="status">
+                <strong><?= esc(lang('Admin.alert_page_declaration_program_title')) ?></strong>
+                <?= lang('Admin.alert_page_declaration_program_body') ?>
+                <?php
+                $lpFr = admin_public_declaration_list_url('fr');
+                $lpEn = admin_public_declaration_list_url('en');
+                ?>
+                <span class="d-block mt-2">
+                    <a href="<?= site_url('admin/declaration-items') ?>" class="btn btn-sm btn-outline-secondary me-2"><?= esc(lang('Admin.nav_declaration_items')) ?></a>
+                    <a href="<?= esc($lpFr, 'attr') ?>" target="_blank" rel="noopener" class="me-2"><?= esc(lang('Admin.action_view_public_list_fr')) ?></a>
+                    <a href="<?= esc($lpEn, 'attr') ?>" target="_blank" rel="noopener"><?= esc(lang('Admin.action_view_public_list_en')) ?></a>
+                </span>
+            </div>
+        <?php elseif (! $isListHeroForm && $slugField === 'structure') : ?>
+            <div class="alert alert-info border py-2 small mt-2 mb-0" role="status">
+                <strong><?= esc(lang('Admin.alert_page_structure_title')) ?></strong>
+                <?= lang('Admin.alert_page_structure_body', [site_url('admin/cms-guide-blocks#admin-guide-structure-page')]) ?>
+                <?php
+                $structFr = admin_public_page_url('structure', 'fr');
+                $structEn = admin_public_page_url('structure', 'en');
+                ?>
+                <span class="d-block mt-2">
+                    <a href="<?= site_url('admin/structures') ?>" class="btn btn-sm btn-outline-secondary me-2"><?= esc(lang('Admin.nav_structures')) ?></a>
+                    <?php if ($structFr !== null) : ?>
+                        <a href="<?= esc($structFr, 'attr') ?>" target="_blank" rel="noopener" class="me-2"><?= esc(lang('Admin.action_view_public_list_fr')) ?></a>
+                    <?php endif; ?>
+                    <?php if ($structEn !== null) : ?>
+                        <a href="<?= esc($structEn, 'attr') ?>" target="_blank" rel="noopener"><?= esc(lang('Admin.action_view_public_list_en')) ?></a>
+                    <?php endif; ?>
+                </span>
+            </div>
         <?php endif; ?>
     </div>
     <div class="mb-3">
@@ -187,7 +219,12 @@ $isEdit = $page !== null;
         </div>
     </div>
 
-    <?= view('admin/pages/blocks_builder', ['blocksForForm' => $blocksForForm, 'contentMode' => $contentMode]) ?>
+    <?= view('admin/pages/blocks_builder', [
+        'blocksForForm'                   => $blocksForForm,
+        'contentMode'                     => $contentMode,
+        'showDeclarationBlocksSplitGuide' => ! $isListHeroForm && $slugField === 'declaration',
+        'showStructurePageBlocksGuide'      => ! $isListHeroForm && $slugField === 'structure',
+    ]) ?>
     <?php endif; ?>
 
     <div class="mb-3">

@@ -25,6 +25,8 @@ class CmsPageBlocksGuide extends BaseController
 <link rel="stylesheet" href="{$cssBase}ggz-press-page.css">
 <link rel="stylesheet" href="{$cssBase}govgenz-guide-preview-parity.css">
 <link rel="stylesheet" href="{$cssBase}admin-cms-guide-preview.css">
+<link rel="stylesheet" href="{$cssBase}sectors-grid-layouts.css">
+<link rel="stylesheet" href="{$cssBase}structures-grid-layouts.css">
 <link rel="stylesheet" href="{$cssBase}admin-cms-blocks-guide.css">
 HTML;
 
@@ -32,7 +34,12 @@ HTML;
             'title'     => lang('Admin.title_cms_blocks_guide'),
             'extraHead' => $extra,
             'main'      => view('admin/cms_page_blocks_guide', [
-                'examples' => $this->examples(),
+                'examples'              => $this->examples(),
+                'declarationItemsUrl'   => site_url('admin/declaration-items'),
+                'pagesIndexUrl'         => site_url('admin/pages'),
+                'structuresAdminUrl'    => site_url('admin/structures'),
+                'sectorsAdminUrl'       => site_url('admin/sectors'),
+                'componentsGuideUrl'  => site_url('admin/cms-guide'),
             ]),
         ]);
     }
@@ -83,29 +90,28 @@ HTML;
             [
                 'id'    => 'cards_pillar',
                 'title' => 'Cartes ADN',
-                'usage' => 'Piliers ADN avec numero, sur-titre et puces.',
+                'usage' => 'Piliers ADN (page Declaration) : sur-titre, titre, puces — variante pillar_cards.',
                 'blocks' => [[
                     'type' => 'cards_grid',
                     'variant' => 'pillar_cards',
                     'cards' => [
-                        ['value' => '01', 'eyebrow' => 'POUR QUI', 'title' => 'Notre raison d etre', 'bullets' => ['Point A', 'Point B']],
-                        ['value' => '02', 'eyebrow' => 'CE QUI NOUS GUIDE', 'title' => 'Nos valeurs', 'bullets' => ['Point A', 'Point B']],
+                        ['eyebrow' => 'Pour qui', 'title' => 'Notre raison d etre', 'bullets' => ['55 % de jeunes', '12 a 35 ans']],
+                        ['eyebrow' => 'Ce qui nous guide', 'title' => 'Nos valeurs', 'bullets' => ['Integrite', 'Rigueur']],
                     ],
                 ]],
             ],
             [
-                'id'    => 'organization_hub',
-                'title' => 'Organisation',
-                'usage' => 'Noyau central + grille des fonctions.',
+                'id'    => 'structures_grid_hub',
+                'title' => 'Grille structures (hub)',
+                'usage' => 'Page /structure (slug CMS structure) : noyau + fonctions (layout hub). Donnees : table Structures. Remplace organization_hub et le HTML statique GG_CMS_STRUCTURES_HUB.',
                 'blocks' => [[
-                    'type' => 'organization_hub',
-                    'core_label' => 'NOYAU EXECUTIF CENTRAL',
-                    'core_subtitle' => 'Coordination · Securite · Vision',
-                    'core_href' => 'mailto:contact@govgenz.org',
-                    'items' => [
-                        ['name' => 'COORDINATION', 'subtitle' => 'Executifs · Regions', 'href' => 'mailto:coordination@govgenz.org'],
-                        ['name' => 'COMMUNICATION', 'subtitle' => 'Presse · Contenus', 'href' => 'mailto:communication@govgenz.org'],
-                    ],
+                    'type'            => 'structures_grid',
+                    'layout'          => 'hub',
+                    'kicker'          => 'Organigramme',
+                    'title'           => 'Structure organisationnelle',
+                    'lead'            => 'Noyau central et equipes specialisees.',
+                    'banner_title'    => 'Structure — GoV Gen Z Madagascar',
+                    'banner_subtitle' => 'Programme Paikady Taninjanaka',
                 ]],
             ],
             [
@@ -149,12 +155,34 @@ HTML;
             ],
             [
                 'id'    => 'legal_prose',
-                'title' => 'Mentions / texte long',
-                'usage' => 'Sections longues structurees.',
+                'title' => 'Mentions / texte long (prose)',
+                'usage' => 'Sections longues en prose continue (mentions, CGU).',
                 'blocks' => [[
-                    'type' => 'legal_prose',
-                    'sections' => [
+                    'type'         => 'legal_prose',
+                    'presentation' => 'prose',
+                    'sections'     => [
                         ['heading' => 'Editeur', 'body' => "Texte de demonstration.\nDeuxieme paragraphe."],
+                    ],
+                ]],
+            ],
+            [
+                'id'    => 'legal_prose_accordion',
+                'title' => 'Mentions / accordéon',
+                'usage' => 'Page Déclaration : engagements éthiques (presentation accordion).',
+                'blocks' => [[
+                    'type'         => 'legal_prose',
+                    'presentation' => 'accordion',
+                    'sections'     => [
+                        [
+                            'heading' => 'Charte ethique',
+                            'body'    => 'Exemple de corps avec puces :',
+                            'bullets' => ['Professionnalisme', 'Sources verifiables'],
+                        ],
+                        [
+                            'heading' => 'Transparence financiere',
+                            'body'    => 'Deuxieme section repliable.',
+                            'bullets' => ['Rapports publies', 'Audit independant'],
+                        ],
                     ],
                 ]],
             ],
@@ -199,9 +227,38 @@ HTML;
             [
                 'id'    => 'sectors_grid',
                 'title' => 'Grille secteurs',
-                'usage' => 'Affichage automatique des secteurs depuis la base.',
+                'usage' => 'Tuiles depuis la BDD — style Déclaration avec intro et bandeau teal facultatifs.',
                 'blocks' => [[
-                    'type' => 'sectors_grid',
+                    'type'            => 'sectors_grid',
+                    'layout'          => 'compact',
+                    'kicker'          => 'Équipes de terrain',
+                    'title'           => '14 Équipes sectorielles',
+                    'lead'            => 'Chaque secteur clé de Madagascar est couvert par une équipe dédiée — bâtir, innover, servir le peuple.',
+                    'banner_title'    => 'Équipes sectorielles — GoV Gen Z Madagascar',
+                    'banner_subtitle' => '14 secteurs · Madagascar',
+                ]],
+            ],
+            [
+                'id'    => 'sectors_grid_wide',
+                'title' => 'Grille secteurs — 7 colonnes',
+                'usage' => 'Même tuiles vertes, grille large type page /secteurs.',
+                'blocks' => [[
+                    'type'   => 'sectors_grid',
+                    'layout' => 'wide',
+                ]],
+            ],
+            [
+                'id'    => 'structures_grid',
+                'title' => 'Grille structures (départements)',
+                'usage' => 'Page Déclaration : 7 departements (layout dept). Autres pages : preferer layout hub pour /structure.',
+                'blocks' => [[
+                    'type'            => 'structures_grid',
+                    'layout'          => 'dept',
+                    'kicker'          => 'Organigramme',
+                    'title'           => 'Structure organisationnelle',
+                    'lead'            => 'Un noyau exécutif central appuyé par 7 départements spécialisés — Programme Paikady Taninjanaka.',
+                    'banner_title'    => 'Structure organisationnelle — GoV Gen Z Madagascar',
+                    'banner_subtitle' => '7 départements · Programme Paikady Taninjanaka',
                 ]],
             ],
         ];

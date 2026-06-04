@@ -40,10 +40,13 @@ ANALYTICS_GA4_ID="${ANALYTICS_GA4_ID:-}"
 ANALYTICS_PRIVACY_SLUG="${ANALYTICS_PRIVACY_SLUG:-mentions-legales}"
 PROJECTS_USE_PATH_PREFIX="${PROJECTS_USE_PATH_PREFIX:-true}"
 POSITIONS_USE_PATH_PREFIX="${POSITIONS_USE_PATH_PREFIX:-true}"
+DECLARATION_USE_PATH_PREFIX="${DECLARATION_USE_PATH_PREFIX:-true}"
 PROJECTS_HOST="${PROJECTS_HOST:-}"
 PROJECTS_BASE_URL="${PROJECTS_BASE_URL:-}"
 POSITIONS_HOST="${POSITIONS_HOST:-}"
 POSITIONS_BASE_URL="${POSITIONS_BASE_URL:-}"
+DECLARATION_HOST="${DECLARATION_HOST:-}"
+DECLARATION_BASE_URL="${DECLARATION_BASE_URL:-}"
 APP_ASSET_VERSION="${APP_ASSET_VERSION:-}"
 
 sq() {
@@ -124,11 +127,12 @@ trap 'rm -f "$tmp"' EXIT
   echo "analytics.privacyPageSlug = $(sq "$ANALYTICS_PRIVACY_SLUG")"
   echo ""
   echo "#--------------------------------------------------------------------"
-  echo "# Hôtes / URLs (projets & positions)"
+  echo "# Hôtes / URLs (projets, positions & déclaration)"
   echo "#--------------------------------------------------------------------"
   echo ""
   echo "app.projectsUsePathPrefix = ${PROJECTS_USE_PATH_PREFIX}"
   echo "app.positionsUsePathPrefix = ${POSITIONS_USE_PATH_PREFIX}"
+  echo "app.declarationUsePathPrefix = ${DECLARATION_USE_PATH_PREFIX}"
   if [[ -n "${PROJECTS_HOST}" ]]; then
     echo "app.projectsHost = $(sq "$PROJECTS_HOST")"
   fi
@@ -140,6 +144,12 @@ trap 'rm -f "$tmp"' EXIT
   fi
   if [[ -n "${POSITIONS_BASE_URL}" ]]; then
     echo "app.positionsBaseURL = '$(sq "$POSITIONS_BASE_URL")'"
+  fi
+  if [[ -n "${DECLARATION_HOST}" ]]; then
+    echo "app.declarationHost = $(sq "$DECLARATION_HOST")"
+  fi
+  if [[ -n "${DECLARATION_BASE_URL}" ]]; then
+    echo "app.declarationBaseURL = '$(sq "$DECLARATION_BASE_URL")'"
   fi
   echo ""
   echo "#--------------------------------------------------------------------"

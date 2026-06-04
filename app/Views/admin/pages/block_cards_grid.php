@@ -8,7 +8,7 @@ declare(strict_types=1);
 $pfx = 'blocks[' . $i . ']';
 $b = $block;
 $variant = strtolower(trim((string) ($b['variant'] ?? 'simple_cards')));
-if (! in_array($variant, ['simple_cards', 'circle_cards', 'pillar_cards', 'tile_grid'], true)) {
+if (! in_array($variant, ['simple_cards', 'circle_cards', 'pillar_cards', 'tile_grid', 'declaration_cards'], true)) {
     $variant = 'simple_cards';
 }
 $cards = $b['cards'] ?? [];
@@ -55,6 +55,7 @@ $cards = array_values(array_filter($cards, static function ($card): bool {
                 <option value="circle_cards" <?= $variant === 'circle_cards' ? 'selected' : '' ?>><?= esc(lang('Admin.cms_variant_circle_cards')) ?></option>
                 <option value="pillar_cards" <?= $variant === 'pillar_cards' ? 'selected' : '' ?>><?= esc(lang('Admin.cms_variant_pillar_cards')) ?></option>
                 <option value="tile_grid" <?= $variant === 'tile_grid' ? 'selected' : '' ?>><?= esc(lang('Admin.cms_variant_tile_grid')) ?></option>
+                <option value="declaration_cards" <?= $variant === 'declaration_cards' ? 'selected' : '' ?>><?= esc(lang('Admin.cms_variant_declaration_cards')) ?></option>
             </select>
         </div>
 

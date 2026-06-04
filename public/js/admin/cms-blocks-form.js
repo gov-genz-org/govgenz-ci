@@ -53,6 +53,82 @@
                 reindexRepeatable(wrap);
             });
         });
+        refreshDeclarationSplitGuide();
+    }
+
+    const splitGuideEnabled = container.dataset.declarationSplitGuide === '1';
+    const zoneBeforeLabel = container.dataset.zoneBefore || '';
+    const zoneAfterLabel = container.dataset.zoneAfter || '';
+    const zoneSplitLabel = container.dataset.zoneSplit || '';
+
+    /**
+     * @param {HTMLElement} row
+     * @returns {string}
+     */
+    function blockTypeFromRow(row) {
+        const input = row.querySelector('input[type="hidden"][name^="blocks["][name$="[type]"]');
+        if (!(input instanceof HTMLInputElement)) {
+            return '';
+        }
+
+        return (input.value || '').toLowerCase();
+    }
+
+    /**
+     * @param {string} type
+     * @returns {boolean}
+     */
+    function isSplitTriggerType(type) {
+        return type === 'legal_prose' || type === 'cta_panel';
+    }
+
+    function refreshDeclarationSplitGuide() {
+        if (!splitGuideEnabled) {
+            return;
+        }
+
+        container.querySelectorAll('.cms-declaration-split-marker').forEach((el) => {
+            el.remove();
+        });
+        container.querySelectorAll('.cms-block-zone-badge').forEach((el) => {
+            el.remove();
+        });
+
+        const rows = Array.from(container.querySelectorAll(':scope > .cms-block-row'));
+        let splitAt = rows.length;
+
+        for (let i = 0; i < rows.length; i++) {
+            if (isSplitTriggerType(blockTypeFromRow(rows[i]))) {
+                splitAt = i;
+                break;
+            }
+        }
+
+        if (splitAt < rows.length && zoneSplitLabel !== '') {
+            const marker = document.createElement('div');
+            marker.className = 'cms-declaration-split-marker';
+            marker.setAttribute('role', 'note');
+            marker.textContent = zoneSplitLabel;
+            rows[splitAt].before(marker);
+        }
+
+        rows.forEach((row, idx) => {
+            const badge = document.createElement('span');
+            badge.className = 'cms-block-zone-badge badge border '
+                + (idx >= splitAt ? 'cms-block-zone-badge--after' : 'cms-block-zone-badge--before');
+            badge.textContent = idx >= splitAt ? zoneAfterLabel : zoneBeforeLabel;
+
+            const header = row.querySelector('.card-header');
+            if (!header) {
+                return;
+            }
+            const removeBtn = header.querySelector('.cms-block-remove');
+            if (removeBtn) {
+                header.insertBefore(badge, removeBtn);
+            } else {
+                header.appendChild(badge);
+            }
+        });
     }
 
     /**
@@ -578,5 +654,16 @@
 
     if (blocksRadio.checked && container.querySelectorAll(':scope > .cms-block-row').length === 0) {
         appendBlock('section_text');
+    }
+
+    refreshDeclarationSplitGuide();
+
+    const pageForm = container.closest('form');
+    if (pageForm) {
+        pageForm.addEventListener('submit', () => {
+            if (blocksRadio.checked) {
+                reindexBlocks(container);
+            }
+        });
     }
 })();
