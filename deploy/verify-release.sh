@@ -41,6 +41,8 @@ must_file public/assets/css/govgenz-template.css
 must_file public/assets/css/govgenz-front-pages.css
 must_file public/js/front/govgenz-template.js
 must_file public/assets/img/govgenz-logo.svg
+must_file public/assets/icons/sectors/education.svg
+must_file public/assets/icons/structures/coordination.svg
 
 for dir in cache logs session debugbar uploads backups; do
   must_exist "writable/${dir}"
