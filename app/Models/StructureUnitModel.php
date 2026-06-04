@@ -143,12 +143,7 @@ class StructureUnitModel extends Model
             return null;
         }
 
-        $relative = 'assets/icons/structures/' . $code . '.svg';
-        if (! is_file(FCPATH . $relative)) {
-            return null;
-        }
-
-        return base_url($relative);
+        return \App\Libraries\PublicStaticAsset::urlIfExists('assets/icons/structures/' . $code . '.svg');
     }
 
     public function iconAltForRow(array $row): string
