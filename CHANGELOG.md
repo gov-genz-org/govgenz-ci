@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.15.0] - 2026-06-04
+
+### Release
+
+- fix: icons sectors/structure (FCPATH racine FTP) (#71) (00fc8a1)
+- chore(release): prepare develop 1.15.0 after v1.14.0 (#70) (c39380a)
+- docs(changelog): v1.14.0 (1540aaa)
+- feat(front/admin): add declaration pages and features (#67) (57daadf)
+- chore(release): prepare develop 1.14.0 after v1.13.0 (#66) (adf3d1b)
+- fix(ci): MR-only develop sync, skip spurious tags and changelog deploys (#62) (87513f9)
+
+
 ## [1.14.0] - 2026-06-04
 
 ### Release
