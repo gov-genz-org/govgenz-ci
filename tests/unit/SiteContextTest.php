@@ -29,6 +29,10 @@ final class SiteContextTest extends CIUnitTestCase
         SiteContext::setPositions();
         $this->assertTrue(SiteContext::isPositionsSite());
 
+        SiteContext::setDeclaration();
+        $this->assertTrue(SiteContext::isDeclarationSite());
+        $this->assertSame(SiteContext::SITE_DECLARATION, SiteContext::id());
+
         SiteContext::setMain();
         $this->assertSame(SiteContext::SITE_MAIN, SiteContext::id());
 
@@ -60,5 +64,6 @@ final class SiteContextTest extends CIUnitTestCase
     {
         $this->assertFalse(SiteContext::httpHostMatchesProjectsHost());
         $this->assertFalse(SiteContext::httpHostMatchesPositionsHost());
+        $this->assertFalse(SiteContext::httpHostMatchesDeclarationHost());
     }
 }

@@ -7,14 +7,18 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $registerFrontWithoutCatchAll = static function (RouteCollection $routes): void {
-    $pathPrefix           = SiteContext::projectsPathPrefixEnabled();
-    $positionsPathPrefix  = SiteContext::positionsPathPrefixEnabled();
-    $onProjectsVhost      = ! $pathPrefix && trim((string) env('app.projectsHost', '')) !== '' && SiteContext::httpHostMatchesProjectsHost();
-    $onPositionsVhost     = ! $positionsPathPrefix && trim((string) env('app.positionsHost', '')) !== '' && SiteContext::httpHostMatchesPositionsHost();
+    $pathPrefix             = SiteContext::projectsPathPrefixEnabled();
+    $positionsPathPrefix    = SiteContext::positionsPathPrefixEnabled();
+    $declarationPathPrefix  = SiteContext::declarationPathPrefixEnabled();
+    $onProjectsVhost        = ! $pathPrefix && trim((string) env('app.projectsHost', '')) !== '' && SiteContext::httpHostMatchesProjectsHost();
+    $onPositionsVhost       = ! $positionsPathPrefix && trim((string) env('app.positionsHost', '')) !== '' && SiteContext::httpHostMatchesPositionsHost();
+    $onDeclarationVhost     = ! $declarationPathPrefix && trim((string) env('app.declarationHost', '')) !== '' && SiteContext::httpHostMatchesDeclarationHost();
     if ($onProjectsVhost) {
         $frontHomeIndex = 'Front\\Projects\\Home::index';
     } elseif ($onPositionsVhost) {
         $frontHomeIndex = 'Front\\Positions\\Home::index';
+    } elseif ($onDeclarationVhost) {
+        $frontHomeIndex = 'Front\\Declaration\\Home::index';
     } else {
         $frontHomeIndex = 'Front\\Home::index';
     }
@@ -27,6 +31,14 @@ $registerFrontWithoutCatchAll = static function (RouteCollection $routes): void 
 
     $routes->get('press', 'Front\\Press::index');
     $routes->get('press/(:segment)', 'Front\\Press::show/$1');
+
+    if (SiteContext::declarationPathPrefixEnabled()) {
+        $routes->get('declaration', 'Front\\Declaration\\Home::index');
+        $routes->get('declaration/(:segment)/share-qr.png', 'Front\\Declaration\\Home::shareQrImage/$1');
+        $routes->get('declaration/(:segment)/share-qr', 'Front\\Declaration\\Home::shareQrImage/$1');
+        $routes->get('declaration/(:segment)/share', 'Front\\Declaration\\Home::shareQrPage/$1');
+        $routes->get('declaration/(:segment)', 'Front\\Declaration\\Home::show/$1');
+    }
 
     $routes->get('secteurs', 'Front\\Sectors::index');
     $routes->get('sectors', 'Front\\Sectors::index');
@@ -66,6 +78,12 @@ $registerFrontWithoutCatchAll = static function (RouteCollection $routes): void 
         $routes->post('filter', 'Front\\Positions\\Home::filterPost');
         $routes->get('(.+)', 'Front\\Positions\\Home::tail/$1');
     }
+    if ($onDeclarationVhost) {
+        $routes->get('(:segment)/share-qr.png', 'Front\\Declaration\\Home::shareQrImage/$1');
+        $routes->get('(:segment)/share-qr', 'Front\\Declaration\\Home::shareQrImage/$1');
+        $routes->get('(:segment)/share', 'Front\\Declaration\\Home::shareQrPage/$1');
+        $routes->get('(.+)', 'Front\\Declaration\\Home::tail/$1');
+    }
 };
 
 $registerFrontCatchAll = static function (RouteCollection $routes): void {
@@ -75,18 +93,24 @@ $registerFrontCatchAll = static function (RouteCollection $routes): void {
 $registerFrontWithoutCatchAll($routes);
 
 // /en seul : accueil anglais du site courant (principal vs vhost projets — ne pas forcer Front\Home sur projects.*).
-$pathPrefixForEnRoute      = SiteContext::projectsPathPrefixEnabled();
-$positionsPrefixForEnRoute = SiteContext::positionsPathPrefixEnabled();
-$onProjectsVhostForEnRoute = ! $pathPrefixForEnRoute
+$pathPrefixForEnRoute           = SiteContext::projectsPathPrefixEnabled();
+$positionsPrefixForEnRoute      = SiteContext::positionsPathPrefixEnabled();
+$declarationPrefixForEnRoute    = SiteContext::declarationPathPrefixEnabled();
+$onProjectsVhostForEnRoute      = ! $pathPrefixForEnRoute
     && trim((string) env('app.projectsHost', '')) !== ''
     && SiteContext::httpHostMatchesProjectsHost();
-$onPositionsVhostForEnRoute = ! $positionsPrefixForEnRoute
+$onPositionsVhostForEnRoute     = ! $positionsPrefixForEnRoute
     && trim((string) env('app.positionsHost', '')) !== ''
     && SiteContext::httpHostMatchesPositionsHost();
+$onDeclarationVhostForEnRoute   = ! $declarationPrefixForEnRoute
+    && trim((string) env('app.declarationHost', '')) !== ''
+    && SiteContext::httpHostMatchesDeclarationHost();
 if ($onProjectsVhostForEnRoute) {
     $englishRootController = 'Front\\Projects\\Home::index';
 } elseif ($onPositionsVhostForEnRoute) {
     $englishRootController = 'Front\\Positions\\Home::index';
+} elseif ($onDeclarationVhostForEnRoute) {
+    $englishRootController = 'Front\\Declaration\\Home::index';
 } else {
     $englishRootController = 'Front\\Home::index';
 }
@@ -154,6 +178,15 @@ $routes->group('admin', ['filter' => 'authadmin'], static function ($routes) {
     $routes->get('sectors/edit/(:num)', 'Admin\\Sectors::edit/$1');
     $routes->post('sectors/update/(:num)', 'Admin\\Sectors::update/$1');
     $routes->post('sectors/delete/(:num)', 'Admin\\Sectors::delete/$1');
+    $routes->post('sectors/reorder', 'Admin\\Sectors::reorder');
+
+    $routes->get('structures', 'Admin\\Structures::index');
+    $routes->get('structures/create', 'Admin\\Structures::create');
+    $routes->post('structures/store', 'Admin\\Structures::store');
+    $routes->get('structures/edit/(:num)', 'Admin\\Structures::edit/$1');
+    $routes->post('structures/update/(:num)', 'Admin\\Structures::update/$1');
+    $routes->post('structures/delete/(:num)', 'Admin\\Structures::delete/$1');
+    $routes->post('structures/reorder', 'Admin\\Structures::reorder');
 
     $routes->get('project-projects', 'Admin\\ProjectProjects::index');
     $routes->get('project-projects/create', 'Admin\\ProjectProjects::create');
@@ -170,6 +203,13 @@ $routes->group('admin', ['filter' => 'authadmin'], static function ($routes) {
     $routes->post('position-items/update/(:num)', 'Admin\\PositionItems::update/$1');
     $routes->post('position-items/duplicate/(:num)', 'Admin\\PositionItems::duplicate/$1');
     $routes->post('position-items/delete/(:num)', 'Admin\\PositionItems::delete/$1');
+
+    $routes->get('declaration-items', 'Admin\\DeclarationItems::index');
+    $routes->get('declaration-items/create', 'Admin\\DeclarationItems::create');
+    $routes->post('declaration-items/store', 'Admin\\DeclarationItems::store');
+    $routes->get('declaration-items/edit/(:num)', 'Admin\\DeclarationItems::edit/$1');
+    $routes->post('declaration-items/update/(:num)', 'Admin\\DeclarationItems::update/$1');
+    $routes->post('declaration-items/delete/(:num)', 'Admin\\DeclarationItems::delete/$1');
 
     $routes->get('project-exchange-rates', 'Admin\\ProjectExchangeRates::edit');
     $routes->post('project-exchange-rates/update', 'Admin\\ProjectExchangeRates::update');

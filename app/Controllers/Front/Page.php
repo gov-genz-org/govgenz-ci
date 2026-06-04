@@ -52,8 +52,12 @@ class Page extends BaseController
      */
     public function show(string $slug)
     {
-        helper('cms');
-        if (strtolower(trim($slug)) === cms_footer_embed_slug()) {
+        helper(['cms', 'locale']);
+        $normalized = strtolower(trim($slug));
+        if (in_array($normalized, cms_sectors_legacy_slugs(), true)) {
+            return redirect()->to(localized_site_url(cms_sectors_public_slug()), 301);
+        }
+        if ($normalized === cms_footer_embed_slug()) {
             throw PageNotFoundException::forPageNotFound('Page introuvable.');
         }
 

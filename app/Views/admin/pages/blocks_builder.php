@@ -3,17 +3,21 @@
 declare(strict_types=1);
 
 /** @var list<array<string, mixed>> $blocksForForm */
+/** @var bool $showDeclarationBlocksSplitGuide */
+$showDeclarationBlocksSplitGuide = $showDeclarationBlocksSplitGuide ?? false;
+/** @var bool $showStructurePageBlocksGuide */
+$showStructurePageBlocksGuide = $showStructurePageBlocksGuide ?? false;
 $blockViews = [
     'section_text'    => 'admin/pages/block_section_text',
     'cards_grid'      => 'admin/pages/block_cards_grid',
     'stats_grid'      => 'admin/pages/block_stats_grid',
     'metrics_section' => 'admin/pages/block_stats_grid',
-    'organization_hub'=> 'admin/pages/block_organization_hub',
     'contact_grid'    => 'admin/pages/block_contact_grid',
     'cta_panel'       => 'admin/pages/block_cta_panel',
     'legal_prose'     => 'admin/pages/block_legal_prose',
     'sources'         => 'admin/pages/block_sources',
     'sectors_grid'    => 'admin/pages/block_sectors_grid',
+    'structures_grid' => 'admin/pages/block_structures_grid',
     'footer_columns'  => 'admin/pages/block_footer_columns',
     'html'            => 'admin/pages/block_html',
 ];
@@ -22,12 +26,12 @@ $blockLabels = [
     'section_text'     => lang('Admin.cms_add_section_text'),
     'cards_grid'       => lang('Admin.cms_add_cards_grid'),
     'stats_grid'       => lang('Admin.cms_add_stats_grid'),
-    'organization_hub' => lang('Admin.cms_add_organization_hub'),
     'contact_grid'     => lang('Admin.cms_add_contact_grid'),
     'cta_panel'        => lang('Admin.cms_add_cta_panel'),
     'legal_prose'      => lang('Admin.cms_add_legal_prose'),
     'sources'          => lang('Admin.cms_add_sources'),
     'sectors_grid'     => lang('Admin.cms_add_sectors_grid'),
+    'structures_grid'  => lang('Admin.cms_add_structures_grid'),
     'footer_columns'   => lang('Admin.cms_add_footer_columns'),
     'html'             => lang('Admin.cms_add_html'),
 ];
@@ -36,12 +40,12 @@ $allowedBlockTypes = [
     'section_text',
     'cards_grid',
     'stats_grid',
-    'organization_hub',
     'contact_grid',
     'cta_panel',
     'legal_prose',
     'sources',
     'sectors_grid',
+    'structures_grid',
     'footer_columns',
     'html',
 ];
@@ -51,6 +55,9 @@ $mapBlockView = static function (array $block) use ($blockViews): string {
     if ($type === 'metrics_section') {
         $type = 'stats_grid';
     }
+    if ($type === 'organization_hub') {
+        $type = 'structures_grid';
+    }
 
     return $blockViews[$type] ?? $blockViews['section_text'];
 };
@@ -58,12 +65,25 @@ $mapBlockView = static function (array $block) use ($blockViews): string {
 
 <div id="cms-blocks-panel" class="<?= $contentMode === 'blocks' ? '' : 'd-none' ?>">
     <label class="form-label"><?= esc(lang('Admin.cms_blocks_label')) ?></label>
+    <?php if ($showDeclarationBlocksSplitGuide) : ?>
+        <?= view('admin/pages/partials/declaration_blocks_order_guide') ?>
+    <?php endif; ?>
+    <?php if ($showStructurePageBlocksGuide) : ?>
+        <?= view('admin/pages/partials/structure_page_blocks_guide') ?>
+    <?php endif; ?>
     <p class="text-muted small"><?= lang('Admin.cms_blocks_help', [
         site_url('admin/cms-guide-blocks'),
         site_url('admin/cms-guide-blocks#admin-block-footer_columns'),
     ]) ?></p>
 
-    <div id="cms-blocks-container" class="mb-2">
+    <div
+        id="cms-blocks-container"
+        class="mb-2"
+        <?= $showDeclarationBlocksSplitGuide ? ' data-declaration-split-guide="1"' : '' ?>
+        <?= $showDeclarationBlocksSplitGuide ? ' data-zone-before="' . esc(lang('Admin.declaration_block_zone_before'), 'attr') . '"' : '' ?>
+        <?= $showDeclarationBlocksSplitGuide ? ' data-zone-after="' . esc(lang('Admin.declaration_block_zone_after'), 'attr') . '"' : '' ?>
+        <?= $showDeclarationBlocksSplitGuide ? ' data-zone-split="' . esc(lang('Admin.declaration_block_zone_split_line'), 'attr') . '"' : '' ?>
+    >
         <?php foreach ($blocksForForm as $idx => $block) : ?>
             <?= view($mapBlockView(is_array($block) ? $block : []), [
                 'i'     => $idx,

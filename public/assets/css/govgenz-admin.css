@@ -256,6 +256,64 @@ aside.admin-sidebar .admin-sidebar-nav .nav-link.active {
   border-radius: 0.5rem;
 }
 
+.declaration-blocks-order-steps {
+  margin-bottom: 0;
+}
+
+.cms-declaration-split-marker {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.35rem 0 0.85rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px dashed rgba(196, 30, 48, 0.35);
+  border-radius: 0.5rem;
+  background: rgba(196, 30, 48, 0.05);
+  color: #7a2430;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.cms-declaration-split-marker::before,
+.cms-declaration-split-marker::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(196, 30, 48, 0.2);
+}
+
+.cms-block-zone-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.cms-block-zone-badge--before {
+  color: #0d6e6a;
+  border-color: rgba(23, 163, 158, 0.35) !important;
+  background: rgba(23, 163, 158, 0.08) !important;
+}
+
+.cms-block-zone-badge--after {
+  color: #7a2430;
+  border-color: rgba(196, 30, 48, 0.28) !important;
+  background: rgba(196, 30, 48, 0.06) !important;
+}
+
+.cms-declaration-zone-badge--before {
+  color: #0d6e6a;
+  border-color: rgba(23, 163, 158, 0.35) !important;
+  background: rgba(23, 163, 158, 0.08) !important;
+}
+
+.cms-declaration-zone-badge--after {
+  color: #7a2430;
+  border-color: rgba(196, 30, 48, 0.28) !important;
+  background: rgba(196, 30, 48, 0.06) !important;
+}
+
 .cms-media-preview {
   width: 4.5rem;
   min-height: 4.5rem;
@@ -328,4 +386,13 @@ main:focus {
 
 .cms-guide-sample {
   border-radius: 8px;
+}
+
+tbody[data-admin-sortable-list] tr.is-dragging {
+  opacity: 0.55;
+}
+
+tbody[data-admin-sortable-list].is-drag-over {
+  outline: 2px dashed rgba(13, 110, 253, 0.35);
+  outline-offset: 2px;
 }

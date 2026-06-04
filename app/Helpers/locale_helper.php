@@ -75,6 +75,7 @@ if (! function_exists('locale_switch_url')) {
 
         if (! SiteContext::isProjectsSite()
             && ! SiteContext::isPositionsSite()
+            && ! SiteContext::isDeclarationSite()
             && count($segments) === 1) {
             $partnerSlug = cms_page_partner_slug_for_locale_switch((string) $segments[0], $loc);
             if ($partnerSlug !== null) {
@@ -214,6 +215,88 @@ if (! function_exists('locale_switch_url')) {
             }
 
             $mapped = $mapPositionSegments($segments, $loc);
+            $tail   = implode('/', $mapped);
+
+            return $tail === '' ? $origin . '/' : $origin . '/' . $tail;
+        }
+
+        if (SiteContext::isDeclarationSite() && SiteContext::declarationPathPrefixEnabled()) {
+            helper('declaration');
+
+            $mapDeclarationSegments = static function (array $segs, string $fromLocale): array {
+                $out = [];
+                foreach ($segs as $s) {
+                    $s = trim((string) $s);
+                    if ($s === '') {
+                        continue;
+                    }
+                    $partner = declaration_partner_slug_for_locale_switch($s, $fromLocale);
+                    if ($partner !== null) {
+                        $out[] = $partner;
+
+                        continue;
+                    }
+                    $out[] = $fromLocale === 'fr'
+                        ? locale_slug_fr_to_en($s)
+                        : locale_slug_en_to_fr($s);
+                }
+
+                return $out;
+            };
+
+            if ($loc === 'fr') {
+                $mapped = $mapDeclarationSegments($segments, $loc);
+                $tail   = implode('/', $mapped);
+
+                return $tail === '' ? site_url('en/declaration') : site_url('en/declaration/' . $tail);
+            }
+
+            $mapped = $mapDeclarationSegments($segments, $loc);
+            $tail   = implode('/', $mapped);
+
+            return $tail === '' ? site_url('declaration') : site_url('declaration/' . $tail);
+        }
+
+        if (SiteContext::isDeclarationSite()
+            && ! SiteContext::declarationPathPrefixEnabled()
+            && SiteContext::httpHostMatchesDeclarationHost(service('request'))) {
+            helper('declaration');
+            $u      = service('request')->getUri();
+            $origin = $u->getScheme() . '://' . $u->getHost();
+            $port   = $u->getPort();
+            if ($port !== null && ! in_array((int) $port, [80, 443], true)) {
+                $origin .= ':' . $port;
+            }
+
+            $mapDeclarationSegments = static function (array $segs, string $fromLocale): array {
+                $out = [];
+                foreach ($segs as $s) {
+                    $s = trim((string) $s);
+                    if ($s === '') {
+                        continue;
+                    }
+                    $partner = declaration_partner_slug_for_locale_switch($s, $fromLocale);
+                    if ($partner !== null) {
+                        $out[] = $partner;
+
+                        continue;
+                    }
+                    $out[] = $fromLocale === 'fr'
+                        ? locale_slug_fr_to_en($s)
+                        : locale_slug_en_to_fr($s);
+                }
+
+                return $out;
+            };
+
+            if ($loc === 'fr') {
+                $mapped = $mapDeclarationSegments($segments, $loc);
+                $tail   = implode('/', $mapped);
+
+                return $tail === '' ? $origin . '/en/' : $origin . '/en/' . $tail;
+            }
+
+            $mapped = $mapDeclarationSegments($segments, $loc);
             $tail   = implode('/', $mapped);
 
             return $tail === '' ? $origin . '/' : $origin . '/' . $tail;

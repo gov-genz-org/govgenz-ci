@@ -24,14 +24,17 @@ final class CmsBodyBlocksRenderer
                 'section_text' => self::sectionText($b),
                 'cards_grid' => self::cardsGrid($b),
                 'metrics_section', 'stats_grid' => self::statsGrid($b),
-                'organization_hub' => self::organizationHub($b),
+                'organization_hub' => self::structuresGrid(['layout' => 'hub']),
                 'contact_grid' => self::contactGrid($b),
                 'cta_panel' => self::ctaPanel($b),
                 'legal_prose' => self::legalProse($b),
                 'sources' => self::sources($b),
                 'sectors_grid' => self::sectorsGrid($b),
+                'structures_grid' => self::structuresGrid($b),
                 'footer_columns' => self::footerColumns($b),
-                'html' => (string) ($b['html'] ?? ''),
+                'html' => function_exists('cms_apply_html_embeds')
+                    ? cms_apply_html_embeds((string) ($b['html'] ?? ''))
+                    : (string) ($b['html'] ?? ''),
                 default => '',
             };
         }
@@ -108,8 +111,12 @@ final class CmsBodyBlocksRenderer
     private static function cardsGrid(array $b): string
     {
         $variant = strtolower(trim((string) ($b['variant'] ?? 'simple_cards')));
-        if (! in_array($variant, ['simple_cards', 'circle_cards', 'pillar_cards', 'tile_grid'], true)) {
+        if (! in_array($variant, ['simple_cards', 'circle_cards', 'pillar_cards', 'tile_grid', 'declaration_cards'], true)) {
             $variant = 'simple_cards';
+        }
+
+        if (strtolower(trim((string) ($b['variant'] ?? ''))) === 'dept_cards') {
+            return self::structuresGrid(['layout' => 'dept']);
         }
 
         $cards = $b['cards'] ?? [];
@@ -123,6 +130,7 @@ final class CmsBodyBlocksRenderer
                     'circle_cards' => self::circleCard($card, $idx),
                     'pillar_cards' => self::pillarCard($card, $idx),
                     'tile_grid' => self::tileCard($card, $idx),
+                    'declaration_cards' => self::declarationCard($card, $idx),
                     default => self::simpleCard($card, $idx),
                 };
             }
@@ -136,12 +144,16 @@ final class CmsBodyBlocksRenderer
             'circle_cards' => 'cercles',
             'pillar_cards' => 'adn',
             'tile_grid' => 'tile-grid',
+            'declaration_cards' => 'decl-cards',
+            'dept_cards' => 'dept-grid',
             default => 'ggz-cards-row',
         };
 
         $sectionClass = match ($variant) {
             'pillar_cards' => 'section section--cms-cards section--adn',
             'circle_cards' => 'section section--cms-cards section--qui',
+            'declaration_cards' => 'section section--cms-cards section--decl-cards',
+            'dept_cards' => 'section section--cms-cards section--dept-cards',
             default => 'section section--cms-cards',
         };
 
@@ -329,6 +341,140 @@ final class CmsBodyBlocksRenderer
         $html .= '</' . $tag . '>';
 
         return $html;
+    }
+
+    /**
+     * Carte déclaration / partenariat (bandeau, méta, pied — page programme Déclaration).
+     *
+     * @param array<string, mixed> $card
+     */
+    private static function declarationCard(array $card, int $idx): string
+    {
+        $eyebrow = trim((string) ($card['eyebrow'] ?? ''));
+        $title = trim((string) ($card['title'] ?? ''));
+        $subtitle = trim((string) ($card['subtitle'] ?? ''));
+        $description = trim((string) ($card['description'] ?? ''));
+        $href = trim((string) ($card['href'] ?? ''));
+        $badge = trim((string) ($card['value'] ?? ''));
+        $ctaLabel = trim((string) ($card['unit'] ?? ''));
+
+        if ($title === '' && $description === '' && $eyebrow === '') {
+            return '';
+        }
+
+        $tone = self::declarationCardTone($eyebrow);
+        if ($badge === '') {
+            $badge = self::declarationBadgeLabel($tone, $eyebrow);
+        }
+        if ($ctaLabel === '' && $href !== '') {
+            $ctaLabel = str_contains($href, 'partnerships@') ? 'Proposer un partenariat' : 'En savoir plus';
+        }
+
+        $metaHtml = '';
+        foreach (preg_split('/\s*·\s*/u', $subtitle) ?: [] as $part) {
+            $part = trim((string) $part);
+            if ($part !== '') {
+                $metaHtml .= '<span>' . esc($part) . '</span>';
+            }
+        }
+
+        $html = '<article class="decl-card decl-card--' . esc($tone, 'attr') . ' reveal" data-delay="' . ($idx * 100) . '">';
+        if ($eyebrow !== '') {
+            $html .= '<div class="decl-band">' . esc($eyebrow) . '</div>';
+        }
+        $html .= '<div class="decl-header">';
+        if ($metaHtml !== '') {
+            $html .= '<div class="decl-meta">' . $metaHtml . '</div>';
+        }
+        if ($title !== '') {
+            $html .= '<h3 class="decl-title">' . esc($title) . '</h3>';
+        }
+        if ($description !== '') {
+            $html .= '<p class="decl-summary">' . esc($description) . '</p>';
+        }
+        $html .= '</div>';
+        if ($href !== '' || $badge !== '') {
+            $html .= '<div class="decl-footer">';
+            if ($badge !== '') {
+                $html .= '<span class="decl-badge decl-badge--' . esc($tone, 'attr') . '">' . esc($badge) . '</span>';
+            }
+            if ($href !== '' && $ctaLabel !== '') {
+                $html .= '<div class="decl-footer-ctas"><a href="' . esc($href, 'attr') . '" class="btn btn-sm">' . esc($ctaLabel) . '</a></div>';
+            }
+            $html .= '</div>';
+        }
+        $html .= '</article>';
+
+        return $html;
+    }
+
+    /**
+     * Carte département (grille organigramme).
+     *
+     * @param array<string, mixed> $card
+     */
+    private static function deptCard(array $card, int $idx): string
+    {
+        $title = trim((string) ($card['title'] ?? ''));
+        $description = trim((string) ($card['description'] ?? ''));
+        $href = trim((string) ($card['href'] ?? ''));
+        if ($title === '' && $description === '' && $href === '') {
+            return '';
+        }
+
+        $mail = $href !== '' ? (preg_replace('/^mailto:/', '', $href) ?? $href) : '';
+        $tag  = $href !== '' ? 'a' : 'article';
+        $mediaId = (int) ($card['media_id'] ?? 0);
+        $mediaUrl = $mediaId > 0 && function_exists('cms_media_public_url') ? cms_media_public_url($mediaId) : null;
+        $iconUrl = trim((string) ($card['icon_url'] ?? ''));
+        $html = '<' . $tag . ' class="dept-card reveal" data-delay="' . ($idx * 50) . '"';
+        if ($href !== '') {
+            $html .= ' href="' . esc($href, 'attr') . '"';
+        }
+        $html .= '>';
+        if ($mediaUrl !== null) {
+            $html .= '<div class="dept-card__icon"><img src="' . esc($mediaUrl, 'attr') . '" alt="' . esc(trim((string) ($card['media_alt'] ?? $title)), 'attr') . '" width="40" height="40" loading="lazy"></div>';
+        } elseif ($iconUrl !== '') {
+            $html .= '<div class="dept-card__icon"><img src="' . esc($iconUrl, 'attr') . '" alt="" width="40" height="40" loading="lazy"></div>';
+        }
+        if ($title !== '') {
+            $html .= '<h4 class="dept-card__title">' . esc($title) . '</h4>';
+        }
+        if ($description !== '') {
+            $html .= '<p class="dept-card__desc">' . esc($description) . '</p>';
+        }
+        if ($mail !== '') {
+            $html .= '<span class="dept-card__mail">' . esc($mail) . '</span>';
+        }
+        $html .= '</' . $tag . '>';
+
+        return $html;
+    }
+
+    private static function declarationCardTone(string $eyebrow): string
+    {
+        $e = mb_strtolower($eyebrow);
+        if (str_contains($e, 'plaidoyer') || str_contains($e, 'advocacy')) {
+            return 'pledge';
+        }
+        if (str_contains($e, 'alerte') || str_contains($e, 'alert')) {
+            return 'alert';
+        }
+        if (str_contains($e, 'partenariat') || str_contains($e, 'partnership') || str_contains($e, 'alliance')) {
+            return 'partnership';
+        }
+
+        return 'official';
+    }
+
+    private static function declarationBadgeLabel(string $tone, string $eyebrow): string
+    {
+        return match ($tone) {
+            'pledge' => 'Plaidoyer',
+            'alert' => 'Alerte',
+            'partnership' => 'Partenariat',
+            default => 'Officiel',
+        };
     }
 
     /**
@@ -537,6 +683,11 @@ final class CmsBodyBlocksRenderer
      */
     private static function legalProse(array $b): string
     {
+        $presentation = strtolower(trim((string) ($b['presentation'] ?? '')));
+        if ($presentation === 'accordion') {
+            return self::legalProseAccordion($b);
+        }
+
         $sectionsHtml = '';
         $sections = $b['sections'] ?? [];
         if (is_array($sections)) {
@@ -577,6 +728,57 @@ final class CmsBodyBlocksRenderer
     /**
      * @param array<string, mixed> $b
      */
+    private static function legalProseAccordion(array $b): string
+    {
+        $itemsHtml = '';
+        $sections = $b['sections'] ?? [];
+        if (is_array($sections)) {
+            foreach (array_values($sections) as $idx => $section) {
+                if (! is_array($section)) {
+                    continue;
+                }
+                $heading = trim((string) ($section['heading'] ?? ''));
+                $body = trim((string) ($section['body'] ?? ''));
+                $bullets = $section['bullets'] ?? [];
+                if ($heading === '' && $body === '' && (! is_array($bullets) || $bullets === [])) {
+                    continue;
+                }
+
+                $bodyHtml = '';
+                foreach (self::textLines($body) as $paragraph) {
+                    $bodyHtml .= '<p>' . esc($paragraph) . '</p>';
+                }
+                $lis = '';
+                if (is_array($bullets)) {
+                    foreach ($bullets as $bullet) {
+                        $bullet = trim((string) $bullet);
+                        if ($bullet !== '') {
+                            $lis .= '<li>' . esc($bullet) . '</li>';
+                        }
+                    }
+                }
+                if ($lis !== '') {
+                    $bodyHtml .= '<ul>' . $lis . '</ul>';
+                }
+
+                $openAttr = $idx === 0 ? ' open' : '';
+                $itemsHtml .= '<details class="decl-expandable"' . $openAttr . '>';
+                $itemsHtml .= '<summary class="decl-expandable__trigger"><span>' . esc($heading) . '</span><span class="decl-expandable__arrow" aria-hidden="true">▼</span></summary>';
+                $itemsHtml .= '<div class="decl-expandable__body">' . $bodyHtml . '</div>';
+                $itemsHtml .= '</details>';
+            }
+        }
+
+        if ($itemsHtml === '') {
+            return '';
+        }
+
+        return '<section class="section section--legal section--decl-ethics"><div class="section__inner"><div class="decl-expandables">' . $itemsHtml . '</div></div></section>';
+    }
+
+    /**
+     * @param array<string, mixed> $b
+     */
     private static function sources(array $b): string
     {
         $linesHtml = '';
@@ -601,12 +803,62 @@ final class CmsBodyBlocksRenderer
      */
     private static function sectorsGrid(array $b): string
     {
-        $grid = function_exists('cms_sectors_render_tile_grid_html') ? cms_sectors_render_tile_grid_html() : '';
+        helper('cms');
+
+        $layout = cms_sectors_normalize_layout($b['layout'] ?? null, 'compact');
+
+        $grid = function_exists('cms_sectors_render_tile_grid_html')
+            ? cms_sectors_render_tile_grid_html($layout)
+            : '';
         if ($grid === '') {
             return '';
         }
 
-        return '<section class="section section--secteurs"><div class="section__inner">'
+        $sectionClass = $layout === 'wide'
+            ? 'section section--secteurs sectors-grid sectors-grid--wide'
+            : 'section section--secteurs section--decl-teams sectors-grid sectors-grid--compact';
+
+        $intro  = cms_sectors_render_block_intro_html($b);
+        $banner = cms_sectors_render_block_banner_html($b, $layout);
+
+        return '<section class="' . esc($sectionClass, 'attr') . '"><div class="section__inner">'
+            . $intro
+            . $banner
+            . $grid
+            . '</div></section>';
+    }
+
+    /**
+     * @param array<string, mixed> $b
+     */
+    private static function structuresGrid(array $b): string
+    {
+        helper('cms');
+
+        $layout = cms_structures_normalize_layout($b['layout'] ?? null, 'dept');
+
+        $grid = $layout === 'hub'
+            ? (function_exists('cms_structures_render_hub_html') ? cms_structures_render_hub_html() : '')
+            : (function_exists('cms_structures_render_dept_grid_html') ? cms_structures_render_dept_grid_html() : '');
+
+        if ($grid === '') {
+            return '';
+        }
+
+        $intro  = cms_structures_render_block_intro_html($b);
+        $banner = cms_structures_render_block_banner_html($b, $layout);
+
+        if ($layout === 'hub') {
+            return '<section class="section section--structure structures-grid structures-grid--hub"><div class="section__inner">'
+                . $intro
+                . $banner
+                . $grid
+                . '</div></section>';
+        }
+
+        return '<section class="section section--cms-cards section--dept-cards structures-grid structures-grid--dept"><div class="section__inner">'
+            . $intro
+            . $banner
             . $grid
             . '</div></section>';
     }

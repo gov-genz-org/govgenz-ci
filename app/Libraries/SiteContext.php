@@ -11,6 +11,7 @@ use CodeIgniter\HTTP\RequestInterface;
  *
  * `projects` = même appli servie sur le vhost configuré par app.projectsHost (dossier B FTP).
  * `positions` = idem pour app.positionsHost (futur sous-domaine).
+ * `declaration` = idem pour app.declarationHost (futur sous-domaine).
  */
 final class SiteContext
 {
@@ -19,6 +20,8 @@ final class SiteContext
     public const SITE_PROJECTS = 'projects';
 
     public const SITE_POSITIONS = 'positions';
+
+    public const SITE_DECLARATION = 'declaration';
 
     private static string $siteId = self::SITE_MAIN;
 
@@ -49,6 +52,11 @@ final class SiteContext
         self::$siteId = self::SITE_POSITIONS;
     }
 
+    public static function setDeclaration(): void
+    {
+        self::$siteId = self::SITE_DECLARATION;
+    }
+
     public static function isProjectsSite(): bool
     {
         return self::$siteId === self::SITE_PROJECTS;
@@ -57,6 +65,11 @@ final class SiteContext
     public static function isPositionsSite(): bool
     {
         return self::$siteId === self::SITE_POSITIONS;
+    }
+
+    public static function isDeclarationSite(): bool
+    {
+        return self::$siteId === self::SITE_DECLARATION;
     }
 
     /**
@@ -114,6 +127,11 @@ final class SiteContext
         return self::httpHostMatchesConfiguredHost('app.positionsHost', $request);
     }
 
+    public static function httpHostMatchesDeclarationHost(?RequestInterface $request = null): bool
+    {
+        return self::httpHostMatchesConfiguredHost('app.declarationHost', $request);
+    }
+
     /**
      * @return array{host: string, port: ?string}
      */
@@ -147,6 +165,11 @@ final class SiteContext
     public static function positionsPathPrefixEnabled(): bool
     {
         return filter_var(env('app.positionsUsePathPrefix', true), FILTER_VALIDATE_BOOLEAN);
+    }
+
+    public static function declarationPathPrefixEnabled(): bool
+    {
+        return filter_var(env('app.declarationUsePathPrefix', true), FILTER_VALIDATE_BOOLEAN);
     }
 
     public static function id(): string

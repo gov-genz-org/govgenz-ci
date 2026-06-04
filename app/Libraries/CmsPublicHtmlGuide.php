@@ -157,8 +157,8 @@ HTML,
             ],
             [
                 'id'    => 'structure',
-                'title' => 'Structure — hub + fonctions',
-                'intro' => 'Bloc .hub avec .hub__core et grille .hub__grid de liens .fn-card.',
+                'title' => 'Structure — hub + fonctions (exemple statique)',
+                'intro' => 'Exemple HTML manuel (.hub). En production, préférez la page CMS slug structure en mode Blocs avec un bloc structures_grid (layout hub) — données depuis Structures. Voir aussi « Organigramme dynamique (BDD) » ci-dessous.',
                 'html'  => <<<'HTML'
 <div class="hub">
     <div class="hub__core">
@@ -174,6 +174,17 @@ HTML,
         </a>
     </div>
 </div>
+HTML,
+            ],
+            [
+                'id'    => 'structures-dynamic',
+                'title' => 'Organigramme dynamique (BDD)',
+                'intro' => 'Noyau et fonctions depuis la table structure_units (administration > Structures). En mode source HTML : data-gg-cms="structures-hub" ou commentaire <!-- GG_CMS_STRUCTURES_HUB -->. Équivalent recommandé : bloc Page Builder « Grille structures », présentation Hub, sur la page slug structure.',
+                'html'  => <<<'HTML'
+<div class="section__inner">
+    <!-- GG_CMS_STRUCTURES_HUB -->
+</div>
+<p class="small text-muted">Équivalent : <code>&lt;div data-gg-cms="structures-hub"&gt;&lt;/div&gt;</code></p>
 HTML,
             ],
             [

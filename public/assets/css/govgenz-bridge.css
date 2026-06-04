@@ -45,7 +45,7 @@ body.ggz-public-theme {
     box-shadow: var(--ggz-shadow-card);
 }
 
-#main-content.ggz-main-shell .wysiwyg.ggz-page-prose h2 {
+#main-content.ggz-main-shell .wysiwyg.ggz-page-prose :is(h2, h3):where(:not(.ggz-legal-prose *)):where(:not(.ggz-editorial-prose *)) {
     font-family: var(--font-display);
     font-weight: 600;
     letter-spacing: -0.02em;

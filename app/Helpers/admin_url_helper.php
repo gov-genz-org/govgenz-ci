@@ -121,6 +121,73 @@ if (! function_exists('admin_public_press_list_url')) {
     }
 }
 
+if (! function_exists('admin_public_declaration_list_url')) {
+    function admin_public_declaration_list_url(?string $locale = null): string
+    {
+        helper('url');
+        $locale = $locale === 'en' ? 'en' : 'fr';
+
+        if (\App\Libraries\SiteContext::declarationPathPrefixEnabled()) {
+            return admin_site_url_for_locale('declaration', $locale);
+        }
+
+        $declarationBase = trim((string) env('app.declarationBaseURL', ''));
+        if ($declarationBase !== '' && filter_var($declarationBase, FILTER_VALIDATE_URL)) {
+            $root = rtrim($declarationBase, '/');
+
+            return $locale === 'en' ? $root . '/en/' : $root . '/';
+        }
+
+        $host = trim((string) env('app.declarationHost', ''));
+        if ($host === '') {
+            return $locale === 'en' ? site_url('en/declaration') : site_url('declaration');
+        }
+
+        $cfg    = config('App');
+        $scheme = $cfg->forceGlobalSecureRequests ? 'https' : (parse_url((string) $cfg->baseURL, PHP_URL_SCHEME) ?: 'http');
+        $path   = $locale === 'en' ? '/en/' : '/';
+
+        return $scheme . '://' . $host . $path;
+    }
+}
+
+if (! function_exists('admin_public_declaration_item_url')) {
+    function admin_public_declaration_item_url(string $slug, ?string $locale = null): string
+    {
+        helper('url');
+        $locale = $locale === 'en' ? 'en' : 'fr';
+        $slug   = strtolower(trim($slug, '/'));
+        if ($slug === '') {
+            return admin_public_declaration_list_url($locale);
+        }
+
+        if (\App\Libraries\SiteContext::declarationPathPrefixEnabled()) {
+            return admin_site_url_for_locale('declaration/' . $slug, $locale);
+        }
+
+        $declarationBase = trim((string) env('app.declarationBaseURL', ''));
+        if ($declarationBase !== '' && filter_var($declarationBase, FILTER_VALIDATE_URL)) {
+            $root = rtrim($declarationBase, '/');
+            $path = $locale === 'en' ? '/en/' . $slug : '/' . $slug;
+
+            return $root . $path;
+        }
+
+        $host = trim((string) env('app.declarationHost', ''));
+        if ($host === '') {
+            return $locale === 'en'
+                ? site_url('en/declaration/' . $slug)
+                : site_url('declaration/' . $slug);
+        }
+
+        $cfg    = config('App');
+        $scheme = $cfg->forceGlobalSecureRequests ? 'https' : (parse_url((string) $cfg->baseURL, PHP_URL_SCHEME) ?: 'http');
+        $path   = $locale === 'en' ? '/en/' . $slug : '/' . $slug;
+
+        return $scheme . '://' . $host . $path;
+    }
+}
+
 if (! function_exists('admin_public_positions_list_url')) {
     function admin_public_positions_list_url(?string $locale = null): string
     {

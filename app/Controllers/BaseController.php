@@ -77,6 +77,19 @@ abstract class BaseController extends Controller
         return $this->tinymceExtraScripts($editorSelector) . view('admin/partials/form_dirty_guard');
     }
 
+    /** Modal médiathèque + sélecteur pour champs `.cms-media-slot` (sans éditeur TinyMCE). */
+    protected function adminMediaSlotScripts(): string
+    {
+        return view('admin/partials/tinymce_init', [
+            'uploadUrl'      => site_url('admin/media/upload'),
+            'mediaJsonUrl'   => site_url('admin/media/json'),
+            'pageUrlContact' => site_url('contact'),
+            'pageUrlPress'   => site_url('press'),
+            'editorSelector' => '#admin-media-slot-noop',
+        ])
+            . '<script defer src="' . esc(base_url('js/admin/admin-media-slot.js'), 'attr') . '"></script>';
+    }
+
     /**
      * Après création / mise à jour : rester sur le formulaire d’édition (PRG).
      *
@@ -167,5 +180,39 @@ abstract class BaseController extends Controller
             'sort'  => $query->sortKey(),
             'dir'   => $query->sortDir(),
         ];
+    }
+
+    /**
+     * Met à jour sort_order (10, 20, 30…) depuis l’ordre des lignes après drag-and-drop admin.
+     *
+     * @param list<int|string> $ids
+     */
+    protected function adminApplySortOrderFromIds(Model $model, array $ids): void
+    {
+        $order = 10;
+        foreach ($ids as $rawId) {
+            $id = (int) $rawId;
+            if ($id <= 0) {
+                continue;
+            }
+            if ($model->find($id) === null) {
+                continue;
+            }
+            $model->update($id, ['sort_order' => $order]);
+            $order += 10;
+        }
+    }
+
+    /**
+     * @return array{ok: bool, message?: string}
+     */
+    protected function adminReorderSortOrderPayload(): array
+    {
+        $ids = $this->request->getPost('ids');
+        if (! is_array($ids) || $ids === []) {
+            return ['ok' => false, 'message' => lang('Admin.error_reorder_empty')];
+        }
+
+        return ['ok' => true, 'ids' => array_values($ids)];
     }
 }

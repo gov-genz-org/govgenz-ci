@@ -16,7 +16,7 @@
 
 :is(#main-content, .cms-guide-preview-host).ggz-main-shell
   :is(article.wysiwyg, .ggz-shell-wysiwyg)
-  :is(a.card, a.tile, a.fn-card, a.contact-block) {
+  :is(a.card, a.tile, a.fn-card, a.dept-card, a.contact-block) {
   color: inherit;
   font-weight: inherit;
   text-decoration: none;
@@ -24,7 +24,7 @@
 
 :is(#main-content, .cms-guide-preview-host).ggz-main-shell
   :is(article.wysiwyg, .ggz-shell-wysiwyg)
-  :is(a.card, a.tile, a.fn-card, a.contact-block):hover {
+  :is(a.card, a.tile, a.fn-card, a.dept-card, a.contact-block):hover {
   color: inherit;
 }
 

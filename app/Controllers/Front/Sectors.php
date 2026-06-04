@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Controllers\Front;
 
 use App\Controllers\BaseController;
-use App\Libraries\SiteContext;
-use App\Models\CmsPageModel;
 use App\Models\SectorModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
@@ -16,8 +14,7 @@ class Sectors extends BaseController
     {
         helper(['cms', 'locale']);
 
-        $slug = SiteContext::locale() === 'en' ? 'sectors' : 'secteurs';
-        $page  = model(CmsPageModel::class)->getPublishedBySlug($slug);
+        $page = cms_sectors_get_published_page();
         if ($page === null) {
             throw PageNotFoundException::forPageNotFound('Page introuvable.');
         }

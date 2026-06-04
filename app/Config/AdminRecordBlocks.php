@@ -33,4 +33,12 @@ class AdminRecordBlocks extends BaseConfig
         'sources',
         'html',
     ];
+
+    /** @var list<string> */
+    public array $declaration = [
+        'section_rich',
+        'note_panel',
+        'sources',
+        'html',
+    ];
 }

@@ -5,11 +5,13 @@ declare(strict_types=1);
 helper('admin');
 
 /** @var list<array<string, mixed>> $rows */
-/** @var \CodeIgniter\Pager\Pager $pager */
+/** @var \CodeIgniter\Pager\Pager|null $pager */
 /** @var string $filterActive */
 /** @var string $searchQuery */
 /** @var string $sort */
 /** @var string $dir */
+/** @var bool $enableSortableList */
+/** @var string $reorderUrl */
 ?>
 <h1 class="h3 mb-1"><?= esc(lang('Admin.title_sectors')) ?></h1>
 <p class="text-muted small mb-3"><?= lang('Admin.help_sectors_intro') ?></p>
@@ -42,9 +44,15 @@ helper('admin');
         </div>
     </div>
 <?php else : ?>
+<?php if (! empty($enableSortableList)) : ?>
+    <p class="alert alert-light border small py-2 mb-3"><?= lang('Admin.help_list_drag_reorder') ?></p>
+<?php endif; ?>
 <div class="table-responsive admin-table-wrap shadow-sm rounded border bg-white">
 <table class="table table-striped align-middle mb-0">
     <thead class="table-light"><tr>
+        <?php if (! empty($enableSortableList)) : ?>
+            <th class="text-center" style="width:2.75rem" aria-label="<?= esc(lang('Admin.block_drag_reorder'), 'attr') ?>"></th>
+        <?php endif; ?>
         <th><?= admin_list_sort_th('code', lang('Admin.col_code'), $sort, $dir) ?></th>
         <th><?= esc(lang('Admin.col_filter_code_fr')) ?></th>
         <th><?= esc(lang('Admin.col_filter_code_en')) ?></th>
@@ -55,19 +63,26 @@ helper('admin');
         <th><?= admin_list_sort_th('is_active', lang('Admin.col_active'), $sort, $dir) ?></th>
         <th class="text-end"><?= esc(lang('Admin.col_actions')) ?></th>
     </tr></thead>
-    <tbody>
+    <tbody
+        <?= ! empty($enableSortableList) ? ' data-admin-sortable-list data-reorder-url="' . esc($reorderUrl, 'attr') . '" data-csrf-name="' . esc(csrf_token(), 'attr') . '" data-csrf-hash="' . esc(csrf_hash(), 'attr') . '"' : '' ?>
+    >
     <?php foreach ($rows as $row) :
         $id = (int) ($row['id'] ?? 0);
         $active = (int) ($row['is_active'] ?? 0) === 1;
         ?>
-        <tr>
+        <tr<?= ! empty($enableSortableList) ? ' data-sortable-id="' . esc((string) $id, 'attr') . '"' : '' ?>>
+            <?php if (! empty($enableSortableList)) : ?>
+                <td class="text-center">
+                    <button type="button" class="btn btn-sm btn-outline-secondary admin-sortable-handle py-0 px-1" draggable="true" title="<?= esc(lang('Admin.block_drag_reorder'), 'attr') ?>" aria-label="<?= esc(lang('Admin.block_drag_reorder'), 'attr') ?>">↕</button>
+                </td>
+            <?php endif; ?>
             <td><code class="small"><?= esc((string) ($row['code'] ?? '')) ?></code></td>
             <td><code class="small text-muted"><?= esc(trim((string) ($row['code_fr'] ?? '')) !== '' ? (string) $row['code_fr'] : '—') ?></code></td>
             <td><code class="small text-muted"><?= esc(trim((string) ($row['code_en'] ?? '')) !== '' ? (string) $row['code_en'] : '—') ?></code></td>
             <td><?= esc((string) ($row['label_fr'] ?? '')) ?></td>
             <td><?= esc((string) ($row['label_en'] ?? '')) ?></td>
             <td class="small"><a href="mailto:<?= esc((string) ($row['contact_email'] ?? ''), 'attr') ?>"><?= esc((string) ($row['contact_email'] ?? '')) ?></a></td>
-            <td class="text-end small"><?= (int) ($row['sort_order'] ?? 0) ?></td>
+            <td class="text-end small"<?= ! empty($enableSortableList) ? ' data-sort-order-cell' : '' ?>><?= (int) ($row['sort_order'] ?? 0) ?></td>
             <td>
                 <?php if ($active) : ?>
                     <span class="badge text-bg-success"><?= esc(lang('Admin.ui_yes')) ?></span>
@@ -89,5 +104,7 @@ helper('admin');
     </tbody>
 </table>
 </div>
-<?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => lang('Admin.pager_results')]) ?>
+<?php if ($pager !== null) : ?>
+    <?= view('admin/partials/list_pager', ['pager' => $pager, 'resultLabel' => lang('Admin.pager_results')]) ?>
+<?php endif; ?>
 <?php endif; ?>
