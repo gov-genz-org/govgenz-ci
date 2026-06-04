@@ -1,0 +1,16 @@
+/**
+ * Grille structures — intro facultative + bandeau teal (mode départements).
+ */
+#main-content .structures-grid .section__header {
+  margin-bottom: 1.25rem;
+}
+
+#main-content .structures-grid .section__header .section__lead {
+  max-width: 42.5rem;
+}
+
+#main-content .structures-grid--dept .dept-grid {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}

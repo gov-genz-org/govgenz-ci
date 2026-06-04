@@ -55,15 +55,18 @@ final class CmsPageBodyNormalizer
                     $out[] = $norm;
                 }
             } elseif ($type === 'cards_grid') {
+                $variant = strtolower(trim((string) ($blk['variant'] ?? '')));
+                if ($variant === 'dept_cards') {
+                    $out[] = ['type' => 'structures_grid', 'layout' => 'dept'];
+
+                    continue;
+                }
                 $norm = self::normalizeCardsGridBlock($blk);
                 if ($norm !== null) {
                     $out[] = $norm;
                 }
             } elseif ($type === 'organization_hub') {
-                $norm = self::normalizeOrganizationHubBlock($blk);
-                if ($norm !== null) {
-                    $out[] = $norm;
-                }
+                $out[] = ['type' => 'structures_grid', 'layout' => 'hub'];
             } elseif ($type === 'contact_grid') {
                 $norm = self::normalizeContactGridBlock($blk);
                 if ($norm !== null) {
@@ -87,6 +90,18 @@ final class CmsPageBodyNormalizer
             } elseif ($type === 'sectors_grid') {
                 $norm = self::normalizeSectionHeader($blk);
                 $norm['type'] = 'sectors_grid';
+                helper('cms');
+                $norm['layout'] = cms_sectors_normalize_layout($blk['layout'] ?? null, 'compact');
+                $norm['banner_title'] = trim((string) ($blk['banner_title'] ?? ''));
+                $norm['banner_subtitle'] = trim((string) ($blk['banner_subtitle'] ?? ''));
+                $out[] = $norm;
+            } elseif ($type === 'structures_grid') {
+                $norm = self::normalizeSectionHeader($blk);
+                $norm['type'] = 'structures_grid';
+                $layout = strtolower(trim((string) ($blk['layout'] ?? 'dept')));
+                $norm['layout'] = in_array($layout, ['hub', 'dept'], true) ? $layout : 'dept';
+                $norm['banner_title'] = trim((string) ($blk['banner_title'] ?? ''));
+                $norm['banner_subtitle'] = trim((string) ($blk['banner_subtitle'] ?? ''));
                 $out[] = $norm;
             } elseif ($type === 'footer_columns') {
                 $norm = self::normalizeFooterColumnsBlock($blk);
@@ -248,7 +263,7 @@ final class CmsPageBodyNormalizer
     {
         $data = self::normalizeSectionHeader($blk);
         $variant = strtolower(trim((string) ($blk['variant'] ?? 'simple_cards')));
-        if (! in_array($variant, ['simple_cards', 'circle_cards', 'pillar_cards', 'tile_grid'], true)) {
+        if (! in_array($variant, ['simple_cards', 'circle_cards', 'pillar_cards', 'tile_grid', 'declaration_cards'], true)) {
             $variant = 'simple_cards';
         }
 
@@ -474,7 +489,16 @@ final class CmsPageBodyNormalizer
             }
         }
 
-        return $sections === [] ? null : ['type' => 'legal_prose', 'sections' => $sections];
+        $presentation = strtolower(trim((string) ($blk['presentation'] ?? '')));
+        if (! in_array($presentation, ['accordion', 'prose'], true)) {
+            $presentation = 'prose';
+        }
+
+        return $sections === [] ? null : [
+            'type'         => 'legal_prose',
+            'presentation' => $presentation,
+            'sections'     => $sections,
+        ];
     }
 
     /**

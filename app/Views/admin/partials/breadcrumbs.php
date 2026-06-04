@@ -59,6 +59,14 @@ if ($rest === 'pages') {
 } elseif (preg_match('#^sectors/edit/\d+$#', $rest)) {
     $items[] = ['label' => lang('Admin.nav_sectors'), 'url' => site_url('admin/sectors')];
     $items[] = ['label' => lang('Admin.breadcrumb_edit'), 'url' => null];
+} elseif ($rest === 'structures') {
+    $items[] = ['label' => lang('Admin.nav_structures'), 'url' => null];
+} elseif ($rest === 'structures/create') {
+    $items[] = ['label' => lang('Admin.nav_structures'), 'url' => site_url('admin/structures')];
+    $items[] = ['label' => lang('Admin.breadcrumb_structure_new'), 'url' => null];
+} elseif (preg_match('#^structures/edit/\d+$#', $rest)) {
+    $items[] = ['label' => lang('Admin.nav_structures'), 'url' => site_url('admin/structures')];
+    $items[] = ['label' => lang('Admin.breadcrumb_edit'), 'url' => null];
 } elseif ($rest === 'project-projects') {
     $items[] = ['label' => lang('Admin.nav_project_projects'), 'url' => null];
 } elseif ($rest === 'project-projects/create') {
@@ -76,6 +84,14 @@ if ($rest === 'pages') {
     $items[] = ['label' => lang('Admin.breadcrumb_position_new'), 'url' => null];
 } elseif (preg_match('#^position-items/edit/\d+$#', $rest)) {
     $items[] = ['label' => lang('Admin.nav_position_items'), 'url' => site_url('admin/position-items')];
+    $items[] = ['label' => lang('Admin.breadcrumb_edit'), 'url' => null];
+} elseif ($rest === 'declaration-items') {
+    $items[] = ['label' => lang('Admin.nav_declaration_items'), 'url' => null];
+} elseif ($rest === 'declaration-items/create') {
+    $items[] = ['label' => lang('Admin.nav_declaration_items'), 'url' => site_url('admin/declaration-items')];
+    $items[] = ['label' => lang('Admin.breadcrumb_declaration_new'), 'url' => null];
+} elseif (preg_match('#^declaration-items/edit/\d+$#', $rest)) {
+    $items[] = ['label' => lang('Admin.nav_declaration_items'), 'url' => site_url('admin/declaration-items')];
     $items[] = ['label' => lang('Admin.breadcrumb_edit'), 'url' => null];
 } else {
     return;

@@ -24,6 +24,7 @@ class CmsComponentsGuide extends BaseController
 <link rel="stylesheet" href="{$cssBase}ggz-legal-page.css">
 <link rel="stylesheet" href="{$cssBase}ggz-press-page.css">
 <link rel="stylesheet" href="{$cssBase}govgenz-guide-preview-parity.css">
+<link rel="stylesheet" href="{$cssBase}structures-grid-layouts.css">
 <link rel="stylesheet" href="{$cssBase}admin-cms-guide-preview.css">
 HTML;
 

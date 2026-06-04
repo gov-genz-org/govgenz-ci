@@ -1,0 +1,265 @@
+/**
+ * Grille secteurs — compact (teal Déclaration) vs wide (vert · 7 colonnes).
+ * Utilisé sur /secteurs, blocs CMS sectors_grid et /declaration.
+ */
+
+#main-content .sectors-grid .section__header {
+  margin-bottom: 1.25rem;
+}
+
+#main-content .sectors-grid .section__header .section__lead {
+  max-width: 42.5rem;
+}
+
+#main-content .decl-teams-header {
+  background: var(--ggz-teal, #17a39e);
+  border-radius: var(--radius-md, 8px);
+  padding: 0.75rem 1.5rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+#main-content .decl-teams-header h3,
+#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .decl-teams-header h3 {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0;
+}
+
+#main-content .decl-teams-header span,
+#main-content.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .decl-teams-header span {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+#main-content .sectors-grid--compact .tile-grid,
+#main-content .section--decl-teams.sectors-grid--compact .tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#main-content .sectors-grid--compact a.tile,
+#main-content .sectors-grid--compact .tile,
+#main-content .section--decl-teams.sectors-grid--compact a.tile,
+#main-content .section--decl-teams.sectors-grid--compact .tile {
+  position: relative;
+  display: block;
+  text-align: left;
+  text-decoration: none;
+  color: inherit;
+  background: var(--bg-elevated, rgba(20, 20, 32, 0.9));
+  border: 1px solid rgba(23, 163, 158, 0.35);
+  border-radius: var(--radius-md, 8px);
+  padding: 1rem 1.25rem;
+  box-shadow: none;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+#main-content .sectors-grid--compact .tile::before,
+#main-content .sectors-grid--compact .tile::after,
+#main-content .section--decl-teams.sectors-grid--compact .tile::before,
+#main-content .section--decl-teams.sectors-grid--compact .tile::after {
+  display: none;
+}
+
+#main-content .sectors-grid--compact .tile:hover,
+#main-content .section--decl-teams.sectors-grid--compact .tile:hover {
+  transform: translateY(-3px);
+  border-color: var(--ggz-teal, #17a39e);
+  background: var(--bg-elevated, rgba(20, 20, 32, 0.9));
+  box-shadow: none;
+}
+
+#main-content .sectors-grid--compact .tile__icon,
+#main-content .section--decl-teams.sectors-grid--compact .tile__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0 0 0.65rem;
+}
+
+#main-content .sectors-grid--compact .tile__icon img,
+#main-content .section--decl-teams.sectors-grid--compact .tile__icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+#main-content .sectors-grid--compact .tile__name,
+#main-content .section--decl-teams.sectors-grid--compact .tile__name {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ggz-teal, #17a39e);
+  margin: 0 0 0.35rem;
+}
+
+#main-content .sectors-grid--compact .tile__sub,
+#main-content .section--decl-teams.sectors-grid--compact .tile__sub {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-style: normal;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0 0 0.4rem;
+  opacity: 1;
+  flex: none;
+}
+
+#main-content .sectors-grid--compact .tile__mail,
+#main-content .section--decl-teams.sectors-grid--compact .tile__mail {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  word-break: break-all;
+  padding-top: 0;
+  margin: 0;
+  border-top: none;
+}
+
+html[lang="fr"] #main-content .sectors-grid--compact .tile__mail::after,
+html[lang="fr"] #main-content .section--decl-teams.sectors-grid--compact .tile__mail::after {
+  content: "Équipe sectorielle";
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ggz-teal, #17a39e);
+  font-weight: 600;
+}
+
+html[lang="en"] #main-content .sectors-grid--compact .tile__mail::after,
+html[lang="en"] #main-content .section--decl-teams.sectors-grid--compact .tile__mail::after {
+  content: "Sector team";
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ggz-teal, #17a39e);
+  font-weight: 600;
+}
+
+#main-content .sectors-grid--wide .tile-grid--wide {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#main-content .sectors-grid--wide a.tile,
+#main-content .sectors-grid--wide .tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  padding: 1.5rem 1rem;
+  background: linear-gradient(180deg, var(--green-deep) 0%, rgba(2, 44, 34, 0.9) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 10px;
+  box-shadow: none;
+  transition: all 0.3s var(--ease-out-expo);
+  overflow: hidden;
+}
+
+#main-content .sectors-grid--wide .tile::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--green-primary);
+  display: block;
+}
+
+#main-content .sectors-grid--wide .tile::after {
+  display: none;
+}
+
+#main-content .sectors-grid--wide .tile:hover {
+  transform: translateY(-4px);
+  border-color: var(--green-primary);
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.2) 0%, rgba(6, 95, 70, 0.7) 100%);
+  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.2);
+}
+
+#main-content .sectors-grid--wide .tile__icon {
+  margin: 0 auto 0.35rem;
+}
+
+#main-content .sectors-grid--wide .tile__name {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  color: var(--green-soft);
+  text-transform: none;
+  font-weight: inherit;
+}
+
+#main-content .sectors-grid--wide .tile__sub {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--green-pale);
+}
+
+#main-content .sectors-grid--wide .tile__mail {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-bright);
+  border-top: 1px solid rgba(16, 185, 129, 0.25);
+  padding-top: 0.5rem;
+  margin-top: auto;
+}
+
+#main-content .sectors-grid--wide .tile__mail::after {
+  content: none;
+}
+
+#main-content .sectors-grid a.tile {
+  text-decoration: none;
+  color: inherit;
+}
+
+@media (max-width: 1100px) {
+  #main-content .sectors-grid--wide .tile-grid--wide {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  #main-content .sectors-grid--wide .tile-grid--wide {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  #main-content .sectors-grid--wide .tile-grid--wide {
+    grid-template-columns: 1fr;
+  }
+}

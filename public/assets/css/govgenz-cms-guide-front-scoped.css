@@ -467,15 +467,15 @@ line-height: var(--ggz-line-body);
 margin-top: 0;
 }
 
-.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg h2:not(.section__title):not(.ggz-section-title):where(:not(.ggz-legal-prose *), :not(.ggz-editorial-prose *)),
-.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg h3:where(:not(.ggz-legal-prose *), :not(.ggz-editorial-prose *)) {
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg h2:not(.section__title):not(.ggz-section-title):where(:not(.ggz-legal-prose *)):where(:not(.ggz-editorial-prose *)),
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg h3:where(:not(.ggz-legal-prose *)):where(:not(.ggz-editorial-prose *)) {
 line-height: var(--ggz-line-heading);
     margin-top: 1.5rem;
     margin-bottom: 0.65rem;
     font-weight: 800;
 }
 
-.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg h2:not(.section__title):not(.ggz-section-title):where(:not(.ggz-legal-prose *), :not(.ggz-editorial-prose *)) {
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg h2:not(.section__title):not(.ggz-section-title):where(:not(.ggz-legal-prose *)):where(:not(.ggz-editorial-prose *)) {
 font-size: 1.35rem;
     letter-spacing: 0.02em;
     text-transform: uppercase;
@@ -497,14 +497,14 @@ text-align: center;
     margin-right: auto;
 }
 
-.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.contact-block) {
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.dept-card):not(.contact-block) {
 color: var(--ggz-peach);
     font-weight: 600;
     text-decoration: underline;
     text-underline-offset: 2px;
 }
 
-.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.contact-block):hover {
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.dept-card):not(.contact-block):hover {
 color: var(--ggz-text-on-dark);
 }
 
@@ -1245,7 +1245,7 @@ margin-top: 1.35rem;
     box-shadow: var(--ggz-shadow-card);
 }
 
-.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .wysiwyg.ggz-page-prose h2 {
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .wysiwyg.ggz-page-prose :is(h2, h3):where(:not(.ggz-legal-prose *)):where(:not(.ggz-editorial-prose *)) {
 font-family: var(--font-display);
     font-weight: 600;
     letter-spacing: -0.02em;

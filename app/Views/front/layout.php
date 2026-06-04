@@ -34,6 +34,8 @@ if ($footerCmsHtml !== '' && preg_match('/^<div\s+class="footer__columns(?:\s[^"
     <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/govgenz-template.css'), 'attr') ?>">
     <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/govgenz-cms-shell.css'), 'attr') ?>">
     <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/govgenz-front-pages.css'), 'attr') ?>">
+    <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/sectors-grid-layouts.css'), 'attr') ?>">
+    <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/structures-grid-layouts.css'), 'attr') ?>">
     <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/govgenz-bridge.css'), 'attr') ?>">
     <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/ggz-legal-page.css'), 'attr') ?>">
     <link rel="stylesheet" href="<?= esc(public_asset_url('assets/css/ggz-press-page.css'), 'attr') ?>">

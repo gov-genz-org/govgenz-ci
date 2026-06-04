@@ -470,15 +470,15 @@ article.wysiwyg > *:first-child {
     margin-top: 0;
 }
 
-article.wysiwyg h2:not(.section__title):not(.ggz-section-title):where(:not(.ggz-legal-prose *), :not(.ggz-editorial-prose *)),
-article.wysiwyg h3:where(:not(.ggz-legal-prose *), :not(.ggz-editorial-prose *)) {
+article.wysiwyg h2:not(.section__title):not(.ggz-section-title):where(:not(.ggz-legal-prose *)):where(:not(.ggz-editorial-prose *)),
+article.wysiwyg h3:where(:not(.ggz-legal-prose *)):where(:not(.ggz-editorial-prose *)) {
     line-height: var(--ggz-line-heading);
     margin-top: 1.5rem;
     margin-bottom: 0.65rem;
     font-weight: 800;
 }
 
-article.wysiwyg h2:not(.section__title):not(.ggz-section-title):where(:not(.ggz-legal-prose *), :not(.ggz-editorial-prose *)) {
+article.wysiwyg h2:not(.section__title):not(.ggz-section-title):where(:not(.ggz-legal-prose *)):where(:not(.ggz-editorial-prose *)) {
     font-size: 1.35rem;
     letter-spacing: 0.02em;
     text-transform: uppercase;
@@ -500,14 +500,14 @@ article.wysiwyg p {
     margin-right: auto;
 }
 
-article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.contact-block) {
+article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.dept-card):not(.contact-block) {
     color: var(--ggz-peach);
     font-weight: 600;
     text-decoration: underline;
     text-underline-offset: 2px;
 }
 
-article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.contact-block):hover {
+article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.dept-card):not(.contact-block):hover {
     color: var(--ggz-text-on-dark);
 }
 
@@ -813,7 +813,7 @@ textarea {
 
 /* Hors vocabulaire template (.btn--primary / .btn--ghost) — évite d’écraser FR/EN et les CTA site_govgenz */
 button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill):not(.project-fund-dialog__close):not(.project-fund-form__item-remove):not(.projects-program-show__btn):not(.projects-program-show__share-icon-btn):not(.ggz-project-cta-btn),
-.btn:not(.btn--primary):not(.btn--ghost) {
+.btn:not(.btn--primary):not(.btn--ghost):not(.btn--secondary) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -840,7 +840,7 @@ button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti_
 }
 
 button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill):not(.project-fund-dialog__close):not(.project-fund-form__item-remove):not(.projects-program-show__btn):not(.projects-program-show__share-icon-btn):not(.ggz-project-cta-btn):hover,
-.btn:not(.btn--primary):not(.btn--ghost):hover {
+.btn:not(.btn--primary):not(.btn--ghost):not(.btn--secondary):hover {
     filter: brightness(1.05);
 }
 
@@ -1206,7 +1206,7 @@ button.secondary,
     }
 
     button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill):not(.ggz-project-cta-btn),
-    .btn:not(.btn--primary):not(.btn--ghost),
+    .btn:not(.btn--primary):not(.btn--ghost):not(.btn--secondary),
     .card {
         transition-duration: 0.01ms !important;
     }

@@ -1,0 +1,97 @@
+/**
+ * Fiche déclaration — shell partagé avec projects-program-show.css (classes project-*).
+ * Spécifique : bandeau type, badges kind, bordure carte.
+ */
+
+#main-content .declaration-program-show.projects-program-show {
+  border-left: 3px solid var(--pp-teal);
+}
+
+#main-content .declaration-program-show.projects-program-show[data-kind-accent="official"] {
+  border-left-color: var(--pp-red);
+}
+
+#main-content .declaration-program-show.projects-program-show[data-kind-accent="pledge"] {
+  border-left-color: #4aba78;
+}
+
+#main-content .declaration-program-show.projects-program-show[data-kind-accent="alert"] {
+  border-left-color: var(--pp-warm);
+}
+
+#main-content .declaration-program-show.projects-program-show[data-kind-accent="partnership"] {
+  border-left-color: var(--pp-teal);
+}
+
+#main-content .declaration-program-show .declaration-program-show__band {
+  padding: 0.45rem clamp(1.25rem, 4vw, 2rem);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--pp-border-dim);
+}
+
+#main-content .declaration-program-show .declaration-program-show__band--official {
+  background: rgba(196, 30, 48, 0.15);
+  color: #ff6b7a;
+}
+
+#main-content .declaration-program-show .declaration-program-show__band--pledge {
+  background: rgba(42, 122, 75, 0.2);
+  color: #4aba78;
+}
+
+#main-content .declaration-program-show .declaration-program-show__band--alert {
+  background: rgba(232, 138, 106, 0.15);
+  color: var(--pp-warm);
+}
+
+#main-content .declaration-program-show .declaration-program-show__band--partnership {
+  background: rgba(23, 163, 158, 0.15);
+  color: var(--pp-teal);
+}
+
+#main-content .declaration-program-show .project-hero .declaration-program-show__kind-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid var(--pp-border-dim);
+  background: rgba(90, 100, 120, 0.2);
+  color: var(--pp-text-sec);
+}
+
+#main-content .declaration-program-show .declaration-program-show__kind-badge--official {
+  background: rgba(196, 30, 48, 0.15);
+  color: #ff6b7a;
+  border-color: rgba(196, 30, 48, 0.35);
+}
+
+#main-content .declaration-program-show .declaration-program-show__kind-badge--pledge {
+  background: rgba(42, 122, 75, 0.2);
+  color: #4aba78;
+  border-color: rgba(42, 122, 75, 0.35);
+}
+
+#main-content .declaration-program-show .declaration-program-show__kind-badge--alert {
+  background: rgba(232, 138, 106, 0.15);
+  color: var(--pp-warm);
+  border-color: rgba(232, 138, 106, 0.35);
+}
+
+#main-content .declaration-program-show .declaration-program-show__kind-badge--partnership {
+  background: rgba(23, 163, 158, 0.15);
+  color: var(--pp-teal);
+  border-color: rgba(23, 163, 158, 0.35);
+}
+
+@media (max-width: 768px) {
+  #main-content .declaration-program-show .project-layout {
+    padding-top: 1.5rem;
+  }
+}

@@ -31,6 +31,19 @@ final class FrontPageAssets
         return view('front/partials/head_assets/positions_program_list');
     }
 
+    public static function declarationProgramList(): string
+    {
+        return view('front/partials/head_assets/declaration_program_list');
+    }
+
+    public static function declarationProgramShow(): array
+    {
+        return [
+            'head'    => view('front/partials/head_assets/declaration_program_show_head'),
+            'scripts' => view('front/partials/head_assets/declaration_program_show_scripts'),
+        ];
+    }
+
     /** @return array{head: string, scripts: string} */
     public static function positionsProgramShow(): array
     {

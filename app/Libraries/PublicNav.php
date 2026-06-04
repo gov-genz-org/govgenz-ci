@@ -21,11 +21,22 @@ final class PublicNav
 
         return match ($kind) {
             'home' => localized_site_url(''),
-            'segment' => $target !== '' ? localized_site_url($target) : localized_site_url(''),
+            'segment' => self::hrefSegmentTarget($target),
             'path' => self::hrefPathTarget($target),
             'external' => $target !== '' ? $target : localized_site_url(''),
             default => localized_site_url(''),
         };
+    }
+
+    private static function hrefSegmentTarget(string $target): string
+    {
+        if ($target === 'declaration') {
+            helper('declaration');
+
+            return declaration_list_url();
+        }
+
+        return $target !== '' ? localized_site_url($target) : localized_site_url('');
     }
 
     private static function hrefPathTarget(string $target): string
@@ -53,13 +64,16 @@ final class PublicNav
             'press', 'presse-programme', 'press-program' => $navActive === 'press',
             'join' => $navActive === 'join',
             'contact' => $navActive === 'contact',
+            'declaration' => self::isDeclarationListMenuActive($navActive, $seg1)
+                || ($navActive === '' && $seg1 === 'declaration'),
             'admin_login' => $seg1 === 'admin' && $seg2 === 'login',
             // Liste programme (URL /projects ou vhost racine) : Front\Projects\Home impose navActive = "projects"
             'projects', 'projets-programme', 'projects-program' => self::isProjectsListMenuActive($navActive, $seg1),
             'positions', 'positions-programme', 'positions-program' => self::isPositionsListMenuActive($navActive, $seg1),
             default => ($navActive === '' && $seg1 === $mk)
                 || self::isProjectsDetailMenuActive($navActive, $seg1, $mk)
-                || self::isPositionsDetailMenuActive($navActive, $seg1, $mk),
+                || self::isPositionsDetailMenuActive($navActive, $seg1, $mk)
+                || self::isDeclarationDetailMenuActive($navActive, $seg1, $mk),
         };
     }
 
@@ -97,6 +111,26 @@ final class PublicNav
     private static function isPositionsDetailMenuActive(string $navActive, string $seg1, string $mk): bool
     {
         if ($navActive !== 'positions' || $seg1 === '') {
+            return false;
+        }
+
+        return $seg1 === $mk;
+    }
+
+    /**
+     * Entrée menu « liste des déclarations » (slug path ou slug CMS bandeau liste).
+     */
+    private static function isDeclarationListMenuActive(string $navActive, string $seg1): bool
+    {
+        return $navActive === 'declaration' && $seg1 === '';
+    }
+
+    /**
+     * Fiche déclaration : même navActive ; le 1er segment public est le slug déclaration.
+     */
+    private static function isDeclarationDetailMenuActive(string $navActive, string $seg1, string $mk): bool
+    {
+        if ($navActive !== 'declaration' || $seg1 === '') {
             return false;
         }
 

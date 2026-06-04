@@ -219,25 +219,6 @@ HTML;
 
     public static function structure(): string
     {
-        $fns = [
-            ['coordination@govgenz.org', 0, 'COORDINATION', 'Executive · Sector · Regions · Diaspora'],
-            ['safety@govgenz.org', 50, 'SECURITY', 'Preventive &amp; corrective · Legal · Tech · Field'],
-            ['communication@govgenz.org', 100, 'COMMUNICATION', 'Strategy · Content · Networks · Outreach'],
-            ['partnerships@govgenz.org', 150, 'PARTNERSHIPS', 'Strategic · National &amp; international'],
-            ['recruitment@govgenz.org', 200, 'HUMAN RESOURCES', 'Recruitment · Onboarding · Training'],
-            ['projects@govgenz.org', 250, 'PROJECT MANAGEMENT', 'PMO · Tracking · Impact · KPIs'],
-            ['finance@govgenz.org', 300, 'FINANCE', 'Accounting · Fundraising · Treasury'],
-        ];
-
-        $fnHtml = '';
-        foreach ($fns as [$mail, $delay, $nf, $sf]) {
-            $fnHtml .= '<a href="mailto:' . esc($mail, 'attr') . '" class="fn-card reveal" data-delay="' . (int) $delay . '">';
-            $fnHtml .= '<div class="fn-card__name">' . esc($nf) . '</div>';
-            $fnHtml .= '<div class="fn-card__sub">' . $sf . '</div>';
-            $fnHtml .= '<div class="fn-card__mail">' . esc($mail) . '</div>';
-            $fnHtml .= '</a>';
-        }
-
         return <<<HTML
 <section class="section section--structure" id="structure-content" aria-labelledby="structure-heading">
     <div class="section__inner">
@@ -248,16 +229,7 @@ HTML;
                 A central executive core, seven cross-cutting functions and fourteen sector teams. Each function can be reached directly.
             </p>
         </div>
-        <div class="hub">
-            <div class="hub__core">
-                <div class="hub__label">CENTRAL EXECUTIVE CORE</div>
-                <div class="hub__sub">Coordination · Security · Vision · Decisions</div>
-                <a href="mailto:contact@govgenz.org" class="hub__mail">contact@govgenz.org</a>
-            </div>
-            <div class="hub__grid">
-                {$fnHtml}
-            </div>
-        </div>
+        <!-- GG_CMS_STRUCTURES_HUB -->
     </div>
 </section>
 HTML;

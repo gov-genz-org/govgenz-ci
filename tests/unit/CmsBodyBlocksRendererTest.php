@@ -150,6 +150,73 @@ final class CmsBodyBlocksRendererTest extends CIUnitTestCase
         $this->assertSame('', $html);
     }
 
+    public function testDeclarationCardsVariantRendersDeclCardMarkup(): void
+    {
+        $html = CmsBodyBlocksRenderer::render([
+            [
+                'type'    => 'cards_grid',
+                'variant' => 'declaration_cards',
+                'cards'   => [
+                    [
+                        'eyebrow'     => 'Plaidoyer',
+                        'subtitle'    => 'Mai 2026 · Gouvernance',
+                        'title'       => 'Titre test',
+                        'description' => 'Résumé',
+                        'href'        => 'mailto:contact@govgenz.org',
+                        'value'       => 'Plaidoyer',
+                        'unit'        => 'CTA',
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->assertStringContainsString('decl-cards', $html);
+        $this->assertStringContainsString('decl-card--pledge', $html);
+        $this->assertStringContainsString('decl-band', $html);
+        $this->assertStringContainsString('decl-footer', $html);
+    }
+
+    public function testDeclarationPageBlockStackRenders(): void
+    {
+        $html = CmsBodyBlocksRenderer::render([
+            ['type' => 'html', 'html' => '<span id="declarations" class="ggz-anchor"></span>'],
+            [
+                'type'  => 'stats_grid',
+                'stats' => [
+                    ['value' => '3', 'label' => 'Déclarations'],
+                ],
+            ],
+            [
+                'type'    => 'cards_grid',
+                'variant' => 'simple_cards',
+                'cards'   => [
+                    [
+                        'eyebrow'     => 'Plaidoyer',
+                        'title'       => 'Jeunesse',
+                        'description' => 'Texte',
+                        'href'        => 'mailto:contact@govgenz.org',
+                    ],
+                ],
+            ],
+            [
+                'type'     => 'legal_prose',
+                'sections' => [
+                    [
+                        'heading' => 'Charte éthique',
+                        'body'    => 'Engagement :',
+                        'bullets' => ['Professionnalisme'],
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->assertStringContainsString('id="declarations"', $html);
+        $this->assertStringContainsString('ggz-cards-row', $html);
+        $this->assertStringContainsString('Plaidoyer', $html);
+        $this->assertStringContainsString('Charte éthique', $html);
+        $this->assertStringContainsString('<li>Professionnalisme</li>', $html);
+    }
+
     public function testFooterColumnsRendersFooterColMarkup(): void
     {
         $html = CmsBodyBlocksRenderer::render([

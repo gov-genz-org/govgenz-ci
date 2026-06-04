@@ -470,6 +470,21 @@ a.lang-toggle {
   transform: translateY(-2px);
 }
 
+.ggz-public-theme .btn--secondary {
+  background: transparent;
+  color: var(--ggz-teal, #17a39e);
+  border: 1px solid rgba(23, 163, 158, 0.45);
+  box-shadow: none;
+}
+
+.ggz-public-theme .btn--secondary:hover {
+  background: rgba(23, 163, 158, 0.1);
+  border-color: var(--ggz-teal, #17a39e);
+  color: #2ec4be;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(23, 163, 158, 0.15);
+}
+
 .hero__scroll {
   display: flex;
   flex-direction: column;
@@ -934,11 +949,127 @@ a.lang-toggle {
   border-top: 1px solid var(--border);
 }
 
+/* ===== ORGANIGRAMME · CARTES DÉPARTEMENTS ===== */
+.dept-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+.dept-card {
+  position: relative;
+  padding: 1.35rem 1.25rem 1.15rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s var(--ease-out-expo);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.dept-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--red-primary);
+  border-radius: 10px 10px 0 0;
+}
+
+a.dept-card,
+a.dept-card:hover,
+a.dept-card:focus-visible {
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+}
+
+.dept-card:hover {
+  border-color: var(--red-primary);
+  background: rgba(220, 38, 38, 0.08);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(220, 38, 38, 0.2);
+}
+
+.dept-card__title,
+.dept-card h4 {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  color: var(--text-bright);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.dept-card__desc,
+.dept-card p {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--text-tertiary);
+  margin: 0;
+  flex: 1;
+}
+
+.dept-card__mail,
+.dept-card a {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--red-soft);
+  word-break: break-all;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+  text-decoration: none;
+}
+
+.dept-card__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: 0.5rem;
+  flex-shrink: 0;
+}
+
+.dept-card__icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.dept-card a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--red-soft);
+}
+
+a.dept-card:hover .dept-card__mail {
+  text-decoration: underline;
+  text-decoration-color: var(--red-soft);
+}
+
 /* ===== SECTEURS ===== */
 .tile-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
   gap: 1rem;
+}
+
+.tile-grid--wide {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.tile-grid--compact,
+.section--decl-teams .tile-grid,
+.sectors-grid--compact .tile-grid {
+  grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+  gap: 0.75rem;
 }
 
 .tile {
@@ -987,6 +1118,28 @@ a.lang-toggle {
 .tile:hover::after {
   opacity: 1;
   transform: translateX(0);
+}
+
+a.tile,
+a.tile:hover,
+a.tile:focus-visible {
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+}
+
+.tile__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0 auto 0.35rem;
+  flex-shrink: 0;
+}
+
+.tile__icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .tile__name {
@@ -1360,7 +1513,7 @@ body.js-loaded .cercle.reveal {
     grid-template-columns: repeat(4, 1fr);
   }
   
-  .tile-grid {
+  .tile-grid--wide {
     grid-template-columns: repeat(4, 1fr);
   }
   
@@ -1448,7 +1601,7 @@ body.js-loaded .cercle.reveal {
     grid-template-columns: repeat(2, 1fr);
   }
   
-  .tile-grid {
+  .tile-grid--wide {
     grid-template-columns: repeat(2, 1fr);
   }
   
@@ -1490,7 +1643,7 @@ body.js-loaded .cercle.reveal {
     grid-template-columns: 1fr;
   }
   
-  .tile-grid {
+  .tile-grid--wide {
     grid-template-columns: 1fr;
   }
   

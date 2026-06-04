@@ -118,6 +118,13 @@ if (! function_exists('cms_positions_list_page_slug')) {
     }
 }
 
+if (! function_exists('cms_declaration_list_page_slug')) {
+    function cms_declaration_list_page_slug(): string
+    {
+        return 'declaration';
+    }
+}
+
 if (! function_exists('cms_projects_list_page_slug')) {
     /**
      * Slug CMS du bandeau de la liste publique /projects (champs hero uniquement).
@@ -334,20 +341,337 @@ HTML;
     }
 }
 
+if (! function_exists('cms_sectors_public_slug')) {
+    function cms_sectors_public_slug(): string
+    {
+        return \App\Libraries\SiteContext::locale() === 'en' ? 'sectors' : 'secteurs';
+    }
+}
+
+if (! function_exists('cms_sectors_legacy_slugs')) {
+    /**
+     * @return list<string>
+     */
+    function cms_sectors_legacy_slugs(): array
+    {
+        return ['secteur', 'sector'];
+    }
+}
+
+if (! function_exists('cms_sectors_get_published_page')) {
+    /**
+     * Page CMS publiée pour /secteurs (slug canonique + repli singulier).
+     *
+     * @return ?array<string, mixed>
+     */
+    function cms_sectors_get_published_page(): ?array
+    {
+        $pages = model(\App\Models\CmsPageModel::class);
+        $page  = $pages->getPublishedBySlug(cms_sectors_public_slug());
+        if ($page !== null) {
+            return $page;
+        }
+
+        foreach (cms_sectors_legacy_slugs() as $legacy) {
+            $page = $pages->getPublishedBySlug($legacy);
+            if ($page !== null) {
+                return $page;
+            }
+        }
+
+        return null;
+    }
+}
+
+if (! function_exists('cms_sectors_normalize_layout')) {
+    function cms_sectors_normalize_layout(mixed $raw, string $default = 'compact'): string
+    {
+        $layout = strtolower(trim((string) $raw));
+        if ($layout === 'tile' || $layout === 'card') {
+            $layout = 'compact';
+        }
+        if (! in_array($layout, ['compact', 'wide'], true)) {
+            return $default;
+        }
+
+        return $layout;
+    }
+}
+
+if (! function_exists('cms_sectors_grid_layout_from_blocks')) {
+    /**
+     * @param list<array<string, mixed>> $blocks
+     */
+    function cms_sectors_grid_layout_from_blocks(array $blocks, string $default = 'wide'): string
+    {
+        foreach ($blocks as $blk) {
+            if (! is_array($blk)) {
+                continue;
+            }
+            if (strtolower(trim((string) ($blk['type'] ?? ''))) !== 'sectors_grid') {
+                continue;
+            }
+
+            return cms_sectors_normalize_layout($blk['layout'] ?? null, $default);
+        }
+
+        return $default;
+    }
+}
+
+if (! function_exists('cms_sectors_grid_layout_from_page')) {
+    function cms_sectors_grid_layout_from_page(array $page, string $default = 'wide'): string
+    {
+        if (strtolower(trim((string) ($page['content_mode'] ?? ''))) !== 'blocks') {
+            return $default;
+        }
+
+        $raw = trim((string) ($page['body_blocks'] ?? ''));
+        if ($raw === '' || $raw === '[]') {
+            return $default;
+        }
+
+        $decoded = json_decode($raw, true);
+        if (! is_array($decoded)) {
+            return $default;
+        }
+
+        return cms_sectors_grid_layout_from_blocks($decoded, $default);
+    }
+}
+
+if (! function_exists('cms_sectors_grid_block_from_blocks')) {
+    /**
+     * @param list<array<string, mixed>> $blocks
+     * @return ?array<string, mixed>
+     */
+    function cms_sectors_grid_block_from_blocks(array $blocks): ?array
+    {
+        foreach ($blocks as $blk) {
+            if (! is_array($blk)) {
+                continue;
+            }
+            if (strtolower(trim((string) ($blk['type'] ?? ''))) !== 'sectors_grid') {
+                continue;
+            }
+
+            return $blk;
+        }
+
+        return null;
+    }
+}
+
+if (! function_exists('cms_sectors_grid_block_from_page')) {
+    /**
+     * @return ?array<string, mixed>
+     */
+    function cms_sectors_grid_block_from_page(array $page): ?array
+    {
+        if (strtolower(trim((string) ($page['content_mode'] ?? ''))) !== 'blocks') {
+            return null;
+        }
+
+        $raw = trim((string) ($page['body_blocks'] ?? ''));
+        if ($raw === '' || $raw === '[]') {
+            return null;
+        }
+
+        $decoded = json_decode($raw, true);
+        if (! is_array($decoded)) {
+            return null;
+        }
+
+        return cms_sectors_grid_block_from_blocks($decoded);
+    }
+}
+
+if (! function_exists('cms_block_render_section_intro_html')) {
+    /**
+     * @param array<string, mixed> $block
+     */
+    function cms_block_render_section_intro_html(array $block): string
+    {
+        $kicker = trim((string) ($block['kicker'] ?? ''));
+        $title  = trim((string) ($block['title'] ?? ''));
+        $lead   = trim((string) ($block['lead'] ?? ''));
+        if ($kicker === '' && $title === '' && $lead === '') {
+            return '';
+        }
+
+        $headingId = trim((string) ($block['heading_id'] ?? ''));
+        $html      = '<header class="section__header">';
+        if ($kicker !== '') {
+            $html .= '<div class="section__overline">' . esc($kicker) . '</div>';
+        }
+        if ($title !== '') {
+            $idAttr = $headingId !== '' ? ' id="' . esc($headingId, 'attr') . '"' : '';
+            $html .= '<h2 class="section__title"' . $idAttr . '>' . esc($title) . '</h2>';
+        }
+        if ($lead !== '') {
+            $html .= '<p class="section__lead">' . nl2br(esc($lead)) . '</p>';
+        }
+        $html .= '</header>';
+
+        return $html;
+    }
+}
+
+if (! function_exists('cms_block_render_teal_banner_html')) {
+    /**
+     * @param array<string, mixed> $block
+     */
+    function cms_block_render_teal_banner_html(array $block): string
+    {
+        $bannerTitle    = trim((string) ($block['banner_title'] ?? ''));
+        $bannerSubtitle = trim((string) ($block['banner_subtitle'] ?? ''));
+        if ($bannerTitle === '' && $bannerSubtitle === '') {
+            return '';
+        }
+
+        $html = '<div class="decl-teams-header">';
+        if ($bannerTitle !== '') {
+            $html .= '<h3>' . esc($bannerTitle) . '</h3>';
+        }
+        if ($bannerSubtitle !== '') {
+            $html .= '<span>' . esc($bannerSubtitle) . '</span>';
+        }
+        $html .= '</div>';
+
+        return $html;
+    }
+}
+
+if (! function_exists('cms_sectors_render_block_intro_html')) {
+    /**
+     * @param array<string, mixed> $block
+     */
+    function cms_sectors_render_block_intro_html(array $block): string
+    {
+        return cms_block_render_section_intro_html($block);
+    }
+}
+
+if (! function_exists('cms_sectors_render_block_banner_html')) {
+    /**
+     * Bandeau teal (mode compact / Déclaration).
+     *
+     * @param array<string, mixed> $block
+     */
+    function cms_sectors_render_block_banner_html(array $block, string $layout = 'compact'): string
+    {
+        $layout = cms_sectors_normalize_layout($layout, 'compact');
+        if ($layout !== 'compact') {
+            return '';
+        }
+
+        return cms_block_render_teal_banner_html($block);
+    }
+}
+
 if (! function_exists('cms_sectors_render_tile_grid_html')) {
     /**
      * Grille des secteurs depuis la table `sectors` (même source que Join et les projets).
      */
-    function cms_sectors_render_tile_grid_html(): string
+    function cms_sectors_render_tile_grid_html(string $layout = 'compact'): string
     {
         $db = \Config\Database::connect();
         if (! $db->tableExists('sectors')) {
             return '';
         }
 
+        $layout = cms_sectors_normalize_layout($layout, 'compact');
+
         $sectors = model(\App\Models\SectorModel::class)->listOrdered();
 
-        return view('front/sectors/tile_grid', ['sectors' => $sectors]);
+        return view('front/sectors/tile_grid', [
+            'sectors' => $sectors,
+            'layout'  => $layout,
+        ]);
+    }
+}
+
+if (! function_exists('cms_structures_render_dept_grid_html')) {
+    /**
+     * Grille organigramme / départements depuis la table `structure_units`.
+     */
+    function cms_structures_render_dept_grid_html(): string
+    {
+        $db = \Config\Database::connect();
+        if (! $db->tableExists('structure_units')) {
+            return '';
+        }
+
+        $units = model(\App\Models\StructureUnitModel::class)->listFunctionsActive();
+        if ($units === []) {
+            return '';
+        }
+
+        return view('front/structures/dept_grid', ['units' => $units]);
+    }
+}
+
+if (! function_exists('cms_structures_render_hub_html')) {
+    /**
+     * Hub noyau + fonctions depuis `structure_units`.
+     */
+    function cms_structures_render_hub_html(): string
+    {
+        $db = \Config\Database::connect();
+        if (! $db->tableExists('structure_units')) {
+            return '';
+        }
+
+        $model = model(\App\Models\StructureUnitModel::class);
+        $functions = $model->listFunctionsActive();
+        $core      = $model->findActiveCore();
+        if ($core === null && $functions === []) {
+            return '';
+        }
+
+        return view('front/structures/hub', [
+            'core'      => $core,
+            'functions' => $functions,
+        ]);
+    }
+}
+
+if (! function_exists('cms_structures_normalize_layout')) {
+    function cms_structures_normalize_layout(mixed $raw, string $default = 'dept'): string
+    {
+        $layout = strtolower(trim((string) $raw));
+        if (! in_array($layout, ['hub', 'dept'], true)) {
+            return $default;
+        }
+
+        return $layout;
+    }
+}
+
+if (! function_exists('cms_structures_render_block_intro_html')) {
+    /**
+     * @param array<string, mixed> $block
+     */
+    function cms_structures_render_block_intro_html(array $block): string
+    {
+        return cms_block_render_section_intro_html($block);
+    }
+}
+
+if (! function_exists('cms_structures_render_block_banner_html')) {
+    /**
+     * Bandeau teal (mode cartes départements / Déclaration).
+     *
+     * @param array<string, mixed> $block
+     */
+    function cms_structures_render_block_banner_html(array $block, string $layout = 'dept'): string
+    {
+        $layout = cms_structures_normalize_layout($layout, 'dept');
+        if ($layout !== 'dept') {
+            return '';
+        }
+
+        return cms_block_render_teal_banner_html($block);
     }
 }
 
@@ -431,8 +755,12 @@ if (! function_exists('cms_apply_html_embeds')) {
 
         $gridHtml = cms_sectors_render_tile_grid_html();
         if ($gridHtml === '') {
+            $html = cms_apply_structures_html_embeds($html);
+
             return $html;
         }
+
+        $wideGridHtml = cms_sectors_render_tile_grid_html('wide');
 
         $patterns = [];
 
@@ -442,6 +770,78 @@ if (! function_exists('cms_apply_html_embeds')) {
 
         $patterns[] = '#<!--\s*GG_CMS_SECTORS_TILE_GRID\s*-->#i';
         $patterns[] = '#<!--\s*GG_CMS_SECTEURS_TILE_GRID\s*-->#i';
+
+        foreach ($patterns as $pattern) {
+            $html = preg_replace_callback(
+                $pattern,
+                static function (array $matches) use ($gridHtml, $wideGridHtml): string {
+                    $snippet = $matches[0] ?? '';
+                    if (preg_match('/data-gg-layout\s*=\s*(?:"wide"|\'wide\'|&quot;wide&quot;)/i', $snippet) === 1) {
+                        return $wideGridHtml;
+                    }
+
+                    return $gridHtml;
+                },
+                $html,
+            ) ?? $html;
+        }
+
+        return cms_apply_structures_html_embeds($html);
+    }
+}
+
+if (! function_exists('cms_apply_structures_html_embeds')) {
+    /**
+     * Marqueurs HTML : data-gg-cms="structures-dept-grid" ou commentaire GG_CMS_STRUCTURES_DEPT_GRID.
+     */
+    function cms_apply_structures_html_embeds(string $html): string
+    {
+        if ($html === '') {
+            return '';
+        }
+
+        $gridHtml = cms_structures_render_dept_grid_html();
+        if ($gridHtml === '') {
+            return $html;
+        }
+
+        $patterns = [];
+        $q = preg_quote('structures-dept-grid', '~');
+        $quote = '(?:"|\'|&quot;|&#34;|&apos;|&#39;)';
+        $val = $quote . $q . $quote;
+        $in = '(?=[^>]*\bdata-gg-cms\s*=\s*' . $val . ')';
+        $inner = '(?:\s|&nbsp;|&#160;|&#x0*A0;|<br\s*/?>)*';
+        $patterns[] = '~<div\b' . $in . '[^>]*>' . $inner . '</div>~iu';
+        $patterns[] = '~<div\b' . $in . '[^>]*/>~iu';
+        $patterns[] = '#<!--\s*GG_CMS_STRUCTURES_DEPT_GRID\s*-->#i';
+
+        $hubHtml = cms_structures_render_hub_html();
+        if ($hubHtml !== '') {
+            $hq = preg_quote('structures-hub', '~');
+            $quote = '(?:"|\'|&quot;|&#34;|&apos;|&#39;)';
+            $val = $quote . $hq . $quote;
+            $in = '(?=[^>]*\bdata-gg-cms\s*=\s*' . $val . ')';
+            $inner = '(?:\s|&nbsp;|&#160;|&#x0*A0;|<br\s*/?>)*';
+            $hubPatterns = [
+                '~<div\b' . $in . '[^>]*>' . $inner . '</div>~iu',
+                '~<div\b' . $in . '[^>]*/>~iu',
+                '#<!--\s*GG_CMS_STRUCTURES_HUB\s*-->#i',
+                '~(<div class="hub">)\s*<!--\s*GG_CMS_STRUCTURES_HUB\s*-->\s*(</div>)~i',
+            ];
+            foreach ($hubPatterns as $pattern) {
+                $html = preg_replace_callback(
+                    $pattern,
+                    static function (array $m) use ($hubHtml): string {
+                        if (isset($m[1], $m[2]) && str_contains($m[1], 'hub')) {
+                            return $m[1] . $hubHtml . $m[2];
+                        }
+
+                        return $hubHtml;
+                    },
+                    $html,
+                ) ?? $html;
+            }
+        }
 
         foreach ($patterns as $pattern) {
             $html = preg_replace_callback(
