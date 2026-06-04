@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.14.0] - 2026-06-04
+
+### Release
+
+- feat(front/admin): add declaration pages and features (#67) (f79a89f)
+- chore(release): prepare develop 1.14.0 after v1.13.0 (#66) (f677113)
+- docs(changelog): v1.13.0 (8635591)
+
+
 ## [1.13.0] - 2026-05-30
 
 ### Release
