@@ -57,4 +57,25 @@ final class LocaleHelperTest extends CIUnitTestCase
         $this->assertStringContainsString('/contact', localized_site_url('contact'));
         $this->assertStringNotContainsString('/en/contact', localized_site_url('contact'));
     }
+
+    public function testLocaleSwitchUrlMapsPressListPage(): void
+    {
+        if (! \Config\Database::connect()->tableExists('cms_pages')) {
+            $this->markTestSkipped('cms_pages table not available in test database');
+        }
+
+        SiteContext::setMain();
+        SiteContext::setLocale('fr');
+        SiteContext::setPublicUriSegments(['press']);
+
+        $url = locale_switch_url();
+        $this->assertStringContainsString('/en/press', $url);
+
+        SiteContext::setLocale('en');
+        SiteContext::setPublicUriSegments(['press']);
+
+        $urlFr = locale_switch_url();
+        $this->assertStringContainsString('/press', $urlFr);
+        $this->assertStringNotContainsString('/en/', $urlFr);
+    }
 }

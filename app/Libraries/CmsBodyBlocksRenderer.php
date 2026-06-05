@@ -660,7 +660,13 @@ final class CmsBodyBlocksRenderer
                 }
                 $label = trim((string) ($action['label'] ?? ''));
                 $href = trim((string) ($action['href'] ?? ''));
-                if ($label === '' || $href === '') {
+                if ($href === '') {
+                    continue;
+                }
+                if (function_exists('declaration_cta_panel_action_label')) {
+                    helper('declaration');
+                    $label = declaration_cta_panel_action_label($label, $href);
+                } elseif ($label === '') {
                     continue;
                 }
                 $variant = strtolower(trim((string) ($action['variant'] ?? 'primary')));

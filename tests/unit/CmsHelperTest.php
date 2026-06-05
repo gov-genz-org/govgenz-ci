@@ -30,4 +30,13 @@ final class CmsHelperTest extends CIUnitTestCase
             'hero_lead'  => '',
         ]));
     }
+
+    public function testListPageLayoutMainClassUsesLayoutKey(): void
+    {
+        $this->assertSame('ggz-layout-full', cms_list_page_layout_main_class(null));
+        $this->assertSame('', cms_list_page_layout_main_class(['layout_key' => null]));
+        $this->assertSame('', cms_list_page_layout_main_class(['layout_key' => '']));
+        $this->assertSame('ggz-layout-narrow', cms_list_page_layout_main_class(['layout_key' => 'narrow']));
+        $this->assertSame('ggz-layout-full', cms_list_page_layout_main_class(['layout_key' => 'full']));
+    }
 }

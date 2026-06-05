@@ -82,7 +82,7 @@ $shareSocialLinks = project_share_social_links($title, $shareUrl, $shareQrPageUr
         <div class="widget-cta">
             <?php foreach ($actionCtas as $cta) :
                 $variant = (string) ($cta['variant'] ?? 'ghost');
-                $class   = 'projects-program-show__btn positions-program-show__btn--' . $variant;
+                $class   = 'projects-program-show__btn projects-program-show__btn--' . $variant;
                 ?>
                 <a href="<?= esc((string) ($cta['href'] ?? '#'), 'attr') ?>" class="<?= esc($class, 'attr') ?>"><?= esc((string) ($cta['label'] ?? '')) ?></a>
             <?php endforeach; ?>

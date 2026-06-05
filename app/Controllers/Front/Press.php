@@ -41,7 +41,7 @@ class Press extends BaseController
                 'heroLead'     => $hero['heroLead'],
             ]),
             'navActive'       => 'press',
-            'mainExtraClass'  => 'ggz-layout-full',
+            'mainExtraClass'  => cms_list_page_layout_main_class($listPage),
         ]);
     }
 
@@ -53,14 +53,16 @@ class Press extends BaseController
             throw PageNotFoundException::forPageNotFound();
         }
 
-        $title = $post['meta_title'] ?? $post['title'];
+        $listPage = model(CmsPageModel::class)->getPublishedBySlug(cms_press_list_page_slug());
+        $title    = $post['meta_title'] ?? $post['title'];
 
         return view('front/layout', [
             'title'           => $title,
             'metaDescription' => trim((string) ($post['meta_description'] ?? '')),
             'main'            => view('front/press/show', ['post' => $post]),
             'navActive'       => 'press',
-            'mainExtraClass'  => 'ggz-layout-full',
+            'mainExtraClass'  => cms_list_page_layout_main_class($listPage),
         ]);
     }
 }
+

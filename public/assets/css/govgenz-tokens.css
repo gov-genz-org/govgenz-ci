@@ -1,39 +1,24 @@
 /**
  * GovGenZ — design system (source unique).
  * Base : genzgov-final/css/variables.css + charte PDF (docs/GOVGENZ-DESIGN-TOKENS.css).
- * Les fichiers template / pages consomment les alias --bg-*, --red-* ci-dessous.
+ * Thèmes : [data-theme="dark"] (défaut) et [data-theme="light"].
  */
 
+/* — Structure & accents de marque (stables entre thèmes) — */
 :root {
-  /* — Fonds (genzgov-final) — */
-  --ggz-bg: #080d1a;
-  --ggz-bg-section: #0d1524;
-  --ggz-bg-card: #121d30;
-  --ggz-bg-card-overlay: rgba(30, 30, 44, 0.72);
-  --ggz-bg-overlay: rgba(8, 13, 26, 0.7);
-
-  /* — Accents — */
   --ggz-red: #c41e30;
   --ggz-red-hover: #a6192a;
   --ggz-teal: #17a39e;
+  --ggz-teal-bright: #2ec4be;
   --ggz-warm: #e88a6a;
   --ggz-peach: #ffa586;
   --ggz-bordeaux: #541a2e;
+  --ggz-text-on-accent: #ffffff;
 
-  /* — Texte — */
-  --ggz-text: #ffffff;
-  --ggz-text-secondary: #8c94a8;
-  --ggz-text-muted: #5a6478;
-  --ggz-text-on-dark: #fafafa;
-  --ggz-text-meta: rgba(250, 250, 250, 0.72);
+  --ggz-decl-pledge: #4aba78;
+  --ggz-decl-pledge-deep: #2a7a4b;
+  --ggz-decl-official-soft: #e05060;
 
-  /* — Bordures — */
-  --ggz-border-dim: rgba(255, 255, 255, 0.07);
-  --ggz-border-red: rgba(196, 30, 48, 0.3);
-  --ggz-border-teal: rgba(23, 163, 158, 0.3);
-  --ggz-border-panel: rgba(56, 67, 88, 0.58);
-
-  /* — Typographie (auto-hébergée : govgenz-fonts.css) — */
   --ggz-font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
   --ggz-font-sans: 'JetBrains Mono', 'Courier New', monospace;
   --ggz-font-mono: var(--ggz-font-sans);
@@ -43,7 +28,6 @@
   --ggz-type-section-title: clamp(1.75rem, 4vw, 2.65rem);
   --ggz-type-legal-h2: clamp(0.8125rem, 1.25vw, 0.9375rem);
 
-  /* — Espacement & rayons — */
   --ggz-space-xs: 0.25rem;
   --ggz-space-sm: 0.5rem;
   --ggz-space-md: 1rem;
@@ -58,7 +42,6 @@
   --ggz-t-fast: 0.15s ease;
   --ggz-t-base: 0.25s ease;
 
-  /* — Layout — */
   --ggz-max-content: min(96vw, 1040px);
   --ggz-max-wide: min(calc(100vw - 2 * var(--gutter, clamp(1.5rem, 4vw, 4rem))), 96rem);
   --ggz-max-narrow: 36rem;
@@ -66,11 +49,152 @@
   --ggz-gutter: clamp(1.5rem, 4vw, 4rem);
   --ggz-section-pad: clamp(4rem, 10vh, 8rem);
 
-  /* — Ombres & dégradés — */
+  --ggz-focus-ring: 2px solid var(--ggz-peach);
+
+  --max-width: 1320px;
+  --gutter: var(--ggz-gutter);
+  --section-pad: var(--ggz-section-pad);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --font-display: var(--ggz-font-display);
+  --font-body: var(--ggz-font-sans);
+  --font-mono: var(--ggz-font-mono);
+}
+
+/* — Thème sombre (défaut) — */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --ggz-bg: #080d1a;
+  --ggz-bg-section: #0d1524;
+  --ggz-bg-card: #121d30;
+  --ggz-bg-card-overlay: rgba(30, 30, 44, 0.72);
+  --ggz-bg-overlay: rgba(8, 13, 26, 0.7);
+  --ggz-bg-deepest: #050507;
+  --ggz-bg-light: #15151f;
+  --ggz-bg-inset: rgba(0, 0, 0, 0.12);
+  --ggz-bg-band-subtle: rgba(255, 255, 255, 0.02);
+
+  --ggz-text: #ffffff;
+  --ggz-text-secondary: #8c94a8;
+  --ggz-text-muted: #5a6478;
+  --ggz-text-on-dark: #fafafa;
+  --ggz-text-meta: rgba(250, 250, 250, 0.72);
+  --ggz-text-on-gradient: rgba(255, 255, 255, 0.88);
+  --ggz-text-on-accent: #ffffff;
+
+  --ggz-border-dim: rgba(255, 255, 255, 0.07);
+  --ggz-border-red: rgba(196, 30, 48, 0.3);
+  --ggz-border-teal: rgba(23, 163, 158, 0.3);
+  --ggz-border-teal-strong: rgba(23, 163, 158, 0.75);
+  --ggz-border-panel: rgba(56, 67, 88, 0.58);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  --ggz-text-form-label: rgba(250, 250, 250, 0.92);
+  --ggz-input-bg: var(--ggz-bg);
+  --ggz-input-text: var(--ggz-text-on-dark);
+  --ggz-input-border: var(--ggz-text-muted);
+  --ggz-surface-glass: rgba(21, 21, 31, 0.58);
+  --ggz-surface-glass-soft: rgba(21, 21, 31, 0.52);
+  --ggz-surface-chip: rgba(35, 47, 73, 0.65);
+  --ggz-surface-chip-hover: rgba(35, 47, 73, 0.92);
+  --ggz-surface-chip-border: rgba(255, 165, 134, 0.55);
+  --ggz-surface-panel: rgba(22, 30, 47, 0.72);
+  --ggz-surface-input: rgba(10, 14, 24, 0.78);
+  --ggz-accent-overline-bg: rgba(220, 38, 38, 0.05);
+  --ggz-accent-overline-border: rgba(220, 38, 38, 0.3);
+  --ggz-card-hover-border: rgba(255, 165, 134, 0.22);
+  --ggz-tag-bg: rgba(23, 163, 158, 0.15);
+  --ggz-filters-band-bg: rgba(30, 30, 44, 0.72);
+  --ggz-pill-active-bg: rgba(220, 38, 38, 0.12);
+  --ggz-status-neutral-bg: rgba(90, 100, 120, 0.2);
+  --ggz-ms-primary: rgba(255, 146, 112, 0.95);
+  --ggz-ms-bg: rgba(19, 27, 42, 0.98);
+  --ggz-ms-text: rgba(230, 236, 246, 0.96);
+  --ggz-ms-text-muted: rgba(160, 174, 198, 0.95);
+  --ggz-ms-text-light: rgba(132, 146, 166, 0.9);
+  --ggz-ms-border: rgba(56, 67, 88, 0.95);
+  --ggz-ms-border-light: rgba(56, 67, 88, 0.65);
+  --ggz-ms-input-bg: rgba(10, 14, 24, 0.88);
+  --ggz-ms-input-border: rgba(56, 67, 88, 0.85);
+  --ggz-ms-input-border-active: rgba(255, 164, 138, 0.55);
+  --ggz-ms-option-bg: rgba(35, 47, 73, 0.65);
+  --ggz-ms-checkbox-border: rgba(90, 102, 122, 0.95);
+  --ggz-ms-checkbox-bg: rgba(10, 14, 24, 0.78);
+  --ggz-ms-native-select-bg: rgba(10, 14, 24, 0.88);
+  --ggz-ms-native-option-bg: #131b2a;
+  --ggz-btn-warm-hover-bg: rgba(232, 138, 106, 0.15);
+  --ggz-btn-teal-hover-bg: rgba(23, 163, 158, 0.12);
+  --ggz-alert-success-bg: rgba(255, 165, 134, 0.14);
+  --ggz-alert-success-border: rgba(255, 165, 134, 0.35);
+  --ggz-alert-danger-bg: rgba(213, 26, 43, 0.16);
+  --ggz-alert-danger-border: rgba(213, 26, 43, 0.35);
+  --ggz-alert-info-bg: rgba(36, 47, 73, 0.85);
+  --ggz-alert-info-border: rgba(56, 67, 88, 0.65);
+  --ggz-prose-inset-highlight: rgba(255, 255, 255, 0.04);
+  --ggz-prose-shadow: 0 18px 48px rgba(0, 0, 0, 0.38);
+  --ggz-prose-heading-border: rgba(56, 67, 88, 0.55);
+  --ggz-prose-heading-accent: rgba(255, 165, 134, 0.45);
+  --ggz-prose-link-underline: rgba(255, 165, 134, 0.4);
+  --ggz-prose-code-bg: rgba(0, 0, 0, 0.32);
+  --ggz-prose-code-border: rgba(56, 67, 88, 0.7);
+  --ggz-prose-muted-border: rgba(56, 67, 88, 0.55);
+  --ggz-hero-grid-line: rgba(255, 255, 255, 0.025);
+  --ggz-hero-glow: rgba(220, 38, 38, 0.18);
+  --ggz-body-noise-opacity: 0.04;
+  --ggz-selection-bg: rgba(220, 38, 38, 0.35);
+  --ggz-footer-soon-bg: rgba(220, 38, 38, 0.15);
+  --ggz-logo-glow: rgba(220, 38, 38, 0.3);
+  --ggz-tile-wide-bg: linear-gradient(to bottom, var(--green-deep), rgba(2, 44, 34, 0.9));
+  --ggz-tile-wide-bg-hover: linear-gradient(to bottom, rgba(16, 185, 129, 0.2), rgba(6, 95, 70, 0.7));
+  --ggz-tile-wide-border: rgba(16, 185, 129, 0.3);
+  --ggz-tile-wide-mail-border: rgba(16, 185, 129, 0.25);
+  --ggz-tile-wide-shadow-hover: 0 12px 28px rgba(16, 185, 129, 0.2);
+  --ggz-mobile-nav-bg: var(--bg-deepest);
+  --ggz-surface-form-panel: rgba(22, 30, 47, 0.72);
+  --ggz-input-border-strong: rgba(56, 67, 88, 0.85);
+  --ggz-input-inset-highlight: rgba(255, 255, 255, 0.04);
+  --ggz-input-hover-border: rgba(90, 102, 122, 0.95);
+  --ggz-input-focus-border: rgba(255, 164, 138, 0.72);
+  --ggz-input-focus-ring: rgba(255, 146, 112, 0.22);
+  --ggz-border-list-divider: rgba(56, 67, 88, 0.45);
+  --ggz-text-lead: rgba(250, 250, 250, 0.94);
+  --ggz-fieldset-divider: rgba(56, 67, 88, 0.5);
+  --ggz-fieldset-divider-optional: rgba(56, 67, 88, 0.42);
+
+  --ggz-overlay-stat-pill: rgba(5, 5, 7, 0.35);
+  --ggz-overlay-teal-hover: rgba(23, 163, 158, 0.08);
+  --ggz-overlay-red-hover: rgba(220, 38, 38, 0.08);
+  --ggz-overlay-band-divider: rgba(255, 255, 255, 0.05);
+
+  --ggz-decl-official-band-bg: rgba(196, 30, 48, 0.1);
+  --ggz-decl-pledge-band-bg: rgba(42, 122, 75, 0.12);
+  --ggz-decl-alert-band-bg: rgba(232, 138, 106, 0.12);
+  --ggz-decl-partnership-band-bg: rgba(23, 163, 158, 0.12);
+  --ggz-decl-official-badge-bg: rgba(196, 30, 48, 0.15);
+  --ggz-decl-official-badge-border: rgba(196, 30, 48, 0.3);
+  --ggz-decl-pledge-badge-bg: rgba(42, 122, 75, 0.15);
+  --ggz-decl-pledge-badge-border: rgba(42, 122, 75, 0.3);
+  --ggz-decl-alert-badge-bg: rgba(232, 138, 106, 0.15);
+  --ggz-decl-alert-badge-border: rgba(232, 138, 106, 0.3);
+  --ggz-decl-partnership-badge-bg: rgba(23, 163, 158, 0.15);
+  --ggz-decl-partnership-badge-border: rgba(23, 163, 158, 0.3);
+
   --ggz-shadow-header: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 12px 40px rgba(0, 0, 0, 0.38);
   --ggz-shadow-card: 0 2px 4px rgba(0, 0, 0, 0.14), 0 14px 44px rgba(0, 0, 0, 0.28);
   --ggz-shadow-card-hover: 0 12px 28px rgba(0, 0, 0, 0.34), 0 28px 56px rgba(84, 26, 46, 0.14);
-  --ggz-shadow-btn-red: 0 8px 20px rgba(196, 30, 48, 0.35);
+  --ggz-shadow-card-lift: 0 12px 36px rgba(0, 0, 0, 0.45);
+  --ggz-shadow-dept-hover: 0 10px 24px rgba(0, 0, 0, 0.4);
+  --ggz-shadow-btn-red: 0 4px 18px rgba(220, 38, 38, 0.28);
+  --ggz-shadow-btn-red-hover: 0 8px 24px rgba(220, 38, 38, 0.42);
+  --ggz-shadow-hero: 0 12px 48px rgba(0, 0, 0, 0.28);
+
+  --ggz-header-bg: rgba(10, 10, 20, 0.75);
+  --ggz-header-bg-scrolled: rgba(5, 5, 7, 0.92);
+  --ggz-meta-theme-color: #0a0a14;
+
   --ggz-gradient-page:
     radial-gradient(ellipse 120% 82% at 50% -28%, rgba(255, 165, 134, 0.12), transparent 52%),
     radial-gradient(ellipse 72% 48% at 100% 12%, rgba(13, 21, 36, 0.55), transparent 48%),
@@ -82,9 +206,10 @@
   --ggz-gradient-panel:
     linear-gradient(165deg, rgba(28, 36, 54, 0.94) 0%, rgba(16, 22, 36, 0.88) 100%);
   --ggz-gradient-panel-accent: linear-gradient(90deg, transparent, rgba(255, 165, 134, 0.75), rgba(196, 30, 48, 0.55), transparent);
-  --ggz-focus-ring: 2px solid var(--ggz-peach);
+  --ggz-gradient-body-glow:
+    radial-gradient(circle at 20% 30%, rgba(220, 38, 38, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(124, 45, 18, 0.05) 0%, transparent 60%);
 
-  /* — Alias charte historiques (--ggz-night-* etc.) — */
   --ggz-night-deep: var(--ggz-bg);
   --ggz-night-blue: var(--ggz-bg-card);
   --ggz-blue-gray: var(--ggz-text-muted);
@@ -94,7 +219,6 @@
   --ggz-navy: var(--ggz-bg);
   --ggz-blue: var(--ggz-bg-card);
 
-  /* — Alias projets (--pp-* → tokens) — */
   --pp-bg: var(--ggz-bg);
   --pp-bg-section: var(--ggz-bg-card-overlay);
   --pp-bg-card: var(--ggz-bg-card-overlay);
@@ -113,18 +237,16 @@
   --pp-t: var(--ggz-t-base);
   --pp-t-card: var(--ggz-t-base);
 
-  /* — Alias CTA — */
   --ggz-cta-teal: var(--ggz-teal);
   --ggz-cta-red: var(--ggz-red);
   --ggz-cta-text-sec: var(--ggz-text-secondary);
   --ggz-cta-border-dim: var(--ggz-border-dim);
   --ggz-cta-t: var(--ggz-t-base);
 
-  /* — Alias govgenz-template.css (:root du template) — */
-  --bg-deepest: #050507;
+  --bg-deepest: var(--ggz-bg-deepest);
   --bg-deep: var(--ggz-bg);
   --bg-mid: var(--ggz-bg-section);
-  --bg-light: #15151f;
+  --bg-light: var(--ggz-bg-light);
   --bg-elevated: var(--ggz-bg-card);
   --red-primary: var(--ggz-red);
   --red-deep: #7f1d1d;
@@ -144,13 +266,161 @@
   --text-tertiary: #94a3b8;
   --text-muted: var(--ggz-text-muted);
   --border: var(--ggz-border-dim);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --font-display: var(--ggz-font-display);
-  --font-body: var(--ggz-font-sans);
-  --font-mono: var(--ggz-font-mono);
-  --max-width: 1320px;
-  --gutter: var(--ggz-gutter);
-  --section-pad: var(--ggz-section-pad);
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* — Thème clair — */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --ggz-bg: #f8fafc;
+  --ggz-bg-section: #f1f5f9;
+  --ggz-bg-card: #ffffff;
+  --ggz-bg-card-overlay: #ffffff;
+  --ggz-bg-overlay: rgba(248, 250, 252, 0.92);
+  --ggz-bg-deepest: #eef2f7;
+  --ggz-bg-light: #ffffff;
+  --ggz-bg-inset: rgba(8, 13, 26, 0.04);
+  --ggz-bg-band-subtle: rgba(8, 13, 26, 0.025);
+
+  --ggz-text: #0f172a;
+  --ggz-text-secondary: #475569;
+  --ggz-text-muted: #64748b;
+  --ggz-text-on-dark: #0f172a;
+  --ggz-text-meta: rgba(15, 23, 42, 0.72);
+  --ggz-text-on-gradient: rgba(255, 255, 255, 0.95);
+  --ggz-text-on-accent: #ffffff;
+
+  --ggz-border-dim: rgba(15, 23, 42, 0.1);
+  --ggz-border-red: rgba(196, 30, 48, 0.22);
+  --ggz-border-teal: rgba(23, 163, 158, 0.32);
+  --ggz-border-teal-strong: rgba(23, 163, 158, 0.55);
+  --ggz-border-panel: rgba(148, 163, 184, 0.45);
+  --border-subtle: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(15, 23, 42, 0.14);
+
+  --ggz-text-form-label: #475569;
+  --ggz-input-bg: #ffffff;
+  --ggz-input-text: #0f172a;
+  --ggz-input-border: #94a3b8;
+  --ggz-surface-glass: rgba(255, 255, 255, 0.92);
+  --ggz-surface-glass-soft: rgba(255, 255, 255, 0.88);
+  --ggz-surface-chip: #ffffff;
+  --ggz-surface-chip-hover: #f8fafc;
+  --ggz-surface-chip-border: rgba(196, 30, 48, 0.28);
+  --ggz-surface-panel: #ffffff;
+  --ggz-surface-input: #ffffff;
+  --ggz-accent-overline-bg: rgba(196, 30, 48, 0.06);
+  --ggz-accent-overline-border: rgba(196, 30, 48, 0.22);
+  --ggz-card-hover-border: rgba(196, 30, 48, 0.18);
+  --ggz-tag-bg: rgba(23, 163, 158, 0.1);
+  --ggz-filters-band-bg: rgba(255, 255, 255, 0.92);
+  --ggz-pill-active-bg: rgba(196, 30, 48, 0.1);
+  --ggz-status-neutral-bg: rgba(148, 163, 184, 0.2);
+  --ggz-ms-primary: rgba(196, 30, 48, 0.85);
+  --ggz-ms-bg: #ffffff;
+  --ggz-ms-text: #0f172a;
+  --ggz-ms-text-muted: #475569;
+  --ggz-ms-text-light: #64748b;
+  --ggz-ms-border: rgba(148, 163, 184, 0.55);
+  --ggz-ms-border-light: rgba(148, 163, 184, 0.35);
+  --ggz-ms-input-bg: #ffffff;
+  --ggz-ms-input-border: rgba(148, 163, 184, 0.65);
+  --ggz-ms-input-border-active: rgba(196, 30, 48, 0.42);
+  --ggz-ms-option-bg: #f1f5f9;
+  --ggz-ms-checkbox-border: rgba(100, 116, 139, 0.65);
+  --ggz-ms-checkbox-bg: #ffffff;
+  --ggz-ms-native-select-bg: #ffffff;
+  --ggz-ms-native-option-bg: #ffffff;
+  --ggz-btn-warm-hover-bg: rgba(232, 138, 106, 0.12);
+  --ggz-btn-teal-hover-bg: rgba(23, 163, 158, 0.1);
+  --ggz-alert-success-bg: rgba(23, 163, 158, 0.08);
+  --ggz-alert-success-border: rgba(23, 163, 158, 0.28);
+  --ggz-alert-danger-bg: rgba(196, 30, 48, 0.08);
+  --ggz-alert-danger-border: rgba(196, 30, 48, 0.25);
+  --ggz-alert-info-bg: rgba(241, 245, 249, 0.98);
+  --ggz-alert-info-border: rgba(148, 163, 184, 0.45);
+  --ggz-prose-inset-highlight: rgba(255, 255, 255, 0.65);
+  --ggz-prose-shadow: 0 12px 36px rgba(15, 23, 42, 0.08);
+  --ggz-prose-heading-border: rgba(148, 163, 184, 0.45);
+  --ggz-prose-heading-accent: rgba(196, 30, 48, 0.45);
+  --ggz-prose-link-underline: rgba(196, 30, 48, 0.35);
+  --ggz-prose-code-bg: rgba(241, 245, 249, 0.95);
+  --ggz-prose-code-border: rgba(148, 163, 184, 0.45);
+  --ggz-prose-muted-border: rgba(148, 163, 184, 0.4);
+  --ggz-hero-grid-line: rgba(15, 23, 42, 0.055);
+  --ggz-hero-glow: rgba(196, 30, 48, 0.1);
+  --ggz-body-noise-opacity: 0.018;
+  --ggz-selection-bg: rgba(196, 30, 48, 0.18);
+  --ggz-footer-soon-bg: rgba(196, 30, 48, 0.1);
+  --ggz-logo-glow: rgba(196, 30, 48, 0.15);
+  --ggz-tile-wide-bg: linear-gradient(to bottom, #ffffff, #f0fdf4);
+  --ggz-tile-wide-bg-hover: linear-gradient(to bottom, #f0fdf4, #dcfce7);
+  --ggz-tile-wide-border: rgba(23, 163, 158, 0.28);
+  --ggz-tile-wide-mail-border: rgba(23, 163, 158, 0.2);
+  --ggz-tile-wide-shadow-hover: 0 12px 28px rgba(23, 163, 158, 0.12);
+  --green-soft: #047857;
+  --green-pale: #065f46;
+  --ggz-mobile-nav-bg: #ffffff;
+  --ggz-surface-form-panel: #ffffff;
+  --ggz-input-border-strong: rgba(148, 163, 184, 0.65);
+  --ggz-input-inset-highlight: rgba(255, 255, 255, 0.85);
+  --ggz-input-hover-border: rgba(100, 116, 139, 0.85);
+  --ggz-input-focus-border: rgba(196, 30, 48, 0.42);
+  --ggz-input-focus-ring: rgba(196, 30, 48, 0.12);
+  --ggz-border-list-divider: rgba(148, 163, 184, 0.45);
+  --ggz-text-lead: #334155;
+  --ggz-fieldset-divider: rgba(148, 163, 184, 0.45);
+  --ggz-fieldset-divider-optional: rgba(148, 163, 184, 0.35);
+
+  --ggz-overlay-stat-pill: rgba(255, 255, 255, 0.28);
+  --ggz-overlay-teal-hover: rgba(23, 163, 158, 0.1);
+  --ggz-overlay-red-hover: rgba(196, 30, 48, 0.08);
+  --ggz-overlay-band-divider: rgba(8, 13, 26, 0.06);
+
+  --ggz-decl-official-soft: #b81828;
+  --ggz-decl-official-band-bg: rgba(196, 30, 48, 0.08);
+  --ggz-decl-pledge-band-bg: rgba(42, 122, 75, 0.1);
+  --ggz-decl-alert-band-bg: rgba(232, 138, 106, 0.12);
+  --ggz-decl-partnership-band-bg: rgba(23, 163, 158, 0.1);
+  --ggz-decl-official-badge-bg: rgba(196, 30, 48, 0.1);
+  --ggz-decl-official-badge-border: rgba(196, 30, 48, 0.25);
+  --ggz-decl-pledge-badge-bg: rgba(42, 122, 75, 0.1);
+  --ggz-decl-pledge-badge-border: rgba(42, 122, 75, 0.25);
+  --ggz-decl-alert-badge-bg: rgba(232, 138, 106, 0.12);
+  --ggz-decl-alert-badge-border: rgba(232, 138, 106, 0.28);
+  --ggz-decl-partnership-badge-bg: rgba(23, 163, 158, 0.1);
+  --ggz-decl-partnership-badge-border: rgba(23, 163, 158, 0.25);
+
+  --ggz-shadow-header: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 8px 32px rgba(8, 13, 26, 0.08);
+  --ggz-shadow-card: 0 2px 8px rgba(8, 13, 26, 0.06), 0 12px 32px rgba(8, 13, 26, 0.08);
+  --ggz-shadow-card-hover: 0 8px 24px rgba(8, 13, 26, 0.1), 0 20px 40px rgba(196, 30, 48, 0.06);
+  --ggz-shadow-card-lift: 0 12px 36px rgba(8, 13, 26, 0.12);
+  --ggz-shadow-dept-hover: 0 10px 24px rgba(8, 13, 26, 0.1);
+  --ggz-shadow-btn-red: 0 4px 18px rgba(196, 30, 48, 0.22);
+  --ggz-shadow-btn-red-hover: 0 8px 24px rgba(196, 30, 48, 0.32);
+  --ggz-shadow-hero: 0 12px 48px rgba(8, 13, 26, 0.08);
+
+  --ggz-header-bg: rgba(255, 255, 255, 0.82);
+  --ggz-header-bg-scrolled: rgba(255, 255, 255, 0.96);
+  --ggz-meta-theme-color: #f8fafc;
+
+  --ggz-gradient-page:
+    radial-gradient(ellipse 120% 82% at 50% -28%, rgba(255, 165, 134, 0.18), transparent 52%),
+    radial-gradient(ellipse 72% 48% at 100% 12%, rgba(196, 30, 48, 0.06), transparent 48%),
+    linear-gradient(180deg, var(--ggz-bg) 0%, var(--ggz-bg-section) 100%);
+  --ggz-gradient-hero:
+    radial-gradient(ellipse 92% 56% at 90% -6%, rgba(196, 30, 48, 0.1), transparent 56%),
+    radial-gradient(ellipse 68% 44% at 8% 102%, rgba(84, 26, 46, 0.08), transparent 52%),
+    linear-gradient(168deg, var(--ggz-bg-section) 0%, var(--ggz-bg) 50%, #dce2ec 100%);
+  --ggz-gradient-panel:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.98) 0%, rgba(244, 247, 252, 0.94) 100%);
+  --ggz-gradient-panel-accent: linear-gradient(90deg, transparent, rgba(255, 165, 134, 0.65), rgba(196, 30, 48, 0.45), transparent);
+  --ggz-gradient-body-glow:
+    radial-gradient(circle at 20% 30%, rgba(196, 30, 48, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(232, 138, 106, 0.04) 0%, transparent 60%);
+
+  --red-deep: #991b1b;
+  --red-glow: #dc2626;
+  --text-primary: #1e293b;
+  --text-tertiary: #64748b;
 }

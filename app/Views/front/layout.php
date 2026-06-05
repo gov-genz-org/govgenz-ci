@@ -19,6 +19,9 @@ if ($footerCmsHtml !== '' && preg_match('/^<div\s+class="footer__columns(?:\s[^"
 <html lang="<?= esc(SiteContext::locale()) ?>" data-theme="dark" class="ggz-public-theme">
 <head>
     <meta charset="utf-8">
+    <script>
+    (function(){try{var s=localStorage.getItem('ggz-theme'),r=document.documentElement;if(s==='light'||s==='dark'){r.dataset.theme=s;}}catch(e){}})();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0a0a14">
     <meta name="author" content="GoV Gen Z Madagascar">
@@ -68,6 +71,18 @@ if ($footerCmsHtml !== '' && preg_match('/^<div\s+class="footer__columns(?:\s[^"
         </nav>
 
         <div class="header__actions">
+            <button
+                type="button"
+                class="theme-toggle lang-toggle"
+                id="theme-toggle"
+                aria-pressed="false"
+                aria-label="<?= esc(lang('Site.theme_switch_to_light'), 'attr') ?>"
+                title="<?= esc(lang('Site.theme_switch_to_light'), 'attr') ?>"
+                data-label-light="<?= esc(lang('Site.theme_label_light'), 'attr') ?>"
+                data-label-dark="<?= esc(lang('Site.theme_label_dark'), 'attr') ?>"
+                data-title-light="<?= esc(lang('Site.theme_switch_to_light'), 'attr') ?>"
+                data-title-dark="<?= esc(lang('Site.theme_switch_to_dark'), 'attr') ?>"
+            ><span class="theme-toggle__icon" aria-hidden="true">☀</span><span class="theme-toggle__label"><?= esc(lang('Site.theme_label_light')) ?></span></button>
             <a href="<?= esc($switchHref, 'attr') ?>" class="lang-toggle lang-toggle--link" title="<?= esc($switchTitle, 'attr') ?>"><?= esc($switchLabel) ?></a>
             <button
                 type="button"
@@ -141,6 +156,7 @@ $mainShell = trim('ggz-main-shell ' . trim((string) ($mainExtraClass ?? '')));
 
 <?= view('front/partials/cookie_consent') ?>
 
+<script defer src="<?= esc(public_asset_url('js/front/theme-toggle.js'), 'attr') ?>"></script>
 <script defer src="<?= esc(public_asset_url('js/front/govgenz-template.js'), 'attr') ?>"></script>
 <?php if (analytics_is_active()) : ?>
     <script defer src="<?= esc(public_asset_url('js/front/analytics-gtag.js'), 'attr') ?>"></script>

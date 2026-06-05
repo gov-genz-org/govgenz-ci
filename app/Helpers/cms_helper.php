@@ -22,6 +22,22 @@ if (! function_exists('cms_layout_main_class')) {
     }
 }
 
+if (! function_exists('cms_list_page_layout_main_class')) {
+    /**
+     * Classe CSS pour <main> à partir d’une page CMS bandeau de liste (presse, projets…).
+     *
+     * @param array<string, mixed>|null $listPage
+     */
+    function cms_list_page_layout_main_class(?array $listPage): string
+    {
+        if ($listPage === null) {
+            return 'ggz-layout-full';
+        }
+
+        return cms_layout_main_class(isset($listPage['layout_key']) ? (string) $listPage['layout_key'] : null);
+    }
+}
+
 if (! function_exists('cms_layout_normalized')) {
     /**
      * Valeur à stocker en base : null (défaut), narrow, full, ou chaîne personnalisée (≤ 64).
@@ -315,6 +331,45 @@ if (! function_exists('cms_page_partner_slug_for_locale_switch')) {
         $out = trim((string) ($partner['slug'] ?? ''));
 
         return $out !== '' ? $out : null;
+    }
+}
+
+if (! function_exists('cms_post_partner_slug_for_locale_switch')) {
+    /**
+     * Slug publié du communiqué presse dans l’autre langue (même translation_group).
+     */
+    function cms_post_partner_slug_for_locale_switch(string $slug, string $currentLocale): ?string
+    {
+        $slug = strtolower(trim($slug));
+        if ($slug === '' || ! preg_match('/^[a-z0-9\-]+$/', $slug)) {
+            return null;
+        }
+
+        $loc   = $currentLocale === 'en' ? 'en' : 'fr';
+        $other = $loc === 'en' ? 'fr' : 'en';
+
+        $model = model(\App\Models\CmsPostModel::class);
+        $row   = $model->getPublishedBySlug($slug, $loc);
+        if ($row === null) {
+            return null;
+        }
+
+        $tg = trim((string) ($row['translation_group'] ?? ''));
+        if ($tg === '') {
+            return null;
+        }
+
+        $partner = $model->where('translation_group', $tg)
+            ->where('locale', $other)
+            ->where('status', 'published')
+            ->first();
+        if ($partner === null || ! is_array($partner)) {
+            return null;
+        }
+
+        $out = strtolower(trim((string) ($partner['slug'] ?? '')));
+
+        return $out !== '' && preg_match('/^[a-z0-9\-]+$/', $out) === 1 ? $out : null;
     }
 }
 

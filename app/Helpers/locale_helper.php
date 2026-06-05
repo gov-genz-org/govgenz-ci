@@ -302,6 +302,36 @@ if (! function_exists('locale_switch_url')) {
             return $tail === '' ? $origin . '/' : $origin . '/' . $tail;
         }
 
+        if (
+            ! SiteContext::isProjectsSite()
+            && ! SiteContext::isPositionsSite()
+            && ! SiteContext::isDeclarationSite()
+            && ($segments[0] ?? '') === 'press'
+        ) {
+            $mapPressSegments = static function (array $segs, string $fromLocale): array {
+                $out = ['press'];
+                if (count($segs) >= 2) {
+                    $articleSlug = trim((string) $segs[1]);
+                    if ($articleSlug !== '') {
+                        $partner = cms_post_partner_slug_for_locale_switch($articleSlug, $fromLocale);
+                        $out[]   = $partner ?? $articleSlug;
+                    }
+                }
+
+                return $out;
+            };
+
+            if ($loc === 'fr') {
+                $tail = implode('/', $mapPressSegments($segments, $loc));
+
+                return site_url('en/' . $tail);
+            }
+
+            $tail = implode('/', $mapPressSegments($segments, $loc));
+
+            return site_url($tail);
+        }
+
         if ($loc === 'fr') {
             $mapped = array_map(
                 static fn (string $s): string => locale_slug_fr_to_en($s),

@@ -2,21 +2,49 @@
  * Section Presse — liste : grille .cercles verticale ; fiche : gabarit mentions légales (ggz-legal-page.css).
  */
 
-:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-page.section--press {
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell
+  :is(.ggz-press-page, article.ggz-cms-page--press)
+  .section--press {
   padding: clamp(0.5rem, 2vw, 1.25rem) 0 clamp(2.5rem, 5vw, 4rem);
 }
 
-:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-layout.section__inner {
-  max-width: var(--ggz-max-wide, min(calc(100vw - 2 * var(--gutter)), 96rem));
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell
+  :is(.ggz-press-page, article.ggz-cms-page--press)
+  .section--press
+  > .section__inner.ggz-press-layout {
+  max-width: 100%;
   width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
 }
 
 /* --- Liste --- */
 :is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-page .ggz-press-page__hero.section__header {
   text-align: center;
+  max-width: none;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell
+  .ggz-press-page--show
+  .ggz-page-hero--structured
+  .ggz-page-hero__copy.section__header {
+  max-width: none;
+  width: 100%;
+}
+
+:is(#main-content, .cms-guide-preview-host).ggz-main-shell
+  .ggz-press-page--show
+  .ggz-press-detail__breadcrumb {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0.85rem 0 0.5rem;
+  box-sizing: border-box;
 }
 
 :is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-page :is(h1, h2).section__title {
@@ -99,11 +127,6 @@
   color: inherit;
 }
 
-:is(#main-content, .cms-guide-preview-host).ggz-main-shell .ggz-press-detail__breadcrumb {
-  max-width: var(--max-width, 1320px);
-  margin: 0 auto;
-  padding: 0.85rem clamp(1.25rem, 4vw, 2rem) 0.5rem;
-}
 
 :is(#main-content, .cms-guide-preview-host).ggz-main-shell article.wysiwyg.ggz-cms-page--press .ggz-press-back-row {
   max-width: 46rem;

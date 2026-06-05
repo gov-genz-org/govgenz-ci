@@ -29,7 +29,7 @@ body.ggz-public-theme {
 #main-content .ggz-page-hero {
     border-color: var(--border-strong);
     background: var(--ggz-gradient-hero);
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.28);
+    box-shadow: var(--ggz-shadow-hero);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 }
@@ -60,10 +60,10 @@ body.ggz-public-theme {
     padding: clamp(1.35rem, 2.8vw, 2rem) clamp(1.25rem, 3vw, 2.15rem);
     border-radius: 14px;
     border: 1px solid var(--border);
-    background: rgba(21, 21, 31, 0.58);
+    background: var(--ggz-surface-glass);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    box-shadow: 0 16px 56px rgba(0, 0, 0, 0.26);
+    box-shadow: var(--ggz-shadow-card);
 }
 
 #main-content p.ggz-home-missing-lead {
@@ -71,7 +71,7 @@ body.ggz-public-theme {
     padding: clamp(1.25rem, 2.5vw, 1.75rem) clamp(1.25rem, 3vw, 2rem);
     border-radius: 14px;
     border: 1px solid var(--border);
-    background: rgba(21, 21, 31, 0.52);
+    background: var(--ggz-surface-glass-soft);
     line-height: 1.65;
 }
 
@@ -110,7 +110,7 @@ body.ggz-public-theme {
 }
 
 ::selection {
-    background: rgba(220, 38, 38, 0.35);
+    background: var(--ggz-selection-bg);
     color: var(--text-bright);
 }
 
