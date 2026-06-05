@@ -18,9 +18,13 @@ Ordre de chargement (`app/Views/front/layout.php`) :
 | 8 | `ggz-legal-page.css` | Pages mentions / légal |
 | 9 | `ggz-press-page.css` | Liste + détail presse |
 
-Pages optionnelles : `join-enhancements.css`, `program-body-blocks.css`, `projects-program-*.css`, `positions-program-*.css`, `cookie-consent.css` via `extraHead`.
+Pages optionnelles : `join-enhancements.css`, `program-body-blocks.css`, `projects-program-*.css`, `positions-program-*.css`, `declaration-program-*.css`, `cookie-consent.css` via `extraHead`.
 
-**Programme positions / projets :** `program-body-blocks.css` (blocs `content-section` / `content-title` du renderer) + feuille liste ou fiche dédiée. Tokens `--pp-*` = alias dans `govgenz-tokens.css` (pas de hex locaux).
+**Programme positions / projets / déclaration :** `program-body-blocks.css` (blocs `content-section` / `content-title` du renderer) + feuille liste ou fiche dédiée. Tokens `--pp-*` = alias dans `govgenz-tokens.css` (pas de hex locaux).
+
+**Fiches programme (layout partagé) :** `projects-program-show.css` sert de shell pour **projets, positions et déclaration** (sidebar, widgets, classes `project-*`). Chaque programme ajoute une feuille delta (`positions-program-show.css`, `declaration-program-show.css`, …) pour bandeaux et badges uniquement.
+
+**Boutons widget fiche programme :** toujours `projects-program-show__btn` + variante (`--red`, `--teal`, `--warm`, `--ghost`) — styles dans `govgenz-components.css`, scope `#main-content :is(.projects-program-show, .positions-program-show, .declaration-program-show)`. Ne pas utiliser `positions-program-show__btn--*`.
 
 **Règle :** ne pas recopier les styles `.section__header` / `.section__title` dans `admin-cms-guide-preview.css` — ils vivent dans `govgenz-cms-shell.css`.
 

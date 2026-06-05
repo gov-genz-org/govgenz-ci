@@ -97,11 +97,28 @@
     );
   }
 
+  function siteThemeName() {
+    return document.documentElement.getAttribute('data-theme') === 'light'
+      ? 'light'
+      : 'dark';
+  }
+
+  function syncSectorMultiSelectTheme() {
+    var ms = document.querySelector('.ggz-page-join .ggz-field-sector .multi-select');
+    if (!ms) {
+      return;
+    }
+    ms.setAttribute('data-theme', siteThemeName());
+  }
+
   onReady(function () {
     var form = document.querySelector('.ggz-page-join .ggz-form');
     if (!form) {
       return;
     }
+
+    syncSectorMultiSelectTheme();
+    document.addEventListener('ggz-theme-change', syncSectorMultiSelectTheme);
 
     var fieldMsgs = {
       sectorRequired: form.getAttribute('data-join-msg-sector') || '',

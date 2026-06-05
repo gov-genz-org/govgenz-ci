@@ -146,13 +146,17 @@ class Preview extends BaseController
 
         $this->warmPreviewSiteContext($post);
 
+        helper('cms');
+
         $title      = '(Brouillon) ' . ($post['title'] ?? 'Article');
         $ribbonText = lang('Admin.ribbon_record_preview_saved');
+        $listPage   = model(CmsPageModel::class)->getPublishedBySlug(cms_press_list_page_slug());
 
         return view('front/layout', [
             'title'         => $title,
             'main'          => view('front/press/show', ['post' => $post]),
             'navActive'     => 'press',
+            'mainExtraClass'  => cms_list_page_layout_main_class($listPage),
             'previewRibbon' => $ribbonText,
         ]);
     }
@@ -194,12 +198,16 @@ class Preview extends BaseController
 
         $this->warmPreviewSiteContext($merged);
 
-        $title = lang('Admin.preview_title_prefix') . ($merged['title'] ?? 'Article');
+        helper('cms');
+
+        $title      = lang('Admin.preview_title_prefix') . ($merged['title'] ?? 'Article');
+        $listPage   = model(CmsPageModel::class)->getPublishedBySlug(cms_press_list_page_slug());
 
         return view('front/layout', [
             'title'         => $title,
             'main'          => view('front/press/show', ['post' => $merged]),
             'navActive'     => 'press',
+            'mainExtraClass'  => cms_list_page_layout_main_class($listPage),
             'previewRibbon' => lang('Admin.ribbon_record_preview_draft'),
         ]);
     }

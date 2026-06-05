@@ -51,7 +51,7 @@
   min-width: min(100%, 6.5rem);
   max-width: 100%;
   text-align: center;
-  background: rgba(5, 5, 7, 0.35);
+  background: var(--ggz-overlay-stat-pill);
   border-radius: 999px;
   padding: 0.55rem 0.85rem;
   display: flex;
@@ -66,7 +66,7 @@
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--ggz-text-on-gradient);
 }
 
 #main-content .projects-program-page .projects-program-page__stat-value {
@@ -75,7 +75,7 @@
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.02em;
-  color: #fff;
+  color: var(--ggz-text-on-accent);
 }
 
 /* Filtres : pleine largeur + groupes qui passent à la ligne (statique .filters-bar). */
@@ -83,7 +83,7 @@
   margin-top: 0;
   padding: clamp(0.85rem, 2vw, 1.25rem) clamp(1rem, 4vw, 2rem);
   border-radius: 0;
-  background: rgba(30, 30, 44, 0.72);
+  background: var(--ggz-filters-band-bg, var(--ggz-bg-card-overlay));
   border: none;
   border-top: 1px solid var(--border-strong);
   border-bottom: 1px solid var(--border-strong);
@@ -173,8 +173,25 @@
 #main-content .projects-program-page a.projects-program-page__pill--active,
 #main-content .projects-program-page button.projects-program-page__pill--active {
   border-color: var(--red-soft);
-  background: rgba(220, 38, 38, 0.12);
+  background: var(--ggz-pill-active-bg);
   color: var(--text-bright);
+}
+
+#main-content .projects-program-page button.projects-program-page__pill[data-filter-kind="sector"] {
+  border-color: var(--ggz-border-teal);
+  color: var(--pp-teal);
+}
+
+#main-content .projects-program-page button.projects-program-page__pill[data-filter-kind="sector"]:hover {
+  border-color: var(--pp-teal);
+  background: var(--ggz-tag-bg);
+  color: var(--pp-teal);
+}
+
+#main-content .projects-program-page button.projects-program-page__pill--active[data-filter-kind="sector"] {
+  border-color: var(--pp-teal);
+  background: var(--ggz-tag-bg);
+  color: var(--pp-teal);
 }
 
 #main-content .projects-program-page a.projects-program-page__pill--sm,
@@ -260,7 +277,7 @@
 }
 
 #main-content .projects-program-page .projects-program-page__card:hover {
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--ggz-shadow-card-lift);
   border-left-color: var(--pp-red);
 }
 
@@ -278,7 +295,7 @@
 
 #main-content .projects-program-page .projects-program-page__tag {
   display: inline-block;
-  background: rgba(23, 163, 158, 0.15);
+  background: var(--ggz-tag-bg);
   color: var(--pp-teal);
   padding: 0.2rem 0.65rem;
   border-radius: 20px;
@@ -304,22 +321,22 @@
 }
 
 #main-content .projects-program-page .projects-program-page__status.status-actif {
-  background: rgba(42, 122, 75, 0.2);
-  color: #4aba78;
+  background: var(--ggz-decl-pledge-badge-bg);
+  color: var(--ggz-decl-pledge);
 }
 
 #main-content .projects-program-page .projects-program-page__status.status-candidat {
-  background: rgba(23, 163, 158, 0.15);
+  background: var(--ggz-tag-bg);
   color: var(--pp-teal);
 }
 
 #main-content .projects-program-page .projects-program-page__status.status-validation {
-  background: rgba(232, 138, 106, 0.2);
+  background: var(--ggz-decl-alert-badge-bg);
   color: var(--pp-warm);
 }
 
 #main-content .projects-program-page .projects-program-page__status.status-complete {
-  background: rgba(90, 100, 120, 0.2);
+  background: var(--ggz-status-neutral-bg);
   color: var(--pp-text-sec);
 }
 
@@ -327,7 +344,7 @@
   font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 700;
-  color: var(--text-bright, #fff);
+  color: var(--text-bright);
   line-height: 1.4;
   margin: 0;
   flex-shrink: 0;

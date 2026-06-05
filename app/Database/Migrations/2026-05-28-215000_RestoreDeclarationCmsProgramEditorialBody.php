@@ -104,8 +104,8 @@ class RestoreDeclarationCmsProgramEditorialBody extends Migration
                 'type'    => 'cta_panel',
                 'text'    => 'Une question sur nos déclarations ou partenariats ?',
                 'actions' => [
-                    ['label' => 'contact@govgenz.org', 'href' => 'mailto:contact@govgenz.org', 'variant' => 'primary'],
-                    ['label' => 'partnerships@govgenz.org', 'href' => 'mailto:partnerships@govgenz.org', 'variant' => 'secondary'],
+                    ['label' => 'Écrire au mouvement', 'href' => 'mailto:contact@govgenz.org', 'variant' => 'primary'],
+                    ['label' => 'Partenariats & alliances', 'href' => 'mailto:partnerships@govgenz.org', 'variant' => 'secondary'],
                 ],
             ],
         ];
@@ -165,8 +165,8 @@ class RestoreDeclarationCmsProgramEditorialBody extends Migration
                 'type'    => 'cta_panel',
                 'text'    => 'Questions about our declarations or partnerships?',
                 'actions' => [
-                    ['label' => 'contact@govgenz.org', 'href' => 'mailto:contact@govgenz.org', 'variant' => 'primary'],
-                    ['label' => 'partnerships@govgenz.org', 'href' => 'mailto:partnerships@govgenz.org', 'variant' => 'secondary'],
+                    ['label' => 'Write to the movement', 'href' => 'mailto:contact@govgenz.org', 'variant' => 'primary'],
+                    ['label' => 'Partnerships & alliances', 'href' => 'mailto:partnerships@govgenz.org', 'variant' => 'secondary'],
                 ],
             ],
         ];

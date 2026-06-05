@@ -48,9 +48,9 @@
   margin: 0 0 1rem;
   display: inline-block;
   padding: 0.4rem 1rem;
-  border: 1px solid rgba(220, 38, 38, 0.3);
+  border: 1px solid var(--ggz-accent-overline-border);
   border-radius: 100px;
-  background: rgba(220, 38, 38, 0.05);
+  background: var(--ggz-accent-overline-bg);
 }
 
 :is(#main-content, .cms-guide-preview-host).ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) :is(h1, h2).section__title,
