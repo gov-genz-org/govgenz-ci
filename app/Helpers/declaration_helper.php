@@ -201,29 +201,133 @@ if (! function_exists('declaration_share_qr_page_url')) {
     }
 }
 
+if (! function_exists('declaration_mailto_href')) {
+    function declaration_mailto_href(string $email, string $subject, ?string $body = null): string
+    {
+        $email = trim($email);
+        if ($email === '' || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return '';
+        }
+
+        $query = 'subject=' . rawurlencode($subject);
+        if ($body !== null && trim($body) !== '') {
+            $query .= '&body=' . rawurlencode(trim($body));
+        }
+
+        return 'mailto:' . $email . '?' . $query;
+    }
+}
+
+if (! function_exists('declaration_default_cta_for_item')) {
+    /**
+     * Libellé + lien action principal pour une fiche (évite « Nous soutenir » + mailto générique).
+     *
+     * @return array{label: string, href: string}|null
+     */
+    function declaration_default_cta_for_item(array $item, string $title): ?array
+    {
+        $kind    = (string) ($item['kind'] ?? DeclarationItemModel::KIND_OFFICIAL);
+        $section = (string) ($item['list_section'] ?? DeclarationItemModel::SECTION_DECLARATIONS);
+        $ctaHref = trim((string) ($item['cta_href'] ?? ''));
+        $ctaLabel = trim((string) ($item['cta_label'] ?? ''));
+
+        if ($ctaHref === '') {
+            return null;
+        }
+
+        $subject = lang('Declaration.cta_email_subject_prefix') . $title;
+
+        if (str_starts_with($ctaHref, 'mailto:')) {
+            $email = strtolower(trim((string) preg_replace('#^mailto:#i', '', explode('?', $ctaHref, 2)[0])));
+            if ($email === '') {
+                return null;
+            }
+            $href = declaration_mailto_href($email, $subject);
+            if ($href === '') {
+                return null;
+            }
+
+            $vague = [
+                'nous soutenir', 'nous contacter', 'support us', 'contact us',
+                'en savoir plus', 'learn more', 'lire la position complète', 'read full position',
+            ];
+            $labelNorm = function_exists('mb_strtolower') ? mb_strtolower($ctaLabel) : strtolower($ctaLabel);
+            if ($ctaLabel !== '' && ! in_array($labelNorm, $vague, true)) {
+                return ['label' => $ctaLabel, 'href' => $href];
+            }
+
+            if ($section === DeclarationItemModel::SECTION_PARTNERSHIPS
+                || str_contains($email, 'partnerships@')) {
+                return ['label' => lang('Declaration.cta_partnership'), 'href' => $href];
+            }
+
+            return match ($kind) {
+                DeclarationItemModel::KIND_PLEDGE => [
+                    'label' => lang('Declaration.cta_support_pledge'),
+                    'href'  => $href,
+                ],
+                DeclarationItemModel::KIND_ALERT => [
+                    'label' => lang('Declaration.cta_alert'),
+                    'href'  => $href,
+                ],
+                default => [
+                    'label' => lang('Declaration.cta_support_generic'),
+                    'href'  => $href,
+                ],
+            };
+        }
+
+        if ($ctaLabel === '') {
+            return null;
+        }
+
+        return ['label' => $ctaLabel, 'href' => $ctaHref];
+    }
+}
+
+if (! function_exists('declaration_cta_panel_action_label')) {
+    /**
+     * Libellés lisibles pour le bloc CMS cta_panel (évite boutons = adresses e-mail brutes).
+     */
+    function declaration_cta_panel_action_label(string $label, string $href): string
+    {
+        $label = trim($label);
+        if ($label !== '' && ! str_contains($label, '@')) {
+            return $label;
+        }
+
+        $hrefLower = strtolower($href);
+        if (str_contains($hrefLower, 'partnerships@')) {
+            return lang('Declaration.cta_panel_partnerships');
+        }
+
+        return lang('Declaration.cta_panel_contact');
+    }
+}
+
 if (! function_exists('declaration_show_action_ctas')) {
     /**
      * @return list<array{label: string, href: string, variant: string}>
      */
     function declaration_show_action_ctas(array $item, string $title): array
     {
-        $ctas      = [];
-        $ctaLabel  = trim((string) ($item['cta_label'] ?? ''));
-        $ctaHref   = trim((string) ($item['cta_href'] ?? ''));
-        $contact   = 'contact@govgenz.org';
+        helper('locale');
+        $ctas   = [];
+        $primary = declaration_default_cta_for_item($item, $title);
 
-        if ($ctaHref !== '' && $ctaLabel !== '') {
-            $variant = str_starts_with($ctaHref, 'mailto:') ? 'teal' : 'red';
-            $ctas[]  = [
-                'label'   => $ctaLabel,
-                'href'    => $ctaHref,
+        if ($primary !== null) {
+            $href = $primary['href'];
+            $variant = str_starts_with($href, 'mailto:') ? 'teal' : 'red';
+            $ctas[] = [
+                'label'   => $primary['label'],
+                'href'    => $href,
                 'variant' => $variant,
             ];
         }
 
         $ctas[] = [
-            'label'   => lang('Declaration.cta_contact'),
-            'href'    => 'mailto:' . $contact . '?subject=' . rawurlencode($title),
+            'label'   => lang('Declaration.cta_contact_form'),
+            'href'    => localized_site_url('contact'),
             'variant' => 'ghost',
         ];
 

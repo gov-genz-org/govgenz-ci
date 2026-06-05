@@ -56,7 +56,7 @@
   min-width: min(100%, 6.5rem);
   max-width: 100%;
   text-align: center;
-  background: rgba(5, 5, 7, 0.35);
+  background: var(--ggz-overlay-stat-pill);
   border-radius: 999px;
   padding: 0.55rem 0.85rem;
   display: flex;
@@ -71,7 +71,7 @@
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--ggz-text-on-gradient);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .declaration-program-page__stat-value {
@@ -80,7 +80,7 @@
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.02em;
-  color: #fff;
+  color: var(--ggz-text-on-accent);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .declaration-program-page__block {
@@ -109,7 +109,7 @@
   transform: translateX(-50%);
   width: 100vw;
   max-width: 100vw;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--ggz-bg-band-subtle);
   pointer-events: none;
 }
 
@@ -315,25 +315,25 @@
   background: var(--red-primary);
   color: var(--text-bright);
   border: none;
-  box-shadow: 0 4px 18px rgba(220, 38, 38, 0.28);
+  box-shadow: var(--ggz-shadow-btn-red);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .section--cms-cta .btn--primary:hover {
   background: var(--red-glow);
-  box-shadow: 0 8px 24px rgba(220, 38, 38, 0.42);
+  box-shadow: var(--ggz-shadow-btn-red-hover);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .section--cms-cta .btn--secondary {
   background: transparent;
-  color: var(--ggz-teal, #17a39e);
-  border: 1px solid rgba(23, 163, 158, 0.4);
+  color: var(--ggz-teal);
+  border: 1px solid var(--ggz-border-teal);
   box-shadow: none;
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .section--cms-cta .btn--secondary:hover {
-  background: rgba(23, 163, 158, 0.08);
-  border-color: rgba(23, 163, 158, 0.75);
-  color: #2ec4be;
+  background: var(--ggz-overlay-teal-hover);
+  border-color: var(--ggz-border-teal-strong);
+  color: var(--ggz-teal-bright);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .dept-grid,
@@ -364,8 +364,8 @@
   text-align: left;
   text-decoration: none;
   color: inherit;
-  background: var(--bg-elevated, rgba(20, 20, 32, 0.9));
-  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
   border-left: 3px solid var(--red-primary);
   border-radius: var(--radius-md, 8px);
   padding: 1.25rem 1.5rem;
@@ -376,10 +376,10 @@
 #main-content :is(.declaration-program-page, .declaration-program-show) .section--dept-cards a.dept-card:hover,
 #main-content :is(.declaration-program-page, .declaration-program-show) .section--dept-cards .dept-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
-  border-color: var(--border-subtle, rgba(255, 255, 255, 0.08));
+  box-shadow: var(--ggz-shadow-dept-hover);
+  border-color: var(--border-subtle);
   border-left-color: var(--red-primary);
-  background: var(--bg-elevated, rgba(20, 20, 32, 0.9));
+  background: var(--bg-elevated);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .section--dept-cards .dept-card__icon {
@@ -447,7 +447,7 @@
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-expandable {
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md, 8px);
   overflow: hidden;
   background: var(--bg-elevated);
@@ -481,7 +481,7 @@
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-expandable__body {
   padding: 0 1.25rem 1rem;
-  background: rgba(0, 0, 0, 0.12);
+  background: var(--ggz-bg-inset);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-expandable__body li::before {
@@ -501,7 +501,7 @@
   width: 100%;
   box-sizing: border-box;
   background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--border-subtle);
   border-radius: 10px;
   overflow: hidden;
   border-left: 3px solid var(--red-primary);
@@ -523,12 +523,12 @@
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-card__hit:focus-visible {
-  outline: 2px solid var(--ggz-teal, #17a39e);
+  outline: var(--ggz-focus-ring);
   outline-offset: 2px;
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--linked:hover .decl-title {
-  color: var(--ggz-teal, #17a39e);
+  color: var(--ggz-teal);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--linked .decl-action--mailto {
@@ -537,11 +537,11 @@
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-card:hover {
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--ggz-shadow-card-lift);
   transform: translateY(-3px);
 }
 
-#main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--pledge { border-left-color: #4aba78; }
+#main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--pledge { border-left-color: var(--ggz-decl-pledge); }
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--alert { border-left-color: var(--ggz-warm); }
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--partnership { border-left-color: var(--ggz-teal); }
 
@@ -551,23 +551,23 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(196, 30, 48, 0.1);
-  color: #e05060;
+  border-bottom: 1px solid var(--ggz-overlay-band-divider);
+  background: var(--ggz-decl-official-band-bg);
+  color: var(--ggz-decl-official-soft);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--pledge .decl-band {
-  background: rgba(42, 122, 75, 0.12);
-  color: #4aba78;
+  background: var(--ggz-decl-pledge-band-bg);
+  color: var(--ggz-decl-pledge);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--alert .decl-band {
-  background: rgba(232, 138, 106, 0.12);
+  background: var(--ggz-decl-alert-band-bg);
   color: var(--ggz-warm);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--partnership .decl-band {
-  background: rgba(23, 163, 158, 0.12);
+  background: var(--ggz-decl-partnership-band-bg);
   color: var(--ggz-teal);
 }
 
@@ -602,7 +602,7 @@
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-footer {
   padding: 0.9rem 1.75rem;
-  border-top: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  border-top: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -628,11 +628,11 @@
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-action--primary {
-  color: var(--ggz-teal, #17a39e);
+  color: var(--ggz-teal);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-action--primary:hover {
-  color: #2ec4be;
+  color: var(--ggz-teal-bright);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-action--mailto {
@@ -665,25 +665,40 @@
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-badge--official {
-  background: rgba(196, 30, 48, 0.15);
-  color: #e05060;
-  border: 1px solid rgba(196, 30, 48, 0.3);
+  background: var(--ggz-decl-official-badge-bg);
+  color: var(--ggz-decl-official-soft);
+  border: 1px solid var(--ggz-decl-official-badge-border);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-badge--pledge {
-  background: rgba(42, 122, 75, 0.15);
-  color: #4aba78;
-  border: 1px solid rgba(42, 122, 75, 0.3);
+  background: var(--ggz-decl-pledge-badge-bg);
+  color: var(--ggz-decl-pledge);
+  border: 1px solid var(--ggz-decl-pledge-badge-border);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-badge--alert {
-  background: rgba(232, 138, 106, 0.15);
+  background: var(--ggz-decl-alert-badge-bg);
   color: var(--ggz-warm);
-  border: 1px solid rgba(232, 138, 106, 0.3);
+  border: 1px solid var(--ggz-decl-alert-badge-border);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-badge--partnership {
-  background: rgba(23, 163, 158, 0.15);
+  background: var(--ggz-decl-partnership-badge-bg);
   color: var(--ggz-teal);
-  border: 1px solid rgba(23, 163, 158, 0.3);
+  border: 1px solid var(--ggz-decl-partnership-badge-border);
+}
+
+/* Fiche déclaration — actions sidebar */
+#main-content .declaration-program-show .declaration-program-show__widget-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.65rem;
+}
+
+#main-content .declaration-program-show .declaration-program-show__widget-cta .projects-program-show__btn {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  box-sizing: border-box;
 }

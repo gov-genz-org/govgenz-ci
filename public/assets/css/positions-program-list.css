@@ -51,7 +51,7 @@
   min-width: min(100%, 6.5rem);
   max-width: 100%;
   text-align: center;
-  background: rgba(5, 5, 7, 0.35);
+  background: var(--ggz-overlay-stat-pill);
   border-radius: 999px;
   padding: 0.55rem 0.85rem;
   display: flex;
@@ -66,7 +66,7 @@
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--ggz-text-on-gradient);
 }
 
 #main-content .positions-program-page .positions-program-page__stat-value {
@@ -75,7 +75,7 @@
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.02em;
-  color: #fff;
+  color: var(--ggz-text-on-accent);
 }
 
 /* Filtres : pleine largeur + groupes qui passent à la ligne (statique .filters-bar). */

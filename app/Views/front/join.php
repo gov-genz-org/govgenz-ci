@@ -73,7 +73,6 @@ $phoneCountryErr = isset($joinErrors['phone_country']) ? (string) $joinErrors['p
                             aria-describedby="sector-hint sector-error"
                             data-multi-select
                             data-placeholder="<?= esc(lang('Site.join_sector_placeholder'), 'attr') ?>"
-                            data-theme="dark"
                             data-search="true"
                             data-select-all="true"
                             data-min="1"

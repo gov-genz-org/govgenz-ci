@@ -1,15 +1,15 @@
 /**
  * Composants réutilisables GovGenZ (boutons, panneau éditorial, tags, cartes lien).
  *
- * Boutons : --red / --primary = action qui demande l’attention (soumettre, CTA principal).
- *           --teal = action positive secondaire. --ghost = annuler / retour.
+ * Boutons fiche programme (projets, positions, déclaration) : toujours
+ * `projects-program-show__btn` + `--red` | `--teal` | `--warm` | `--ghost`
+ * (shell CSS partagé : projects-program-show.css).
  */
 
-/* —— Boutons (genzgov-final + fiche projets) —— */
+/* —— Boutons (genzgov-final + fiches programme) —— */
 .ggz-btn,
 .ggz-project-cta-btn,
-#main-content .projects-program-show .projects-program-show__btn,
-#main-content .positions-program-show .positions-program-show__btn,
+#main-content :is(.projects-program-show, .positions-program-show, .declaration-program-show) .projects-program-show__btn,
 .btn.btn--primary,
 .btn.btn--ghost,
 .btn.ggz-btn-urgent,
@@ -39,13 +39,12 @@ button.ggz-btn-urgent {
 .ggz-btn--primary,
 .ggz-project-cta-btn--red,
 .ggz-project-cta-btn--primary,
-#main-content .projects-program-show .projects-program-show__btn--red,
-#main-content .positions-program-show .positions-program-show__btn--red,
+#main-content :is(.projects-program-show, .positions-program-show, .declaration-program-show) .projects-program-show__btn--red,
 .btn.btn--primary,
 .btn.ggz-btn-urgent,
 button.ggz-btn-urgent {
   background: var(--ggz-red);
-  color: #fff;
+  color: var(--ggz-text-on-accent);
   border: none;
 }
 
@@ -53,13 +52,12 @@ button.ggz-btn-urgent {
 .ggz-btn--primary:hover,
 .ggz-project-cta-btn--red:hover,
 .ggz-project-cta-btn--primary:hover,
-#main-content .projects-program-show .projects-program-show__btn--red:hover,
-#main-content .positions-program-show .positions-program-show__btn--red:hover,
+#main-content :is(.projects-program-show, .positions-program-show, .declaration-program-show) .projects-program-show__btn--red:hover,
 .btn.btn--primary:hover,
 .btn.ggz-btn-urgent:hover,
 button.ggz-btn-urgent:hover {
   background: var(--ggz-red-hover);
-  color: #fff;
+  color: var(--ggz-text-on-accent);
   transform: translateY(-2px);
   box-shadow: var(--ggz-shadow-btn-red);
   filter: none;
@@ -67,8 +65,7 @@ button.ggz-btn-urgent:hover {
 
 .ggz-btn--teal,
 .ggz-project-cta-btn--teal,
-#main-content .projects-program-show .projects-program-show__btn--teal,
-#main-content .positions-program-show .positions-program-show__btn--teal {
+#main-content :is(.projects-program-show, .positions-program-show, .declaration-program-show) .projects-program-show__btn--teal {
   background: transparent;
   border: 1.5px solid var(--ggz-teal);
   color: var(--ggz-teal);
@@ -76,7 +73,7 @@ button.ggz-btn-urgent:hover {
 
 .ggz-btn--warm,
 .ggz-project-cta-btn--warm,
-#main-content .positions-program-show .positions-program-show__btn--warm {
+#main-content :is(.projects-program-show, .positions-program-show, .declaration-program-show) .projects-program-show__btn--warm {
   background: transparent;
   border: 1.5px solid var(--ggz-warm, #e88a6a);
   color: var(--ggz-warm, #e88a6a);
@@ -84,8 +81,8 @@ button.ggz-btn-urgent:hover {
 
 .ggz-btn--warm:hover,
 .ggz-project-cta-btn--warm:hover,
-#main-content .positions-program-show .positions-program-show__btn--warm:hover {
-  background: rgba(232, 138, 106, 0.15);
+#main-content :is(.projects-program-show, .positions-program-show, .declaration-program-show) .projects-program-show__btn--warm:hover {
+  background: var(--ggz-btn-warm-hover-bg);
   color: var(--ggz-warm, #e88a6a);
   transform: translateY(-2px);
   filter: none;
@@ -93,9 +90,8 @@ button.ggz-btn-urgent:hover {
 
 .ggz-btn--teal:hover,
 .ggz-project-cta-btn--teal:hover,
-#main-content .projects-program-show .projects-program-show__btn--teal:hover,
-#main-content .positions-program-show .positions-program-show__btn--teal:hover {
-  background: rgba(23, 163, 158, 0.12);
+#main-content :is(.projects-program-show, .positions-program-show, .declaration-program-show) .projects-program-show__btn--teal:hover {
+  background: var(--ggz-btn-teal-hover-bg);
   color: var(--ggz-teal);
   transform: translateY(-2px);
   filter: none;
@@ -103,8 +99,7 @@ button.ggz-btn-urgent:hover {
 
 .ggz-btn--ghost,
 .ggz-project-cta-btn--ghost,
-#main-content .projects-program-show .projects-program-show__btn--ghost,
-#main-content .positions-program-show .positions-program-show__btn--ghost,
+#main-content :is(.projects-program-show, .positions-program-show, .declaration-program-show) .projects-program-show__btn--ghost,
 .btn.btn--ghost {
   background: transparent;
   border: 1.5px solid var(--ggz-border-dim);
@@ -113,8 +108,7 @@ button.ggz-btn-urgent:hover {
 
 .ggz-btn--ghost:hover,
 .ggz-project-cta-btn--ghost:hover,
-#main-content .projects-program-show .projects-program-show__btn--ghost:hover,
-#main-content .positions-program-show .positions-program-show__btn--ghost:hover,
+#main-content :is(.projects-program-show, .positions-program-show, .declaration-program-show) .projects-program-show__btn--ghost:hover,
 .btn.btn--ghost:hover {
   border-color: var(--ggz-text-secondary);
   color: var(--ggz-text);
@@ -126,7 +120,7 @@ button.ggz-btn-urgent:hover {
 #main-content .projects-program-page .projects-program-page__tag,
 #main-content .projects-program-show .project-hero .tag {
   display: inline-block;
-  background: rgba(23, 163, 158, 0.15);
+  background: var(--ggz-tag-bg);
   color: var(--ggz-teal);
   padding: 0.2rem 0.65rem;
   border-radius: 20px;
@@ -148,8 +142,8 @@ button.ggz-btn-urgent:hover {
   border: 1px solid var(--ggz-border-panel);
   background: var(--ggz-gradient-panel);
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
-    0 18px 48px rgba(0, 0, 0, 0.38);
+    0 0 0 1px var(--ggz-prose-inset-highlight) inset,
+    var(--ggz-prose-shadow);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }
@@ -177,8 +171,8 @@ button.ggz-btn-urgent:hover {
   color: var(--ggz-text);
   margin: 0 0 0.65rem;
   padding: 0 0 0.4rem 0.55rem;
-  border-bottom: 1px solid rgba(56, 67, 88, 0.55);
-  border-left: 3px solid rgba(255, 165, 134, 0.45);
+  border-bottom: 1px solid var(--ggz-prose-heading-border);
+  border-left: 3px solid var(--ggz-prose-heading-accent);
 }
 
 .ggz-editorial-prose h2:not(:first-child),
@@ -227,7 +221,7 @@ button.ggz-btn-urgent:hover {
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: rgba(255, 165, 134, 0.4);
+  text-decoration-color: var(--ggz-prose-link-underline);
   transition: color 0.18s ease, text-decoration-color 0.18s ease;
 }
 
@@ -256,8 +250,8 @@ button.ggz-btn-urgent:hover {
   font-size: 0.82em;
   padding: 0.14rem 0.45rem;
   border-radius: 5px;
-  background: rgba(0, 0, 0, 0.32);
-  border: 1px solid rgba(56, 67, 88, 0.7);
+  background: var(--ggz-prose-code-bg);
+  border: 1px solid var(--ggz-prose-code-border);
   color: var(--ggz-text);
 }
 
@@ -267,7 +261,7 @@ button.ggz-btn-urgent:hover {
 .ggz-legal-prose .muted {
   margin-top: 1.65rem;
   padding-top: 1.1rem;
-  border-top: 1px dashed rgba(56, 67, 88, 0.55);
+  border-top: 1px dashed var(--ggz-prose-muted-border);
   font-size: 0.8125rem;
   line-height: 1.55;
   color: var(--ggz-text-muted);
@@ -286,7 +280,7 @@ button.ggz-btn-urgent:hover {
 #main-content :is(article.wysiwyg, .ggz-shell-wysiwyg, .ggz-sector-cms-body) .card:hover,
 #main-content .ggz-cards-row .card:hover,
 .ggz-card:hover {
-  border-color: rgba(255, 165, 134, 0.22);
+  border-color: var(--ggz-card-hover-border);
   box-shadow: var(--ggz-shadow-card-hover);
 }
 
@@ -306,9 +300,7 @@ button.ggz-btn-urgent:hover {
 @media (prefers-reduced-motion: reduce) {
   .ggz-btn:hover,
   .ggz-project-cta-btn:hover,
-  #main-content .projects-program-show .projects-program-show__btn:hover,
-  #main-content .positions-program-show .positions-program-show__btn--warm:hover,
-  #main-content .positions-program-show .positions-program-show__btn:hover {
+  #main-content :is(.projects-program-show, .positions-program-show, .declaration-program-show) .projects-program-show__btn:hover {
     transform: none;
   }
 

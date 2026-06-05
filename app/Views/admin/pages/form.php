@@ -14,7 +14,10 @@ $listHeroDefaultLocale = $listHeroDefaultLocale ?? 'fr';
 $listHeroDefaultTranslationGroup = $listHeroDefaultTranslationGroup ?? null;
 $isListHeroForm = $listHeroKind !== null;
 
-$layoutDefault = ($page === null && ! $isListHeroForm) ? 'full' : (string) ($page['layout_key'] ?? '');
+$layoutDefault = (string) ($page['layout_key'] ?? '');
+if ($page === null && $layoutDefault === '') {
+    $layoutDefault = 'full';
+}
 $layoutState   = cms_layout_select_state(old('layout_key', $page !== null ? (string) ($page['layout_key'] ?? '') : $layoutDefault));
 
 $action = $page
@@ -237,7 +240,6 @@ $isEdit = $page !== null;
             <option value="published" <?= $st === 'published' ? 'selected' : '' ?>><?= esc(lang('Admin.filter_published')) ?></option>
         </select>
     </div>
-    <?php if (! $isListHeroForm) : ?>
     <div class="mb-3">
         <label class="form-label" for="layout_key"><?= esc(lang('Admin.form_page_layout')) ?></label>
         <select name="layout_key" id="layout_key" class="form-select" style="max-width: 28rem;">
@@ -248,9 +250,8 @@ $isEdit = $page !== null;
             <option value="narrow" <?= ! $layoutState['legacy'] && $layoutState['value'] === 'narrow' ? 'selected' : '' ?>><?= esc(lang('Admin.form_page_layout_narrow')) ?></option>
             <option value="full" <?= ! $layoutState['legacy'] && $layoutState['value'] === 'full' ? 'selected' : '' ?>><?= esc(lang('Admin.form_page_layout_full')) ?></option>
         </select>
-        <div class="form-text"><?= esc(lang('Admin.help_page_layout')) ?></div>
+        <div class="form-text"><?= esc($isListHeroForm ? lang('Admin.help_list_hero_layout') : lang('Admin.help_page_layout')) ?></div>
     </div>
-    <?php endif; ?>
     <div class="mb-3">
         <label class="form-label" for="meta_title"><?= esc(lang('Admin.form_label_meta_title')) ?></label>
         <input type="text" name="meta_title" id="meta_title" class="form-control" value="<?= esc(old('meta_title', $page !== null ? ($page['meta_title'] ?? '') : '')) ?>">

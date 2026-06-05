@@ -117,12 +117,14 @@ final class CmsListHeroPageAdmin
      */
     public static function payloadForSave(string $kind, IncomingRequest $request, array $hero): array
     {
+        helper('cms');
+
         return [
             'slug'              => self::canonicalSlug($kind),
             'content_mode'      => 'html',
             'body_html'         => '',
             'body_blocks'       => null,
-            'layout_key'        => 'full',
+            'layout_key'        => cms_layout_normalized($request->getPost('layout_key')),
             'hero_overline'     => $hero['hero_overline'],
             'hero_title'        => $hero['hero_title'],
             'hero_lead'         => $hero['hero_lead'],

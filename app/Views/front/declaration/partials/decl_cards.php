@@ -27,12 +27,9 @@ $loc = SiteContext::locale();
         $title     = (string) ($row['title'] ?? '');
         $summary   = trim((string) ($row['summary'] ?? ''));
         $badge     = trim((string) ($row['badge_label'] ?? ''));
-        $ctaLabel  = trim((string) ($row['cta_label'] ?? ''));
-        $ctaHref   = trim((string) ($row['cta_href'] ?? ''));
         if ($badge === '') {
             $badge = declaration_default_band_label($kind, $loc);
         }
-        $mailtoCta = $ctaHref !== '' && str_starts_with($ctaHref, 'mailto:') && $ctaLabel !== '';
         $titleId   = 'decl-card-title-' . (int) $i;
         ?>
         <article class="decl-card decl-card--<?= esc($tone, 'attr') ?> decl-card--linked reveal" role="listitem" data-delay="<?= (int) $i * 100 ?>">
@@ -56,10 +53,7 @@ $loc = SiteContext::locale();
             <div class="decl-footer">
                 <span class="decl-badge decl-badge--<?= esc($tone, 'attr') ?>"><?= esc($badge) ?></span>
                 <div class="decl-footer-actions">
-                    <span class="decl-action decl-action--primary" aria-hidden="true"><?= esc(lang('Declaration.card_view_link')) ?></span>
-                    <?php if ($mailtoCta) : ?>
-                        <a href="<?= esc($ctaHref, 'attr') ?>" class="decl-action decl-action--mailto"><?= esc($ctaLabel) ?></a>
-                    <?php endif; ?>
+                    <span class="decl-action decl-action--primary" aria-hidden="true"><?= esc(lang('Declaration.card_read_declaration')) ?> →</span>
                 </div>
             </div>
         </article>
