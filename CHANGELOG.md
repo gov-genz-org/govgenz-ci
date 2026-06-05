@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.16.0] - 2026-06-05
+
+### Release
+
+- feat: css theming and more adjustment (22236b6)
+- chore(release): prepare develop 1.16.0 after v1.15.0 (#74) (b91f796)
+- docs(changelog): v1.15.0 (eae8850)
+
+
 ## [1.15.0] - 2026-06-04
 
 ### Release
