@@ -164,7 +164,7 @@ body.ggz-public-theme #main-content.ggz-layout-full {
     font-weight: 700;
     letter-spacing: 0.35em;
     text-transform: none;
-    color: var(--red-soft);
+    color: var(--ggz-warning);
     margin: 0 0 1rem;
     display: inline-block;
     padding: 0.4rem 1rem;
@@ -541,7 +541,7 @@ article.wysiwyg .footer__col a {
 }
 
 article.wysiwyg .footer__col a:hover {
-    color: var(--red-soft);
+    color: var(--ggz-warning);
 }
 
 article.wysiwyg .footer__soon {
@@ -733,14 +733,14 @@ article.wysiwyg .cms-actions .cms-btn--secondary:hover {
 .ggz-alert--success {
     background: var(--ggz-alert-success-bg);
     border-color: var(--ggz-alert-success-border);
-    border-left-color: var(--ggz-teal);
+    border-left-color: var(--ggz-accent);
     color: var(--text-bright);
 }
 
 .ggz-alert--danger {
     background: var(--ggz-alert-danger-bg);
     border-color: var(--ggz-alert-danger-border);
-    border-left-color: var(--ggz-red-action);
+    border-left-color: var(--ggz-primary);
     color: var(--text-bright);
 }
 
@@ -759,7 +759,7 @@ article.wysiwyg .cms-actions .cms-btn--secondary:hover {
     font-weight: 600;
     line-height: 1.45;
     border: 1px solid var(--ggz-alert-success-border);
-    border-left: 4px solid var(--ggz-teal);
+    border-left: 4px solid var(--ggz-accent);
     background: var(--ggz-alert-success-bg);
     color: var(--text-bright);
 }
@@ -771,7 +771,7 @@ article.wysiwyg .cms-actions .cms-btn--secondary:hover {
     font-weight: 600;
     line-height: 1.45;
     border: 1px solid var(--ggz-alert-danger-border);
-    border-left: 4px solid var(--ggz-red-action);
+    border-left: 4px solid var(--ggz-primary);
     background: var(--ggz-alert-danger-bg);
     color: var(--text-bright);
 }

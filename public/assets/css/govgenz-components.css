@@ -43,7 +43,7 @@ button.ggz-btn-urgent {
 .btn.btn--primary,
 .btn.ggz-btn-urgent,
 button.ggz-btn-urgent {
-  background: var(--ggz-red);
+  background: var(--ggz-primary);
   color: var(--ggz-text-on-accent);
   border: none;
 }
@@ -56,7 +56,7 @@ button.ggz-btn-urgent {
 .btn.btn--primary:hover,
 .btn.ggz-btn-urgent:hover,
 button.ggz-btn-urgent:hover {
-  background: var(--ggz-red-hover);
+  background: var(--ggz-primary-dark);
   color: var(--ggz-text-on-accent);
   transform: translateY(-2px);
   box-shadow: var(--ggz-shadow-btn-red);
@@ -67,8 +67,8 @@ button.ggz-btn-urgent:hover {
 .ggz-project-cta-btn--teal,
 #main-content :is(.projects-program-show, .positions-program-show, .declaration-program-show) .projects-program-show__btn--teal {
   background: transparent;
-  border: 1.5px solid var(--ggz-teal);
-  color: var(--ggz-teal);
+  border: 1.5px solid var(--ggz-accent);
+  color: var(--ggz-accent);
 }
 
 .ggz-btn--warm,
@@ -92,7 +92,7 @@ button.ggz-btn-urgent:hover {
 .ggz-project-cta-btn--teal:hover,
 #main-content :is(.projects-program-show, .positions-program-show, .declaration-program-show) .projects-program-show__btn--teal:hover {
   background: var(--ggz-btn-teal-hover-bg);
-  color: var(--ggz-teal);
+  color: var(--ggz-accent);
   transform: translateY(-2px);
   filter: none;
 }
@@ -121,7 +121,7 @@ button.ggz-btn-urgent:hover {
 #main-content .projects-program-show .project-hero .tag {
   display: inline-block;
   background: var(--ggz-tag-bg);
-  color: var(--ggz-teal);
+  color: var(--ggz-accent);
   padding: 0.2rem 0.65rem;
   border-radius: 20px;
   font-size: 0.68rem;
