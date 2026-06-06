@@ -44,7 +44,7 @@
   font-weight: 700;
   letter-spacing: 0.35em;
   text-transform: none;
-  color: var(--red-soft);
+  color: var(--ggz-warning);
   margin: 0 0 1rem;
   display: inline-block;
   padding: 0.4rem 1rem;
@@ -115,8 +115,8 @@
 }
 
 :is(#main-content, .cms-guide-preview-host).ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) blockquote {
-  border-left-color: var(--red-primary);
-  background: rgba(220, 38, 38, 0.06);
+  border-left-color: var(--ggz-primary);
+  background: rgba(var(--ggz-primary-rgb), 0.06);
 }
 
 :is(#main-content, .cms-guide-preview-host).ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) h1.contact-card__title {

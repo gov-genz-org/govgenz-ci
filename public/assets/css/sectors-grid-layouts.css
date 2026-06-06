@@ -12,7 +12,7 @@
 }
 
 #main-content .decl-teams-header {
-  background: var(--ggz-teal);
+  background: var(--ggz-accent);
   border-radius: var(--radius-md, 8px);
   padding: 0.75rem 1.5rem;
   margin-bottom: 1.25rem;
@@ -81,7 +81,7 @@
 #main-content .sectors-grid--compact .tile:hover,
 #main-content .section--decl-teams.sectors-grid--compact .tile:hover {
   transform: translateY(-3px);
-  border-color: var(--ggz-teal);
+  border-color: var(--ggz-accent);
   background: var(--bg-elevated);
   box-shadow: var(--ggz-shadow-card-hover);
 }
@@ -109,7 +109,7 @@
   font-style: normal;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ggz-teal);
+  color: var(--ggz-accent);
   margin: 0 0 0.35rem;
 }
 
@@ -144,7 +144,7 @@ html[lang="fr"] #main-content .section--decl-teams.sectors-grid--compact .tile__
   font-size: 0.58rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--ggz-teal);
+  color: var(--ggz-accent);
   font-weight: 600;
 }
 
@@ -156,7 +156,7 @@ html[lang="en"] #main-content .section--decl-teams.sectors-grid--compact .tile__
   font-size: 0.58rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--ggz-teal);
+  color: var(--ggz-accent);
   font-weight: 600;
 }
 
@@ -193,7 +193,7 @@ html[lang="en"] #main-content .section--decl-teams.sectors-grid--compact .tile__
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--green-primary);
+  background: var(--ggz-accent);
   display: block;
 }
 
@@ -203,7 +203,7 @@ html[lang="en"] #main-content .section--decl-teams.sectors-grid--compact .tile__
 
 #main-content .sectors-grid--wide .tile:hover {
   transform: translateY(-4px);
-  border-color: var(--green-primary);
+  border-color: var(--ggz-accent);
   background: var(--ggz-tile-wide-bg-hover);
   box-shadow: var(--ggz-tile-wide-shadow-hover);
 }

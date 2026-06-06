@@ -1,6 +1,6 @@
 # Architecture CSS GovGenZ
 
-Deux piles **indépendantes** (front public ≠ back-office). Source de vérité des couleurs et tailles : `public/assets/css/govgenz-tokens.css`.
+Deux piles **indépendantes** (front public ≠ back-office). Source de vérité des couleurs et tailles : `public/assets/css/govgenz-tokens.css`, aligné sur **`docs/base_connaissance_design_govgenz.md`**.
 
 ## Front public (CodeIgniter)
 

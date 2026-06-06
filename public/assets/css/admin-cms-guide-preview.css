@@ -58,7 +58,7 @@
 }
 
 .cms-guide-preview-host--footer .footer__col a:hover {
-  color: var(--red-soft);
+  color: var(--ggz-warning);
   text-decoration: none;
 }
 

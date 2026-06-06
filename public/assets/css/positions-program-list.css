@@ -36,7 +36,7 @@
 /* Bandeau chiffres : flex centré + retours à la ligne (statique .stats-band). */
 #main-content .positions-program-page .positions-program-page__stats {
   border-radius: 0;
-  background: linear-gradient(135deg, var(--red-primary), var(--red-deep));
+  background: linear-gradient(135deg, var(--ggz-primary), var(--ggz-primary-deep));
   padding: clamp(1rem, 2.5vw, 1.75rem) clamp(1rem, 4vw, 2rem);
   display: flex;
   flex-wrap: wrap;
@@ -164,7 +164,7 @@
 
 #main-content .positions-program-page a.positions-program-page__pill:hover,
 #main-content .positions-program-page button.positions-program-page__pill:hover {
-  border-color: var(--red-soft);
+  border-color: var(--ggz-warning);
   color: var(--text-bright);
   filter: none;
   transform: none;

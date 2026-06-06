@@ -58,7 +58,7 @@
 }
 
 .admin-cms-blocks-guide .cms-guide-preview-host--footer .footer__col a:hover {
-  color: var(--red-soft) !important;
+  color: var(--ggz-warning) !important;
   text-decoration: none !important;
 }
 
@@ -68,7 +68,7 @@
 }
 
 .admin-cms-blocks-guide .cms-guide-preview-host.ggz-public-theme {
-  --ggz-peach: var(--ggz-red);
+  --ggz-peach: var(--ggz-warning);
 }
 
 .admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.dept-card):not(.contact-block) {
@@ -82,18 +82,20 @@
 }
 
 .admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg blockquote {
-  border-left-color: var(--red-soft);
+  border-left-color: var(--ggz-warning);
   background: rgba(255, 255, 255, 0.04);
 }
 
 .admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg .cms-actions .cms-btn--primary {
-  background: var(--red-primary);
+  background: var(--ggz-primary);
+  color: var(--ggz-text-on-accent);
   border-color: rgba(255, 255, 255, 0.22);
   box-shadow: 0 6px 20px rgba(196, 30, 48, 0.35);
 }
 
 .admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg .cms-actions .cms-btn--primary:hover {
-  background: var(--red-glow);
+  background: var(--ggz-primary-glow);
+  color: var(--ggz-text-on-accent);
   box-shadow: 0 10px 28px rgba(196, 30, 48, 0.45);
 }
 
@@ -102,7 +104,7 @@
 }
 
 .admin-cms-blocks-guide .cms-guide-preview-host article.wysiwyg .cms-actions .cms-btn--secondary:hover {
-  border-color: var(--red-soft);
+  border-color: var(--ggz-warning);
   background: rgba(196, 30, 48, 0.08);
 }
 
@@ -111,11 +113,12 @@
 }
 
 .admin-cms-blocks-guide .cms-guide-preview-host .btn--primary {
-  background: var(--red-primary);
-  color: var(--text-bright);
+  background: var(--ggz-primary);
+  color: var(--ggz-text-on-accent);
   box-shadow: 0 4px 20px rgba(196, 30, 48, 0.35);
 }
 
 .admin-cms-blocks-guide .cms-guide-preview-host .btn--primary:hover {
-  background: var(--red-glow);
+  background: var(--ggz-primary-glow);
+  color: var(--ggz-text-on-accent);
 }
