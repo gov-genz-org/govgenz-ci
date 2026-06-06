@@ -92,7 +92,7 @@ body.ggz-public-theme {
     overflow: hidden;
     z-index: 12000;
     padding: 0.5rem 1rem;
-    background: var(--red-soft);
+    background: var(--ggz-warning);
     color: var(--bg-deepest);
     font-family: var(--font-mono);
     font-weight: 700;
@@ -130,7 +130,7 @@ body.ggz-public-theme {
 }
 
 .nav a.ggz-nav-admin:hover {
-    border-color: var(--red-primary);
+    border-color: var(--ggz-primary);
 }
 
 @media (max-width: 768px) {

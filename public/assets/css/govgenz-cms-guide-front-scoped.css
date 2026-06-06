@@ -50,7 +50,7 @@ background: var(--ggz-bg-card-overlay);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .card:hover {
-border-color: rgba(255, 165, 134, 0.22);
+border-color: var(--ggz-card-hover-border);
     box-shadow: var(--ggz-shadow-card-hover);
 }
 
@@ -61,7 +61,7 @@ margin: 0 0 0.65rem;
     font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--ggz-text-on-dark);
+    color: var(--text-bright);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-cta-band .ggz-cta-band__title {
@@ -89,7 +89,7 @@ padding: 2rem 1.35rem;
     margin-bottom: 1.25rem;
     border-radius: var(--ggz-radius-card);
     background: var(--ggz-gradient-hero);
-    border: 1px solid rgba(56, 67, 88, 0.45);
+    border: 1px solid var(--ggz-border-panel);
     box-shadow: var(--ggz-shadow-card);
 }
 
@@ -162,13 +162,13 @@ font-family: var(--font-mono);
     font-weight: 700;
     letter-spacing: 0.35em;
     text-transform: none;
-    color: var(--red-soft);
+    color: var(--ggz-warning);
     margin: 0 0 1rem;
     display: inline-block;
     padding: 0.4rem 1rem;
-    border: 1px solid rgba(220, 38, 38, 0.3);
+    border: 1px solid var(--ggz-accent-overline-border);
     border-radius: 100px;
-    background: rgba(220, 38, 38, 0.05);
+    background: var(--ggz-accent-overline-bg);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero--structured .section__lead {
@@ -217,8 +217,8 @@ margin: 1.25rem 0 0;
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-trust-list li {
 padding: 0.45rem 0.75rem;
     border-radius: 999px;
-    border: 1px solid rgba(56, 67, 88, 0.65);
-    background: rgba(22, 30, 47, 0.55);
+    border: 1px solid var(--ggz-border-panel);
+    background: var(--ggz-surface-glass-soft);
     font-size: 0.84rem;
     color: var(--ggz-text-meta);
 }
@@ -505,7 +505,7 @@ color: var(--ggz-peach);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg a:not(.btn):not(.card):not(.tile):not(.fn-card):not(.dept-card):not(.contact-block):hover {
-color: var(--ggz-text-on-dark);
+color: var(--text-bright);
 }
 
 /* Pied de page CMS (bloc ou HTML dans un corps wysiwyg — ne pas styler comme le prose) */
@@ -538,7 +538,7 @@ font-family: var(--font-mono);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg .footer__col a:hover {
-color: var(--red-soft);
+color: var(--ggz-warning);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg .footer__soon {
@@ -557,8 +557,8 @@ padding-left: 1.35rem;
 margin: 1.25rem 0;
     padding: 0.85rem 1rem 0.85rem 1rem;
     border-left: 4px solid var(--ggz-peach);
-    background: rgba(255, 165, 134, 0.08);
-    color: var(--ggz-text-on-dark);
+    background: var(--ggz-overlay-red-hover);
+    color: var(--text-bright);
     font-style: normal;
 }
 
@@ -623,7 +623,7 @@ margin: 0;
     text-align: center;
     background: var(--ggz-night-blue);
     border-radius: var(--ggz-radius-card);
-    border: 1px solid rgba(56, 67, 88, 0.45);
+    border: 1px solid var(--ggz-border-panel);
     box-shadow: var(--ggz-shadow-card);
     transition:
         border-color 0.2s ease,
@@ -631,7 +631,7 @@ margin: 0;
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg dl.cms-metrics > div:hover {
-border-color: rgba(255, 165, 134, 0.22);
+border-color: var(--ggz-card-hover-border);
     box-shadow: var(--ggz-shadow-card-hover);
 }
 
@@ -698,16 +698,16 @@ background: linear-gradient(150deg, #ffc4ae 0%, var(--ggz-peach) 45%, var(--ggz-
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg .cms-actions .cms-btn--secondary {
-background: rgba(35, 47, 73, 0.65);
-    border: 2px solid rgba(255, 165, 134, 0.55);
-    color: var(--ggz-text-on-dark);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+background: var(--ggz-surface-chip);
+    border: 2px solid var(--ggz-surface-chip-border);
+    color: var(--text-bright);
+    box-shadow: var(--ggz-shadow-card);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell article.wysiwyg .cms-actions .cms-btn--secondary:hover {
-background: rgba(35, 47, 73, 0.92);
+background: var(--ggz-surface-chip-hover);
     border-color: var(--ggz-peach);
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+    box-shadow: var(--ggz-shadow-card-hover);
     transform: translateY(-2px);
     filter: none;
 }
@@ -728,24 +728,24 @@ margin-top: 0.35rem;
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-alert--success {
-background: rgba(255, 165, 134, 0.14);
-    border-color: rgba(255, 165, 134, 0.35);
-    border-left-color: var(--ggz-peach);
-    color: var(--ggz-text-on-dark);
+background: var(--ggz-alert-success-bg);
+    border-color: var(--ggz-alert-success-border);
+    border-left-color: var(--ggz-accent);
+    color: var(--text-bright);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-alert--danger {
-background: rgba(213, 26, 43, 0.16);
-    border-color: rgba(213, 26, 43, 0.35);
-    border-left-color: var(--ggz-red-action);
-    color: var(--ggz-text-on-dark);
+background: var(--ggz-alert-danger-bg);
+    border-color: var(--ggz-alert-danger-border);
+    border-left-color: var(--ggz-primary);
+    color: var(--text-bright);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-alert--info {
-background: rgba(36, 47, 73, 0.85);
-    border-color: rgba(56, 67, 88, 0.65);
+background: var(--ggz-alert-info-bg);
+    border-color: var(--ggz-alert-info-border);
     border-left-color: var(--ggz-peach);
-    color: var(--ggz-text-on-dark);
+    color: var(--text-bright);
 }
 
 /* Compat : bandeaux hors layout (ex. anciennes vues) */
@@ -755,10 +755,10 @@ padding: 0.85rem 1rem 0.85rem 1.1rem;
     margin-bottom: 1rem;
     font-weight: 600;
     line-height: 1.45;
-    border: 1px solid rgba(255, 165, 134, 0.35);
-    border-left: 4px solid var(--ggz-peach);
-    background: rgba(255, 165, 134, 0.14);
-    color: var(--ggz-text-on-dark);
+    border: 1px solid var(--ggz-alert-success-border);
+    border-left: 4px solid var(--ggz-accent);
+    background: var(--ggz-alert-success-bg);
+    color: var(--text-bright);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .errors {
@@ -767,10 +767,10 @@ padding: 0.85rem 1rem 0.85rem 1.1rem;
     margin-bottom: 1rem;
     font-weight: 600;
     line-height: 1.45;
-    border: 1px solid rgba(213, 26, 43, 0.35);
-    border-left: 4px solid var(--ggz-red-action);
-    background: rgba(213, 26, 43, 0.16);
-    color: var(--ggz-text-on-dark);
+    border: 1px solid var(--ggz-alert-danger-border);
+    border-left: 4px solid var(--ggz-primary);
+    background: var(--ggz-alert-danger-bg);
+    color: var(--text-bright);
 }
 
 /* --- Formulaires --- */
@@ -781,7 +781,7 @@ display: block;
     font-size: 0.88rem;
     letter-spacing: 0.03em;
     text-transform: uppercase;
-    color: rgba(250, 250, 250, 0.92);
+    color: var(--ggz-text-form-label);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell input,
@@ -792,9 +792,9 @@ width: 100%;
     padding: 0.55rem 0.7rem;
     margin-top: 0.35rem;
     border-radius: 10px;
-    border: 1px solid var(--ggz-blue-gray);
-    background: var(--ggz-night-deep);
-    color: var(--ggz-text-on-dark);
+    border: 1px solid var(--ggz-input-border);
+    background: var(--ggz-input-bg);
+    color: var(--ggz-input-text);
     font-family: inherit;
     font-size: 1rem;
 }
@@ -809,8 +809,8 @@ min-height: 8rem;
 }
 
 /* Hors vocabulaire template (.btn--primary / .btn--ghost) — évite d’écraser FR/EN et les CTA site_govgenz */
-.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill):not(.project-fund-dialog__close):not(.project-fund-form__item-remove):not(.projects-program-show__btn):not(.projects-program-show__share-icon-btn):not(.ggz-project-cta-btn),
-.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn:not(.btn--primary):not(.btn--ghost) {
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button:not(.lang-toggle):not(.theme-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill):not(.project-fund-dialog__close):not(.project-fund-form__item-remove):not(.projects-program-show__btn):not(.projects-program-show__share-icon-btn):not(.ggz-project-cta-btn),
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn:not(.btn--primary):not(.btn--ghost):not(.btn--secondary) {
 display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -836,8 +836,8 @@ display: inline-flex;
         border-color 0.2s ease;
 }
 
-.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill):not(.project-fund-dialog__close):not(.project-fund-form__item-remove):not(.projects-program-show__btn):not(.projects-program-show__share-icon-btn):not(.ggz-project-cta-btn):hover,
-.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn:not(.btn--primary):not(.btn--ghost):hover {
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button:not(.lang-toggle):not(.theme-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill):not(.project-fund-dialog__close):not(.project-fund-form__item-remove):not(.projects-program-show__btn):not(.projects-program-show__share-icon-btn):not(.ggz-project-cta-btn):hover,
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn:not(.btn--primary):not(.btn--ghost):not(.btn--secondary):hover {
 filter: brightness(1.05);
 }
 
@@ -861,19 +861,19 @@ background: linear-gradient(150deg, #ffc4ae 0%, var(--ggz-peach) 45%, var(--ggz-
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell button.secondary,
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn.secondary,
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell button.btn-secondary {
-background: rgba(35, 47, 73, 0.65);
-    border: 2px solid rgba(255, 165, 134, 0.55);
-    color: var(--ggz-text-on-dark);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+background: var(--ggz-surface-chip);
+    border: 2px solid var(--ggz-surface-chip-border);
+    color: var(--text-bright);
+    box-shadow: var(--ggz-shadow-card);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn.btn-secondary:hover,
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell button.secondary:hover,
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn.secondary:hover,
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell button.btn-secondary:hover {
-background: rgba(35, 47, 73, 0.92);
+background: var(--ggz-surface-chip-hover);
     border-color: var(--ggz-peach);
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+    box-shadow: var(--ggz-shadow-card-hover);
     transform: translateY(-2px);
     filter: none;
 }
@@ -893,7 +893,7 @@ list-style: none;
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .card ul li {
 padding: 0.65rem 0;
-    border-bottom: 1px solid rgba(56, 67, 88, 0.45);
+    border-bottom: 1px solid var(--ggz-border-list-divider);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .card ul li:last-child {
@@ -958,7 +958,7 @@ margin: 1rem 0 0;
     font-family: var(--ggz-font-sans);
     font-size: clamp(1.03rem, 1.5vw, 1.18rem);
     line-height: 1.62;
-    color: rgba(250, 250, 250, 0.94);
+    color: var(--ggz-text-lead);
     font-weight: 500;
     max-width: 62ch;
 }
@@ -966,7 +966,7 @@ margin: 1rem 0 0;
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-back-row {
 margin: 2rem 0 0;
     padding-top: 1rem;
-    border-top: 1px solid rgba(56, 67, 88, 0.45);
+    border-top: 1px solid var(--ggz-border-list-divider);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-btn-back {
@@ -988,7 +988,7 @@ margin: 0.25rem 0 0.45rem;
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-fieldset {
-border: 1px solid rgba(56, 67, 88, 0.55);
+border: 1px solid var(--ggz-border-panel);
     border-radius: 14px;
     padding: 1rem 1.15rem 1.2rem;
     margin: 1.35rem 0 0;
@@ -1004,7 +1004,7 @@ padding: 0 0.4rem;
     font-size: 0.78rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: rgba(250, 250, 250, 0.92);
+    color: var(--ggz-text-form-label);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-optional-tag {
@@ -1030,9 +1030,9 @@ max-width: 38rem;
     margin: 0 auto;
     padding: clamp(1.35rem, 3vw, 2rem) clamp(1.35rem, 3vw, 2rem);
     border-radius: 16px;
-    border: 1px solid rgba(56, 67, 88, 0.55);
-    background: rgba(22, 30, 47, 0.72);
-    box-shadow: 0 12px 44px rgba(0, 0, 0, 0.32);
+    border: 1px solid var(--ggz-border-panel);
+    background: var(--ggz-surface-form-panel);
+    box-shadow: var(--ggz-shadow-card);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 }
@@ -1055,7 +1055,7 @@ font-family: var(--ggz-font-sans);
     font-size: 0.9375rem;
     letter-spacing: 0.01em;
     text-transform: none;
-    color: var(--ggz-text-on-dark);
+    color: var(--text-bright);
     margin-top: 0;
 }
 
@@ -1072,9 +1072,9 @@ font-family: var(--ggz-font-sans);
     margin-top: 0.4rem;
     padding: 0.68rem 0.9rem;
     border-radius: 12px;
-    border: 1px solid rgba(56, 67, 88, 0.85);
-    background: rgba(10, 14, 24, 0.78);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--ggz-input-border-strong);
+    background: var(--ggz-surface-input);
+    box-shadow: inset 0 1px 0 var(--ggz-input-inset-highlight);
     transition:
         border-color 0.18s ease,
         box-shadow 0.18s ease;
@@ -1089,7 +1089,7 @@ display: grid;
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form input:not(.multi-select-search):not(.iti__search-input):hover,
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form textarea:hover,
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form select:hover {
-border-color: rgba(90, 102, 122, 0.95);
+border-color: var(--ggz-input-hover-border);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form input:not(.multi-select-search):not(.iti__search-input):focus,
@@ -1097,10 +1097,10 @@ border-color: rgba(90, 102, 122, 0.95);
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form select:focus {
 outline: none;
     /* Pêche / corail : pas le rouge « erreur » (220,38,38) */
-    border-color: rgba(255, 164, 138, 0.72);
+    border-color: var(--ggz-input-focus-border);
     box-shadow:
-        0 0 0 3px rgba(255, 146, 112, 0.22),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        0 0 0 3px var(--ggz-input-focus-ring),
+        inset 0 1px 0 var(--ggz-input-inset-highlight);
 }
 
 /* Secteurs : multi-select-dropdown-js (voir join-enhancements.css) */
@@ -1113,13 +1113,13 @@ margin: 1.5rem 0 0;
     padding: 1.35rem 0 0;
     border: none;
     border-radius: 0;
-    border-top: 1px solid rgba(56, 67, 88, 0.5);
+    border-top: 1px solid var(--ggz-fieldset-divider);
     background: transparent;
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-fieldset--optional {
 border-top-style: dashed;
-    border-top-color: rgba(56, 67, 88, 0.42);
+    border-top-color: var(--ggz-fieldset-divider-optional);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-fieldset-legend {
@@ -1149,15 +1149,15 @@ display: inline-block;
     letter-spacing: 0.05em;
     text-transform: uppercase;
     color: var(--ggz-text-meta);
-    border: 1px solid rgba(56, 67, 88, 0.75);
-    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid var(--ggz-border-panel);
+    background: var(--ggz-bg-inset);
     vertical-align: middle;
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form-actions {
 margin-top: 1.75rem;
     padding-top: 1.35rem;
-    border-top: 1px solid rgba(56, 67, 88, 0.45);
+    border-top: 1px solid var(--ggz-border-list-divider);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-join .ggz-form-actions .ggz-project-cta-btn--red {
@@ -1179,7 +1179,7 @@ transition: none;
 }
 /* Presse : voir ggz-press-page.css */
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .cercle__title a {
-color: var(--ggz-text-on-dark);
+color: var(--text-bright);
     text-decoration: none;
 }
 
@@ -1196,8 +1196,8 @@ color: var(--ggz-peach);
 transform: none;
 }
 
-.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button:not(.lang-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill):not(.ggz-project-cta-btn),
-.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn:not(.btn--primary):not(.btn--ghost),
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell button:not(.lang-toggle):not(.theme-toggle):not(.menu-toggle):not(.iti__selected-country):not(.iti__search-clear):not(.projects-program-page__pill):not(.ggz-project-cta-btn),
+.cms-guide-preview-host.ggz-public-theme.ggz-main-shell .btn:not(.btn--primary):not(.btn--ghost):not(.btn--secondary),
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell :is(article.wysiwyg, .ggz-shell-wysiwyg) .card {
 transition-duration: 0.01ms !important;
 }
@@ -1229,7 +1229,7 @@ margin-top: 0;
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell .ggz-page-hero {
 border-color: var(--border-strong);
     background: var(--ggz-gradient-hero);
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.28);
+    box-shadow: var(--ggz-shadow-hero);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 }
@@ -1260,10 +1260,10 @@ margin-top: 0;
     padding: clamp(1.35rem, 2.8vw, 2rem) clamp(1.25rem, 3vw, 2.15rem);
     border-radius: 14px;
     border: 1px solid var(--border);
-    background: rgba(21, 21, 31, 0.58);
+    background: var(--ggz-surface-glass);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    box-shadow: 0 16px 56px rgba(0, 0, 0, 0.26);
+    box-shadow: var(--ggz-shadow-card);
 }
 
 .cms-guide-preview-host.ggz-public-theme.ggz-main-shell p.ggz-home-missing-lead {
@@ -1271,7 +1271,7 @@ margin-top: 1.35rem;
     padding: clamp(1.25rem, 2.5vw, 1.75rem) clamp(1.25rem, 3vw, 2rem);
     border-radius: 14px;
     border: 1px solid var(--border);
-    background: rgba(21, 21, 31, 0.52);
+    background: var(--ggz-surface-glass-soft);
     line-height: 1.65;
 }
 

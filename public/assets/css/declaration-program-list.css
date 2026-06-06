@@ -19,7 +19,7 @@
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .declaration-program-page__hero-accent {
-  color: var(--red-primary);
+  color: var(--ggz-primary);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .declaration-program-page__trust {
@@ -41,7 +41,7 @@
   margin-bottom: clamp(2rem, 4vw, 3rem);
   box-sizing: border-box;
   border-radius: 0;
-  background: linear-gradient(135deg, var(--red-primary), var(--red-deep));
+  background: linear-gradient(135deg, var(--ggz-primary), var(--ggz-primary-deep));
   padding: clamp(1rem, 2.5vw, 1.75rem) clamp(1rem, 4vw, 2rem);
   display: flex;
   flex-wrap: wrap;
@@ -118,7 +118,7 @@
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--red-primary);
+  color: var(--ggz-primary);
   margin: 0 0 0.5rem;
 }
 
@@ -216,7 +216,7 @@
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--red-primary);
+  color: var(--ggz-primary);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .declaration-program-page__static .section--cms-text .ggz-editorial-prose p:nth-child(2) {
@@ -246,7 +246,7 @@
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--red-primary);
+  color: var(--ggz-primary);
   margin: 0 0 0.5rem;
   display: block;
   position: static;
@@ -312,20 +312,21 @@
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .section--cms-cta .btn--primary {
-  background: var(--red-primary);
-  color: var(--text-bright);
+  background: var(--ggz-primary);
+  color: var(--ggz-text-on-accent);
   border: none;
   box-shadow: var(--ggz-shadow-btn-red);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .section--cms-cta .btn--primary:hover {
-  background: var(--red-glow);
+  background: var(--ggz-primary-glow);
+  color: var(--ggz-text-on-accent);
   box-shadow: var(--ggz-shadow-btn-red-hover);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .section--cms-cta .btn--secondary {
   background: transparent;
-  color: var(--ggz-teal);
+  color: var(--ggz-accent);
   border: 1px solid var(--ggz-border-teal);
   box-shadow: none;
 }
@@ -333,7 +334,7 @@
 #main-content :is(.declaration-program-page, .declaration-program-show) .section--cms-cta .btn--secondary:hover {
   background: var(--ggz-overlay-teal-hover);
   border-color: var(--ggz-border-teal-strong);
-  color: var(--ggz-teal-bright);
+  color: var(--ggz-accent);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .dept-grid,
@@ -366,7 +367,7 @@
   color: inherit;
   background: var(--bg-elevated);
   border: 1px solid var(--border-subtle);
-  border-left: 3px solid var(--red-primary);
+  border-left: 3px solid var(--ggz-primary);
   border-radius: var(--radius-md, 8px);
   padding: 1.25rem 1.5rem;
   box-shadow: none;
@@ -378,7 +379,7 @@
   transform: translateY(-4px);
   box-shadow: var(--ggz-shadow-dept-hover);
   border-color: var(--border-subtle);
-  border-left-color: var(--red-primary);
+  border-left-color: var(--ggz-primary);
   background: var(--bg-elevated);
 }
 
@@ -423,7 +424,7 @@
   border-top: none;
   font-family: var(--font-body);
   font-size: 0.78rem;
-  color: var(--red-primary);
+  color: var(--ggz-primary);
   word-break: break-all;
   text-decoration: none;
 }
@@ -471,7 +472,7 @@
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-expandable__arrow {
-  color: var(--red-primary);
+  color: var(--ggz-primary);
   font-size: 0.75rem;
 }
 
@@ -486,7 +487,7 @@
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-expandable__body li::before {
   content: "✓ ";
-  color: var(--ggz-teal);
+  color: var(--ggz-accent);
   font-weight: 700;
 }
 
@@ -504,7 +505,7 @@
   border: 1px solid var(--border-subtle);
   border-radius: 10px;
   overflow: hidden;
-  border-left: 3px solid var(--red-primary);
+  border-left: 3px solid var(--ggz-primary);
   transition: box-shadow 0.25s ease, transform 0.25s ease;
   position: relative;
 }
@@ -528,7 +529,7 @@
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--linked:hover .decl-title {
-  color: var(--ggz-teal);
+  color: var(--ggz-accent);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--linked .decl-action--mailto {
@@ -543,7 +544,7 @@
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--pledge { border-left-color: var(--ggz-decl-pledge); }
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--alert { border-left-color: var(--ggz-warm); }
-#main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--partnership { border-left-color: var(--ggz-teal); }
+#main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--partnership { border-left-color: var(--ggz-accent); }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-band {
   padding: 0.45rem 1.75rem;
@@ -568,7 +569,7 @@
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-card--partnership .decl-band {
   background: var(--ggz-decl-partnership-band-bg);
-  color: var(--ggz-teal);
+  color: var(--ggz-accent);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-header {
@@ -628,11 +629,11 @@
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-action--primary {
-  color: var(--ggz-teal);
+  color: var(--ggz-accent);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-action--primary:hover {
-  color: var(--ggz-teal-bright);
+  color: var(--ggz-accent);
 }
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-action--mailto {
@@ -684,7 +685,7 @@
 
 #main-content :is(.declaration-program-page, .declaration-program-show) .decl-badge--partnership {
   background: var(--ggz-decl-partnership-badge-bg);
-  color: var(--ggz-teal);
+  color: var(--ggz-accent);
   border: 1px solid var(--ggz-decl-partnership-badge-border);
 }
 

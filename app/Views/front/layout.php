@@ -23,7 +23,7 @@ if ($footerCmsHtml !== '' && preg_match('/^<div\s+class="footer__columns(?:\s[^"
     (function(){try{var s=localStorage.getItem('ggz-theme'),r=document.documentElement;if(s==='light'||s==='dark'){r.dataset.theme=s;}}catch(e){}})();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0a0a14">
+    <meta name="theme-color" content="#070c19">
     <meta name="author" content="GoV Gen Z Madagascar">
     <title><?= esc($title ?? 'GovGenZ') ?></title>
     <link rel="icon" type="image/png" href="/assets/favicon.png">
