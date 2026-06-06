@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.17.0] - 2026-06-06
+
+### Release
+
+- feat(css): align css to md file (461ddf8)
+- chore(release): prepare develop 1.17.0 after v1.16.0 (#77) (b6636c1)
+- docs(changelog): v1.16.0 (8d73589)
+
+
 ## [1.16.0] - 2026-06-05
 
 ### Release
